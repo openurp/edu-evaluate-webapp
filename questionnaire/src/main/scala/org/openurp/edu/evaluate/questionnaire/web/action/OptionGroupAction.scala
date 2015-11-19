@@ -61,7 +61,7 @@ override def saveAndRedirect(entity: OptionGroup): View = {
   }
     
 override  def remove(): View = {
-    val optionGroupIds = get("optionGroupIds")
+    val optionGroupIds = getLong("optionGroupId").get
     val query1=OqlBuilder.from(classOf[OptionGroup],"optionGroup")
     query1.where("optionGroup.id in (:optionGroupIds)",optionGroupIds)
     val optionGroups = entityDao.search(query1);
