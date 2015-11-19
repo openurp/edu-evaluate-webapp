@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+    <bean id="HibernateConfig.default">
+        <property name="properties">
+            <props merge="true">
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.default_batch_fetch_size">800</prop>
+            </props>
+        </property>
+    </bean>
+</beans>
