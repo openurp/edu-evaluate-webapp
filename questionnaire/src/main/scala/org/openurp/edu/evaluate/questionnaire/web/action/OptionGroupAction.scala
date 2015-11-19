@@ -61,28 +61,19 @@ override def saveAndRedirect(entity: OptionGroup): View = {
   }
     
 override  def remove(): View = {
-    val optionGroupIds = getLong("optionGroupId").get
+    val optionGroupIds = longIds("optionGroup")
     val query1=OqlBuilder.from(classOf[OptionGroup],"optionGroup")
     query1.where("optionGroup.id in (:optionGroupIds)",optionGroupIds)
     val optionGroups = entityDao.search(query1);
 
     val query = OqlBuilder.from(classOf[Question], "question");
-    query.where("question.optionGroup in (:optionGroups)", optionGroups);
+    query.where("question.optionGroup.id in (:optionGroups)", optionGroupIds);
     val questions = entityDao.search(query);
-    if (questions!=null ) { return redirect("search", "删除失败,选择的数据中已有被评教问题引用"); }
-
-    entityDao.remove(optionGroups);
-    return redirect("search", "info.delete.success");
+    if (!questions.isEmpty )  return redirect("search", "删除失败,选择的数据中已有被评教问题引用")
+    else entityDao.remove(optionGroups);
+    return redirect("search", "info.remove.success");
   }
-//
-//  def remove(): View = {
-//    val idclass = entityMetaData.getType(entityName).get.idType
-//    val entities: Seq[T] = getId(shortName, idclass) match {
-//      case Some(entityId) => List(getModel[T](entityName, entityId))
-//      case None           => getModels[T](entityName, ids(shortName, idclass))
-//    }
-//    removeAndRedirect(entities)
-//  }
+
    
     
 }

@@ -20,7 +20,6 @@ class EvaluationCriteriaAction extends RestfulAction[EvaluationCriteria] {
     populateConditions(builder)
     builder.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
     val evalutionCriterias = entityDao.search(builder)
-
     put("evalutionCriterias", evalutionCriterias)
     forward()
   }
@@ -54,7 +53,19 @@ class EvaluationCriteriaAction extends RestfulAction[EvaluationCriteria] {
       return redirect("search", "info.save.failure");
     }
   }
-      
+
+   /**
+   * 不能删除默认对照标准
+   */
+override  def remove(): View = {
+    val evaluationCriteriaIds = longIds("evaluationCriteria")
+    if (evaluationCriteriaIds.contains(1L)) {
+      return redirect("search", "info.delete.failure");
+    } else {
+      return super.remove();
+    }
+  }
+ 
    protected override def getQueryBuilder(): OqlBuilder[EvaluationCriteria] = {
     
     val builder: OqlBuilder[EvaluationCriteria] = OqlBuilder.from(entityName, shortName)
