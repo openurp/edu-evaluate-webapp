@@ -1,14 +1,13 @@
 package org.openurp.edu.evaluate.questionnaire.web.action
 
+import java.util.Date
+import java.sql.Date
+import org.beangle.commons.collection.Order
+import org.beangle.data.dao.OqlBuilder
+import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.model.QuestionType
-import org.beangle.data.dao.OqlBuilder
-import org.beangle.commons.collection.Order
-import org.openurp.edu.evaluation.model.QuestionType
-import org.beangle.commons.lang.Strings
-import java.sql.Timestamp
-import java.sql.Date
-import org.beangle.webmvc.api.view.View
+import org.openurp.edu.evaluation.model.Question
 
 class QuestionTypeAction extends RestfulAction[QuestionType] {
 
@@ -42,16 +41,16 @@ class QuestionTypeAction extends RestfulAction[QuestionType] {
       questionType.name=name.replaceAll("<", "&#60;").replaceAll(">", "&#62;")
       if (!questionType.persisted) {
         if (questionType.state) {
-          questionType.beginOn=(new Date(System.currentTimeMillis()));
+          questionType.beginOn=new java.sql.Date(System.currentTimeMillis())
         }
       } else {
-        questionType.updatedAt=(new Date(System.currentTimeMillis()))
+        questionType.updatedAt= new java.util.Date
         val questionTypeOld = entityDao.get(classOf[QuestionType], questionType.id);
         if (questionTypeOld.state != questionType.state) {
           if (questionType.state) {
-            questionType.beginOn= (new Date(System.currentTimeMillis()));
+            questionType.beginOn=(new java.sql.Date(System.currentTimeMillis()))
           } else {
-            questionType.endOn = (new Date(System.currentTimeMillis()));
+            questionType.endOn = (new java.sql.Date(System.currentTimeMillis()))
           }
         }
       }
@@ -62,6 +61,21 @@ class QuestionTypeAction extends RestfulAction[QuestionType] {
       logger.info("saveAndForwad failure", e);
       return redirect("search", "info.save.failure");
     }
+  }
+  
+    override def remove() : View = {
+    val questionTypeIds = longIds("questionType")
+    val query1=OqlBuilder.from(classOf[QuestionType],"questionType")
+    query1.where("questionType.id in (:questionTypeIds)",questionTypeIds)
+    val questionTypes = entityDao.search(query1);
+
+    val query = OqlBuilder.from(classOf[Question], "question");
+    query.where("question.questionType in (:questionTypes)", questionTypes);
+    val questions = entityDao.search(query);
+    if (!questions.isEmpty) { return redirect("search", "删除失败,选择的数据中已有被评教问题引用"); }
+
+    entityDao.remove(questionTypes);
+    return redirect("search", "info.remove.success");
   }
   
 }

@@ -51,7 +51,7 @@ class DefaultMapping extends Mapping {
     bind[Questionnaire].on(e => declare(
       e.depart & e.beginOn are notnull,
       e.remark is length(200),
-      e.questions is depends("questionnaire"),
+     // e.questions is depends("questionnaire"),
       e.title is length(200),
       e.description is length(500)))
 

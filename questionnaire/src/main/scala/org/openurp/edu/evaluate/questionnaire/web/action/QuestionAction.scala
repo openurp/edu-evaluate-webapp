@@ -14,6 +14,16 @@ import org.openurp.edu.evaluation.model.Question
 import org.openurp.edu.evaluation.model.Question
 import java.sql.Date
 import org.openurp.edu.evaluation.model.Question
+import org.openurp.edu.evaluation.model.OptionGroup
+import org.openurp.edu.evaluate.questionnaire.service.QuestionTypeService
+import org.openurp.base.model.Department
+import org.openurp.edu.evaluate.questionnaire.service.QuestionTypeService
+import org.openurp.edu.evaluation.model.Questionnaire
+import org.openurp.edu.evaluate.questionnaire.service.QuestionTypeService
+import org.openurp.edu.evaluation.model.Questionnaire
+import org.openurp.edu.evaluate.questionnaire.service.QuestionTypeService
+import org.openurp.edu.evaluation.model.Questionnaire
+import org.openurp.edu.evaluate.questionnaire.service.QuestionTypeService
 
 /**
  * 问题维护响应类
@@ -22,6 +32,8 @@ import org.openurp.edu.evaluation.model.Question
  */
 class QuestionAction extends RestfulAction[Question] {
     
+ var questionTypeService:QuestionTypeService=_
+  
     override def search(): String = {
       val builder = OqlBuilder.from(classOf[Question], "question")
       populateConditions(builder)
@@ -32,7 +44,17 @@ class QuestionAction extends RestfulAction[Question] {
       forward()
     }
     
-  protected override def  saveAndForward(entity: Question): View = {
+ protected override def editSetting(entity: Question): Unit = {
+    val optionGroups = entityDao.getAll(classOf[OptionGroup])
+    put("optionGroups", optionGroups);
+    val departmentList = entityDao.getAll(classOf[Department])
+    val questionTypes = questionTypeService.getQuestionTypes()
+    put("questionTypes", questionTypes);
+    put("departmentList", departmentList);
+  } 
+
+    
+   protected def  saveAndForward(entity: Question): View = {
     try {
       val question =  entity.asInstanceOf[Question]
       val remark = question.remark
@@ -51,23 +73,38 @@ class QuestionAction extends RestfulAction[Question] {
           question.beginOn = new Date(System.currentTimeMillis())
         }
       } else {
-        question.updatedAt = new Date(System.currentTimeMillis())
-        val questionOld = entityDao.get(Question.class, question.getId());
+        question.updatedAt = new java.util.Date
+        val questionOld = entityDao.get(classOf[Question], question.id);
         if (questionOld.state != question.state) {
-          if (question.getState()) {
-            question.setBeginOn(new Timestamp(System.currentTimeMillis()));
+          if (question.state) {
+            question.beginOn =  new Date(System.currentTimeMillis())
           } else {
-            question.setEndOn(new Timestamp(System.currentTimeMillis()));
+            question.endOn = new Date(System.currentTimeMillis())
           }
         }
 
       }
       entityDao.saveOrUpdate(question);
       return redirect("search", "info.save.success");
-    } catch (Exception e) {
-      logger.info("saveAndForwad failure", e);
+    } catch {
+      case e:Exception=>
+      logger.info("saveAndForwad failure",e);
       return redirect("search", "info.save.failure");
     }
   }
+   override def  remove() :View ={
+    val questionIds = longId("question");
+    val questions = entityDao.get(classOf[Question], questionIds);
+
+    val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire");
+    query.join("questionnaire.questions", "question");
+    query.where("question in (:questions)", questions);
+    val questionnaires = entityDao.search(query);
+    if (!questionnaires.isEmpty) { redirect("search", "删除失败,选择的数据中已有被评教问卷引用"); }
+    entityDao.remove(questions);
+     redirect("search", "info.delete.success");
+  }
+
+
   
 }
