@@ -60,9 +60,6 @@ class DefaultMapping extends Mapping {
       e.enName is length(100),
       e.remark is length(100),
       e.beginOn is notnull))
-      
-    bind[EvaluateSwitch].on(e => declare(
-      e.endOn & e.beginOn & e.isOpen & e.semester are notnull))
 
     all.cacheable()
   }
