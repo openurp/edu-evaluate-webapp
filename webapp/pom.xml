@@ -24,6 +24,11 @@
     </dependency>
     <dependency>
       <groupId>org.openurp.edu.evaluate</groupId>
+      <artifactId>openurp-edu-evaluate-department</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openurp.edu.evaluate</groupId>
       <artifactId>openurp-edu-evaluate-questionnaire</artifactId>
       <version>${project.version}</version>
     </dependency>
