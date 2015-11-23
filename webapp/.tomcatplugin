@@ -7,9 +7,10 @@
     <updateXml>true</updateXml>
     <warLocation></warLocation>
     <extraInfo></extraInfo>
-    <webPath>/edu/evaluate</webPath>
+    <webPath>edu/evaluate</webPath>
     <webClassPathEntries>
         <webClassPathEntry>/openurp-edu-evaluate-course/target/classes</webClassPathEntry>
+        <webClassPathEntry>/openurp-edu-evaluate-department/target/classes</webClassPathEntry>
         <webClassPathEntry>/openurp-edu-evaluate-questionnaire/target/classes</webClassPathEntry>
         <webClassPathEntry>/openurp-edu-evaluate-webapp/target/classes</webClassPathEntry>
         <webClassPathEntry>M2_REPO/antlr/antlr/2.7.7/antlr-2.7.7.jar</webClassPathEntry>
