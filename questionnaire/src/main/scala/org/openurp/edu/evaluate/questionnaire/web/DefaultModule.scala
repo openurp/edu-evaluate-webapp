@@ -7,12 +7,14 @@ import org.openurp.edu.evaluate.questionnaire.web.action.QuestionnaireAction
 import org.openurp.edu.evaluate.questionnaire.web.action.OptionGroupAction
 import org.openurp.edu.evaluate.questionnaire.web.action.EvaluationCriteriaAction
 import org.openurp.edu.evaluate.questionnaire.web.action.EvaluationConfigAction
+import org.openurp.edu.evaluate.questionnaire.service.QuestionTypeService
 class DefaultModule extends AbstractBindModule {
 
   override def binding() {
     bind(classOf[QuestionAction],classOf[QuestionTypeAction])
     bind(classOf[EvaluationCriteriaAction],classOf[OptionGroupAction],classOf[QuestionnaireAction])
     bind(classOf[EvaluationConfigAction])
+    bind(classOf[QuestionTypeService])
   }
 
 }

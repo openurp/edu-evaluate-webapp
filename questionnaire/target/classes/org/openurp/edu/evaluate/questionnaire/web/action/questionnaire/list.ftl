@@ -11,7 +11,7 @@
     [/@]
     [@b.row]
         [@b.boxcol /]
-        [@b.col property="description" title="问卷描述" width="30%"]${(questionnaire.description)!}[/@]
+        [@b.col property="description" title="问卷描述"][@b.a href="!info?id=${questionnaire.id}"]${(questionnaire.description)!}[/@][/@]
 	    [@b.col property="depart" title="制作部门" width="30%"]${(questionnaire.depart.name)!}[/@]
 	    [@b.col property="state" title="问卷状态" width="40%"]${questionnaire.state?string("有效","无效")}[/@]
     [/@]

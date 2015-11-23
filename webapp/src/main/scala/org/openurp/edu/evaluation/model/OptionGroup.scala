@@ -32,7 +32,9 @@ class OptionGroup extends LongId with Named {
   var oppoVal: Float = _
 
   /** 各类选项 */
-  var options = Collections.newBuffer[Option]
+    import scala.collection.mutable.HashSet
+    var options: collection.mutable.Set[Option] = new collection.mutable.HashSet[Option]
+//  var options = Collections.newBuffer[Option]
 
   /** 创建部门 */
   var depart: Department = _
