@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<mvc>
+  <profile name="openurp-edu-evaluate-department" package="org.openurp.edu.evaluate.department.action">
+    <url path="/department" suffix=""  style="seo" />
+    <interceptors>
+      <interceptor name="web.Interceptor.hibernate"/>
+      <interceptor name="web.Interceptor.flash"/>
+     </interceptors>
+  </profile>
+</mvc>

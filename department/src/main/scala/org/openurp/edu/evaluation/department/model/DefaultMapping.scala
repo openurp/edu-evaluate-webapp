@@ -9,7 +9,7 @@ import org.beangle.data.model.bind.Mapping
 class DefaultMapping extends Mapping {
 
   def binding(): Unit = {
-    defaultIdGenerator("date")
+    defaultIdGenerator("auto_increment")
 
     //lesson result
     bind[DepartEvaluate].on(e => declare(
