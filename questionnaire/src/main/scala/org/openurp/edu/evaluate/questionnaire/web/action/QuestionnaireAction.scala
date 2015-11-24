@@ -118,8 +118,8 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] {
       }
 
     }
-//    questionnaire.questions.clear();
-    questionnaire.questions ++= entityDao.find(classOf[Question], longIds("question"))
+    questionnaire.questions.clear();
+    questionnaire.questions ++= entityDao.find(classOf[Question],longIds("questionnaire.question"))
 
     entityDao.saveOrUpdate(questionnaire);
     redirect("search", "info.save.success");
