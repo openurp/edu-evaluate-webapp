@@ -231,7 +231,7 @@
             alert(errors);
             flag=false;
         }
-        bg.form.addInput(document.questionnaireForm,"questionIds",questionIds.substring(1,questionIds.length-1));
+        bg.form.addInput(document.questionnaireForm,"questionnaire.questionIds",questionIds.substring(1,questionIds.length-1));
         return flag;
     }
     
