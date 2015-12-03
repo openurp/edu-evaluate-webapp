@@ -1,4 +1,4 @@
-package org.openurp.edu.evaluate.questionnaire.service
+package org.openurp.edu.evaluation.questionnaire.service
 
 import org.openurp.edu.evaluation.model.Question
 import org.beangle.commons.lang.Strings

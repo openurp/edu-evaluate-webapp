@@ -1,10 +1,4 @@
-package org.openurp.edu.evaluate.course.web.action
-
-import org.openurp.edu.evaluate.course.service.LessonService
-import org.openurp.edu.evaluate.course.service.LessonFilterStrategyFactory
-import org.openurp.edu.evaluate.course.service.EvaluateResultService
-import org.openurp.edu.evaluate.course.service.StdEvaluateSwitchService
-import org.openurp.edu.lesson.model.Lesson
+package org.openurp.edu.evaluation.course.web.action
 
 class EvaluateStdAction {
 //  var  lessonFilterStrategyFactory:LessonFilterStrategyFactory=_

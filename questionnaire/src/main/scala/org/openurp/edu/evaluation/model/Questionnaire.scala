@@ -18,12 +18,11 @@
  */
 package org.openurp.edu.evaluation.model
 
+import org.beangle.commons.collection.Collections
 import org.beangle.data.model.LongId
-import org.openurp.base.model.Department
-import java.sql.Date
 import org.beangle.data.model.TemporalOn
 import org.beangle.data.model.Updated
-import org.beangle.commons.collection.Collections
+import org.openurp.base.model.Department
 /**
  * 评教问卷
  */

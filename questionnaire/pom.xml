@@ -2,18 +2,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.openurp.edu.evaluate</groupId>
-    <artifactId>openurp-edu-evaluate-parent</artifactId>
+    <groupId>org.openurp.edu.evaluation</groupId>
+    <artifactId>openurp-edu-evaluation-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>org.openurp.edu.evaluate</groupId>
-  <artifactId>openurp-edu-evaluate-questionnaire</artifactId>
+  <groupId>org.openurp.edu.evaluation</groupId>
+  <artifactId>openurp-edu-evaluation-questionnaire</artifactId>
   <packaging>jar</packaging>
-  <name>OpenURP Edu-Evaluate Questionnaire</name>
+  <name>OpenURP Edu-evaluation Questionnaire</name>
 
   <properties>
-    <bundle.symbolicName>org.openurp.edu.evaluate.questionnaire</bundle.symbolicName>
-    <bundle.namespace>org.openurp.edu.evaluate</bundle.namespace>
+    <bundle.symbolicName>org.openurp.edu.evaluation.questionnaire</bundle.symbolicName>
+    <bundle.namespace>org.openurp.edu.evaluation</bundle.namespace>
     <openurp.api.version>0.0.5</openurp.api.version>
   </properties>
 

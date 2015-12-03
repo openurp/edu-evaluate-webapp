@@ -1,4 +1,4 @@
-package org.openurp.edu.evaluate.questionnaire.web.action
+package org.openurp.edu.evaluation.questionnaire.web.action
 
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.model.EvaluationCriteria

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <mvc>
-  <profile name="openurp-edu-evaluate-course" package="org.openurp.edu.evaluate.course.web.action">
+  <profile name="openurp-edu-evaluation-course" package="org.openurp.edu.evaluation.course.web.action">
     <url path="/course" suffix=""  style="seo" />
     <interceptors>
       <interceptor name="web.Interceptor.hibernate"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <mvc>
-  <profile name="openurp-edu-evaluate-questionnaire" package="org.openurp.edu.evaluate.questionnaire.web.action">
+  <profile name="openurp-edu-evaluation-questionnaire" package="org.openurp.edu.evaluation.questionnaire.web.action">
     <url path="/questionnaire" suffix=""  style="seo" />
     <interceptors>
       <interceptor name="web.Interceptor.hibernate"/>

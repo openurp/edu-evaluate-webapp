@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <cdi>
   <container name="web">
-    <module class="org.openurp.edu.evaluate.department.EvaluateModule"/>
+    <module class="org.openurp.edu.evaluation.department.EvaluateModule"/>
   </container>
 </cdi>

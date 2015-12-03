@@ -1,4 +1,4 @@
-package org.openurp.edu.evaluate.course.web.action
+package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
@@ -14,7 +14,6 @@ import java.sql.Date
 import org.openurp.base.model.Semester
 import org.openurp.base.model.Semester
 import org.openurp.base.model.Semester
-import org.openurp.edu.evaluate.course.service.StdEvaluateSwitchService
 import org.openurp.base.model.Semester
 import org.openurp.edu.base.model.Project
 import org.openurp.edu.lesson.model.Lesson
@@ -24,6 +23,7 @@ import org.beangle.commons.collection.Order
 import org.beangle.data.dao.QueryBuilder
 import org.openurp.edu.lesson.model.Lesson
 import org.beangle.webmvc.api.view.View
+import org.openurp.edu.evaluation.course.service.StdEvaluateSwitchService
 
 class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
 

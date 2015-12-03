@@ -2,17 +2,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.openurp.edu.evaluate</groupId>
-    <artifactId>openurp-edu-evaluate-parent</artifactId>
+    <groupId>org.openurp.edu.evaluation</groupId>
+    <artifactId>openurp-edu-evaluation-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>org.openurp.edu.evaluate</groupId>
-  <artifactId>openurp-edu-evaluate-webapp</artifactId>
+  <groupId>org.openurp.edu.evaluation</groupId>
+  <artifactId>openurp-edu-evaluation-webapp</artifactId>
   <packaging>war</packaging>
-  <name>OpenURP Edu Evaluate Webapp</name>
+  <name>OpenURP Edu evaluation Webapp</name>
 
   <properties>
-    <bundle.symbolicName>org.openurp.edu.evaluate.webapp</bundle.symbolicName>
+    <bundle.symbolicName>org.openurp.edu.evaluation.webapp</bundle.symbolicName>
     <bundle.namespace>org.openurp</bundle.namespace>
     <openurp.api.version>0.0.5</openurp.api.version>
   </properties>
@@ -24,18 +24,18 @@
         <version>${openurp.api.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.openurp.edu.evaluate</groupId>
-      <artifactId>openurp-edu-evaluate-course</artifactId>
+      <groupId>org.openurp.edu.evaluation</groupId>
+      <artifactId>openurp-edu-evaluation-course</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.openurp.edu.evaluate</groupId>
-      <artifactId>openurp-edu-evaluate-department</artifactId>
+      <groupId>org.openurp.edu.evaluation</groupId>
+      <artifactId>openurp-edu-evaluation-department</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.openurp.edu.evaluate</groupId>
-      <artifactId>openurp-edu-evaluate-questionnaire</artifactId>
+      <groupId>org.openurp.edu.evaluation</groupId>
+      <artifactId>openurp-edu-evaluation-questionnaire</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

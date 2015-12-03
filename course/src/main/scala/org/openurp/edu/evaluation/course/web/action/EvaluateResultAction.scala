@@ -1,4 +1,4 @@
-package org.openurp.edu.evaluate.course.web.action
+package org.openurp.edu.evaluation.course.web.action
 
 import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
 import org.beangle.webmvc.entity.action.RestfulAction

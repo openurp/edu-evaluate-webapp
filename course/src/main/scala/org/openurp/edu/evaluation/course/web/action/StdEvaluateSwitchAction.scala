@@ -1,4 +1,4 @@
-package org.openurp.edu.evaluate.course.web.action
+package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.entity.action.RestfulAction

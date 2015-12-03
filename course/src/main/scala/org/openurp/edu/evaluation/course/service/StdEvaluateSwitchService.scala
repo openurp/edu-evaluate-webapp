@@ -1,4 +1,4 @@
-package org.openurp.edu.evaluate.course.service
+package org.openurp.edu.evaluation.course.service
 
 import org.beangle.data.dao.EntityDao
 import org.beangle.data.dao.OqlBuilder

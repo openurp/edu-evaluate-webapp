@@ -1,4 +1,4 @@
-package org.openurp.edu.evaluate.questionnaire.web.action
+package org.openurp.edu.evaluation.questionnaire.web.action
 
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.model.Question
@@ -15,15 +15,9 @@ import org.openurp.edu.evaluation.model.Question
 import java.sql.Date
 import org.openurp.edu.evaluation.model.Question
 import org.openurp.edu.evaluation.model.OptionGroup
-import org.openurp.edu.evaluate.questionnaire.service.QuestionTypeService
 import org.openurp.base.model.Department
-import org.openurp.edu.evaluate.questionnaire.service.QuestionTypeService
+import org.openurp.edu.evaluation.questionnaire.service.QuestionTypeService
 import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.edu.evaluate.questionnaire.service.QuestionTypeService
-import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.edu.evaluate.questionnaire.service.QuestionTypeService
-import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.edu.evaluate.questionnaire.service.QuestionTypeService
 
 /**
  * 问题维护响应类

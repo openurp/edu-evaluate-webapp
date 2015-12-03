@@ -1,4 +1,4 @@
-package org.openurp.edu.evaluate.department.action
+package org.openurp.edu.evaluation.department.action
 
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.department.model.DepartEvaluate

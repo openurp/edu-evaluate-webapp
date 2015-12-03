@@ -1,4 +1,4 @@
-package org.openurp.edu.evaluate.questionnaire.web.action
+package org.openurp.edu.evaluation.questionnaire.web.action
 
 import scala.collection.mutable.Buffer
 import org.beangle.commons.collection.Collections
@@ -7,21 +7,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.annotation.param
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
-import org.openurp.edu.evaluate.questionnaire.service.QuestionTypeService
 import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.QuestionType
-import org.openurp.edu.evaluation.model.QuestionType
-import org.openurp.edu.evaluation.model.QuestionType
-import org.openurp.edu.evaluation.model.QuestionType
-import org.openurp.edu.evaluation.model.QuestionType
-import org.openurp.edu.evaluation.model.QuestionType
 import org.openurp.edu.evaluation.model.QuestionType
 import org.openurp.edu.evaluation.model.Questionnaire
 import java.sql.Date
