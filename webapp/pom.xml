@@ -14,9 +14,15 @@
   <properties>
     <bundle.symbolicName>org.openurp.edu.evaluate.webapp</bundle.symbolicName>
     <bundle.namespace>org.openurp</bundle.namespace>
+    <openurp.api.version>0.0.5</openurp.api.version>
   </properties>
 
  <dependencies>
+    <dependency>
+        <groupId>org.openurp.edu.base</groupId>
+        <artifactId>openurp-edu-base-model</artifactId>
+        <version>${openurp.api.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.openurp.edu.evaluate</groupId>
       <artifactId>openurp-edu-evaluate-course</artifactId>

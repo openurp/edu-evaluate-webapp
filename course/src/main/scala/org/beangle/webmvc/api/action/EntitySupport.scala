@@ -34,6 +34,11 @@ trait EntitySupport[T] {
   }
 
   protected def getId(name: String): Option[String] = {
+    println(Params.get(name + ".id"))  
+    println(Params.get(name + "_id")) 
+    println(Params.get(name + "Id")) 
+		println(Params.get(name + ".id").orElse(Params.get(name + "_id").orElse(Params.get(name + "Id"))))
+    println(Params.get(name + ".id").orElse(Params.get(name + "_id")).orElse(Params.get(name + "Id")))
     Params.get(name + ".id").orElse(Params.get(name + "_id").orElse(Params.get(name + "Id")))
   }
 

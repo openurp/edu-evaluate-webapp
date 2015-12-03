@@ -1,6 +1,4 @@
 /home/vbird/openurp/webapp/edu-evaluate-webapp/webapp/target/classes
-/home/vbird/openurp/webapp/edu-evaluate-webapp/course/target/classes
-/home/vbird/.m2/repository/org/openurp/edu/evaluation/openurp-edu-evaluation-model/0.0.5/openurp-edu-evaluation-model-0.0.5.jar
 /home/vbird/.m2/repository/org/openurp/edu/base/openurp-edu-base-model/0.0.5/openurp-edu-base-model-0.0.5.jar
 /home/vbird/.m2/repository/org/openurp/base/openurp-base-model/0.0.5/openurp-base-model-0.0.5.jar
 /home/vbird/.m2/repository/org/openurp/code/openurp-code-model-person/0.0.5/openurp-code-model-person-0.0.5.jar
@@ -17,6 +15,8 @@
 /home/vbird/.m2/repository/org/openurp/people/base/openurp-people-base-model/0.0.5/openurp-people-base-model-0.0.5.jar
 /home/vbird/.m2/repository/org/openurp/code/openurp-code-model-hr/0.0.5/openurp-code-model-hr-0.0.5.jar
 /home/vbird/.m2/repository/org/openurp/code/openurp-code-model-job/0.0.5/openurp-code-model-job-0.0.5.jar
+/home/vbird/openurp/webapp/edu-evaluate-webapp/course/target/classes
+/home/vbird/.m2/repository/org/openurp/edu/evaluation/openurp-edu-evaluation-model/0.0.5/openurp-edu-evaluation-model-0.0.5.jar
 /home/vbird/.m2/repository/org/openurp/edu/lesson/openurp-edu-lesson-model/0.0.5/openurp-edu-lesson-model-0.0.5.jar
 /home/vbird/.m2/repository/org/beangle/webmvc/beangle-webmvc-entity-plugin_2.11/0.3.4/beangle-webmvc-entity-plugin_2.11-0.3.4.jar
 /home/vbird/.m2/repository/org/beangle/data/beangle-data-hibernate_2.11/4.3.2/beangle-data-hibernate_2.11-4.3.2.jar
