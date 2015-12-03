@@ -20,34 +20,15 @@ package org.openurp.edu.evaluation.model
 
 import org.beangle.data.model.LongId
 import org.openurp.base.model.Department
-import java.sql.Date
-import org.beangle.data.model.TemporalOn
-import org.beangle.data.model.Updated
+import org.beangle.data.model.Named
 import org.beangle.commons.collection.Collections
-/**
- * 评教问卷
- */
-class Questionnaire extends LongId with Updated with TemporalOn {
-  /** 问卷标题 */
-  var title: String = _
-  /** 简单描述 */
-  var description: String = _
-  /** 相关联的问题 */
-  var questions = Collections.newBuffer[Question]
-  /** 创建部门 */
+
+class EvaluationCriteria extends LongId with Named {
+
+  /** 具体分值对照项 */
+  var criteriaItems = Collections.newBuffer[EvaluationCriteriaItem]
+
+  /** 制作部门 */
   var depart: Department = _
-  /** 备注 */
-  var remark: String = _
-  /** 创建者 */
-  var createBy: String = _
-  /** 使用状态 */
-  var state: Boolean = false
-  
-  def totalScore: Float = {
-    var totalScore = 0F
-    this.questions foreach { qu =>
-      totalScore += qu.score
-    }
-    totalScore
-  }
+
 }

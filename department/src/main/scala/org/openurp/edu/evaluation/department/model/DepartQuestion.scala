@@ -24,17 +24,13 @@ import org.openurp.edu.evaluation.model.QuestionType
 import org.openurp.edu.evaluation.model.Option
 
 /**
- * 问题评教结果
+ * 院系问题评教结果
  *
  * @author chaostone
  */
 class DepartQuestion extends LongId {
-  /** 问题类别 */
-  var questionType: QuestionType = _
   /** 问题 */
   var question: Question = _
-  /** 问题选项 */
-  var option: Option = _
   /** 得分 */
   var score: Float = _
   /** 评教结果 */

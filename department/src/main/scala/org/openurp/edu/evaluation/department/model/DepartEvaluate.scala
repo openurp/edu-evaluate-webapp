@@ -23,12 +23,17 @@ import org.beangle.data.model.LongId
 import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.hr.base.model.Staff
 import org.openurp.base.model.Department
+import org.openurp.base.model.Semester
+import org.beangle.commons.collection.Collections
 /**
- * 问卷评教结果
+ * 院系问卷评教结果
  *
  * @author chaostone
  */
 class DepartEvaluate extends LongId {
+  
+  /**学年学期*/
+  var semester: Semester = _
   /** 教师 */
   var staff: Staff = _
   /** 开课院系 */
@@ -36,15 +41,9 @@ class DepartEvaluate extends LongId {
   /** 问卷信息 */
   var questionnaire: Questionnaire = _
   /** 问题评教结果 */
-  var questionResults: HashSet[DepartQuestion] = new collection.mutable.HashSet[DepartQuestion]
+  var questionResults = Collections.newSet[DepartQuestion]
   /** 评教时间 */
   var evaluateAt: java.util.Date = _
-  /**问卷状态 */
-  /**
-   * 1正常 2 无效 3异常(互斥)
-   * 总数=有效问卷+无效问卷+异常问卷        无效问卷=无效比例*(总数-异常问卷)
-   */
-  var statType: Int = _
   /**备注*/
   var remark: String = _
 }

@@ -20,34 +20,22 @@ package org.openurp.edu.evaluation.model
 
 import org.beangle.data.model.LongId
 import org.openurp.base.model.Department
-import java.sql.Date
-import org.beangle.data.model.TemporalOn
-import org.beangle.data.model.Updated
+import org.beangle.data.model.Named
 import org.beangle.commons.collection.Collections
 /**
- * 评教问卷
+ * 选项组
+ *
+ * @author chaostone
  */
-class Questionnaire extends LongId with Updated with TemporalOn {
-  /** 问卷标题 */
-  var title: String = _
-  /** 简单描述 */
-  var description: String = _
-  /** 相关联的问题 */
-  var questions = Collections.newBuffer[Question]
+class OptionGroup extends LongId with Named {
+  /** 倾向性权重 必须在0和1之间 */
+  var oppoVal: Float = _
+
+  /** 各类选项 */
+  import scala.collection.mutable.HashSet
+    var options: collection.mutable.Set[Option] = new collection.mutable.HashSet[Option]
+//  var options = Collections.newBuffer[Option]
+
   /** 创建部门 */
   var depart: Department = _
-  /** 备注 */
-  var remark: String = _
-  /** 创建者 */
-  var createBy: String = _
-  /** 使用状态 */
-  var state: Boolean = false
-  
-  def totalScore: Float = {
-    var totalScore = 0F
-    this.questions foreach { qu =>
-      totalScore += qu.score
-    }
-    totalScore
-  }
 }
