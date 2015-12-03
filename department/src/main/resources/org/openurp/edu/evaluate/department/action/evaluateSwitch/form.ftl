@@ -1,0 +1,17 @@
+[#ftl]
+[@b.head/]
+[@b.toolbar title="评教问卷开关"]bar.addBack();[/@]
+  [#assign sa][#if evaluateSwitch.persisted]!update?id=${evaluateSwitch.id}[#else]!save[/#if][/#assign]
+    [@b.form action=sa theme="list"  enctype="multipart/form-data"]
+      [@b.select name="evaluateSwitch.semester.id" label="学年学期" items=semesters?sort_by("code") option = "id,code" value =evaluateSwitch.semester empty="..."/]
+      [@b.select name="evaluateSwitch.questionnaire.id" label="问卷描述" items=questionnaires option = "id,description" value =evaluateSwitch.questionnaire empty="..."/]
+      [@b.select name="evaluateSwitch.opened" label="开关状态" items={'true':'开启','false':'关闭'} value =evaluateSwitch.opened empty="..."/]
+      [@b.startend label="开始结束时间" 
+        name="evaluateSwitch.beginOn,evaluateSwitch.endOn" required="true,true" 
+        start=evaluateSwitch.beginOn end=evaluateSwitch.endOn format="date"/]
+      [@b.formfoot]
+        [#if evaluateSwitch.persisted]<input type="hidden" name="evaluateSwitch.id" value="${evaluateSwitch.id!}" />[/#if]
+        [@b.reset/]&nbsp;&nbsp;[@b.submit value="action.submit"/]
+      [/@]
+    [/@]
+[@b.foot/]
