@@ -7,12 +7,12 @@
     <updateXml>true</updateXml>
     <warLocation></warLocation>
     <extraInfo></extraInfo>
-    <webPath>edu/evaluate</webPath>
+    <webPath>/edu/evaluation</webPath>
     <webClassPathEntries>
-        <webClassPathEntry>/openurp-edu-evaluate-course/target/classes</webClassPathEntry>
-        <webClassPathEntry>/openurp-edu-evaluate-department/target/classes</webClassPathEntry>
-        <webClassPathEntry>/openurp-edu-evaluate-questionnaire/target/classes</webClassPathEntry>
-        <webClassPathEntry>/openurp-edu-evaluate-webapp/target/classes</webClassPathEntry>
+        <webClassPathEntry>/openurp-edu-evaluation-course/target/classes</webClassPathEntry>
+        <webClassPathEntry>/openurp-edu-evaluation-department/target/classes</webClassPathEntry>
+        <webClassPathEntry>/openurp-edu-evaluation-questionnaire/target/classes</webClassPathEntry>
+        <webClassPathEntry>/openurp-edu-evaluation-webapp/target/classes</webClassPathEntry>
         <webClassPathEntry>M2_REPO/antlr/antlr/2.7.7/antlr-2.7.7.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/aopalliance/aopalliance/1.0/aopalliance-1.0.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/ch/qos/logback/logback-classic/1.1.2/logback-classic-1.1.2.jar</webClassPathEntry>
