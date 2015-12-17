@@ -3,4 +3,8 @@
   <container name="web">
     <module class="org.openurp.edu.web.view.TagModule"/>
   </container>
+  <container>
+    <module class="org.openurp.edu.evaluation.service.DaoModule"/>
+    <module class="org.openurp.edu.evaluation.service.DevModule"/>
+  </container>
 </cdi>

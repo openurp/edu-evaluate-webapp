@@ -14,7 +14,6 @@
   <properties>
     <bundle.symbolicName>org.openurp.edu.evaluation.questionnaire</bundle.symbolicName>
     <bundle.namespace>org.openurp.edu.evaluation</bundle.namespace>
-    <openurp.api.version>0.0.5</openurp.api.version>
   </properties>
 
     <dependencies>

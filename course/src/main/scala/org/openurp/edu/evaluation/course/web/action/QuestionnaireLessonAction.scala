@@ -209,7 +209,7 @@ class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
     if ("all".equals(isAll)) {
       questionnaireLessons = entityDao.getAll(classOf[QuestionnaireLesson]);
     } else {
-      val ids = longIds(shortName);
+      val ids = longIds(simpleEntityName)
       questionnaireLessons = entityDao.find(classOf[QuestionnaireLesson], ids);
     }
 

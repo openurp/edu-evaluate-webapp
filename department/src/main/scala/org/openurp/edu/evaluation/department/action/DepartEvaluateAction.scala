@@ -56,7 +56,7 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] {
     if (departId != null && !"".equals(departId)) {
       query.where("staff.state.department.id=" + departId)
     }
-    
+
     val courseDepartId = getStaff.state.department.id
     get("departEvaluate.semester.id") foreach { semesterId =>
       query.where("exists ( from " + classOf[Lesson].getName + s" lesson where staff in elements(lesson.teachers) and lesson.semester.id = $semesterId and lesson.teachDepart.id = $courseDepartId)")
@@ -71,9 +71,13 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] {
     val staffs = entityDao.search(query)
     put("staffs", staffs)
 
-    val builder = OqlBuilder.from(classOf[DepartEvaluate], "departE")
-    builder.where("departE.staff in (:staffs)", staffs).where(s"departE.semester.id=$semesterId")
-    val departEvaluate = entityDao.search(builder)
+    val departEvaluate = if (staffs.isEmpty) {
+      List.empty[DepartEvaluate]
+    } else {
+      val builder = OqlBuilder.from(classOf[DepartEvaluate], "departE")
+      builder.where("departE.staff in (:staffs)", staffs).where(s"departE.semester.id=$semesterId")
+      entityDao.search(builder)
+    }
 
     val evaluateMap =
       if (staffs.isEmpty) Map.empty else {
@@ -95,13 +99,12 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] {
   }
 
   def getStaff(): Staff = {
-    entityDao.get(classOf[Staff], 13007L)
-    //    val staffs = entityDao.search(OqlBuilder.from(classOf[Staff], "s").where("s.code=:code", Securities.user))
-    //    if (staffs.isEmpty) {
-    //      throw new RuntimeException("Cannot find staff with code " + Securities.user)
-    //    } else {
-    //      staffs.head
-    //    }
+    val staffs = entityDao.findBy(classOf[Staff], "code", List(Securities.user))
+    if (staffs.isEmpty) {
+      throw new RuntimeException("Cannot find staff with code " + Securities.user)
+    } else {
+      staffs.head
+    }
   }
 
   def addTeaEvaluate(): String = {

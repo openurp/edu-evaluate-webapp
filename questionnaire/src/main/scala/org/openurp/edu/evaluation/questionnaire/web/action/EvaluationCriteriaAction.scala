@@ -29,10 +29,8 @@ class EvaluationCriteriaAction extends RestfulAction[EvaluationCriteria] {
     put("departmentList", departmentList)
     super.editSetting(entity)
   }
-  
 
-
- protected  override def saveAndRedirect(entity: EvaluationCriteria): View = {
+  protected override def saveAndRedirect(entity: EvaluationCriteria): View = {
     try {
       val evalutionCriteria = entity.asInstanceOf[EvaluationCriteria]
       evalutionCriteria.criteriaItems.clear()
@@ -44,20 +42,20 @@ class EvaluationCriteriaAction extends RestfulAction[EvaluationCriteria] {
           evalutionCriteria.criteriaItems += item
         }
       }
-      evalutionCriteria.name=(evalutionCriteria.name.replaceAll("<", "&#60;").replaceAll(">", "&#62;"));
+      evalutionCriteria.name = (evalutionCriteria.name.replaceAll("<", "&#60;").replaceAll(">", "&#62;"));
       entityDao.saveOrUpdate(evalutionCriteria);
       return redirect("search", "info.save.success");
-    } catch  {
-      case e:Exception=>
-      logger.info("saveAndForwad failure", e);
-      return redirect("search", "info.save.failure");
+    } catch {
+      case e: Exception =>
+        logger.info("saveAndForwad failure", e);
+        return redirect("search", "info.save.failure");
     }
   }
 
-   /**
+  /**
    * 不能删除默认对照标准
    */
-override  def remove(): View = {
+  override def remove(): View = {
     val evaluationCriteriaIds = longIds("evaluationCriteria")
     if (evaluationCriteriaIds.contains(1L)) {
       return redirect("search", "info.delete.failure");
@@ -65,14 +63,13 @@ override  def remove(): View = {
       return super.remove();
     }
   }
- 
-   protected override def getQueryBuilder(): OqlBuilder[EvaluationCriteria] = {
-    
-    val builder: OqlBuilder[EvaluationCriteria] = OqlBuilder.from(entityName, shortName)
+
+  protected override def getQueryBuilder(): OqlBuilder[EvaluationCriteria] = {
+
+    val builder: OqlBuilder[EvaluationCriteria] = OqlBuilder.from(entityName, simpleEntityName)
     populateConditions(builder)
     builder.where("evalutionCriteria.depart.id in (:departIds)", get("evalutionCriteria.depart.id"))
     builder.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
   }
-
 
 }

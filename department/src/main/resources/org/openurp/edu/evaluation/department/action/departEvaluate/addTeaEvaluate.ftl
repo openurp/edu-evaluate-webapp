@@ -48,7 +48,8 @@
                     </td>
                     <td align="left">
                       <div class="input-group spinner">
-                        <input type="text" name="${(questions[0].id)!}_score" class="form-control scoreResult"  id="${(questions[0].id)!}_score" max="${questions[0].score}" value="${(resultMap.get(questions[0]))!0}"/>
+                        <input type="hidden" name="max_score" value="${questions[0].score}">
+                        <input type="text" name="${(questions[0].id)!}_score" class="form-control scoreResult"  id="${(questions[0].id)!}_score" max="${questions[0].score}" value="${(resultMap.get(questions[0]))!}"/>
                         <div class="input-group-btn-vertical">
                           <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
                           <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -67,7 +68,8 @@
                             </td>
                             <td align="left">
                                  <div class="input-group spinner">
-                                  <input type="text"  class="form-control scoreResult" name="${(questions[i].id)!}_score"  id="${(questions[i].id)!}_score" value="${(resultMap.get(questions[i]))!0}" max="${questions[i].score}"/>
+                                 <input type="hidden" name="max_score" value="${questions[i].score}">
+                                  <input type="text"  class="form-control scoreResult" name="${(questions[i].id)!}_score"  id="${(questions[i].id)!}_score" value="${(resultMap.get(questions[i]))!}" max="${questions[i].score}"/>
                                   <div class="input-group-btn-vertical">
                                     <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
                                     <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -106,12 +108,24 @@
     }
     (function ($) {
       $('.spinner .btn:first-of-type').on('click', function() {
-         var i = $(this).parent("div").parent("div").children("input")
-         i.val(parseFloat(i.val(), 10) + 1)
+         var mx = $(this).parent("div").parent("div").children("input:hidden")
+         var i = $(this).parent("div").parent("div").children("input:text")
+         var value = parseFloat(i.val(), 10)
+         if(isNaN(value)){
+           i.val(mx.val())
+         }else{
+           i.val(value + 1)
+         }
       });
       $('.spinner .btn:last-of-type').on('click', function() {
-        var i = $(this).parent("div").parent("div").children("input")
-        i.val(parseFloat(i.val(), 10) - 1)
+        var mx = $(this).parent("div").parent("div").children("input:hidden")
+        var i = $(this).parent("div").parent("div").children("input:text")
+        var value = parseFloat(i.val(), 10)
+        if(isNaN(value)){
+           i.val(mx.val())
+         }else{
+           i.val(value - 1)
+         }
       });
     })(jQuery);
 </script>

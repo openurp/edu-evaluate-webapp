@@ -54,7 +54,7 @@ override def saveAndRedirect(entity: OptionGroup): View = {
       
     protected override def getQueryBuilder(): OqlBuilder[OptionGroup] = {
     
-    val builder: OqlBuilder[OptionGroup] = OqlBuilder.from(entityName, shortName)
+    val builder: OqlBuilder[OptionGroup] = OqlBuilder.from(entityName, simpleEntityName)
     populateConditions(builder)
     builder.where("optionGroup.depart.id in (:departIds)")
     builder.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)

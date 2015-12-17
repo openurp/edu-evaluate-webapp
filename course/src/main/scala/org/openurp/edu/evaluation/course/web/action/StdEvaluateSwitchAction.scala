@@ -39,7 +39,7 @@ class StdEvaluateSwitchAction extends RestfulAction[StdEvaluateSwitch] {
     queryLesson.select("select count(*)");
     put("lessonCount", entityDao.search(queryLesson).head);
 
-    put(shortName + "s", entityDao.search(getQueryBuilder().where(shortName + ".semester.id=:semesterId", semesterId)));
+    put(simpleEntityName + "s", entityDao.search(getQueryBuilder().where(simpleEntityName + ".semester.id=:semesterId", semesterId)));
     forward();
   }
 
