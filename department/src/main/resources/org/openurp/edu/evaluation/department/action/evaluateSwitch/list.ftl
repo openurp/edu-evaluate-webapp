@@ -1,6 +1,6 @@
 [#ftl]
 [@b.head/]
-[@b.grid  items=evaluateSwitchs var="evaluateSwitch" sortable="false"]
+[@b.grid  items=evaluateSwitches var="evaluateSwitch" sortable="false"]
   [@b.gridbar]
     bar.addItem("${b.text("action.new")}",action.add());
     bar.addItem("${b.text("action.modify")}",action.edit());

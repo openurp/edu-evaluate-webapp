@@ -108,28 +108,30 @@
     }
     (function ($) {
       $('.spinner .btn:first-of-type').on('click', function() {
-         var mx = $(this).parent("div").parent("div").children("input:hidden")
+         var max = parseFloat($(this).parent("div").parent("div").children("input:hidden").val(),10)
          var i = $(this).parent("div").parent("div").children("input:text")
-         var value = parseFloat(i.val(), 10)
-         if(isNaN(value)){
-           i.val(mx.val())
+         var myValue=parseFloat(i.val(), 10);
+         if(isNaN(myValue) || myValue >= max) {
+           i.val(max)
          }else{
-           i.val(value + 1)
+           i.val(parseFloat(i.val(), 10) + 1)
          }
       });
       $('.spinner .btn:last-of-type').on('click', function() {
-        var mx = $(this).parent("div").parent("div").children("input:hidden")
-        var i = $(this).parent("div").parent("div").children("input:text")
-        var value = parseFloat(i.val(), 10)
-        if(isNaN(value)){
-           i.val(mx.val())
+         var max = parseFloat($(this).parent("div").parent("div").children("input:hidden").val())
+         var i = $(this).parent("div").parent("div").children("input:text")
+         var myValue=parseFloat(i.val(), 10);
+         if(isNaN(myValue)) {
+           i.val(max)
+         }else if(myValue<=0){
+           i.val(0);
          }else{
-           i.val(value - 1)
+           i.val(parseFloat(i.val(), 10)  - 1)
          }
       });
     })(jQuery);
 </script>
 [@b.foot/]
 [#elseif evaluateSwitches?size>0 && !evaluateSwitches?first.open] 请在${evaluateSwitches?first.beginOn}到${evaluateSwitches?first.endOn}内评教或者评教开关关闭
-[#else] 没有评教开关
+[#else] 本学期没有设置评教开关
 [/#if]

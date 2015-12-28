@@ -33,7 +33,7 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] {
 
   override def indexSetting(): Unit = {
     put("departments", entityDao.getAll(classOf[Department]))
-    put("semesters", entityDao.getAll(classOf[Semester]))
+    put("semesters", entityDao.getAll(classOf[Semester]).sortBy { semester => semester.id })
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     put("currentSemester", entityDao.search(semesterQuery).head)
 
@@ -70,6 +70,18 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] {
     query.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
     val staffs = entityDao.search(query)
     put("staffs", staffs)
+    
+    
+    val evaluateMap =
+      if (staffs.isEmpty) {
+        Map.empty
+      } else {
+        val builder = OqlBuilder.from(classOf[DepartEvaluate], "departE")
+        builder.where("departE.staff in (:staffs)", staffs).where(s"departE.semester.id=$semesterId")
+        val departEvaluate = entityDao.search(builder)
+        put("totalScoreMap", departEvaluate.map(de => (de.staff.id, de.totalScore)).toMap)
+        departEvaluate.map(e => (e.staff, e)).toMap
+      }
 
     val departEvaluate = if (staffs.isEmpty) {
       List.empty[DepartEvaluate]
@@ -78,22 +90,7 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] {
       builder.where("departE.staff in (:staffs)", staffs).where(s"departE.semester.id=$semesterId")
       entityDao.search(builder)
     }
-
-    val evaluateMap =
-      if (staffs.isEmpty) Map.empty else {
-        departEvaluate.map(e => (e.staff, e)).toMap
-      }
     put("evaluateMap", evaluateMap)
-
-    val totalScoreMap = Collections.newMap[Long, Float]
-    departEvaluate foreach { de =>
-      var totalScore = 0F
-      de.questionResults foreach { qr =>
-        totalScore += qr.score
-        totalScoreMap.put(de.staff.id, totalScore)
-      }
-    }
-    put("totalScoreMap", totalScoreMap)
 
     forward()
   }
@@ -116,6 +113,7 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] {
 
     val esbuilder = OqlBuilder.from(classOf[EvaluateSwitch], "es")
     esbuilder.where("es.questionnaire.id =:quId", 322L)
+    esbuilder.where("es.semester.id = :semesterId", semesterId)
     esbuilder.where("es.opened = :opened", true)
     val evaluateSwitches = entityDao.search(esbuilder)
     put("evaluateSwitches", evaluateSwitches)
@@ -198,7 +196,7 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] {
       }
     }
     entityDao.saveOrUpdate(departEvaluate)
-    redirect("search", s"&departEvaluate.semester.id=$semesterId", "info.save.success")
+    redirect("search", s"orderBy=staff.code asc&departEvaluate.semester.id=$semesterId", "info.save.success")
   }
 
 }

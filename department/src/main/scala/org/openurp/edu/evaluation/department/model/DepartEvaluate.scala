@@ -46,4 +46,8 @@ class DepartEvaluate extends LongId {
   var evaluateAt: java.util.Date = _
   /**备注*/
   var remark: String = _
+  
+  def totalScore: Float = {
+    this.questionResults.foldLeft(0f)(_ + _.score)
+  }
 }

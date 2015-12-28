@@ -29,7 +29,7 @@ class SupervisiorEvaluateAction extends RestfulAction[SupervisiorEvaluate] {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     put("currentSemester", entityDao.search(semesterQuery).head)
   }
-  
+
   override def search(): String = {
     val code = get("supervisiorEvaluate.staff.person.code").orNull
     val name = get("supervisiorEvaluate.staff.person.name").orNull
@@ -59,25 +59,17 @@ class SupervisiorEvaluateAction extends RestfulAction[SupervisiorEvaluate] {
     val staffs = entityDao.search(query)
     put("staffs", staffs)
 
-    val builder = OqlBuilder.from(classOf[SupervisiorEvaluate], "departE")
-    builder.where("departE.staff in (:staffs)", staffs).where(s"departE.semester.id=$semesterId")
-    val supervisiorEvaluate = entityDao.search(builder)
-
     val evaluateMap =
-      if (staffs.isEmpty) Map.empty else {
+      if (staffs.isEmpty) {
+        Map.empty
+      } else {
+        val builder = OqlBuilder.from(classOf[SupervisiorEvaluate], "departE")
+        builder.where("departE.staff in (:staffs)", staffs).where(s"departE.semester.id=$semesterId")
+        val supervisiorEvaluate = entityDao.search(builder)
+        put("totalScoreMap", supervisiorEvaluate.map(de => (de.staff.id, de.totalScore)).toMap)
         supervisiorEvaluate.map(e => (e.staff, e)).toMap
       }
     put("evaluateMap", evaluateMap)
-
-    val totalScoreMap = Collections.newMap[Long, Float]
-    supervisiorEvaluate foreach { de =>
-      var totalScore = 0F
-      de.questionResults foreach { qr =>
-        totalScore += qr.score
-        totalScoreMap.put(de.staff.id, totalScore)
-      }
-    }
-    put("totalScoreMap", totalScoreMap)
 
     forward()
   }
@@ -91,6 +83,7 @@ class SupervisiorEvaluateAction extends RestfulAction[SupervisiorEvaluate] {
 
     val esbuilder = OqlBuilder.from(classOf[EvaluateSwitch], "es")
     esbuilder.where("es.questionnaire.id =:quId", 322L)
+    esbuilder.where("es.semester.id = :semesterId", semesterId)
     esbuilder.where("es.opened = :opened", true)
     val evaluateSwitches = entityDao.search(esbuilder)
     put("evaluateSwitches", evaluateSwitches)
@@ -173,6 +166,6 @@ class SupervisiorEvaluateAction extends RestfulAction[SupervisiorEvaluate] {
       }
     }
     entityDao.saveOrUpdate(supervisiorEvaluate)
-    redirect("search", s"&supervisiorEvaluate.semester.id=$semesterId", "info.save.success")
+    redirect("search", s"orderBy=staff.code asc&supervisiorEvaluate.semester.id=$semesterId", "info.save.success")
   }
 }
