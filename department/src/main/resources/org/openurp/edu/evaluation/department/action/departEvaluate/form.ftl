@@ -8,20 +8,20 @@
 <table class="infoTable">
   <tr>
    <td class="title">教师工号:</td>
-   <td class="content"> ${staff.code}</td>
+   <td class="content"> ${departEvaluate.staff.code}</td>
    <td class="title">教师姓名:</td>
-   <td class="content">${staff.person.name.formatedName}</td>
+   <td class="content">${departEvaluate.staff.person.name.formatedName}</td>
   </tr>
   <tr>
    <td class="title">所在院系:</td>
-   <td class="content"> ${staff.state.department.name}</td>
+   <td class="content"> ${departEvaluate.staff.state.department.name}</td>
    <td class="title" style="font-weight:bold;">评教总分:</td>
-   <td class="content" style="color:red; font-weight:bold;">${(totalScoreMap.get(staff.id))!}</td>
+   <td class="content" style="color:red; font-weight:bold;">${(departEvaluate.totalScore)!}</td>
   </tr>
 </table>  
 
-[@b.form name="addTeaEvaluateForm" action="!saveTeaEvaluate"]
-  <input type="hidden" name="semester.id" value="${Parameters['semester.id']!}">
+[@b.form name="addTeaEvaluateForm" action="!save"]
+  <input type="hidden" name="semester.id" value="${Parameters['departEvaluate.semester.id']!}">
   <div class="grid">
     <table class="gridtable" >
         <thead class="gridhead">
@@ -101,9 +101,7 @@
             }
         })
       if(flag){
-        bg.form.addInput(form, "staff.id","${Parameters['staff.id']!}");
-        bg.form.addInput(form, "semester.id", "${Parameters['semester.id']!}");
-        bg.form.submit(form, "${b.url('!saveTeaEvaluate')}");
+        bg.form.submit(form, "${b.url('!update?id='+departEvaluate.id)}");
       }
     }
     (function ($) {

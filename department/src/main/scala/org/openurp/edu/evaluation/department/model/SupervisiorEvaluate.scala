@@ -47,7 +47,10 @@ class SupervisiorEvaluate extends LongId {
   /**备注*/
   var remark: String = _
 
-  def totalScore: Float = {
-    this.questionResults.foldLeft(0f)(_ + _.score)
+  var totalScore: java.lang.Float = _
+
+  def calTotalScore(): Unit = {
+    this.totalScore = this.questionResults.foldLeft(0f)(_ + _.score)
+
   }
 }

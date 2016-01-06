@@ -19,21 +19,25 @@
         <webClassPathEntry>M2_REPO/ch/qos/logback/logback-core/1.1.2/logback-core-1.1.2.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/com/fasterxml/jackson/core/jackson-core/2.5.3/jackson-core-2.5.3.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/com/zaxxer/HikariCP/2.4.1/HikariCP-2.4.1.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/commons-codec/commons-codec/1.5/commons-codec-1.5.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/de/ruedigermoeller/fst/2.39/fst-2.39.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/junit/junit/4.12/junit-4.12.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/net/sf/ehcache/ehcache-core/2.4.3/ehcache-core-2.4.3.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/apache/commons/commons-pool2/2.3/commons-pool2-2.3.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/org/apache/poi/poi/3.9/poi-3.9.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/beangle/cache/beangle-cache-core_2.11/0.0.1/beangle-cache-core_2.11-0.0.1.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/beangle/cdi/beangle-cdi-spring_2.11/0.0.5/beangle-cdi-spring_2.11-0.0.5.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/beangle/commons/beangle-commons-core_2.11/4.4.7/beangle-commons-core_2.11-4.4.7.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/org/beangle/commons/beangle-commons-csv_2.11/4.4.7/beangle-commons-csv_2.11-4.4.7.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/beangle/commons/beangle-commons-i18n_2.11/4.4.7/beangle-commons-i18n_2.11-4.4.7.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/beangle/commons/beangle-commons-text_2.11/4.4.7/beangle-commons-text_2.11-4.4.7.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/beangle/commons/beangle-commons-web_2.11/4.4.7/beangle-commons-web_2.11-4.4.7.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/beangle/data/beangle-data-hibernate_2.11/4.3.3/beangle-data-hibernate_2.11-4.3.3.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/beangle/data/beangle-data-jdbc_2.11/4.3.3/beangle-data-jdbc_2.11-4.3.3.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/beangle/data/beangle-data-model_2.11/4.3.3/beangle-data-model_2.11-4.3.3.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/org/beangle/data/beangle-data-transfer_2.11/4.3.3/beangle-data-transfer_2.11-4.3.3.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/beangle/security/beangle-security-cas_2.11/4.0.13/beangle-security-cas_2.11-4.0.13.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/beangle/security/beangle-security-core_2.11/4.0.13/beangle-security-core_2.11-4.0.13.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/beangle/security/beangle-security-session_2.11/4.0.13/beangle-security-session_2.11-4.0.13.jar</webClassPathEntry>
@@ -54,6 +58,7 @@
         <webClassPathEntry>M2_REPO/org/hibernate/hibernate-ehcache/4.3.1.Final/hibernate-ehcache-4.3.1.Final.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/hibernate/javax/persistence/hibernate-jpa-2.1-api/1.0.0.Final/hibernate-jpa-2.1-api-1.0.0.Final.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/javassist/javassist/3.18.1-GA/javassist-3.18.1-GA.jar</webClassPathEntry>
+        <webClassPathEntry>M2_REPO/org/javassist/javassist/3.19.0-GA/javassist-3.19.0-GA.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/jboss/jandex/1.1.0.Final/jandex-1.1.0.Final.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/jboss/logging/jboss-logging-annotations/1.2.0.Beta1/jboss-logging-annotations-1.2.0.Beta1.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/jboss/logging/jboss-logging/3.1.3.GA/jboss-logging-3.1.3.GA.jar</webClassPathEntry>

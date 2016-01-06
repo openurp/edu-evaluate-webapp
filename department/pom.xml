@@ -14,6 +14,7 @@
   <properties>
     <bundle.symbolicName>org.openurp.edu.evaluation.department</bundle.symbolicName>
     <bundle.namespace>org.openurp.edu.evaluation</bundle.namespace>
+    <beangle.data.version>4.3.3</beangle.data.version>
   </properties>
 
     <dependencies>
@@ -25,6 +26,11 @@
     <dependency>
       <groupId>org.beangle.webmvc</groupId>
       <artifactId>beangle-webmvc-entity-plugin_2.11</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.beangle.data</groupId>
+      <artifactId>beangle-data-transfer_2.11</artifactId>
+        <version>${beangle.data.version}</version>
     </dependency>
     <dependency>
       <groupId>org.openurp.platform.api</groupId>
