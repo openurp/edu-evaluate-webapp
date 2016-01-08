@@ -1,33 +1,25 @@
 [#ftl]
 [@b.head/]
     <input type="hidden" name="semester.id" value="${Parameters['supervisiorEvaluate.semester.id']!}">
-    [@b.grid items=staffs var="staff" sortable="true"]    
+    [@b.grid items=supervisiorEvaluates var="supervisiorEvaluate" sortable="true"]    
         [@b.gridbar title="督导组评教列表"]
-           bar.addItem("${b.text('评教')}","add()","new.png");
-        function add(){
-            var form = action.getForm();
-            var id = bg.input.getCheckBoxValues("staff.id");
-            if(id ==""){
-                alert("请选择一个或多个进行操作！");
-            }else{
-                bg.form.addInput(form, "staff.id", id);
-                bg.form.addInput(form, "semester.id", "${Parameters['supervisiorEvaluate.semester.id']!}");
-                bg.form.submit(form, "${b.url('!addTeaEvaluate')}");
-            }
-        }
+          bar.addItem("${b.text("评教")}",action.edit(),"new.png");
+          var m=bar.addMenu("导入",action.method("importForm"));
+          m.addItem("下载导入模版",action.method("importTemplate",null,null,false));
         [/@]
         [@b.row]
             [@b.boxcol/]
-            [@b.col property="code" title="工号" width="10%"/]
-            [@b.col property="person.name.formatedName" title="姓名" width="10%"/]
-            [@b.col title="性别" property="person.gender.name" width="10%"/]
-            [@b.col title="所在院系" property="state.department.name" width="20%"/]
-            [@b.col title="评教状态" width="20%"]
-              [#if evaluateMap.get(staff) ??]已评
+            [@b.col property="staff.code" title="工号" width="10%"/]
+            [@b.col property="staff.person.name.formatedName" title="姓名" width="10%"/]
+            [@b.col title="性别" property="staff.person.gender.name" width="10%"/]
+            [@b.col title="所在院系" property="staff.state.department.name" width="20%"/]
+            [@b.col title="开课院系" property="department.name" width="20%"/]
+            [@b.col title="评教状态" width="10%"]
+              [#if (supervisiorEvaluate.totalScore) ??]已评
               [#else]未评
               [/#if]
             [/@]
-            [@b.col title="评教总分" width="20%"]${(totalScoreMap.get(staff.id))!}[/@]
+            [@b.col title="评教总分" property="totalScore" width="10%"/]
         [/@]
     [/@]
 [@b.foot/]

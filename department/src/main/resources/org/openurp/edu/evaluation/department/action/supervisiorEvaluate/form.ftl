@@ -2,26 +2,28 @@
 [#if evaluateSwitches?size>0 && evaluateSwitches?first.open]
 [@b.head/]
     <link rel="stylesheet" href="${base}/static/score.css"/>
-[@b.toolbar title="添加部门评教"]
+[@b.toolbar title="添加督导组评教"]
   bar.addItem("提交","saveTeaEvaluate()");
 [/@]
 <table class="infoTable">
   <tr>
    <td class="title">教师工号:</td>
-   <td class="content"> ${staff.code}</td>
+   <td class="content"> ${supervisiorEvaluate.staff.code}</td>
    <td class="title">教师姓名:</td>
-   <td class="content">${staff.person.name.formatedName}</td>
+   <td class="content">${supervisiorEvaluate.staff.person.name.formatedName}</td>
+   <td class="title">所在院系:</td>
+   <td class="content"> ${supervisiorEvaluate.staff.state.department.name}</td>
   </tr>
   <tr>
-   <td class="title">所在院系:</td>
-   <td class="content"> ${staff.state.department.name}</td>
+   <td class="title">开课院系:</td>
+   <td class="content"> ${supervisiorEvaluate.department.name}</td>
    <td class="title" style="font-weight:bold;">评教总分:</td>
-   <td class="content" style="color:red; font-weight:bold;">${(totalScoreMap.get(staff.id))!}</td>
+   <td class="content" style="color:red; font-weight:bold;">${(supervisiorEvaluate.totalScore)!}</td>
   </tr>
 </table>  
 
-[@b.form name="addTeaEvaluateForm" action="!saveTeaEvaluate"]
-  <input type="hidden" name="semester.id" value="${Parameters['semester.id']!}">
+[@b.form name="addTeaEvaluateForm" action="!save"]
+  <input type="hidden" name="semester.id" value="${Parameters['supervisiorEvaluate.semester.id']!}">
   <div class="grid">
     <table class="gridtable" >
         <thead class="gridhead">
@@ -101,35 +103,35 @@
             }
         })
       if(flag){
-        bg.form.addInput(form, "staff.id","${Parameters['staff.id']!}");
-        bg.form.addInput(form, "semester.id", "${Parameters['semester.id']!}");
-        bg.form.submit(form, "${b.url('!saveTeaEvaluate')}");
+        bg.form.submit(form, "${b.url('!update?id='+supervisiorEvaluate.id)}");
       }
     }
     (function ($) {
       $('.spinner .btn:first-of-type').on('click', function() {
-         var mx = $(this).parent("div").parent("div").children("input:hidden")
+         var max = parseFloat($(this).parent("div").parent("div").children("input:hidden").val(),10)
          var i = $(this).parent("div").parent("div").children("input:text")
-         var value = parseFloat(i.val(), 10)
-         if(isNaN(value)){
-           i.val(mx.val())
+         var myValue=parseFloat(i.val(), 10);
+         if(isNaN(myValue) || myValue >= max) {
+           i.val(max)
          }else{
-           i.val(value + 1)
+           i.val(parseFloat(i.val(), 10) + 1)
          }
       });
       $('.spinner .btn:last-of-type').on('click', function() {
-        var mx = $(this).parent("div").parent("div").children("input:hidden")
-        var i = $(this).parent("div").parent("div").children("input:text")
-        var value = parseFloat(i.val(), 10)
-        if(isNaN(value)){
-           i.val(mx.val())
+         var max = parseFloat($(this).parent("div").parent("div").children("input:hidden").val())
+         var i = $(this).parent("div").parent("div").children("input:text")
+         var myValue=parseFloat(i.val(), 10);
+         if(isNaN(myValue)) {
+           i.val(max)
+         }else if(myValue<=0){
+           i.val(0);
          }else{
-           i.val(value - 1)
+           i.val(parseFloat(i.val(), 10)  - 1)
          }
       });
     })(jQuery);
 </script>
 [@b.foot/]
 [#elseif evaluateSwitches?size>0 && !evaluateSwitches?first.open] 请在${evaluateSwitches?first.beginOn}到${evaluateSwitches?first.endOn}内评教或者评教开关关闭
-[#else] 没有评教开关
+[#else] 本学期没有设置评教开关
 [/#if]

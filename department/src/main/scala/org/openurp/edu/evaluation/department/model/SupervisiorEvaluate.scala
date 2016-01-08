@@ -31,7 +31,7 @@ import org.beangle.commons.collection.Collections
  * @author chaostone
  */
 class SupervisiorEvaluate extends LongId {
-  
+
   /**学年学期*/
   var semester: Semester = _
   /** 教师 */
@@ -46,4 +46,11 @@ class SupervisiorEvaluate extends LongId {
   var evaluateAt: java.util.Date = _
   /**备注*/
   var remark: String = _
+
+  var totalScore: java.lang.Float = _
+
+  def calTotalScore(): Unit = {
+    this.totalScore = this.questionResults.foldLeft(0f)(_ + _.score)
+
+  }
 }
