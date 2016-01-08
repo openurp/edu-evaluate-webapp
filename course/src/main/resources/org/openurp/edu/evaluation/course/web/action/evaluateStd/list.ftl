@@ -6,7 +6,7 @@
     <table class="gridtable">
         <thead class="gridhead">
             <tr>
-                <th width="12%">课程代码</th>
+                <th width="12%">课程序号</th>
                 <th>课程名称</th>
                 <th>开课院系</th>
                 <th>教师姓名</th>
@@ -30,6 +30,7 @@
                 [#assign flag = false]
             [/#if]
             <tr class="${lessonClass!}">
+                <td>${(questionnaireLesson.lesson.no)!}</td>
                 <td>${(questionnaireLesson.lesson.course.code)!}</td>
                 <td>${(questionnaireLesson.lesson.course.name)!}</td>
                 <td>${(questionnaireLesson.lesson.teachDepart.name)!}</td>
@@ -49,12 +50,13 @@
                 [#assign flag=false]
             [/#if]
             <tr class="${lessonClass!}">
+                <td>${(questionnaireLesson.lesson.no)!}</td>
                 <td>${(questionnaireLesson.lesson.course.code)!}</td>
                 <td>${(questionnaireLesson.lesson.course.name)!}</td>
                 <td>${(questionnaireLesson.lesson.teachDepart.name)!}</td>
                 <td>
                 [#list (questionnaireLesson.lesson.teachers)?if_exists as teacher]
-                    ${(teacher.name)!}[#if teacher_has_next],[/#if]
+                    ${(teacher.person.name.formatedName)!}[#if teacher_has_next],[/#if]
                 [/#list]
                 </td>
                 <td>[#if flag]已评教[#else]未评教[/#if]</td>

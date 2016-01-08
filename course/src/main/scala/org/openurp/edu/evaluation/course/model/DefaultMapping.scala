@@ -19,7 +19,7 @@
 package org.openurp.edu.evaluation.course.model
 
 import scala.reflect.runtime.universe
-import org.beangle.data.model.annotation.code
+
 import org.beangle.data.model.bind.Mapping
 
 class DefaultMapping extends Mapping {
@@ -30,9 +30,17 @@ class DefaultMapping extends Mapping {
 
     bind[StdEvaluateSwitch].on(e => declare(
       e.endAt & e.beginAt & e.opened & e.semester & e.project are notnull))
+   
+    bind[TextEvaluation].on(e => declare(
+      e.student & e.lesson & e.evaluateByTeacher & e.evaluateAt are notnull))
+        
+    bind[TextEvaluateSwitch].on(e => declare(
+      e.endAt & e.beginAt & e.opened & e.semester & e.project are notnull))
+      
+    bind[TeacherRemessage].on(e => declare(
+      e.visible is notnull))
+      
 
-
-
-  }
-
+}
+  
 }

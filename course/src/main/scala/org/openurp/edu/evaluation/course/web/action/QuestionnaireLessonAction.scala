@@ -30,6 +30,8 @@ class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
   var evaluateSwitchService: StdEvaluateSwitchService = _
 
   override def indexSetting(): Unit = {
+      val semesterId = 20141
+      put("semester",entityDao.get(classOf[Semester], semesterId))
     val departments = entityDao.getAll(classOf[Department])
     put("departments", departments)
     val examModes = entityDao.getAll(classOf[ExamMode])

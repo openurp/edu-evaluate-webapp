@@ -18,7 +18,7 @@
     课程名称:${(lesson.course.name)!}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     教师姓名:
         [#list teachers?if_exists as teacher]
-        ${(teacher.name)!}[#if teacher_has_next],[/#if]
+        ${(teacher.person.name.formatedName)!}[#if teacher_has_next],[/#if]
         <input type="hidden" name="teacherId" value="${(teacher.id)!}" />
         [/#list]
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -41,14 +41,16 @@
                 [#assign questionClass = "griddata-odd"/]
             [/#if]
                 <tr class="${questionClass!}">
-                    <td>${(question.type.name)!}</td>
+                    <td>${(question.questionType.name)!}</td>
                     <td style="text-align:left;padding-left:5px;">${(question_index+1)!}:${(question.content)!}
-                    [#if (question.addition)?exists][#if question.addition]<font color="red">(附加题)</font>[/#if][/#if]
+                   [#-- [#if (question.addition)?exists][#if question.addition]<font color="red">(附加题)</font>[/#if][/#if]--]
                     </td>
                     <td>
                     [#if (question.optionGroup.options)??]
                     [#list (question.optionGroup.options)?sort_by("proportion")?reverse as option]
-                        <input type="radio" id="op_${(question.id)}_${option.id}" name="select${(question.id)!}" value="${(option.id)!}" [#if evaluateResult?exists&&questionMap[(question.id)?string]?default(0)==(option.id)]checked[/#if]/><label for="op_${(question.id)}_${option.id}">${(option.name)!}&nbsp;</label>
+                        <input type="radio" id="op_${(question.id)}_${option.id}" name="select${(question.id)!}" value="${(option.id)!}" 
+                        [#if questionMap?? && questionMap[(question.id)?string]?default(0)==(option.id)]checked[/#if]/>
+                        <label for="op_${(question.id)}_${option.id}">${(option.name)!}&nbsp;</label>
                     [/#list]
                     [/#if]
                     </td>
@@ -95,15 +97,16 @@
         var errors = "";
         var num =0;
         var errors2 ="";
-        [#list questions?sort_by("priority")?reverse?if_exists as question]
+        [#list questions?sort_by("priority")?if_exists as question]
             var value = $("input[name='select${(question.id)!}']:checked").val();
-            if (undefined == value || "" == value){
-                errors += "${(question_index + 1)!},";
+            if (undefined == value || 0 == value){
+                errors += "${(question_index+1)!},";
             }
             var nums = 0;
             var optionV = "";
             var optionScore = "";
-            [#list (question.optionGroup.options)?sort_by("proportion")?reverse as option]
+            [#if question.optionGroup??]
+            [#list (question.optionGroup.options)?sort_by("proportion") as option]
             nums +=1;
                 if(${question.optionGroup.options?size} ==nums){
                     optionV = ${option.id!}; 
@@ -112,30 +115,33 @@
                     optionScore = ${option.proportion!};
                 }
             [/#list]
+            [#else]
+            [/#if]
             var op =0;
+       [#--
             [#list questionnaire.oppoQs as oppoQ]
             if(${oppoQ.orginQuestion.id!} == ${question.id!}){
                 if(${question.optionGroup.oppoVal!} > optionScore){
                 errors2 += "${(question_index + 1)!},";
                 op+=1;
                 }
-            //[#list questions?sort_by("priority")?reverse?if_exists as question2]
-            //var value2 = $("input[name='select${(question.id)!}']:checked").val();
-            //    if(${oppoQ.oppoQuestion.id!} == ${question2.id!}){
-            //        [#list (question.optionGroup.options)?sort_by("proportion")?reverse as option2]
-            //            if(${option2.id!} ==value2){
-            //            optionScore = ${option2.proportion!};
-            //            }
-            //        [/#list]
-            //    }
-            //    if(${question2.optionGroup.oppoVal!} > optionScore){
-            //        errors2 += "${(question_index + 1)!},";
-            //        op+=1;
-            //    }
-            //[/#list]
+            [#list questions?sort_by("priority")?reverse?if_exists as question2]
+            var value2 = $("input[name='select${(question.id)!}']:checked").val();
+                if(${oppoQ.oppoQuestion.id!} == ${question2.id!}){
+                    [#list (question.optionGroup.options)?sort_by("proportion")?reverse as option2]
+                        if(${option2.id!} ==value2){
+                        optionScore = ${option2.proportion!};
+                        }
+                   [/#list]
+                }
+                if(${question2.optionGroup.oppoVal!} > optionScore){
+                    errors2 += "${(question_index + 1)!},";
+                    op+=1;
+                }
+            [/#list]
             }
             [/#list]
-            
+            --]
             
             if(value == optionV){
             //alert(value+"--"+optionV);
@@ -160,6 +166,7 @@
         
         if(num >0){
             if(str ==""){
+            alert(str);
                 alert("您选择中存在差评，请填写备注信息后提交！");
                 return false;
             }

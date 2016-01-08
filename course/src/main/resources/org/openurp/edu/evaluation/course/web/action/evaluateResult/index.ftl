@@ -4,19 +4,20 @@
  bar.addItem("将考试违纪的学生评教问卷置为无效","changeToInvalid()");
 [/@]
 
-[@eams.semesterBar name="project.id" semesterEmpty=false semesterName="semester.id" semesterValue=semester/]
+[#--[@eams.semesterBar name="project.id" semesterEmpty=false semesterName="semester.id" semesterValue=semester/]--]
 <table class="indexpanel">
     <tr>
         <td style="width:200px" class="index_view">
         [@b.form action="!search" name="evaluateRForm" title="ui.searchForm" target="contentDiv" theme="search"]
             <input type="hidden" name="evaluateResult.lesson.project.id" value="${(project.id)!}"/>
             <input type="hidden" name="evaluateResult.lesson.semester.id" value="${(semester.id)!}"/>
-            [@b.textfields style="width:120px" names="evaluateResult.student.code;学生学号,evaluateResult.student.person.name;学生姓名,evaluateResult.student.grade;学生年级,evaluateResult.lesson.no;课程序号,evaluateResult.lesson.course.code;课程代码,evaluateResult.lesson.course.name;课程名称"/]
-            [@b.select style="width:124px" name="evaluateResult.statState" label="是否有效" items={'1':'有效','0':'无效'} empty="..."/]
+            [@b.textfields style="width:120px" names="evaluateResult.student.code;学生学号,evaluateResult.student.person.name.formatedName;学生姓名,evaluateResult.student.grade;学生年级,evaluateResult.lesson.no;课程序号,evaluateResult.lesson.course.code;课程代码,evaluateResult.lesson.course.name;课程名称"/]
+            [@b.select style="width:124px" name="evaluateResult.statType" label="是否有效" items={'1':'有效','0':'无效'} empty="..."/]
         [/@]
         </td>
         <td class="index_content">
-            [@b.div  href="!search?evaluateResult.lesson.semester.id=${(semester.id)!}" id="contentDiv"/]
+         [@b.div id="contentDiv" href="!search"/]
+            [#--[@b.div  href="!search?evaluateResult.lesson.semester.id=${(semester.id)!}" id="contentDiv"/]--]
         </td> 
     </tr>
 </table>

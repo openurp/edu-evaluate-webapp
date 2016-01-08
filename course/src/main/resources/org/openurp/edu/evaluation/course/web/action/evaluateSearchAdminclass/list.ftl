@@ -1,0 +1,13 @@
+[#ftl]
+[@b.head/]
+[@b.grid items=evaluateSearchDepartmentList var="evaluateSearchDepartment"]
+   [@b.row]
+        [@b.col width="10%" property="" title="班级"][@b.a href="!adminClassSearch?semester.id=${semester.id!}&adminclass.id=${(evaluateSearchDepartment.adminclass.id)!}"  target="_new"]
+        ${(evaluateSearchDepartment.adminclass.name)!}
+        [/@][/@]
+        [@b.col width="10%" property="haveFinish" title="已评人次"/]
+        [@b.col width="10%" property="countAll" title="总人次"/]
+        [@b.col width="10%" property="finishRate" title="完成率"/]
+        [/@]
+[/@]
+[@b.foot/]

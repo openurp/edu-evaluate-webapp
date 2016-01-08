@@ -1,35 +1,53 @@
 package org.openurp.edu.evaluation.course.web.action
 
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.springframework.beans.support.PropertyComparator
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
+import org.beangle.commons.lang.Numbers
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.commons.collection.Collections
+import org.beangle.webmvc.api.annotation.param
+import org.beangle.webmvc.api.view.View
+import org.beangle.webmvc.entity.action.RestfulAction
+import org.openurp.base.model.Department
+import org.openurp.base.model.Semester
+import org.openurp.edu.base.code.model.StdType
+import org.openurp.edu.base.model.Project
+import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
 import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
 import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
+import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
+import org.openurp.edu.lesson.model.ExamTake
+import org.openurp.hr.base.model.Staff
+import org.springframework.beans.support.PropertyComparator
 
 class EvaluateResultAction extends RestfulAction[EvaluateResult] {
+  
+  
+
 //  override def  index() : String = {
-//    put("stdTypeList", getStdTypes());
-//    put("departmentList", getTeachDeparts());
+//    val semester = entityDao.get(classOf[Semester],20141)
+//    put("semester",semester)
+//    val project = entityDao.get(classOf[Project],1)
+//    put("project",project)
+//    val stdType = entityDao.get(classOf[StdType],5)
+//    put("stdTypeList", stdType)
+//    val department = entityDao.get(classOf[Department],20)
+//    put("departmentList", department);
 //    forward();
 //  }
-//
-//  
+
+  
 //  override def  search(): String = {
-//    val query = getQueryBuilder();
-//    put("evaluateResults", entityDao.search(query));
+//    val query = getQueryBuilder()
+//    put("evaluateResults", entityDao.search(query))
 //    forward();
 //  }
-//
+
 //  @Override
 // override protected def getQueryBuilder():OqlBuilder[EvaluateResult] ={
+//    val department = entityDao.get(classOf[Department],20)
 //    val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult");
 //    populateConditions(query);
-//    query.where("evaluateResult.lesson.teachDepart in (:teachDeparts)", getTeachDeparts());
-//    query.limit(getPageLimit());
-//    query;
+//    query.where("evaluateResult.lesson.teachDepart in (:teachDeparts)", department)
+////    query.limit(getPageLimit());
+//    
 //  }
 
   /**
@@ -37,87 +55,101 @@ class EvaluateResultAction extends RestfulAction[EvaluateResult] {
    * 
    * @return
    */
-//  public String updateState() {
-//    Long[] ids = getLongIds(getShortName());
-//    Boolean state = getBoolean("isEvaluate");
-//    if (null == state) {
-//      state = Boolean.FALSE;
+  def  updateState():View= {
+    val ids = longIds("evaluateResult")
+    var state = getInt("isEvaluate").get
+//    if (state) {
+//      state = false
 //    }
-//    List<EvaluateResult> results = entityDao.get(EvaluateResult.class, ids);
-//    for (EvaluateResult evaluateResult : results) {
-//      evaluateResult.setStatState(state);
-//    }
-//    try {
-//      entityDao.saveOrUpdate(results);
-//      return redirect("search", "info.action.success");
-//    } catch (Exception e) {
-//      return redirect("search", "info.save.failure");
-//    }
-//  }
+    val results = entityDao.find(classOf[EvaluateResult], ids);
+    results foreach { result =>
+       result.statType = state
+//      //FIXME
+//    result.statType = 1
+    }
+    try {
+      entityDao.saveOrUpdate(results);
+      return redirect("search", "info.action.success");
+    } catch  {
+      case e: Exception =>
+      return redirect("search", "info.save.failure");
+    }
+  }
 
-//  /**
-//   * 更改教师
-//   */
-//  public String updateTeacher() {
-//    put("evaluateR", entityDao.get(EvaluateResult.class, getLong("evaluateResult")));
-//    // put("departments",entityDao.get(Department.class, "",));
-//    return forward();
-//  }
-//
-//  public String saveEvaluateTea() {
-//    try {
-//      EvaluateResult evaluateR = entityDao.get(EvaluateResult.class, getLong("evaluateResult"));
-//      evaluateR.setStaff(entityDao.get(Staff.class, getLong("teacher.id")));
-//      entityDao.saveOrUpdate(evaluateR);
-//    } catch (Exception e) {
-//      // TODO: handle exception
-//      return redirect("search", "info.save.failure");
-//    }
-//    return redirect("search", "info.action.success");
-//  }
+  /**
+   * 更改教师
+   */
+  def  updateTeacher():String= {
+    put("evaluateR", entityDao.get(classOf[EvaluateResult], getLong("evaluateResult").get))
+    // put("departments",entityDao.get(Department.class, "",));
+    forward()
+  }
 
+  def  saveEvaluateTea():View = {
+    try {
+      val evaluateR = entityDao.get(classOf[EvaluateResult], getLong("evaluateResult").get)
+      evaluateR.staff=entityDao.get(classOf[Staff], getLong("teacher.id").get)
+      entityDao.saveOrUpdate(evaluateR);
+    } catch  {
+      case e: Exception =>
+      // TODO: handle exception
+      return redirect("search", "info.save.failure");
+    }
+    return redirect("search", "info.action.success");
+  }
+
+  
   /**
    * 查看(详细信息)
    */
-//   override def info()(@param("id") id: String): String = {
-//    val entityId = getLongId(getShortName());
-//    if (null == entityId) {
-//      logger.warn("cannot get paremeter {}Id or {}.id", getShortName(), getShortName());
-//    }
-//    val result = (EvaluateResult) getModel(getEntityName(), entityId);
-//    List<QuestionResult> questionResults = CollectUtils.newArrayList(result.getQuestionResultSet());
-//    Collections.sort(questionResults, new PropertyComparator("question"));
-//    put("questions", questionResults);
-//    put("remark", result.getRemark());
-//    return forward();
-//  }
+   override def info(@param("id") id: String): String = {   
+//    val entityId = longId("evaluateResult")
+    if (null == id) {
+      logger.warn("cannot get paremeter {}Id or {}.id")
+    }
+    val resultId= Numbers.toLong(id)
+    val result = entityDao.get(classOf[EvaluateResult], Numbers.toLong(id))
+    val query =OqlBuilder.from(classOf[QuestionResult],"questionResult")
+    query.where("questionResult.result =:result",result)
+    val questionResults = entityDao.search(query)
+//          questions.sortWith((x, y) => x.priority < y.priority)
+    questionResults.sortWith((x,y) => x.question.priority < y.question.priority)
+//    questionResults.sort(questionResults, new PropertyComparator("question"))
+    put("questionResults", questionResults)
+    put("remark", result.remark)
+    forward()
+  }
 
   /**
    * 将没有考试资格的学生评教问卷改为无效
    * 
    * @return
    */
-//  public String changeToInvalid() {
-//    OqlBuilder<EvaluateResult> query = OqlBuilder.from(EvaluateResult.class, "evaluateResult").where(
-//        "evaluateResult.lesson.semester=:semester", getSemester());
-//    List<EvaluateResult> results = entityDao.search(query);
-//    try {
-//      for (EvaluateResult result : results) {
+  def  changeToInvalid():View= {
+    val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult")
+    query.where("evaluateResult.lesson.semester=:semester", 20141)
+    val results = entityDao.search(query);
+    try {
+      results foreach { result =>
+       //      for (EvaluateResult result : results) {
 //        // TODO kang 怎么确定学生有没有一门课的考试资格
-//        OqlBuilder<ExamTake> builder = OqlBuilder.from(ExamTake.class, "examTake");
-//        builder.where("examTake.lesson=:lesson", result.getLesson()).where("examTake.std=:std",
-//            result.getStudent());
-//        List<ExamTake> takes = entityDao.search(builder);
-//        if (takes.size() > 0) {
-//          if ("违纪".equals(takes.get(0).getExamStatus().getName())) {
-//            result.setStatState(false);
-//          }
-//        }
-//      }
-//      saveOrUpdate(results);
-//    } catch (Exception e) {
-//      return redirect("search", "info.action.failure");
-//    }
-//    return redirect("search", "info.action.success");
-//  }
+        val builder = OqlBuilder.from(classOf[ExamTake], "examTake")
+        builder.where("examTake.lesson=:lesson", result.lesson)
+        builder.where("examTake.std=:std",result.student)
+        val takes = entityDao.search(builder);
+        if (takes.size > 0) {
+          if ("违纪".equals(takes.head.examStatus.name)) {
+            //FIXME
+            //result.statType=false
+            result.statType=0
+          }
+        }
+      }
+      saveOrUpdate(results);
+    } catch {
+      case e: Exception =>
+      return redirect("search", "info.action.failure");
+    }
+    return redirect("search", "info.action.success");
+  }
 }

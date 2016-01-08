@@ -3,9 +3,9 @@
 [@b.toolbar title='课程问卷详细结果' id='evaluateResultInfoBar']
     bar.addBack();
 [/@]
-[@b.grid id="evaluateTB" items=questions var="question" sortable="true"]
+[@b.grid id="evaluateTB" items=questionResults var="questionResult" sortable="true"]
     [@b.row]
-        [@b.col property="question.type.name" title="问题类型" width="15%"/]
+        [@b.col property="questionType.name" title="问题类型" width="15%"/]
         [@b.col property="question.content" title="问题内容" style="text-align:left;padding-left:5px;"/]
         [@b.col property="option.name" title="所选项" width="8%"/]
         [@b.col property="score" title="所得分" width="6%"/]
