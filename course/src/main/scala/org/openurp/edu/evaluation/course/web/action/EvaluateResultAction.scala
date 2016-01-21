@@ -16,6 +16,7 @@ import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
 import org.openurp.edu.lesson.model.ExamTake
 import org.openurp.hr.base.model.Staff
 import org.springframework.beans.support.PropertyComparator
+import org.beangle.commons.collection.Order
 
 class EvaluateResultAction extends RestfulAction[EvaluateResult] {
   
@@ -32,13 +33,33 @@ class EvaluateResultAction extends RestfulAction[EvaluateResult] {
 //    put("departmentList", department);
 //    forward();
 //  }
-
+    override protected def indexSetting(): Unit = {
+    val semesters = entityDao.getAll(classOf[Semester])
+    put("semesters", semesters)
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    put("currentSemester", entityDao.search(semesterQuery).head)
+  }
   
 //  override def  search(): String = {
 //    val query = getQueryBuilder()
 //    put("evaluateResults", entityDao.search(query))
 //    forward();
 //  }
+      override def search(): String = {
+    // 页面条件
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val semester = entityDao.get(classOf[Semester], semesterId)
+    val statType =getInt("statType").getOrElse(null)
+    val evaluateResult =OqlBuilder.from(classOf[EvaluateResult],"evaluateResult")
+     populateConditions(evaluateResult)
+    evaluateResult.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
+    if (statType !=null)
+    evaluateResult.where("evaluateResult.statType=:statType",statType)
+    evaluateResult.where("evaluateResult.lesson.semester=:semester",semester)
+    put("evaluateResults", entityDao.search(evaluateResult))
+    forward()
+  }
 
 //  @Override
 // override protected def getQueryBuilder():OqlBuilder[EvaluateResult] ={
@@ -126,9 +147,12 @@ class EvaluateResultAction extends RestfulAction[EvaluateResult] {
    * @return
    */
   def  changeToInvalid():View= {
+    
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult")
-    query.where("evaluateResult.lesson.semester=:semester", 20141)
-    val results = entityDao.search(query);
+    query.where("evaluateResult.lesson.semester.id = :semesterId", semesterId)
+    val results = entityDao.search(query)
     try {
       results foreach { result =>
        //      for (EvaluateResult result : results) {

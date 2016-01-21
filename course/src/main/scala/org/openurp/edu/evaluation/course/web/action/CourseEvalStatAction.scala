@@ -21,6 +21,7 @@ import org.openurp.edu.evaluation.lesson.model.DepartEvaluation
 import org.openurp.edu.evaluation.lesson.model.DepartEvaluation
 import org.openurp.edu.evaluation.department.model.DepartEvaluate
 import org.openurp.edu.evaluation.model.Questionnaire
+import org.openurp.base.model.Department
 
 class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
 
@@ -28,6 +29,7 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
 //    put("stdTypeList", getStdTypes());
 //    put("departmentList", getColleges());
 //    put("departments", getDeparts());
+   put("departments", entityDao.search(OqlBuilder.from(classOf[Department],"dep").where("dep.teaching =:tea",true)))
     /** 本学期是否评教 */
     val builder = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult");
     val semesters = 20141
@@ -78,7 +80,7 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
       val li = entityDao.search(query);
       val depEvaluates = entityDao.search(OqlBuilder.from(classOf[DepartEvaluate], "de").where("de.semester.id=:id", semesterId))
       val teaList = entityDao.search(OqlBuilder.from(classOf[Staff], "staff").where("staff.state.id=:id",1L))
-      val evaluates = new ArrayList[CourseEvalStat]()
+      val evaluates =Collections.newBuffer[CourseEvalStat]
       val df = new DecimalFormat("#.00 ");
       teaList foreach { teacher =>
         var fl = 0f;
@@ -99,11 +101,11 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
         depEvaluates foreach {departEvaluation =>
           
           if (departEvaluation.staff.id.toString().equals(teacher.id.toString())) {
-            if (departEvaluation.questionResults.score!= null) {
+            if (departEvaluation.totalScore!= null) {
 
-              evaluate.setDepEvaluate(departEvaluation.getScore());
+              evaluate.depEvaluate=departEvaluation.totalScore
 
-              fl += departEvaluation.getScore() * 0.5f;
+              fl += departEvaluation.totalScore * 0.5f;
             }
           }
         
@@ -118,47 +120,51 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
 //            }
 //          }
 //        }
-        StringBuffer dd = new StringBuffer(" ");
+        val dd = new StringBuffer(" ");
         df.format(fl, dd, new FieldPosition(2));
-        evaluate.setScore(Float.valueOf(dd.toString()));
-        evaluates.add(evaluate);
+        evaluate.score=dd.toString().toFloat
+        evaluates += evaluate
       }
-      Collections.sort(evaluates, new PropertyComparator("score desc"));
-      for (int i = 0; i < evaluates.size(); i++) {
-        CourseEvalStat courseEvalStat = evaluates.get(i);
-        courseEvalStat.setRank(i + 1);
-        int num = 0;
-        for (int j = 0; j < evaluates.size(); j++) {
-          CourseEvalStat courseEvaluate = evaluates.get(j);
-          Staff t1 = courseEvaluate.getStaff();
-          Staff t2 = courseEvalStat.getStaff();
-          if (t1.getDepartment() != null && t2.getDepartment() != null) {
-            if (t1.getDepartment().getId().toString().equals(t2.getDepartment().getId().toString())) {
+//      Collections.sort(evaluates, new PropertyComparator("score desc"));
+      
+      for (i<-0 to  evaluates.size) {
+        val courseEvalStat = evaluates(i)
+        courseEvalStat.rank=i + 1
+        var num = 0;
+        for (j <- 0 to evaluates.size) {
+          val courseEvaluate = evaluates(j);
+          val t1 = courseEvaluate.staff
+          val t2 = courseEvalStat.staff
+          if (t1.state.department != null && t2.state.department != null) {
+            if (t1.state.department.id.toString().equals(t2.state.department.id.toString())) {
               num += 1;
-              if (courseEvaluate.getStaff().getId().toString()
-                  .equals(courseEvalStat.getStaff().getId().toString())) {
-                courseEvalStat.setDepartRank(num);
+              if (courseEvaluate.staff.id.toString().equals(courseEvalStat.staff.id.toString())) {
+                courseEvalStat.departRank=num
               }
             }
           }
 
         }
       }
-      List<CourseEvalStat> list = new ArrayList<CourseEvalStat>();
-      for (CourseEvalStat courseEvalStat : evaluates) {
-        if ((courseEvalStat.getStaff().getDepartment() != null)) {
-          list.add(courseEvalStat);
+      val list = Collections.newBuffer[CourseEvalStat]
+      evaluates foreach {courseEvalStat =>
+        
+        if ((courseEvalStat.staff.state.department != null)) {
+          list +=courseEvalStat
         } else {
-          List<Department> lists = getDeparts();
-          for (Department department : lists) {
-            Staff teacher = courseEvalStat.getStaff();
-            if (null != teacher.getDepartment()) {
-              if (teacher.getDepartment().getId().toString().equals(department.getId().toString())) {
+          val lists = entityDao.getAll(classOf[Department])
+          lists foreach {department =>
+            
+            val teacher = courseEvalStat.staff
+            if (null != teacher.state.department) {
+              if (teacher.state.department.id.toString().equals(department.id.toString())) {
                 list += courseEvalStat
               }
             }
+          
           }
         }
+      
       }
       /** 删除本学期某一问卷的统计结果 **/
       val cBuilder = OqlBuilder.from(classOf[CourseEvalStat], "stat")

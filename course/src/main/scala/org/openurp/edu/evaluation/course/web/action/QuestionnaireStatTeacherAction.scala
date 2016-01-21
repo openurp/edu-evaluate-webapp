@@ -22,13 +22,14 @@ class QuestionnaireStatTeacherAction   extends RestfulAction[LessonEvalStat] {
 
 //  protected QuestionnairStatService questionnairStatService;
 
-  def  index():String= {
+  override def  index():String= {
     put("stdTypeList",  entityDao.getAll(classOf[StdType]));
     put("departmentList", entityDao.search(OqlBuilder.from(classOf[Department],"de").where("de.teaching=:tea",true)));
 //    getSemester();
     put("semester",20141)
     put("semesters", entityDao.getAll(classOf[Semester]));
-    val teacher = getLoginTeacher();
+//    val teacher = getLoginTeacher();
+    val teacher = entityDao.get(classOf[Staff],610L)
     put("teacher", teacher);
     // OqlBuilder query = OqlBuilder.from(QuestionnaireStat.class,
     // "questionnaireStat");
@@ -40,10 +41,11 @@ class QuestionnaireStatTeacherAction   extends RestfulAction[LessonEvalStat] {
     forward();
   }
 
-  def  search():String={
+  override def  search():String={
     val entityQuery = OqlBuilder.from(classOf[LessonEvalStat], "questionnaireStat");
     populateConditions(entityQuery);
-    val teacher = getLoginTeacher();
+//    val teacher = getLoginTeacher();
+    val teacher = entityDao.get(classOf[Staff],610L)
     entityQuery.join("questionnaireStat.lesson.teachers", "teacher");
     entityQuery.where("teacher.id=:teacherId", teacher.id);
     entityQuery.limit(getPageLimit);
@@ -149,10 +151,10 @@ class QuestionnaireStatTeacherAction   extends RestfulAction[LessonEvalStat] {
     val list = entityDao.search(builder);
     if (list.size == 1) {
     } else {
-      forwardError("未找到评教记录！");
+       redirect("search","未找到评教记录!")
     }
     var semest:Semester = null;
-    if (semesterId != null) {
+    if (semesterId != 0) {
       semest = entityDao.get(classOf[Semester], semesterId);
     }
     put("semester", semest);
@@ -162,7 +164,7 @@ class QuestionnaireStatTeacherAction   extends RestfulAction[LessonEvalStat] {
     }
     put("teacher", teacher);
     var lesson:Lesson = null;
-    if (lessonId != null) {
+    if (lessonId != 0L) {
       lesson = entityDao.get(classOf[Lesson], lessonId);
     }
     put("lesson", lesson);
@@ -246,10 +248,10 @@ class QuestionnaireStatTeacherAction   extends RestfulAction[LessonEvalStat] {
     quer.where("evaluateResult.id=questionResult.result.id");
     quer.where("evaluateResult.lesson.semester.id=" + semesterId);
 
-    if (teaId != null) {
+    if (teaId != 0L) {
       quer.where("evaluateResult.teacher.id=:teaId", teaId);
     }
-    if (lessonId != null) {
+    if (lessonId != 0L) {
       quer.where("evaluateResult.lesson.id=:lessonId", lessonId);
     }
     put("teaScore", entityDao.search(quer)(0));
@@ -260,10 +262,10 @@ class QuestionnaireStatTeacherAction   extends RestfulAction[LessonEvalStat] {
     quer1.select("questionResult.question.content,questionResult.question.id,sum(questionResult.score)/count(evaluateResult.id)");
     quer1.where("evaluateResult.id=questionResult.result.id");
     quer1.where("evaluateResult.lesson.semester.id=" + semesterId);
-    if (teaId != null) {
+    if (teaId != 0L) {
       quer1.where("evaluateResult.teacher.id=:teaId", teaId);
     }
-    if (lessonId != null) {
+    if (lessonId != 0L) {
       quer1.where("evaluateResult.lesson.id=:lessonId", lessonId);
     }
     quer1.groupBy("questionResult.question.id,questionResult.question.content");

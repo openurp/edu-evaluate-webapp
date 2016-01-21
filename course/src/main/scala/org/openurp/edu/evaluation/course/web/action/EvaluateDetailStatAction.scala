@@ -61,8 +61,12 @@ class EvaluateDetailStatAction  extends RestfulAction[LessonEvalStat]{
     put("departments", entityDao.getAll(classOf[Department]))
     val query= OqlBuilder.from(classOf[Questionnaire], "questionnaire").where("questionnaire.state =:state",true)
     put("questionnaires", entityDao.search(query))
-    val semesterId = 20141
-      put("semester",entityDao.get(classOf[Semester], semesterId))
+    val semesters = entityDao.getAll(classOf[Semester])
+    put("semesters", semesters)
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    put("currentSemester", entityDao.search(semesterQuery).head)
+//    val semesterId = 20141
+//    put("semester",entityDao.get(classOf[Semester], semesterId))
     forward()
   }
 
@@ -344,6 +348,11 @@ class EvaluateDetailStatAction  extends RestfulAction[LessonEvalStat]{
     put("educations", entityDao.getAll(classOf[Education]))
     val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department],"depart").where("depart.teaching =:tea",true))
     put("departments",teachingDeparts)
+    
+    val semesters = entityDao.getAll(classOf[Semester])
+    put("semesters", semesters)
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    put("currentSemester", entityDao.search(semesterQuery).head)
     forward()
   }
 
@@ -385,8 +394,9 @@ class EvaluateDetailStatAction  extends RestfulAction[LessonEvalStat]{
 //    for (int j = 0 j < depIds.length j++) {
 //      departmentIds[j] = Long.valueOf(depIds[j])
 //    }
-    val semesterId = 20141
-    val semester = entityDao.get(classOf[Semester],semesterId)
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val semester = entityDao.get(classOf[Semester], semesterId)
     // 清楚历史统计数据
 //    remove(educationTypeIds, departmentIds, semesterId)
     // 问题得分统计

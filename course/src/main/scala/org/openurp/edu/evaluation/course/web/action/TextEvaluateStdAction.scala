@@ -22,8 +22,8 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
     query.join("left", "teacherRemessage.students", "student");
     query.join("left", "teacherRemessage.textEvaluation", "textEvaluation");
     query.where("student =:std", std);
-    query.where("textEvaluation.semester =:semester", semester);
-    query.where("textEvaluation.std !=:std", std);
+    query.where("textEvaluation.lesson.semester =:semester", semester);
+    query.where("textEvaluation.student !=:std", std);
     query.where("teacherRemessage.visible = true");
     query.orderBy("teacherRemessage.createdAt desc");
     val otherMap = Collections.newMap[Long, Buffer[TeacherRemessage]]
@@ -51,9 +51,9 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
 
   def getMyTextEvaluationMap(std: Student, semester: Semester, teachers: Seq[Staff]): collection.Map[Long, Buffer[TextEvaluation]] = {
     val query = OqlBuilder.from(classOf[TextEvaluation], "textEvaluation");
-    query.where("textEvaluation.std =:std", std);
-    query.where("textEvaluation.semester =:semester", semester);
-    query.where("textEvaluation.isAffirm = true");
+    query.where("textEvaluation.student =:std", std);
+    query.where("textEvaluation.lesson.semester =:semester", semester);
+    query.where("textEvaluation.state = true");
     val textEvaluateMap = Collections.newMap[Long, Buffer[TextEvaluation]]
     val results = entityDao.search(query)
     results foreach { textEvaluation =>
@@ -72,7 +72,7 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
     query.join("left", "teacherRemessage.students", "student")
     query.join("left", "teacherRemessage.textEvaluation", "textEvaluation")
     query.where("student =:std", std)
-    query.where("textEvaluation.semester =:semester", semester)
+    query.where("textEvaluation.lesson.semester = :semester", semester)
     query.where("teacherRemessage.visible = false")
     val annMap = Collections.newMap[Long, Buffer[TeacherRemessage]]
     val results = entityDao.search(query)
@@ -95,12 +95,19 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
     }
     annMap
   }
-
-  def getTeachersByLessonIdSeq(lessonIdSeq: List[Long]): Seq[Staff] = {
-    val query = OqlBuilder.from[Staff](classOf[Lesson].getName, "lesson")
+    def getTeachersByLessonIdSeq(lessonIdSeq: List[Long]):Seq[Staff] = {
+    val query = OqlBuilder.from[Staff]( classOf[Lesson].getName + " lesson")
+    query.join("lesson.teachers","staff");
     query.select("staff")
-    query.join("lesson.teachers", "staff")
-    query.where("lesson.id in :lessonIdSeq", lessonIdSeq)
+    query.where("lesson.id in (:lessonIdSeq)",lessonIdSeq)
+    entityDao.search(query)
+  }
+  
+  def getTeacherLessonByLessonIdSeq(lessonIdSeq: List[Long]):Seq[Array[Any]] = {
+    val query = OqlBuilder.from[Array[Any]]( classOf[Lesson].getName + " lesson")
+    query.join("lesson.teachers","staff");
+    query.select("staff,lesson")
+    query.where("lesson.id in (:lessonIdSeq)",lessonIdSeq)
     entityDao.search(query)
   }
 
@@ -141,19 +148,21 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
     }
     stdLessons
   }
-  override def indexSetting(): Unit = {
+  
+    override protected def indexSetting(): Unit = {
     val std = entityDao.get(classOf[Student], 68285L)
-    if (null == std) {
-      addMessage("对不起,您没有权限.")
-      forward("errors");
-    }
-    forward()
+    if (std == null) { forward("error.std.stdNo.needed") }
+    val semesters = entityDao.getAll(classOf[Semester])
+    put("semesters", semesters)
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    put("currentSemester", entityDao.search(semesterQuery).head)
   }
 
   override def search(): String = {
     val std = entityDao.get(classOf[Student], 68285L)
     // 页面条件
-    val semesterId = 20141
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     val lessons = getStdLessons(std, semester);
     // 获得(我的课程)
@@ -227,10 +236,10 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
         textEvaluation.evaluateAt = new java.util.Date()
         entityDao.saveOrUpdate(textEvaluation)
       }
-      redirect("search", "info.save.success", "&semester.id=" + 20141)
+      redirect("search","&semester.id=" + lesson.semester.id, "info.save.success")
     } catch {
       case e: Exception =>
-        redirect("search", "info.save.failure", "&semester.id=" + 20141)
+        redirect("search", "&semester.id=" + lesson.semester.id,"info.save.failure")
     }
   }
 
@@ -238,9 +247,11 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
     val std = entityDao.get(classOf[Student], 68285L)
     val ids = longIds("lesson")
     val teachers = getTeachersByLessonIdSeq(ids);
-    val semester = entityDao.get(classOf[Semester], 20141)
+    val lessons= getTeacherLessonByLessonIdSeq(ids)
+    val lesson = entityDao.get(classOf[Lesson],ids(0))
+    val semester = lesson.semester
 
-    put("lessons", teachers);
+    put("lessons", lessons);
     // 获得(教师公告)
     put("annMap", getAnnMap(std, semester, teachers));
     // 获得(评教回复-本人)

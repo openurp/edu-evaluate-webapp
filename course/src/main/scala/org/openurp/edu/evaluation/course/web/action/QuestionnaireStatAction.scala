@@ -1,34 +1,55 @@
 package org.openurp.edu.evaluation.course.web.action
 
-import java.io.IOException
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.hr.base.model.Staff
-import org.openurp.hr.base.model.Staff
-import org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat
-import org.openurp.edu.evaluation.lesson.stat.model.OptionStat
-import org.openurp.hr.base.model.Staff
+import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
-import org.openurp.hr.base.model.Staff
 import org.beangle.webmvc.api.action.ServletSupport
 import org.beangle.webmvc.api.view.View
-import org.openurp.edu.base.code.model.Education
+import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
+import org.openurp.base.model.Semester
+import org.openurp.edu.base.code.model.Education
 import org.openurp.edu.base.code.model.StdType
-import ch.qos.logback.core.joran.action.Action
-import java.util.ArrayList
-import org.beangle.commons.collection.Collections
-import org.openurp.edu.evaluation.lesson.stat.model.QuestionTypeStat
-import org.openurp.edu.evaluation.lesson.stat.model.QuestionTypeStat
-import org.openurp.edu.evaluation.lesson.stat.model.QuestionTypeStat
-import org.openurp.edu.evaluation.lesson.stat.model.QuestionTypeStat
 import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
 import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
+import org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat
+import org.openurp.edu.evaluation.lesson.stat.model.OptionStat
+import org.openurp.edu.evaluation.lesson.stat.model.QuestionTypeStat
+import org.openurp.edu.evaluation.lesson.stat.model.QuestionTypeStat
+import org.openurp.edu.evaluation.lesson.stat.model.QuestionTypeStat
+import org.openurp.edu.evaluation.lesson.stat.model.QuestionTypeStat
+import org.openurp.edu.evaluation.model.EvaluationCriteria
 import org.openurp.edu.evaluation.model.EvaluationCriteriaItem
-import org.openurp.base.model.Semester
+import org.openurp.edu.evaluation.model.QuestionType
+import org.openurp.edu.evaluation.model.Questionnaire
+import org.openurp.hr.base.model.Staff
+import org.openurp.hr.base.model.Staff
+import org.openurp.hr.base.model.Staff
+import org.openurp.hr.base.model.Staff
 
 class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with ServletSupport {
+  
+  override def  index():String= {
+    val stdType = entityDao.get(classOf[StdType],5)
+    put("stdTypeList", stdType)
+    val department = entityDao.get(classOf[Department],20)
+    put("departmentList", department)
 
-
+    var searchFormFlag = get("searchFormFlag").orNull
+    if (searchFormFlag==null) {
+      searchFormFlag = "beenStat"
+    }
+    put("searchFormFlag", searchFormFlag)
+//    put("educations", getEducations())
+    put("departments", entityDao.getAll(classOf[Department]))
+    val query= OqlBuilder.from(classOf[Questionnaire], "questionnaire").where("questionnaire.state =:state",true)
+    put("questionnaires", entityDao.search(query))
+    val semesterId = 20141
+      put("semester",entityDao.get(classOf[Semester], semesterId))
+    put("evaluationCriterias",entityDao.getAll(classOf[EvaluationCriteria]))
+    put("questionTypes", entityDao.getAll(classOf[QuestionType]))
+     forward()
+  }
+ 
   /**
    * 更新(教师)
    * 
@@ -204,41 +225,41 @@ class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with Servlet
   /**
    * 设置有效记录
    **/
-  def  setValid():View= {
-    redirect(new Action(classOf[EvaluateResultStatAction], "search"), "更新成功");
-
-    // FIXEME 死方法
-    // Integer semesterId = getInt("semester.id");
-    // String percent = get("percent");
-    // questionnairStatService.setValidResult(semesterId, new Integer(percent));
-  }
+//  def  setValid():View= {
+//    redirect(new Action(classOf[EvaluateResultStatAction], "search"), "更新成功");
+//
+//    // FIXEME 死方法
+//    // Integer semesterId = getInt("semester.id");
+//    // String percent = get("percent");
+//    // questionnairStatService.setValidResult(semesterId, new Integer(percent));
+//  }
 
   /**
    * 统计(学生评教结果)
    * 
    * @return
    */
-  def  stat():View= {
-    redirect(new Action(classOf[EvaluateResultStatAction], "search"), "更新成功");
-
-    // FIXEME 死方法
-    // setSemesterDataRealm(hasStdTypeTeachDepart);
-    // String departIdSeq = get("departIdSeq");
-    // String educationIdSeq = get("educationIdSeq");
-    // String semesterIdSeq = get("semester.id");
-    // // if (Strings.isBlank(departIdSeq)) {
-    // // departIdSeq = getDepartmentIdSeq();
-    // // }
-    // // if (Strings.isBlank(educationIdSeq)) {
-    // // educationIdSeq =getStdTypeIdSeq();
-    // // }
-    // User user = entityDao.get(User.class, getUserId());
-    // questionnairStatService.saveStatEvaluateResult(educationIdSeq, departIdSeq,
-    // semesterIdSeq, user);
-    // questionnairStatService.setDepartmentStat(educationIdSeq, semesterIdSeq);
-    // questionnairStatService.setCollegeStat(educationIdSeq, semesterIdSeq);
-    // return redirect(new Action(EvaluateResultStatAction.class, "search"), "更新成功");
-  }
+//  def  stat():View= {
+//    redirect(new Action(classOf[EvaluateResultStatAction], "search"), "更新成功");
+//
+//    // FIXEME 死方法
+//    // setSemesterDataRealm(hasStdTypeTeachDepart);
+//    // String departIdSeq = get("departIdSeq");
+//    // String educationIdSeq = get("educationIdSeq");
+//    // String semesterIdSeq = get("semester.id");
+//    // // if (Strings.isBlank(departIdSeq)) {
+//    // // departIdSeq = getDepartmentIdSeq();
+//    // // }
+//    // // if (Strings.isBlank(educationIdSeq)) {
+//    // // educationIdSeq =getStdTypeIdSeq();
+//    // // }
+//    // User user = entityDao.get(User.class, getUserId());
+//    // questionnairStatService.saveStatEvaluateResult(educationIdSeq, departIdSeq,
+//    // semesterIdSeq, user);
+//    // questionnairStatService.setDepartmentStat(educationIdSeq, semesterIdSeq);
+//    // questionnairStatService.setCollegeStat(educationIdSeq, semesterIdSeq);
+//    // return redirect(new Action(EvaluateResultStatAction.class, "search"), "更新成功");
+//  }
 
   /**
    * 跳转(院系评教比较,根据所属部门)
@@ -260,7 +281,7 @@ class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with Servlet
     val lit = entityDao.search(que);
     var fl = 0f;
     if (lit.size > 0) {
-      if (lit(0) != null) {
+      if (lit(0) != 0f) {
         fl = lit(0)
       }
     }

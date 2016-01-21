@@ -11,6 +11,7 @@
         [@b.row]
             [@b.boxcol/]
             [@b.col property="lesson.no" title="课程序号" width="13%"/]
+            [@b.col property="lesson.course.code" title="课程代码"/]
             [@b.col property="lesson.course.name" title="课程名称"/]
             [@b.col property="staff.person.name.formatedName" title="教师姓名"/]
             [@b.col property="content" title="评教内容" width="35%"/]

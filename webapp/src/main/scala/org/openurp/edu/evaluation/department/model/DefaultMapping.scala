@@ -20,16 +20,16 @@ class DefaultMapping extends Mapping {
     bind[DepartQuestion].on(e => declare(
       e.result & e.question & e.score are notnull))
 
-    bind[SupervisiorEvaluate].on(e => declare(
-      e.department & e.questionnaire & e.evaluateAt & e.semester are notnull,
-      e.questionResults is depends("result"),
-      e.remark is length(20)))
-
-    bind[SupervisiorQuestion].on(e => declare(
-      e.result & e.question & e.score are notnull))
-
-    bind[EvaluateSwitch].on(e => declare(
-      e.endOn & e.beginOn & e.opened & e.semester & e.questionnaire are notnull))
+//    bind[SupervisiorEvaluate].on(e => declare(
+//      e.department & e.questionnaire & e.evaluateAt & e.semester are notnull,
+//      e.questionResults is depends("result"),
+//      e.remark is length(20)))
+//
+//    bind[SupervisiorQuestion].on(e => declare(
+//      e.result & e.question & e.score are notnull))
+//
+//    bind[EvaluateSwitch].on(e => declare(
+//      e.endOn & e.beginOn & e.opened & e.semester & e.questionnaire are notnull))
 
   }
 

@@ -23,13 +23,19 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
 //  protected TextEvaluationSwitchService textEvaluationSwitchService;
 //
 //  
-//  override def indexSetting() {
-//    forward()
-//  }
+    override protected def indexSetting(): Unit = {
+    val semesters = entityDao.getAll(classOf[Semester])
+    put("semesters", semesters)
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    put("currentSemester", entityDao.search(semesterQuery).head)
+  }
 
   override def  search():String= {
-    val teacher = entityDao.get(classOf[Staff],10366L)
-    val semester = entityDao.get(classOf[Semester],20141)
+//    章劼
+    val teacher = entityDao.get(classOf[Staff],264L)
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val semester = entityDao.get(classOf[Semester], semesterId)
     if (teacher == null) {
       addMessage("对不起,您没有权限!");
       return forward("errors");
@@ -43,17 +49,20 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     query.orderBy("lesson.semester.id").limit(getPageLimit);
     val results=entityDao.search(query)
     put("lessons", results)
+    put("semester",semester)
     forward();
   }
 
   def searchTextEvaluation():String= {
-    val teacher = entityDao.get(classOf[Staff],10366L)
+    val teacher = entityDao.get(classOf[Staff],264L)
     val lessonId = getLong("lesson.id").get
-    val semesterId = 20141
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val currentSemester=entityDao.search(semesterQuery).head
     // 判断(是否当前学期)
-    val semester = entityDao.get(classOf[Semester],20141)
+    val lesson =entityDao.get(classOf[Lesson],lessonId)
+    val semester = entityDao.get(classOf[Semester],lesson.semester.id)
     var isCurrent = false;
-    if (semesterId.longValue() == semester.id.longValue()) {
+    if (currentSemester.id.longValue() == semester.id.longValue()) {
       isCurrent = true;
     }
     // 获得(文字评教)
@@ -62,7 +71,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     query.where("textEvaluation.lesson.id =:lessonId", lessonId);
     query.where("textEvaluation.staff =:teacher", teacher);
     
-    val switchQuery =OqlBuilder.from(classOf[TextEvaluateSwitch],"switch").where("switch.semester.id=:semesterId",semesterId)
+    val switchQuery =OqlBuilder.from(classOf[TextEvaluateSwitch],"switch").where("switch.semester.id=:semesterId",lesson.semester.id)
     val textEvaluationSwitch = entityDao.search(switchQuery)
 //    if (!textEvaluationSwitch.opened) || !textEvaluationSwitchService.isOpenTime()) {
     if (!textEvaluationSwitch.head.opened) {
@@ -76,37 +85,33 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     }
     put("textEvaluations", textEvaluations);
     
-    // 获得(班级)
-    
-    
-//    val hqlTeachClass = "select lesson.teachclass"+ " from org.openurp.edu.teach.lesson.model.Lesson lesson join lesson.teachers teacher" + " where teacher =:teacher and lesson.semester =:semester";
-    val queryTeachClass = OqlBuilder.from(classOf[Lesson],"lesson")
-    
-//    queryTeachClass.select("teachclass")
-    queryTeachClass.join("left","lesson.teachers","teacher")
-    queryTeachClass.where("teacher=:teacher",teacher);
-    queryTeachClass.where("lesson.semester =:semester", semester);
-    val teachClasses =entityDao.search(queryTeachClass)
-//    val a =teachClasses.head.teachclass
+    // 获得(教学班)
+    val teachClass = OqlBuilder.from(classOf[Lesson],"lesson")
+    teachClass.join("left","lesson.teachers","teacher")
+    teachClass.where("teacher=:teacher",teacher);
+    teachClass.where("lesson.semester =:semester", semester);
+    teachClass.select("lesson.teachclass")
+    val teachClasses =entityDao.search(teachClass)
     put("isCurrent", isCurrent);
     put("lesson", entityDao.get(classOf[Lesson], lessonId));
-    put("textEvaluations", textEvaluations);
-    put("teachclasses", teachClasses);
+    put("teachclasses", teachClasses)
+    put("semester",semester)
     forward();
   }
   
 
 
   def  saveEvaluateRemessageToStd():View= {
-    val teacher = entityDao.get(classOf[Staff],10366L)
+    val teacher = entityDao.get(classOf[Staff],264L)
     // 页面条件
-    val semesterId = getInt("semesterId");
-    val lessonId = getLong("lessonId");
+    val lessonId = getLong("lessonId").get
+    val lesson = entityDao.get(classOf[Lesson],lessonId)
+    val semesterId= lesson.semester.id
     val stdId = getLong("sendObj").get
     val textEvaluationId = getLong("textEvaluationId").get
     val reMessage = get("reMessage").get
-    if (teacher == null) { redirect("searchTextEvaluation", "保存失败,你没有权限!", "&lesson.id=" + lessonId
-        + "&semesterId=" + semesterId); }
+    if (teacher == null) { redirect("searchTextEvaluation", "&lesson.id=" + lessonId
+        + "&semesterId=" + semesterId , "保存失败,你没有权限!") }
     // 创建对象
     val std = entityDao.get(classOf[Student], stdId);
     val textEvaluation = entityDao.get(classOf[TextEvaluation], textEvaluationId);
@@ -121,34 +126,36 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     teacherRemessage.remessage=reMessage
     try {
       entityDao.saveOrUpdate(teacherRemessage);
-      redirect("searchTextEvaluation", "info.save.success", "&lesson.id=" + lessonId + "&semesterId=" + 20141);
+      redirect("searchTextEvaluation",  "&lesson.id=" + lessonId + "&semesterId=" + semesterId,"info.save.success");
     } catch {
       case e: Exception =>
       e.printStackTrace();
-      redirect("searchTextEvaluation", "info.save.failure", "&lesson.id=" + lessonId + "&semesterId="+ 20141);
+      redirect("searchTextEvaluation",  "&lesson.id=" + lessonId + "&semesterId="+ semesterId,"info.save.failure");
     }
   }
 
   def  saveEvaluateRemessageToClass():View={
-    val teacher = entityDao.get(classOf[Staff],10366L)
+    val teacher = entityDao.get(classOf[Staff],264L)
     // 页面条件
-    val semesterId = getInt("semesterId");
-    val lessonId = getLong("lessonId");
+    val lessonId = getLong("lessonId").get
+    val lesson = entityDao.get(classOf[Lesson],lessonId)
+    val semesterId = lesson.semester.id
     val classNames = get("classNames").get
     val stdId = getLong("stdId");
     val textEvaluationId = getLong("textEvaluationId").get
     val isAnn = getBoolean("isAnn").get
     val reMessage = get("reMessage").get
     if (teacher == null) { 
-      redirect("searchTextEvaluation", "保存失败,你没有权限!", "&lesson.id=" + lessonId + "&semesterId=" + semesterId); }
+      redirect("searchTextEvaluation",  "&lesson.id=" + lessonId + "&semesterId=" + semesterId,"保存失败,你没有权限!"); }
     // 查询(班级)
-    val hql = "select courseTake"+ " from org.openurp.edu.teach.lesson.model.Lesson lesson"+ " join lesson.teachers teacher join lesson.teachclass.courseTakes courseTake"+ " where teacher =:teacher and lesson.semester.id =:semesterId and lesson.teachclass.name in (:classNames)";
+//    val hql = "select courseTake"+ " from org.openurp.edu.teach.lesson.model.Lesson lesson"+ " join lesson.teachers teacher join lesson.teachclass.courseTakes courseTake"+ " where teacher =:teacher and lesson.semester.id =:semesterId and lesson.teachclass.name in (:classNames)";
     val query = OqlBuilder.from[CourseTake](classOf[Lesson].getName,"lesson")
     query.join("left","lesson.teachers", "teacher")
     query.join("left","lesson.teachclass.courseTakes", "courseTake")
+    query.select("lesson.teachclass.courseTakes")
     query.where("teacher=:teacher", teacher);
-    query.where("lesson.semesterId=:semesterId", semesterId);
-    query.where("lesson.teachclass.name in :classNames", classNames.split(','))
+    query.where("lesson.semester.id = :semesterId", semesterId);
+    query.where("lesson.teachclass.name in (:classNames)", classNames.split(','))
     val courseTakes = entityDao.search(query);
     if (courseTakes.isEmpty) {  redirect("searchTextEvaluation", "保存失败,班级为空!", "&lesson.id=" + lessonId + "&semesterId=" + semesterId); }
     // 创建对象
@@ -173,11 +180,11 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     teacherRemessage.remessage=reMessage
     try {
       entityDao.saveOrUpdate(teacherRemessage);
-      return redirect("searchTextEvaluation", "info.save.success", "&lesson.id=" + lessonId + "&semesterId="+ semesterId);
+      return redirect("searchTextEvaluation",  "&lesson.id=" + lessonId + "&semesterId="+ semesterId,"info.save.success");
     } catch {
       case e: Exception =>
       e.printStackTrace();
-      return redirect("searchTextEvaluation", "info.save.failure", "&lesson.id=" + lessonId + "&semesterId=" + semesterId);
+      return redirect("searchTextEvaluation",  "&lesson.id=" + lessonId + "&semesterId=" + semesterId,"info.save.failure");
     }
   }
 
@@ -193,12 +200,13 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
   }
 
   def  listAnn():String= {
-    val teacher = entityDao.get(classOf[Staff],10366L)
-    val semesterId = getInt("semesterId");
+    val teacher = entityDao.get(classOf[Staff],264L)
+    val lessonId=getLong("lessonId").get
+    val semesterId = entityDao.get(classOf[Lesson],lessonId).semester.id
     val query = OqlBuilder.from(classOf[TeacherRemessage],"teacherRemessage");
     query.where("teacherRemessage.visible = false");
-    query.where("teacherRemessage.textEvaluation.teacher =:teacher", teacher);
-    query.where("teacherRemessage.textEvaluation.semester.id =:semesterId", semesterId);
+    query.where("teacherRemessage.textEvaluation.staff =:teacher", teacher);
+    query.where("teacherRemessage.textEvaluation.lesson.semester.id =:semesterId", semesterId);
     query.orderBy("teacherRemessage.createdAt desc").limit(getPageLimit)
     put("teacherRemessages", entityDao.search(query));
     forward();

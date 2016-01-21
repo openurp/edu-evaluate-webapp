@@ -8,8 +8,9 @@
         <td style="width:200px" class="index_view">
         [@b.form action="!search" name="textEvaluationTeacherIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
             <input type="hidden" name="lesson.project.id" value="${(project.id)!}"/>
+            [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
             [@b.textfields style="width:130px" names="lesson.no;课程序号,lesson.course.name;课程名称"/]
-            [@b.select style="width:100px" name="textEvaluation.lesson.semester.id" value= currentSemester label="学年学期" items=semesters option="id,code"  /]
+            
         [/@]
         </td>
         <td class="index_content">

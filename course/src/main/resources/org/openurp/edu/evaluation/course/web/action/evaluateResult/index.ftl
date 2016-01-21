@@ -9,10 +9,9 @@
     <tr>
         <td style="width:200px" class="index_view">
         [@b.form action="!search" name="evaluateRForm" title="ui.searchForm" target="contentDiv" theme="search"]
-            <input type="hidden" name="evaluateResult.lesson.project.id" value="${(project.id)!}"/>
-            <input type="hidden" name="evaluateResult.lesson.semester.id" value="${(semester.id)!}"/>
+            [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
             [@b.textfields style="width:120px" names="evaluateResult.student.code;学生学号,evaluateResult.student.person.name.formatedName;学生姓名,evaluateResult.student.grade;学生年级,evaluateResult.lesson.no;课程序号,evaluateResult.lesson.course.code;课程代码,evaluateResult.lesson.course.name;课程名称"/]
-            [@b.select style="width:124px" name="evaluateResult.statType" label="是否有效" items={'1':'有效','0':'无效'} empty="..."/]
+            [@b.select style="width:124px" name="statType" label="是否有效" items={'1':'有效','0':'无效'} empty="..."/]
         [/@]
         </td>
         <td class="index_content">
@@ -25,8 +24,8 @@
 <script>
   function changeToInvalid(){
      var form =document.evaluateRForm;
-     form.action="${b.url('!changeToInvalid')}";
-     bg.form.submit(form);
+     //form.action="${b.url('!changeToInvalid')}";
+     bg.form.submit(form,"${b.url('!changeToInvalid')}");
   }
 </script>
 

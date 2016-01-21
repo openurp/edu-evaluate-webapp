@@ -40,7 +40,7 @@ class QuestionnaireStatSearchAction  extends RestfulAction[LessonEvalStat] {
     put("criteria", criteria);
     val qtypeId = getLong("selectTypeId").get
     var qtypes=Collections.newBuffer[QuestionType]
-    if (qtypeId != null) {
+    if (qtypeId != 0) {
       qtypes += entityDao.get(classOf[QuestionType], qtypeId);
     } else {
       qtypes ++= entityDao.getAll(classOf[QuestionType]);

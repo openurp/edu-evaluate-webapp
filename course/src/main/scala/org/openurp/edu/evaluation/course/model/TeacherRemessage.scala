@@ -22,7 +22,7 @@ class TeacherRemessage extends LongId  {
   var  textEvaluation:TextEvaluation=_
 
   /** 显示状态 */
-  var  visible:Boolean=_
+  var  visible:Boolean=false
   
   var createdAt:Date=_
   

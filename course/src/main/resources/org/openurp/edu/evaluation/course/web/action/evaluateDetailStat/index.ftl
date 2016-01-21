@@ -24,12 +24,12 @@
     }
     
     function departmentChoiceConfig(){
-        bg.form.addInput(form,"semester.id","${semester.id}");
+        [#--bg.form.addInput(form,"semester.id","${semester.id}");--]
         bg.form.submit(form, "${b.url('!departmentChoiceConfig')}");
     }
     
     function depHistoryStat(){
-        bg.form.addInput(form,"semester.id","${semester.id}");
+        [#--bg.form.addInput(form,"semester.id","${semester.id}");--]
         bg.form.submit(form, "${b.url('!depHistoryStat')}");
     }
     
@@ -38,7 +38,7 @@
         bg.form.submit(form, "${b.url('!historyCollegeStat')}");
     }
     function collegeGroupItemInfo(){
-        bg.form.addInput(form,"semester.id","${semester.id}");
+        [#--bg.form.addInput(form,"semester.id","${semester.id}");--]
         bg.form.submit(form, "${b.url('!collegeGroupItemInfo')}");
     }
 </script>

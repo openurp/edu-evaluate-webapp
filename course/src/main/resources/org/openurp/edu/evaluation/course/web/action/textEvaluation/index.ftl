@@ -7,10 +7,11 @@
     <tr>
         <td style="width:200px" class="index_view">
         [@b.form action="!search" name="textEvaluationIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
-            <input type="hidden" name="textEvaluation.lesson.project.id" value="${(project.id)!}"/>
-            [@b.textfields style="width:130px" names="textEvaluation.lesson.no;课程序号,textEvaluation.lesson.course.name;课程名称,textEvaluation.staff.person.name.formatedName;教师名称"/]
-            [@b.select style="width:134px" name="textEvaluation.lesson.teachDepart.id" label="开课院系" items=departments empty="..."/]
-            [@b.select style="width:134px" name="textEvaluation.state" label="是否确认" items={'1':'已确认','0':'未确认'} empty="..."/]
+            <input type="hidden" name="lesson.project.id" value="${(project.id)!}"/>
+            [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
+            [@b.textfields style="width:130px" names="lesson.no;课程序号,lesson.course.code;课程代码,lesson.course.name;课程名称,staff.person.name.formatedName;教师名称"/]
+            [@b.select style="width:134px" name="lesson.teachDepart.id" label="开课院系" items=departments empty="..."/]
+            [@b.select style="width:134px" name="state" label="是否确认" items={'1':'已确认','0':'未确认'}  empty="..."/]
         [/@]
         </td>
         <td class="index_content">

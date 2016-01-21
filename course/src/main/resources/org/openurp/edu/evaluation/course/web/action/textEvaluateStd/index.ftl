@@ -10,11 +10,13 @@
 <table class="indexpanel">
     <tr>
         <td class="index_content">
-            [@b.form name="textEvaluateStudentIndexForm" action="!search" target="contentDiv"]
-                <input type="hidden" name="semester.id" value="${(semester.id)!}"/>
+            [@b.form name="textEvaluateStudentIndexForm" action="!search" target="contentDiv"  theme="search"]
+             [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
             [/@]
-            [@b.div id="contentDiv"/]
         </td>
+        <td class="index_content">
+            [@b.div id="contentDiv"  href="!search?&semester.id=${(semester.id)!}" /]
+        </td> 
     </tr>
 </table>
 <script type="text/javascript">

@@ -68,7 +68,7 @@
 [@b.toolbar title='评教回复及教师公告查询' id='remsgStudentBar']
     bar.addBack();
 [/@]
-[@b.form name="" action=""]
+[@b.form name="sa" action="!search"]
 <div style="margin:0;width:95%;height:24px;border-bottom: 1px solid #0065ce;">
     <div id="messageDiv"></div>
 </div>
@@ -105,26 +105,26 @@
                     [#if (textEvaluationMap.get(lesson[0].id))?exists]
                         <a id="myEvaluation${k}" onClick="showElement(this)" style="float:left;cursor:pointer;">+</a>
                     [/#if]
-                    ${(lesson[0].name)!}
+                    ${(lesson[0].person.name.formatedName)!}
                 </td>
                 <td>${(lesson[1].course.name)!}</td>
                 <td>${(lesson[1].teachDepart.name)!}</td>
             </tr>
             [#if (textEvaluationMap.get(lesson[0].id))?exists]
-                [#list textEvaluationMap.get(lesson[0].id)?sort_by("evaluationAt") as textEvaluation]
+                [#list textEvaluationMap.get(lesson[0].id)?sort_by("evaluateAt") as textEvaluation]
                     [#assign isAnnCount = 0/]
                     [#list textEvaluation.teacherRemessages as remsgBool]
                         [#if !remsgBool.visible]
                             [#assign isAnnCount = isAnnCount +1/]
                         [/#if]
                     [/#list]
-                    [#assign myTextEvaluationFlag = ((textEvaluation.teacherRemessages)?size > 0) && ((textEvaluation.evaluateTeacherRemessages)?size > isAnnCount)/]
+                    [#assign myTextEvaluationFlag = ((textEvaluation.teacherRemessages)?size > 0) && ((textEvaluation.teacherRemessages)?size > isAnnCount)/]
                     <tr class='${(k % 2 == 0)?string("griddata-odd","griddata-even")}' id='myEvaluation${k}SubTr' name='myEvaluation${k}SubTr' style="text-align:left;display:none;">
                         <td colspan="3" [#if myTextEvaluationFlag]style="padding-left:30px;"[#else]style="padding-left:46px;"[/#if]>
                             [#if myTextEvaluationFlag]
                                 <a id="myEvaluationText${z}" onClick="showSubElement(this)" style="float:left;cursor:pointer;">+</a>
                             [/#if]
-                            您于 ${(textEvaluation.evaluationAt?string("yyyy-MM-dd HH:mm"))!} 评教：<font color="blue"><strong>${(textEvaluation.context)!}</strong></font>
+                            您于 ${(textEvaluation.evaluateAt?string("yyyy-MM-dd HH:mm"))!} 评教：<font color="blue"><strong>${(textEvaluation.content)!}</strong></font>
                         </td>
                     </tr>
                     [#if myTextEvaluationFlag]
@@ -185,7 +185,7 @@
                     [#if (otherMap.get(lesson[0].id))?exists]
                         <a id="otherTextEvaluation${j}" onClick="showOtherElement(this,'${j}')" style="float:left;cursor:pointer;">+</a>
                     [/#if]
-                    ${(lesson[0].name)!}
+                    ${(lesson[0].person.name.formatedName)!}
                 </td>
                 <td>${(lesson[1].course.name)!}</td>
                 <td>${(lesson[1].teachDepart.name)!}</td>
@@ -196,7 +196,7 @@
                     <tr class='${(j % 2 == 0)?string("griddata-odd","griddata-even")}' id='otherTextEvaluationTr${j}' name='otherTextEvaluation${j}SubTr' style="text-align:left;display:none;">
                         <td colspan="3" style="padding-left:30px;">
                             <a id="otherEvaluation${y}" onClick="showOtherSubElement(this)" style="float:left;cursor:pointer;">+</a>
-                            ***于 ${(remessage.textEvaluation.evaluationAt?string("yyyy-MM-dd HH:mm"))!} 评教：<font color="blue"><strong>${(remessage.textEvaluation.context)!}</strong></font>
+                            ***于 ${(remessage.textEvaluation.evaluateAt?string("yyyy-MM-dd HH:mm"))!} 评教：<font color="blue"><strong>${(remessage.textEvaluation.content)!}</strong></font>
                         </td>
                     </tr>
                     [#assign y = y + 1/]
@@ -252,7 +252,7 @@
                     [#if (annMap.get(lesson[0].id))?exists]
                         <a id="annEvaluationText${i}" onClick="showSubElement(this)" style="float:left;cursor:pointer;">+</a>
                     [/#if]
-                    ${(lesson[0].name)!}
+                    ${(lesson[0].person.name.formatedName)!}
                 </td>
                 <td>${(lesson[1].course.name)!}</td>
                 <td>${(lesson[1].teachDepart.name)!}</td>

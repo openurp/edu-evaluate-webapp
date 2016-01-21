@@ -1,39 +1,40 @@
 package org.openurp.edu.evaluation.course.web.action
 
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
-import org.openurp.edu.base.code.model.ExamMode
-import org.openurp.base.model.Department
-import org.openurp.edu.base.code.model.ExamMode
-import org.openurp.edu.base.code.model.CourseType
-import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.base.model.Semester
-import org.beangle.data.dao.OqlBuilder
-import org.openurp.base.model.Semester
 import java.sql.Date
-import org.openurp.base.model.Semester
-import org.openurp.base.model.Semester
-import org.openurp.base.model.Semester
-import org.openurp.base.model.Semester
-import org.openurp.edu.base.model.Project
-import org.openurp.edu.lesson.model.Lesson
-import org.openurp.edu.lesson.model.Lesson
-import org.beangle.webmvc.entity.helper.QueryHelper
+
 import org.beangle.commons.collection.Order
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.dao.QueryBuilder
-import org.openurp.edu.lesson.model.Lesson
 import org.beangle.webmvc.api.view.View
+import org.beangle.webmvc.entity.action.RestfulAction
+import org.beangle.webmvc.entity.helper.QueryHelper
+import org.openurp.base.model.Department
+import org.openurp.base.model.Semester
+import org.openurp.base.model.Semester
+import org.openurp.base.model.Semester
+import org.openurp.base.model.Semester
+import org.openurp.base.model.Semester
+import org.openurp.base.model.Semester
+import org.openurp.edu.base.code.model.CourseType
+import org.openurp.edu.base.code.model.ExamMode
+import org.openurp.edu.base.code.model.ExamMode
+import org.openurp.edu.base.model.Project
 import org.openurp.edu.evaluation.course.service.StdEvaluateSwitchService
+import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
+import org.openurp.edu.evaluation.model.Questionnaire
+import org.openurp.edu.lesson.model.Lesson
+import org.openurp.edu.lesson.model.Lesson
+import org.openurp.edu.lesson.model.Lesson
 
 class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
 
   var evaluateSwitchService: StdEvaluateSwitchService = _
 
   override def indexSetting(): Unit = {
-      val semesterId = 20141
-      put("semester",entityDao.get(classOf[Semester], semesterId))
-    val departments = entityDao.getAll(classOf[Department])
-    put("departments", departments)
+    put("semesters",entityDao.getAll(classOf[Semester]))
+        val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    put("currentSemester", entityDao.search(semesterQuery).head)
+    put("departments", entityDao.getAll(classOf[Department]))
     val examModes = entityDao.getAll(classOf[ExamMode])
     put("examModes", examModes);
     val courseTypes = entityDao.getAll(classOf[CourseType])
@@ -42,10 +43,10 @@ class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
   }
 
   override def search(): String = {
-    val questionnaireId = getLong("questionnaire.id").getOrElse(0)
-    val semesterId = 20141
-    val projectId = 1
-    //    if (semesterId != null) 
+    val questionnaireId = getLong("questionnaire.id").getOrElse(-1)
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val projectId = getInt("lesson.project.id").getOrElse(1)
+    val semesterId =getInt("lesson.semester.id").getOrElse( entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     val project = entityDao.get(classOf[Project], projectId)
     // 检查时间
@@ -60,7 +61,6 @@ class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
       new java.util.Date());
     put("questionnaires", entityDao.search(query));
     // 判断(问卷是否存在)
-    //    if (questionnaireId != null && questionnaireId == 0) {
     questionnaireId match {
       case 0 =>//无问卷教学任务list
         put("lessons", entityDao.search(getQueryBuilderByLesson()))
@@ -68,27 +68,29 @@ class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
       case -1 =>//有问卷
         put("questionnaireLessons", entityDao.search(getQueryBuilder()))
         forward("list");
+      case _ =>//问卷Id
+        put("questionnaireLessons", entityDao.search(getQueryBuilder()))
+        forward("list");
     }
   }
 
   protected override def getQueryBuilder(): OqlBuilder[QuestionnaireLesson] = {
     val query = OqlBuilder.from(classOf[QuestionnaireLesson], "questionnaireLesson");
-    query.where(QueryHelper.extractConditions(classOf[Lesson], "lesson", null))
-//    val semesterId = getInt("lesson.semester.id");
-    val semesterId = 20141
-//    if (semesterId == null) {
-//      query.where("lesson.semester.id = :semester", semesterId);
-      query.where("lesson.semester.id = :semester", 20141);
-//    }
+     populateConditions(query);
+//    query.where(QueryHelper.extractConditions(classOf[Lesson], "lesson", null))
+    val semesterId = getInt("lesson.semester.id")
+     semesterId foreach { e =>
+      query.where("questionnaireLesson.lesson.semester.id = :semesterId", e);
+    }
     // 隐性条件(问卷类别,起始周期,上课人数)
-    val questionnaireId = longId("questionnaire")
+    val questionnaireId = getLong("questionnaire.id").getOrElse(-1)
     val startWeekFrom = getInt("startWeekFrom");
     val startWeekEnd = getInt("startWeekEnd");
     val stdCountFrom = getInt("stdCountFrom");
     val stdCountEnd = getInt("stdCountEnd");
 //    val hasTeacher = getBoolean("hasTeacher").get;
 
-    if ( questionnaireId != -1) {
+    if ( questionnaireId != -1 && questionnaireId != 0) {
       query.where("questionnaireLesson.questionnaire.id =:questionnaireId", questionnaireId);
       
     }
@@ -113,7 +115,6 @@ class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
 //    }
 //    query.where("lesson.teachDepart.id in (:teachDeparts)", getInt("teachDeparts"))
     query.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit);
-
     query
   }
 
@@ -123,15 +124,12 @@ class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
    * @return
    */
   protected def getQueryBuilderByLesson(): QueryBuilder[Lesson] = {
-    val query = OqlBuilder.from(classOf[Lesson], "lesson").where("lesson.project.id=:projectId",
-      getInt("project").getOrElse(1))
+    val query = OqlBuilder.from(classOf[Lesson], "lesson").where("lesson.project.id=:projectId",getInt("project").getOrElse(1))
     populateConditions(query);
-//    val semesterId = getInt("lesson.semester.id");
-//    val semesterId =20141
-//    if (semesterId == null) {
-//      query.where("lesson.semester = :semester", get("semester"));
-      query.where("lesson.semester.id = :semester", 20141);
-//    }
+    val semesterId = getInt("lesson.semester.id")
+     semesterId foreach { e =>
+      query.where("lesson.semester.id = :semesterId", e);
+    }
     // 隐性条件(问卷类别,起始周期,上课人数)
     val startWeekFrom = getInt("startWeekFrom");
     val startWeekEnd = getInt("startWeekEnd");
@@ -139,19 +137,19 @@ class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
     val stdCountEnd = getInt("stdCountEnd");
     val hasTeacher = 1
 //      getBoolean("hasTeacher");
-    //
-    //    if (startWeekFrom != null) {
-    //      query.where("lesson.schedule.startWeek >=:startWeekFrom", startWeekFrom);
-    //    }
-    //    if (startWeekEnd != null) {
-    //      query.where("lesson.schedule.startWeek <=:startWeekEnd", startWeekEnd);
-    //    }
-//    stdCountFrom foreach { s =>
-//      query.where("lesson.teachclass.stdCount >=:stdCountFrom", s);
-//    }
-//    stdCountEnd foreach { e =>
-//      query.where("lesson.teachclass.stdCount <=:stdCountEnd", e);
-//    }
+    
+        startWeekFrom foreach { a =>
+          query.where("lesson.schedule.startWeek >=:startWeekFrom", a);
+        }
+        startWeekEnd foreach {a =>
+          query.where("lesson.schedule.startWeek <=:startWeekEnd", a);
+        }
+    stdCountFrom foreach { s =>
+      query.where("lesson.teachclass.stdCount >=:stdCountFrom", s);
+    }
+    stdCountEnd foreach { e =>
+      query.where("lesson.teachclass.stdCount <=:stdCountEnd", e);
+    }
 //    if (hasTeacher!=null) {
 //      if (hasTeacher==1) {
 //        query.where("size(lesson.teachers) != 0");
@@ -160,10 +158,10 @@ class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
 //      }
 //    }
     // 排除(已有问卷)
-    query
-      .where("not exists(from " + classOf[QuestionnaireLesson].getName + " questionnaireLesson"
+    query.where("not exists(from " + classOf[QuestionnaireLesson].getName + " questionnaireLesson"
         + " where questionnaireLesson.lesson = lesson)");
     query.orderBy(get(Order.OrderStr).orNull);
+    query.limit(getPageLimit)
     query
   }
   /**

@@ -69,6 +69,7 @@
         [@b.row]
             [@b.boxcol/]
             [@b.col property="lesson.no" title="课程序号" width="8%"/]
+            [@b.col property="lesson.course.code" title="课程代码"/]
             [@b.col property="lesson.course.name" title="课程名称"/]
             [@b.col property="lesson.courseType.name" title="课程类别"/]
             [@b.col property="questionnaire.description" title="使用问卷描述"/]

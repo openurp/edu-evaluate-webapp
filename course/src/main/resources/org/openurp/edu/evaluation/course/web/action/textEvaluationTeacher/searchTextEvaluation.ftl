@@ -69,13 +69,9 @@
         <td style="padding-left:10px;">${(textEvaluations?size)!"0"}</td>
     </tr>
 </table>
-
 <div class="grid" style="margin-top:3px;">
-    [@b.messages slash="4"/]
-    [@b.form name="evaluateForm"  target="contentDiv"]
-    <div style="border:1px #006CB2 solid;background:#C7DBFF;text-align:center;height:25px;line-height:25px;font-weight:bold;border-bottom:none;">
-        评估意见和建议
-    </div>
+ [@b.messages slash="4"/]
+    [@b.form name="evaluateForm" title="评估意见和建议" action="!save" theme="list" target="contentDiv"]
     <table class="gridtable">
         [#assign i = 0/]
         [#assign styleFlag = true/]
@@ -83,6 +79,7 @@
         [#if textEvaluations??]
         <tbody>
         [#list textEvaluations as textEvaluation]
+    
             [#if i==0 && textEvaluation?exists]
                   [#assign textEvaluationId = textEvaluation.id/]
               [/#if]
@@ -102,11 +99,11 @@
                     <div [#if remsgFlag]style="display:none"[/#if] id="showRemessageDivTag${i}">
                         <a onClick="showRemsg('${i}');" id="showRemessage${i}" style="float:left;cursor:pointer;">+</a>
                     </div>
-                    <div style="text-align:left;margin-left:2%">${(textEvaluation.context)!}</div>
+                    <div style="text-align:left;margin-left:2%">${(textEvaluation.content)!}</div>
                 </td>
                 [#if isCurrent]
                 <td style="width:10%;">
-                    <input type="button" class="buttonStyle" value="回复" onClick="teacherRemessage('${i}','${textEvaluation.id}','${(textEvaluation.context)?default('')?replace('(\r\n|\n)','','r')}','${(textEvaluation.std.id)!}')">
+                    <input type="button" class="buttonStyle" value="回复" onClick="teacherRemessage('${i}','${textEvaluation.id}','${(textEvaluation.content)?default('')?replace('(\r\n|\n)','','r')}','${(textEvaluation.student.id)!}')">
                     <input type="hidden" value="${textEvaluation.id}" id="annTextEvaluationId${i}">
                 </td>
                 [/#if]
@@ -147,15 +144,15 @@
 </div>
 
 <div id="reMessageDiv" style="display:none;">
-    [@b.form name="textEvaluationEditForm" theme="list"]
-        <div id="questionDiv" style="display:none;">
+    [@b.form name="textEvaluationEditForm" theme="list" title="意见和建议" action="!save"  target="contentDiv"]
+        [#--<div id="questionDiv" style="display:none;">
         [@b.textarea label="意见和建议" class="t_area" check="maxLength(200)" id="question" name="question" readOnly="readOnly" style="width:85%"/]
-        </div>
+        </div>--]
         [@b.select label="发送对象" onChange="getValue(this.value);" name="sendObj" id="sendObj" items={'':'学生','adminClass':'班级'}/]
         [@b.textarea label="回复内容" class="t_area" check="maxLength(200)" id="reMessage" name="reMessage" value="" style="width:85%"/]
         [@b.field label="注意"]
             <font color='red'>若"发布公告"或"发送对象"为"班级",请使用鼠标点击选择下面的班级列表，默认为全选。</font>
-            <table width="80%" id="teachclassList" style="display:none;">
+            <table width="80%" id="teachclassList" >
                 [#list teachclasses as teachclass]
                 <tr style="background-color:yellow;cursor:pointer;" onClick="getAdminClasses(this)">
                     <td>${(teachclass.name)!}</td>
@@ -164,7 +161,6 @@
             </table>
         [/@]
         [@b.formfoot]
-            <input type="hidden" id="semesterId" name="semesterId" value=""/>
             <input type="hidden" id="lessonId" name="lessonId" value="${(lesson.id)!}"/>
             <input type="hidden" id="textEvaluationId" name="textEvaluationId" value="${textEvaluationId!}"/>
             <input type="button" value="提交" onClick="saveInfo();" class="buttonStyle"  id="submitToAction"/>
@@ -180,7 +176,7 @@
         [/@]
     [/@]
 </div>
-[@b.form name="actionForm"]
+[@b.form name="actionForm" action="!save" ]
     <input type="hidden" id="lessonId" name="lessonId" value="${(lesson.id)!}"/>
 [/@]
 <script type="text/javaScript">
@@ -266,7 +262,7 @@
         }
         bg.form.addInput(textEvaluationEditForm, "isAnn", isAnn);
         if(!isAnn && $("#sendObj").val() != "adminClass") {
-            bg.form.submit(textEvaluationEditForm, "textEvaluationTeacher!saveEvaluateRemessageToStd.action");
+            bg.form.submit(textEvaluationEditForm, "${b.url('!saveEvaluateRemessageToStd')}");
         } else {
             $("#teachclassList>tbody>tr").each(function(){
                 if (this.style.backgroundColor == "yellow"){
@@ -283,13 +279,12 @@
                 bg.form.addInput(textEvaluationEditForm, "stdId", "");
             }
             bg.form.addInput(textEvaluationEditForm, "classNames", classNames);
-            bg.form.submit(textEvaluationEditForm, "textEvaluationTeacher!saveEvaluateRemessageToClass.action");
+            bg.form.submit(textEvaluationEditForm, "${b.url('!saveEvaluateRemessageToClass')}");
         }
     }
     function showAnn(){
         var actionForm = document.actionForm;
-        bg.form.addInput(actionForm, "semesterId", $("input[name='semester.id']").val());
-        bg.form.submit(actionForm, "textEvaluationTeacher!listAnn.action");
+        bg.form.submit(actionForm, "${b.url('!listAnn')}");
     }
 </script>
 [@b.foot/]

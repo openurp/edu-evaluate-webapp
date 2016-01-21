@@ -17,10 +17,14 @@ class TextEvaluation extends LongId  {
    /** 评教时间 */
   var evaluateAt: java.util.Date = _
   /** 是否确认 */
-  var state:Boolean=_
+  
+  var state:Boolean=false
+  
     /** 是否教师评教 */
   var evaluateByTeacher: Boolean = _
     /** 是否确认 */
 //  var isAffirm:Boolean=_
-    var teacherRemessages =Collections.newBuffer[TeacherRemessage]
+  
+  var teacherRemessages =Collections.newBuffer[TeacherRemessage]
+  
 }
