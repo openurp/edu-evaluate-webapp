@@ -3,7 +3,7 @@
 [@b.toolbar title="问卷列表" /]
 
 
-[@b.grid items=questionnaires var="questionnaire" sortable="false"]
+[@b.grid items=questionnaires var="questionnaire" sortable="true"]
     [@b.gridbar]
         bar.addItem("${b.text('action.add')}",action.add());
         bar.addItem("${b.text('action.edit')}",action.edit());

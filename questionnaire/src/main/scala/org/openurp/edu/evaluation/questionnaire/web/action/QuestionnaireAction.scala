@@ -122,7 +122,7 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] {
     if (!qls.isEmpty) { return redirect("search", "删除失败,选择的数据中已有被课程问卷引用"); }
 
     entityDao.remove(questionnaires);
-    return redirect("search", "info.delete.success");
+    return redirect("search", "删除成功");
   }
 
   def searchQuestion(): String = {

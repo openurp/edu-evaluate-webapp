@@ -14,7 +14,7 @@
      [@b.datepicker label="生效日期" required="true" name="questionnaire.beginOn" id="_beginOn" format="yyyy-MM-dd" maxDate="#F{$dp.$D(\\'_endOn\\')}" value=(questionnaire.beginOn?string("yyyy-MM-dd"))! maxlength="10" style="width:200px"/]
     [@b.datepicker label="失效日期" name="questionnaire.endOn" id="_endOn" format="yyyy-MM-dd" minDate="#F{$dp.$D(\\'_beginOn\\')}" value=(questionnaire.endOn?string("yyyy-MM-dd"))! maxlength="10" style="width:200px"/]
     
-    [@b.field label="选项"]
+    [@b.field label="问题列表"]
         <table class="gridtable" id="questionnaireTable">
             <thead class="gridhead">
                 <tr>
@@ -64,7 +64,7 @@
          [#if questionnaire.persisted]
 		  <input type="hidden"  name="questionnaire.id"  value="${questionnaire.id?default('')}" />
          [/#if]
-        [@b.submit value=(questionnaire.id)?exists?string("更新","新增") onsubmit="doValidate"/]&nbsp;
+        [@b.submit value=(questionnaire.id)?exists?string("保存","修改") onsubmit="doValidate"/]&nbsp;
         <input type="button" name="btnReset" value="${b.text("action.reset")}" class="buttonStyle" onClick="doReset()" />
     [/@]
     [@b.field label="注意"]

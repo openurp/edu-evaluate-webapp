@@ -96,7 +96,7 @@ class QuestionAction extends RestfulAction[Question] {
     val questionnaires = entityDao.search(query);
     if (!questionnaires.isEmpty) { redirect("search", "删除失败,选择的数据中已有被评教问卷引用"); }
     entityDao.remove(questions);
-     redirect("search", "info.delete.success");
+     redirect("search", "删除成功");
   }
 
 
