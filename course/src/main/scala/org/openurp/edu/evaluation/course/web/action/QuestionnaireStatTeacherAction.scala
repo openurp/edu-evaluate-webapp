@@ -26,10 +26,9 @@ class QuestionnaireStatTeacherAction   extends RestfulAction[LessonEvalStat] {
     put("stdTypeList",  entityDao.getAll(classOf[StdType]));
     put("departmentList", entityDao.search(OqlBuilder.from(classOf[Department],"de").where("de.teaching=:tea",true)));
 //    getSemester();
-    put("semester",20141)
-    put("semesters", entityDao.getAll(classOf[Semester]));
+//    put("semesters", entityDao.getAll(classOf[Semester]));
 //    val teacher = getLoginTeacher();
-    val teacher = entityDao.get(classOf[Staff],610L)
+    val teacher = entityDao.get(classOf[Staff],8589L)
     put("teacher", teacher);
     // OqlBuilder query = OqlBuilder.from(QuestionnaireStat.class,
     // "questionnaireStat");
@@ -45,13 +44,13 @@ class QuestionnaireStatTeacherAction   extends RestfulAction[LessonEvalStat] {
     val entityQuery = OqlBuilder.from(classOf[LessonEvalStat], "questionnaireStat");
     populateConditions(entityQuery);
 //    val teacher = getLoginTeacher();
-    val teacher = entityDao.get(classOf[Staff],610L)
+    val teacher = entityDao.get(classOf[Staff],8589L)
     entityQuery.join("questionnaireStat.lesson.teachers", "teacher");
     entityQuery.where("teacher.id=:teacherId", teacher.id);
     entityQuery.limit(getPageLimit);
     val orderBy = get("orderBy");
     if (orderBy != null && !"".equals(orderBy)) {
-      entityQuery.orderBy("questionnaireStat.semester.schoolYear desc");
+      entityQuery.orderBy("questionnaireStat.lesson.semester.schoolYear desc");
     }
    val questionnaireStatTeachers = entityDao.search(entityQuery);
     put("questionnaireStatTeachers", questionnaireStatTeachers);
@@ -75,7 +74,7 @@ class QuestionnaireStatTeacherAction   extends RestfulAction[LessonEvalStat] {
     val questionnaireStat = entityDao.get(classOf[LessonEvalStat], getLong("teacherStatId").get);
     put("questionnaireStat", questionnaireStat);
     val  query = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName, "result");
-    query.where("result.teacher=:teaId", questionnaireStat.staff);
+    query.where("result.staff=:teaId", questionnaireStat.staff);
     query.where("result.lesson=:less", questionnaireStat.lesson);
     query.select("case when result.statType =1 then count(result.id) end,count(result.id)");
     query.groupBy("result.statType");
@@ -114,13 +113,13 @@ class QuestionnaireStatTeacherAction   extends RestfulAction[LessonEvalStat] {
     querys.select("count(courseTake.std.id)");
     put("numbers", entityDao.search(querys)(0));
     val que = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR");
-    que.where("questionR.result.teacher=:teaId", questionnaireStat.staff);
+    que.where("questionR.result.staff=:teaId", questionnaireStat.staff);
     que.where("questionR.result.lesson=:less", questionnaireStat.lesson);
     que.select("questionR.question.id,questionR.option.id,count(*)");
     que.groupBy("questionR.question.id,questionR.option.id");
     put("questionRs", entityDao.search(que));
     val quer = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR");
-    quer.where("questionR.result.teacher=:teaId", questionnaireStat.staff);
+    quer.where("questionR.result.staff=:teaId", questionnaireStat.staff);
     quer.where("questionR.result.lesson=:less", questionnaireStat.lesson);
     quer.select("questionR.question.id,questionR.question.content,sum(questionR.score)/count(questionR.id)");
     quer.groupBy("questionR.question.id,questionR.question.content");
@@ -249,7 +248,7 @@ class QuestionnaireStatTeacherAction   extends RestfulAction[LessonEvalStat] {
     quer.where("evaluateResult.lesson.semester.id=" + semesterId);
 
     if (teaId != 0L) {
-      quer.where("evaluateResult.teacher.id=:teaId", teaId);
+      quer.where("evaluateResult.staff.id=:teaId", teaId);
     }
     if (lessonId != 0L) {
       quer.where("evaluateResult.lesson.id=:lessonId", lessonId);
@@ -263,7 +262,7 @@ class QuestionnaireStatTeacherAction   extends RestfulAction[LessonEvalStat] {
     quer1.where("evaluateResult.id=questionResult.result.id");
     quer1.where("evaluateResult.lesson.semester.id=" + semesterId);
     if (teaId != 0L) {
-      quer1.where("evaluateResult.teacher.id=:teaId", teaId);
+      quer1.where("evaluateResult.staff.id=:teaId", teaId);
     }
     if (lessonId != 0L) {
       quer1.where("evaluateResult.lesson.id=:lessonId", lessonId);

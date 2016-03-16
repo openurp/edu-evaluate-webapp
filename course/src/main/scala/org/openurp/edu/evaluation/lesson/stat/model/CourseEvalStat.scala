@@ -7,7 +7,6 @@ import org.openurp.hr.base.model.Staff
 class CourseEvalStat extends LongId with EvalStat with Rank {
 
   var staff: Staff = _
-
   var course: Course = _
   
   var stdEvaluate:Float=_

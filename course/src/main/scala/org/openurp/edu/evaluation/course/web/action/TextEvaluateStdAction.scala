@@ -154,8 +154,8 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
     if (std == null) { forward("error.std.stdNo.needed") }
     val semesters = entityDao.getAll(classOf[Semester])
     put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
-    put("currentSemester", entityDao.search(semesterQuery).head)
+//    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+//    put("currentSemester", entityDao.search(semesterQuery).head)
   }
 
   override def search(): String = {

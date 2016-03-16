@@ -1,7 +1,7 @@
 [#ftl]
 [@b.head/]
 [@b.form name="questionnaireStatSearchForm" action="!search" target="contentDiv"]
-    [@b.grid items=lessonEvalStats var="questionnaireStat" sortable="true"]
+    [@b.grid items=lessonEvalStats var="lessonEvalStat" sortable="true"]
         [@b.gridbar title="院系教师评教详细信息"]
             var detailMenu = bar.addMenu("查看详情", "info()");
             detailMenu.addItem("教师历史评教", "evaluateTeachHistory()", "info.png");
@@ -15,12 +15,13 @@
         [/@]
         [@b.row]
             [@b.boxcol/]
-            [@b.col title="教师工号"]${(questionnaireStat.staff.code)!}[/@]
-            [@b.col property="staff.person.name.formatedName" title="教师姓名"/]
+            [@b.col property="lesson.no" title="课程序号"/]
             [@b.col property="lesson.course.code" title="课程代码"/]
             [@b.col property="lesson.course.name" title="课程名称"/]
             [@b.col property="lesson.teachDepart.name" title="开课院系"/]
-            [@b.col property="score" title="个人得分"/]
+            [@b.col property="staff.code" title="教师工号"/]
+            [@b.col property="staff.person.name.formatedName" title="教师姓名"/]
+            [@b.col property="score" title="教师任务得分"]${lessonEvalStat.score}[/@]
             [@b.col property="rank" title="全校排名"/]
             [@b.col property="departRank" title="院系排名"/]
         [/@]
@@ -31,34 +32,34 @@
 var form = document.questionnaireStatSearchForm;
     function doing(){
             var form = document.questionnaireStatSearchForm;
-            var lessonIds = bg.input.getCheckBoxValues("questionnaireStat.id");
+            var lessonIds = bg.input.getCheckBoxValues("lessonEvalStat.id");
                 alert(lessonIds);
     }
     
     function remove(){
-        var questionnaireStatIds = bg.input.getCheckBoxValues("questionnaireStat.id");
-        bg.form.addInput(form,"questionnaireStat.id",questionnaireStatIds);
+        var questionnaireStatIds = bg.input.getCheckBoxValues("lessonEvalStat.id");
+        bg.form.addInput(form,"lessonEvalStat.id",questionnaireStatIds);
         bg.form.submit(form,"${b.url('!remove')}");
     }
     function evaluateTeachHistory(){
-        var questionnaireStatIds = bg.input.getCheckBoxValues("questionnaireStat.id");
+        var questionnaireStatIds = bg.input.getCheckBoxValues("lessonEvalStat.id");
         if(questionnaireStatIds == "" || questionnaireStatIds.split(",").length !=1){
                 alert("请选择一个进行操作！");
                 return false;
         }
-        bg.form.addInput(form,"questionnaireStat.id",questionnaireStatIds);
+        bg.form.addInput(form,"lessonEvalStat.id",questionnaireStatIds);
         bg.form.submit(form,"${b.url('!evaluateTeachHistory')}");
     }
     
     
     function info(){
-        var questionnaireStatIds = bg.input.getCheckBoxValues("questionnaireStat.id");
+        var questionnaireStatIds = bg.input.getCheckBoxValues("lessonEvalStat.id");
         if(questionnaireStatIds == "" || questionnaireStatIds.split(",").length !=1){
                 alert("请选择一个进行操作！");
                 return false;
         }
-        bg.form.addInput(form,"questionnaireStat.id",questionnaireStatIds);
-        bg.form.submit(form,"${b.url('evaluate-detail-search!info')}");
+        bg.form.addInput(form,"lessonEvalStat.id",questionnaireStatIds);
+        bg.form.submit(form,"${b.url('lesson-eval-search!info')}");
     }
     var searchForm = document.questionnaireStatSearchForm;
 

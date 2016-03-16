@@ -44,6 +44,7 @@
             alert("请至少选择一项!");
         }
         bg.form.addInput(searchForm, 'isEvaluate', isEvaluate);
+        bg.form.addParamsInput(searchForm,action.page.paramstr);
         [#--bg.form.submit(searchForm, "evaluateResult!updateState.action");--]
         bg.form.submit(searchForm, "${b.url('!updateState')}")
     }

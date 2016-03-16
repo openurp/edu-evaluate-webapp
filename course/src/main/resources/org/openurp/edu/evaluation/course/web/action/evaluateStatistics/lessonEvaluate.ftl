@@ -12,8 +12,8 @@
 <script language="javascript"> 
         var form =document.questionnaireStatSearchForm;
         function infos(){
-        bg.form.submitId(form,"evaluateTeaStas.id",false,"evaluateStatistics!teaEvaluateInfo.action");
-        bg.form.action="evaluateStatistics!search.action";
+        bg.form.submitId(form,"evaluateTeaStas.id",false,"evaluate-statistics!teaEvaluateInfo.action");
+        bg.form.action="evaluate-statistics!search.action";
         }
     function getIds(){
     var str ="idStrs=";
@@ -48,7 +48,7 @@
         [@b.col width="4%" title="全校排名"]${numTeaMaps[evaluateTeaStas[0]]!}[/@]
         [@b.col width="4%" title="当前排名"][#assign nums =nums +1]${nums!}[/@]
         [@b.col width="4%" title="工号"]${(evaluateTeaStas[0])?if_exists}[/@]
-        [@b.col width="5%" title="姓名"][@b.a href="evaluateStatistics!teaEvaluateInfo?idStrs=${semester.id!},${(evaluateTeaStas[7])?if_exists},${evaluateTeaStas[2]!}," target="_blank"]${(evaluateTeaStas[1])?if_exists}[/@][/@]
+        [@b.col width="5%" title="姓名"][@b.a href="evaluate-statistics!teaEvaluateInfo?idStrs=${semester.id!},${(evaluateTeaStas[7])?if_exists},${evaluateTeaStas[2]!}," target="_blank"]${(evaluateTeaStas[1])?if_exists}[/@][/@]
         [@b.col width="10%" title="课程名称"]${(evaluateTeaStas[3])?if_exists}[/@]
         [@b.col width="10%" title="教师所在院系"]${(evaluateTeaStas[6])?if_exists}[/@]
         [@b.col width="4%" title="人次"]${(evaluateTeaStas[5])?if_exists}[/@]

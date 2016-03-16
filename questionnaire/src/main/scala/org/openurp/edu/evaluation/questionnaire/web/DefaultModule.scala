@@ -11,10 +11,13 @@ import org.openurp.edu.evaluation.questionnaire.web.action.QuestionAction
 class DefaultModule extends AbstractBindModule {
 
   override def binding() {
-    bind(classOf[QuestionAction],classOf[QuestionTypeAction])
-    bind(classOf[EvaluationCriteriaAction],classOf[OptionGroupAction],classOf[QuestionnaireAction])
+    
+//*******教务处  问卷设置
     bind(classOf[EvaluationConfigAction])
-    bind(classOf[QuestionTypeService])
+//  问卷、问题、问题类别
+    bind(classOf[QuestionnaireAction],classOf[QuestionAction],classOf[QuestionTypeAction],classOf[QuestionTypeService])
+// 选项组、评价标准
+    bind(classOf[OptionGroupAction],classOf[EvaluationCriteriaAction])
   }
 
 }

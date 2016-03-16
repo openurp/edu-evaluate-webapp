@@ -7,7 +7,7 @@
     <tr>
         <td class="index_view">
               [@b.form name="evaluateSearchIndexForm" action="!search" title="学生条件查询" target="contentDiv" theme="search"]
-                  <input type="hidden" name="semester.id" value="${(semester.id)!}"/>
+                [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
                 [@b.select  name="department.id" label="院系" items=teachDeparts  /]
                 [@b.textfield name="adminclass.name" label="班级名称"/]
             [/@]

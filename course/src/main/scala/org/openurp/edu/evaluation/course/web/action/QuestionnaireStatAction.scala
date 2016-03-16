@@ -43,8 +43,10 @@ class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with Servlet
     put("departments", entityDao.getAll(classOf[Department]))
     val query= OqlBuilder.from(classOf[Questionnaire], "questionnaire").where("questionnaire.state =:state",true)
     put("questionnaires", entityDao.search(query))
-    val semesterId = 20141
-      put("semester",entityDao.get(classOf[Semester], semesterId))
+    val semesters = entityDao.getAll(classOf[Semester])
+    put("semesters", semesters)
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    put("currentSemester", entityDao.search(semesterQuery).head)
     put("evaluationCriterias",entityDao.getAll(classOf[EvaluationCriteria]))
     put("questionTypes", entityDao.getAll(classOf[QuestionType]))
      forward()
@@ -56,7 +58,8 @@ class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with Servlet
    * @return
    */
   def  modifyTeacher():String= {
-    put("questionnaireStat", entityDao.get(classOf[LessonEvalStat],getLong("questionnaireStat.id").get));
+    val quenStatId = longId("questionnaireStat")
+    put("questionnaireStat", entityDao.get(classOf[LessonEvalStat],quenStatId));
     forward();
   }
 
@@ -268,34 +271,35 @@ class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with Servlet
    */
 //  @SuppressWarnings({ "unchecked", "rawtypes" })
   def  departDistributeStat():String= {
-    val semesterId = getInt("semester.id").get
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId =getInt("semester.id").getOrElse( entityDao.search(semesterQuery).head.id)
     val lis = entityDao.search(OqlBuilder.from (classOf[EvaluationCriteriaItem], "criteriaItem").where("criteriaItem.criteria.id =:id",1L)) 
     if (lis.size < 1) { redirect("search", "未找到评价标准！"); }
     put("criterias", lis);
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department],"dep").where("dep.teaching=:tea",true)))
     put("semester", entityDao.get(classOf[Semester], semesterId));
-    val que = OqlBuilder.from[Float](classOf[EvaluateResult].getName + " evaluateResult,"+ classOf[QuestionResult].getName + " questionResult");
+    val que = OqlBuilder.from[Double](classOf[EvaluateResult].getName + " evaluateResult,"+ classOf[QuestionResult].getName + " questionResult");
     que.select("sum(questionResult.score)/count(distinct evaluateResult.id)");
     que.where("evaluateResult.id=questionResult.result.id");
     que.where("evaluateResult.lesson.semester.id=" + semesterId);
     val lit = entityDao.search(que);
-    var fl = 0f;
+    var fl = 0d;
     if (lit.size > 0) {
       if (lit(0) != 0f) {
         fl = lit(0)
       }
     }
     put("evaluateResults", fl);
-    val hql = "select evaluateR.lesson.teachDepart.id,count( evaluateR.teacher.id) from" +
-         " org.openurp.edu.teach.evaluate.course.QuestionnaireStat evaluateR " +
-         " where evaluateR.lesson.semester.id=" + semesterId + " " +
-         "group by evaluateR.lesson.teachDepart.id,evaluateR.lesson.semester.id ";
+    val hql = OqlBuilder.from(classOf[LessonEvalStat],"evaluateR")
+    hql.select("evaluateR.lesson.teachDepart.id,count( evaluateR.staff.id)")
+    hql.where("evaluateR.lesson.semester.id=" + semesterId)
+    hql.groupBy("evaluateR.lesson.teachDepart.id,evaluateR.lesson.semester.id")
     put("questionNums", entityDao.search(hql));
     val maps = Collections.newMap[String, Seq[Array[Any]]]
     lis foreach {evaluationCriteriaItem =>
       val query = OqlBuilder.from[Array[Any]](classOf[LessonEvalStat].getName, "questionnaireStat");
       query.where("questionnaireStat.semester.id=:semesterId", semesterId);
-      query.select("questionnaireStat.lesson.teachDepart.id,count(questionnaireStat.teacher.id)");
+      query.select("questionnaireStat.lesson.teachDepart.id,count(questionnaireStat.staff.id)");
       query.where("questionnaireStat.score>=" + evaluationCriteriaItem.min
           + " and questionnaireStat.score<" + evaluationCriteriaItem.max);
       query.groupBy("questionnaireStat.lesson.teachDepart.id");

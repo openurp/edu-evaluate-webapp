@@ -8,25 +8,42 @@ import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
 import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
 import org.openurp.edu.evaluation.model.Option
 import org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat
+import org.beangle.commons.collection.Collections
+import org.openurp.edu.lesson.model.Lesson
+import org.openurp.base.model.Semester
+import org.beangle.commons.collection.Order
 
-class EvaluateDetailSearchAction extends RestfulAction[LessonEvalStat] {
+class LessonEvalSearchAction extends RestfulAction[LessonEvalStat] {
 //
 //  protected TeacherService teachService;
 //
 //  protected QuestionnairStatService questionnairStatService;
 //
 //  protected EvaluationCriteriaService evaluationCriteriaService;
-//
-//  override def  search():String= {
-//    val query = OqlBuilder.from(classOf[LessonEvalStat], "evaluateTeacherStat");
-//    populateConditions(query);
-////    query.orderBy(get(Order.ORDER_STR)).limit(getPageLimit());
-//    put("questionnaireStats", entityDao.search(query));
-//    forward()
-//  }
+
+    override def  index():String= {
+    val semesters = entityDao.getAll(classOf[Semester])
+    put("semesters", semesters)
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    put("currentSemester", entityDao.search(semesterQuery).head)
+    forward()
+  }
+    
+  override def search(): String = {
+    // 页面条件
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val semester = entityDao.get(classOf[Semester], semesterId)
+    val lessonEvalStat =OqlBuilder.from(classOf[LessonEvalStat],"lessonEvalStat")
+    populateConditions(lessonEvalStat)
+     lessonEvalStat.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
+    lessonEvalStat.where("lessonEvalStat.lesson.semester=:semester",semester)
+    put("lessonEvalStats", entityDao.search(lessonEvalStat))
+    forward()
+  }
 
    def  info() :String= {
-    val questionnaireStat = entityDao.get(classOf[LessonEvalStat],getLong("questionnaireStat.id").get)
+    val questionnaireStat = entityDao.get(classOf[LessonEvalStat],getLong("lessonEvalStat.id").get)
     put("questionnaireStat", questionnaireStat);
     // zongrenci fix
     val query = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName, "result");
@@ -38,23 +55,14 @@ class EvaluateDetailSearchAction extends RestfulAction[LessonEvalStat] {
       put("number1",a(0))
       put("number2",a(1))
     }
-//    var ob = null
-//    if (lis.size == 1) {
-//      put("number1",lis(0))
-//      put("number2",lis(1))
-//    }
-//    put("number1", null)
-//    put("number2", null)
-//    val list = new ArrayList<Option>();
-    val list = entityDao.getAll(classOf[Option]).toBuffer
+    val list = Collections.newBuffer[Option]
     val questions = questionnaireStat.questionnaire.questions
     questions foreach { question =>
       val options = question.optionGroup.options
       options foreach { option =>
         var tt = 0
         list foreach { oldOption =>
-//        for (Option oldOption : list) {
-          if (oldOption.id.equals(option.id)) {
+          if (oldOption.id==option.id) {
             tt += 1;
           }
         }
@@ -64,12 +72,13 @@ class EvaluateDetailSearchAction extends RestfulAction[LessonEvalStat] {
       }
     }
     put("options", list);
-    val querys = OqlBuilder.from(classOf[QuestionnaireLesson], "questionnaireL");
-    querys.join("questionnaireL.lesson.teachers", "teacher");
-    querys.where("teacher=:teach", questionnaireStat.staff);
-    querys.where("questionnaireL.lesson=:lesso", questionnaireStat.lesson);
-    querys.join("questionnaireL.lesson.teachclass.courseTakes", "courseTake");
+    val querys = OqlBuilder.from[Long](classOf[Lesson].getName, "lesson");
+    querys.join("lesson.teachers", "teacher");
+    querys.where("teacher=:teach",questionnaireStat.staff);
+    querys.where("lesson=:lesson", questionnaireStat.lesson);
+    querys.join("lesson.teachclass.courseTakes", "courseTake");
     querys.select("count(courseTake.std.id)");
+    val numbers=entityDao.search(querys)(0)
     put("numbers", entityDao.search(querys)(0));
     val que = OqlBuilder.from(classOf[QuestionResult], "questionR");
     que.where("questionR.result.staff=:teaId", questionnaireStat.staff);
@@ -80,7 +89,7 @@ class EvaluateDetailSearchAction extends RestfulAction[LessonEvalStat] {
     val quer = OqlBuilder.from(classOf[QuestionResult], "questionR");
     quer.where("questionR.result.staff=:teaId", questionnaireStat.staff);
     quer.where("questionR.result.lesson=:less", questionnaireStat.lesson);
-    quer.select("questionR.question.id,questionR.question.content,sum(questionR.score)/count(questionR.id)");
+    quer.select("questionR.question.id,questionR.question.content,sum(questionR.score)/count(questionR.id)*100");
     quer.groupBy("questionR.question.id,questionR.question.content");
     put("questionResults", entityDao.search(quer));
     forward()

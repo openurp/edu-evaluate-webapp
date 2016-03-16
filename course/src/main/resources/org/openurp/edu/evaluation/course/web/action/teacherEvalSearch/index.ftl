@@ -1,6 +1,6 @@
 [#ftl]
 [@b.head/]
-[@b.toolbar title='教师个人评教明细' id='departmentEvaluateBar']
+[@b.toolbar title='教师-问卷评教结果' id='departmentEvaluateBar']
     bar.addBlankItem();
 [/@]
 
@@ -8,9 +8,9 @@
     <tr>
     <td class="index_view">
         [@b.form action="!search" name="courseEvaluateStatIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
-        <input type="hidden" name="semester.id" value="${(semester.id)!}"/>
-       [@b.textfield style="width:100px" name="evaluateTeacher.course.code" label="课程代码" /]
-       [@b.textfield style="width:100px" name="evaluateTeacher.course.name" label="课程名称" /]
+       [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
+       [@b.textfield style="width:100px" name="teacherEvalStat.staff.code" label="教师工号" /]
+       [@b.textfield style="width:100px" name="teacherEvalStat.staff.person.name.formatedName" label="教师姓名" /]
     <input type="hidden" name="searchFormFlag" value="beenStat"/>
          [/@]
         </td>

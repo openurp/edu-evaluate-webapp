@@ -27,14 +27,18 @@ class EvaluateStatusStatAction extends RestfulAction[EvaluateResult] {
   override def  index():String = {
     put("stdTypeList", entityDao.getAll(classOf[StdType]))
     put("departmentList", entityDao.search(OqlBuilder.from(classOf[Department],"dep").where("dep.teaching =:tea",true)));
-    put("semester",entityDao.get(classOf[Semester],20141))
+    val semesters = entityDao.getAll(classOf[Semester])
+    put("semesters", semesters)
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    put("currentSemester", entityDao.search(semesterQuery).head)
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department],"dep").where("dep.teaching =:tea",true)))
     forward()
   }
 
   override def  search():String= {
-    val departmentId = getInt("department.id").get
-    val semesterId = getInt("semester.id").get
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val departmentId = getInt("department.id").getOrElse(0)
     if (departmentId != 0) {
       searchDep(semesterId, departmentId);
       return forward("searchDep");

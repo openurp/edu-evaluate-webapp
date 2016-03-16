@@ -5,12 +5,11 @@
      //bar.addItem("教师评教导出","evaluateTeaResultsExport()");
 [/@]
 
-[#--[@eams.semesterBar name="project.id" semesterEmpty=false semesterName="semester.id" semesterValue=semester/]--]
 <table class="indexpanel">
     <tr>
         <td class="index_view">
         [@b.form action="!search" name="textbookIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
-            [#--<input type='hidden' name="semester.id" value="${semester.id}" />--]
+            [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
             [@b.select name="department.id" label="院系" items=departmentList empty="..." /]
             [@b.select name="questionnaire.id" label="所用问卷" items=[] ]
                 [#list questionnaires as q]
@@ -22,12 +21,14 @@
         </td>
         
         <td class="index_content">
-            [@b.div href="!search?semester.id=${(semester.id)!}" id="contentDiv"/]
+            [@b.div  id="contentDiv" href="!search"/]
         </td> 
     </tr>
     </table>
     <script language="javascript"> 
+    
         var form =document.textbookIndexForm;
+        
         function evaluateTeaResultsExport(){
           form.action="evaluateStatistics.action?method=evaluateTeaResultsExport";
           form.submit();
@@ -38,7 +39,7 @@
        }
        function stuEvalutateResultsExport(){
         form.target="_blank";
-           bg.form.addInput(form,"semester.id",${semester.id});
+           bg.form.addInput(form,"semester.id",$("input[name='semester.id']").val());
            bg.form.addInput(form,"department.id",form['department.id'].value);
            bg.form.addInput(form,"searchTypes",form['searchTypes'].value);
         bg.form.submit(form,"${b.url('!stuEvalutateResultsExport')}");

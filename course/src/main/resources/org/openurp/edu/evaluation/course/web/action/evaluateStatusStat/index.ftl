@@ -7,7 +7,7 @@
     <tr>
         <td class="index_view">
         [@b.form action="!search" name="evaluateStatusStatIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
-            <input type='hidden' name="semester.id" value="${semester.id}" />
+            [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
             [@b.select name="department.id" label="院系" items=departments empty="..."/]
         [/@]
         </td>

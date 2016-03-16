@@ -6,11 +6,11 @@
 [@b.form name="modifyTeacherForm" action="!saveTeacher" title="更改教师" theme="list"]
 <input type="hidden" name="questionnaireStat.id" value="${(questionnaireStat.id)!}">
     <li>
-        <label class="title">现有教师:</label>${(questionnaireStat.teacher.name)!}
+        <label class="title">现有教师:</label>${(questionnaireStat.staff.person.name.formatedName)!}
     </li>
     [@b.field label="修改教师" required="true"]
-        [@b.textfield title="正确工号" theme="xml" id="teacherCode" value="" name="teacherCode" comment="<input type='button' value='查询' onClick='searchTeacher()'/>输入教师工号查询"/]
-        [@b.textfield title="正确工号" theme="xml" id="teacherId" required="true" name="teacher.id" value="" style="display:none;"/]
+        [@b.textfield title="正确工号" theme="html" id="teacherCode" value="" name="teacherCode" comment="<input type='button' value='查询' onClick='searchTeacher()'/>输入教师工号查询"/]
+        [@b.textfield title="正确工号" theme="html" id="teacherId" required="true" name="teacher.id" value="" style="display:none;"/]
     [/@]
     [@b.field label="教师信息"]
     <table class="infoTable" id="studentInfoTable" style="width:40%;">
@@ -35,7 +35,7 @@
     var modifyTeacherForm = document.modifyTeacherForm;
 
     function searchTeacher(){
-        var response = $.post("questionnaireStat!searchTeacher.action",{teacherCode:$("#teacherCode").val()},function(){
+        var response = $.post("searchTeacher",{teacherCode:$("#teacherCode").val()},function(){
             if(response.readyState == 4 && response.status == 200){
                 var teacherId = response.responseText;
                 if (teacherId == ""){

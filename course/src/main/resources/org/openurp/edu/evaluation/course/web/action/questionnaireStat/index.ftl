@@ -8,7 +8,7 @@
 [#include "queryConditions.ftl"/]
 <script type="text/javaScript">
     function compareAllCollege(){
-        bg.form.addInput(form,"semester.id","${semester.id}");
+        bg.form.addInput(form,"semester.id",$("input[name='semester.id']").val());
         bg.form.submit(form, "${b.url('!departDistributeStat')}");
     }
     function lieChart(){

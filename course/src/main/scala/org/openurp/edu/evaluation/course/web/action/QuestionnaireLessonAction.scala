@@ -32,7 +32,7 @@ class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
 
   override def indexSetting(): Unit = {
     put("semesters",entityDao.getAll(classOf[Semester]))
-        val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     put("currentSemester", entityDao.search(semesterQuery).head)
     put("departments", entityDao.getAll(classOf[Department]))
     val examModes = entityDao.getAll(classOf[ExamMode])
@@ -45,9 +45,9 @@ class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
   override def search(): String = {
     val questionnaireId = getLong("questionnaire.id").getOrElse(-1)
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
-    val projectId = getInt("lesson.project.id").getOrElse(1)
     val semesterId =getInt("lesson.semester.id").getOrElse( entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
+    val projectId = getInt("lesson.project.id").getOrElse(1)
     val project = entityDao.get(classOf[Project], projectId)
     // 检查时间
     val evaluateSwitch = evaluateSwitchService.getEvaluateSwitch(semester, project);

@@ -38,6 +38,7 @@ class EvaluateResultAction extends RestfulAction[EvaluateResult] {
     put("semesters", semesters)
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     put("currentSemester", entityDao.search(semesterQuery).head)
+    
   }
   
 //  override def  search(): String = {
@@ -90,7 +91,7 @@ class EvaluateResultAction extends RestfulAction[EvaluateResult] {
     }
     try {
       entityDao.saveOrUpdate(results);
-      return redirect("search", "info.action.success");
+      return redirect("search","info.action.success");
     } catch  {
       case e: Exception =>
       return redirect("search", "info.save.failure");

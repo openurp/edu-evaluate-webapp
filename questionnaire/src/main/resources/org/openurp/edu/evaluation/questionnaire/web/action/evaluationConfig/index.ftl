@@ -10,26 +10,26 @@
                 <table class="search-widget" id="viewTables" width="95%">
                     <tr><td><em>信息分类</em></td></tr>
                     <tr>
-                         <td id="infoTd" class="toolbar-item" width="95%" onclick="info(this,'${b.url("question-type!search")}')" >
-                         &nbsp;&nbsp;问题类别
-                         </td>
-                       </tr>
-                       <tr>
-                         <td id="infoTd" class="toolbar-item" width="95%" onclick="info(this,'${b.url("option-group!search")}')" >
-                         &nbsp;&nbsp;选项组
-                         </td>
-                       </tr>
-                        <tr>
-                         <td id="infoTd" class="toolbar-item" width="95%" onclick="info(this,'${b.url("question!search")}')">
-                         &nbsp;&nbsp;问题信息
-                       </td>
-                       </tr>
-                       <tr>
                          <td id="infoTd" class="toolbar-item" width="95%" onclick="info(this,'${b.url("questionnaire!search")}')">
                          &nbsp;&nbsp;问卷信息
                          </td>
                        </tr>
-                       <tr>
+                    <tr>
+                         <td id="infoTd" class="toolbar-item" width="95%" onclick="info(this,'${b.url("question!search")}')">
+                         &nbsp;&nbsp;问题信息
+                       </td>
+                       </tr>
+                    <tr>
+                         <td id="infoTd" class="toolbar-item" width="95%" onclick="info(this,'${b.url("question-type!search")}')" >
+                         &nbsp;&nbsp;问题类别
+                         </td>
+                       </tr>
+                    <tr>
+                         <td id="infoTd" class="toolbar-item" width="95%" onclick="info(this,'${b.url("option-group!search")}')" >
+                         &nbsp;&nbsp;选项组
+                         </td>
+                       </tr>
+                    <tr>
                          <td id="infoTd" class="toolbar-item" width="95%" onclick="info(this,'${b.url("evaluation-criteria!search")}')">
                          &nbsp;&nbsp;评价标准
                          </td>

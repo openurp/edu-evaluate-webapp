@@ -4,7 +4,6 @@
     bar.addBack();
 [/@]
 [@b.form name="statForm" title="统计评教结果"  action="!stat" theme="list"]
-   [#-- [@eams.semesterCalendar title="学年学期" label="学年学期" name="semester.id" empty="false" value=semester /]--]
     [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
     [@b.field label="学历层次"]
         <table class="infoTable" align="left" style="width:350px;">

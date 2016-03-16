@@ -40,10 +40,12 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     val date = new java.util.Date()
     /** 本学期是否评教 */
     val builder = OqlBuilder.from[Questionnaire](classOf[EvaluateResult].getName, "evaluateResult");
-    val semesters = entityDao.get(classOf[Semester],20141)
-    ;
+    val semesters = entityDao.getAll(classOf[Semester])
+    put("semesters", semesters)
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    put("currentSemester", entityDao.search(semesterQuery).head)
     if (semesters != null) {
-      builder.where("evaluateResult.lesson.semester.id=:ids", semesters.id);
+      builder.where("evaluateResult.lesson.semester in (:ids)", semesters);
     }
     builder.select("distinct evaluateResult.questionnaire");
     val list = entityDao.search(builder);
@@ -51,19 +53,18 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     put("questionnaires", list);
     val departs = entityDao.search(OqlBuilder.from(classOf[Department],"dep").where("dep.teaching =:tea",true))
     put("departmentList", departs);
-    put("semester",semesters)
     forward();
   }
 
   /** 学院与教师评教结果统计 */
   override def  search():String ={
-//    val semesterId = getInt("semester.id").get
-    val semesterId=20141
-    val departmentId = getInt("department.id").get
-    var questionnaireId = 1L;
-    if (getLong("questionnaire.id").get != 0L  ) {
-      questionnaireId = getLong("questionnaire.id").get
-    }
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val departmentId = getInt("department.id").getOrElse(null)
+    var questionnaireId = getLong("questionnaire.id").get
+//    if (getLong("questionnaire.id").get != 0L  ) {
+//      questionnaireId = getLong("questionnaire.id").get
+//    }
     /** 本学期是否评教 */
     val builder = OqlBuilder.from[Questionnaire](classOf[EvaluateResult].getName, "evaluateResult");
     builder.where("evaluateResult.lesson.semester.id=" + semesterId);
@@ -86,7 +87,7 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     put("semester", semest);
     var searchTypes = 1;
     if (getInt("searchTypes") != null) {
-      searchTypes = getInt("searchTypes").get
+      searchTypes = getInt("searchTypes").getOrElse(1);
     }
     if (searchTypes == 1) {
       /** 院系评教总分 */
@@ -95,7 +96,7 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
       query.select("department.id,department.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)");
       query.where("evaluateResult.id=questionResult.result.id and evaluateResult.department.id=department.id");
       query.where("evaluateResult.lesson.semester.id=" + semesterId);
-      if (departmentId != 0) {
+      if (departmentId != null) {
         query.where("department.id=" + departmentId.toString());
       }
       query.groupBy("department.id,department.name");
@@ -108,7 +109,7 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
       query1.select("evaluateResult.department.id,questionResult.question.id,sum(questionResult.score)/count(evaluateResult.id)");
       query1.where("evaluateResult.id=questionResult.result.id");
       query1.where("evaluateResult.lesson.semester.id=" + semesterId);
-      if (departmentId != 0) {
+      if (departmentId != null) {
         query1.where("evaluateResult.department.id=" + departmentId.toString());
       }
       query1.groupBy("questionResult.question.id,evaluateResult.department.id");
@@ -158,9 +159,9 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
   }
 
   def  teacherEvaluate():String= {
-//    val semesterId = getInt("semester.id").get
-    val semesterId=20141
-    val departmentId = getInt("department.id").get
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val departmentId = getInt("department.id").getOrElse(null)
     var id = 1L;
     if (getLong("questionnaire.id") != null) {
       id = getLong("questionnaire.id").get
@@ -189,7 +190,7 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     quer.where("evaluateResult.id=questionResult.result.id ");
     quer.where("evaluateResult.lesson.semester.id=" + semesterId);
     quer.where("evaluateResult.questionnaire.id=:ids", id);
-    if (departmentId != 0) {
+    if (departmentId != null) {
       quer.where("tea.state.department.id=" + departmentId.toString());
     }
     quer.groupBy("tea.code,tea.person.name.formatedName");
@@ -219,7 +220,7 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     quer1.where("evaluateResult.id=questionResult.result.id");
     quer1.where("evaluateResult.lesson.semester.id=" + semesterId);
     quer1.where("evaluateResult.questionnaire.id=:ids", id);
-    if (departmentId != 0) {
+    if (departmentId != null) {
       quer1.where("tea.state.department.id=" + departmentId.toString());
     }
     quer1.groupBy("questionResult.question.id,tea.code");
@@ -288,7 +289,6 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     querdep.where("evaluateResult.lesson.semester.id=" + semesterId);
     if (lesson != null) {
       querdep.where("evaluateResult.lesson.teachDepart.id=:depId", lesson.teachDepart.id);
-      // querdep.where("evaluateResult.teacher.department.id=:depId",teacher.getDepartment().getId());
     }
     put("depScores", entityDao.search(querdep)(0).toString().toFloat);
     /** 全校平均分 */
@@ -325,7 +325,6 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     querydep.where("evaluateResult.lesson.semester.id=" + semesterId);
     if (lesson != null) {
       querdep.where("evaluateResult.lesson.teachDepart.id=:depId", lesson.teachDepart.id);
-      // querdep.where("evaluateResult.teacher.department.id=:depId",teacher.getDepartment().getId());
     }
     querydep.groupBy("evaluateResult.lesson.id");
     querydep.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc");
@@ -400,9 +399,9 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
   }
 
   def lessonEvaluate() {
-//    val semesterId = getInt("semester.id").get
-    val semesterId=20141
-    val departmentId = getInt("department.id").get
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val departmentId = getInt("department.id").getOrElse(null)
     val questionnaireId = getLong("questionnaire.id");
     /** 得到本学期的唯一问卷 */
     val  builder = OqlBuilder.from[Questionnaire](classOf[EvaluateResult].getName, "evaluateResult");
@@ -419,7 +418,7 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
 //        questionList.addAll(questionnaire.getQuestions());
 //      }
     } else {
-      // return redirect("search","未找到评教记录!")
+      redirect("search","未找到评教记录!")
     }
     put("questionList", questionList);
     if (semesterId != 0) {
@@ -435,7 +434,7 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
 //    quer.where("teacher.endOn is null");
     quer.where("evaluateResult.id=questionResult.result.id ");
     quer.where("evaluateResult.lesson.semester.id=" + semesterId);
-    if (departmentId != 0) {
+    if (departmentId != null) {
       quer.where("teacher.state.department.id=" + departmentId.toString());
     }
     quer.groupBy("teacher.code,teacher.person.name.formatedName,evaluateResult.lesson.id,evaluateResult.lesson.course.name,teacher.state.department.name,teacher.id");
@@ -476,7 +475,7 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
 //    quer1.where("teacher.endOn is null");
     quer1.where("evaluateResult.id=questionResult.result.id");
     quer1.where("evaluateResult.lesson.semester.id=" + semesterId);
-    if (departmentId != 0) {
+    if (departmentId != null) {
       quer1.where("teacher.state.department.id=" + departmentId.toString());
     }
     quer1.groupBy("questionResult.question.id,teacher.code,evaluateResult.lesson.id");
@@ -502,8 +501,9 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
   }
 
   def  lessonTeaEvaluate():String = {
-    val semesterId = getInt("semester.id").get
-    val departmentId = getInt("department.id");
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val departmentId = getInt("department.id").getOrElse(null)
     val buil = OqlBuilder.from(classOf[QuestionType], "types");
     buil.where("types.state is true");
     put("questionTypes", entityDao.search(buil));
@@ -586,8 +586,9 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
   }
 
   def  lessonTeaEvaluateExport():String ={
-    val semesterId = getInt("semester.id").get
-    val departmentId = getInt("department.id");
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val departmentId = getInt("department.id").getOrElse(null)
     val  buil = OqlBuilder.from(classOf[QuestionType], "types");
     buil.where("types.state is true");
     put("questionTypes", entityDao.search(buil));
@@ -696,9 +697,9 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
   }
 
   def  courseTypeEvaluate(courseType:Boolean):String = {
-//    val semesterId = getInt("semester.id").get
-    val semesterId=20141
-    val departmentId = getInt("department.id").get
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val departmentId = getInt("department.id").getOrElse(null)
     val questionnaireId = getLong("questionnaire.id").get
     val  buil = OqlBuilder.from(classOf[QuestionType], "types");
     buil.where("types.state is true");
@@ -717,7 +718,7 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     quer.where("evaluateResult.id=questionResult.result.id and tea.id=teacher.id");
     quer.where("evaluateResult.lesson.semester.id=" + semesterId);
     quer.where("evaluateResult.questionnaire.id=" + questionnaireId);
-    if (departmentId != 0) {
+    if (departmentId != null) {
       quer.where("evaluateResult.lesson.teachDepart.id=" + departmentId.toString());
     }
     quer.groupBy("teacher.code,evaluateResult.lesson.id,teacher.person.name.formatedName,evaluateResult.lesson.course.name,evaluateResult.lesson.no,evaluateResult.lesson.teachDepart.name,evaluateResult.lesson.course.code");
@@ -760,7 +761,7 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     quer1.where("evaluateResult.id=questionResult.result.id");
     quer1.where("evaluateResult.lesson.semester.id=" + semesterId);
     quer1.where("evaluateResult.questionnaire.id=" + questionnaireId);
-    if (departmentId != 0) {
+    if (departmentId != null) {
       quer1.where("evaluateResult.lesson.teachDepart.id=" + departmentId.toString());
     }
     if (courseType != false) {
@@ -792,9 +793,9 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
   }
 
   def  stuEvaluateResults():String = {
-//    val semesterId = getInt("semester.id");
-    val semesterId=20141
-    val depId = getInt("department.id").get
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val depId = getInt("department.id").getOrElse(null)
     val questionnaireId = getLong("questionnaire.id").get
     /** 得到本学期的唯一问卷 */
     val  builder = OqlBuilder.from[Questionnaire](classOf[EvaluateResult].getName, "evaluateResult");

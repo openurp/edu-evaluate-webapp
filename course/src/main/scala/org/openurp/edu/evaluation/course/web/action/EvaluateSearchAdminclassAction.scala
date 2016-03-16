@@ -19,7 +19,10 @@ class EvaluateSearchAdminclassAction extends RestfulAction[EvaluateResult] {
 
   override def  index():String= {
 //    getSemester();
-    val semester = entityDao.get(classOf[Semester],20141)
+    val semesters = entityDao.getAll(classOf[Semester])
+    put("semesters", semesters)
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    put("currentSemester", entityDao.search(semesterQuery).head)
     put("teachDeparts", entityDao.search(OqlBuilder.from(classOf[Department],"dep").where("dep.teaching=:tea",true)))
     forward()
   }
@@ -29,7 +32,8 @@ class EvaluateSearchAdminclassAction extends RestfulAction[EvaluateResult] {
    */
   override def  search():String= {
 //    val semesterId = getInt("semester.id").get
-    val semesterId=20141
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val departmentId = getInt("department.id").get
     val className = get("adminclass.name").get
     val semester = entityDao.get(classOf[Semester], semesterId);

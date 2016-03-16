@@ -98,7 +98,7 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
   override def search(): String = {
     val std = entityDao.get(classOf[Student], 68285L)
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
-    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val semesterId =getInt("semester.id").getOrElse( entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     val lessonList = getStdLessons(std, semester)
     // 获得(课程问卷,根据学生,根据教学任务)

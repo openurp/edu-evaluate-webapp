@@ -1,6 +1,6 @@
 [#ftl]
 [@b.head/]
-[@b.toolbar title='院系课程评教详情' id='departmentChoiceConfigBar']
+[@b.toolbar title='院系任务评教结果比较' id='departmentChoiceConfigBar']
     bar.addBack();
 [/@]
     <div style="width: 80%;margin:0 auto;">
@@ -24,15 +24,14 @@
             ${nums!0}
             [/@]
             [#list criterias as criteria]
-            [@b.col title="${criteria.name!}"]
+            [@b.col title="${criteria.name!}(${criteria.min!}~${criteria.max!})"]
             [#list questionDeps['${criteria.id}'] as questionDep]
             [#if questionDep[0]?string == department.id?string ]
             [#list questionNums as questionN]
             [#if questionN[0]?string == department.id?string]
-            ${questionDep[1]!0}/${((questionDep[1]!0)/(questionN[1]!1))*100}%
+            ${questionDep[1]!0}(${((questionDep[1]!0)/(questionN[1]!1))*100}%)
             [/#if]
             [/#list]
-            
             [/#if]
             [/#list]
             [/@]
