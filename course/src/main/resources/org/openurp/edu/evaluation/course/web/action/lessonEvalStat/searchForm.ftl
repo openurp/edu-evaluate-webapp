@@ -1,6 +1,5 @@
 [#ftl]
 [@b.head/]
-[#--[@eams.semesterBar semesterValue=semester name="project.id" semesterName="semester.id" semesterEmpty="false" initCallback="changeSemester()"/]--]
 <table class="indexpanel">
     <tr>
         <td style="width:200px" class="index_view">

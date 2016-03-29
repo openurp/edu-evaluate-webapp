@@ -12,8 +12,12 @@ import scala.collection.mutable.Buffer
 import scala.collection.mutable.ListBuffer
 import org.openurp.edu.evaluation.department.model.SupervisiorEvaluate
 import org.openurp.hr.base.model.Staff
+import org.openurp.edu.evaluation.lesson.stat.model.FinalTeacherScore
+import org.beangle.webmvc.api.view.View
 
-class FinalTeacherScoreAction extends RestfulAction[TeacherEvalStat] {
+class FinalTeacherScoreAction extends RestfulAction[FinalTeacherScore] {
+  
+  
  override def  index():String = {
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department],"dep").where("dep.teaching =:tea",true)))
     val semesters = entityDao.getAll(classOf[Semester])
@@ -23,13 +27,24 @@ class FinalTeacherScoreAction extends RestfulAction[TeacherEvalStat] {
     forward();
   }
 
-  
-
-  
-  override def search():String= {
-    
+ override def search(): String = {
+    // 页面条件
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val semester = entityDao.get(classOf[Semester], semesterId)
+    val finalScores =OqlBuilder.from(classOf[FinalTeacherScore],"finalScore")
+    populateConditions(finalScores)
+    finalScores.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
+    finalScores.where("finalScore.semester=:semester",semester)
+    put("finalScores", entityDao.search(finalScores))
+    
+    forward()
+  }
+
+  
+  def  stat():View = {
+    
+    val semesterId = getInt("semester.id").get
     val semester = entityDao.get(classOf[Semester], semesterId)
     val que = OqlBuilder.from[Array[Any]](classOf[TeacherEvalStat].getName + " teacherEvalStat,"+ classOf[DepartEvaluate].getName + " departEvaluate,"+ classOf[SupervisiorEvaluate].getName + " supervisiorEvaluate");
     que.select("teacherEvalStat.staff.id,teacherEvalStat.score,supervisiorEvaluate.totalScore,departEvaluate.totalScore");
@@ -44,10 +59,18 @@ class FinalTeacherScoreAction extends RestfulAction[TeacherEvalStat] {
 //      val buffer = finalScoreMap.getOrElseUpdate(a(0).asInstanceOf[Long],new ListBuffer[Tuple4[Number,Number,Number,Number]])
 //      buffer += Tuple4(a(1).asInstanceOf[Number],a(2).asInstanceOf[Number],a(3).asInstanceOf[Number],(a(1).toString().toFloat)*0.5+(a(2).toString().toFloat)*0.3+(a(3).toString().toFloat)*0.2)
 //    }
-    val finalScoreMap=entityDao.search(que)
-    put("finalScoreMaps", finalScoreMap);
-    val staffs =entityDao.getAll(classOf[Staff])
-    put("staffs",staffs)
-    forward();
+    val finalScores=entityDao.search(que)
+     finalScores foreach { ob =>
+          val questionS = new FinalTeacherScore
+          questionS.staff = new Staff()
+          questionS.staff.id=ob(0).asInstanceOf[Long]
+          questionS.semester=semester
+          questionS.stdScore = ob(1).toString().toFloat
+          questionS.supviScore= ob(2).toString().toFloat
+          questionS.departScore=ob(3).toString().toFloat
+          questionS.finalScore=ob(1).toString().toFloat*0.5 + ob(2).toString().toFloat*0.3 + ob(3).toString().toFloat*0.2
+          entityDao.saveOrUpdate(questionS)
+    }
+    redirect("index", "info.action.success")
   }
 }

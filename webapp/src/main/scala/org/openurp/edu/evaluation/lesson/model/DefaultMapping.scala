@@ -47,6 +47,7 @@ import org.openurp.edu.evaluation.lesson.stat.model.TeacherQuestionTypeStat
 import org.openurp.edu.evaluation.lesson.stat.model.TeacherEvalStat
 import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
 import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
+import org.openurp.edu.evaluation.lesson.stat.model.FinalTeacherScore
 
 class DefaultMapping extends Mapping {
 
@@ -69,7 +70,10 @@ class DefaultMapping extends Mapping {
     bind[QuestionnaireLesson].on(e => declare(
       e.lesson & e.questionnaire are notnull))
 
-    //eval stat
+    //   finalTeacherScore
+   bind[FinalTeacherScore].on(e => declare(
+      e.staff & e.semester are notnull))
+      //eval stat
     bind[EvalStat].on(e => declare(
       e.semester & e.statAt & e.questionnaire are notnull))
 
