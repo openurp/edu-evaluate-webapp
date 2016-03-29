@@ -53,11 +53,11 @@
            [#-- [/#if]--]
         [/@]
         <div style="height:23px;line-height:23px;border:1px solid white;text-align:center;">
-            评教选择:
-            [@b.select name="isEvaluate" id="isEvaluate" items={'1':'教师评教','0':'课程评教'}/]
+            评教方式选择:
+            [@b.select name="isEvaluate" id="isEvaluate" items={'1':'教师评教','0':'课程评教'} empty="请选择..."/]
             问卷选择:
             <select id="questionnaireId" name="questionnaireId">
-                <option value="">${b.text('filed.choose')}....</option>
+                <option value="">${b.text('请选择')}....</option>
                 [#list questionnaires?if_exists as questionnaire]
                 <option value="${(questionnaire.id)!}" description="${(questionnaire.description)!}">
                     ${(questionnaire.description)!}&nbsp;&nbsp;${(questionnaire.depart.name)!}
@@ -77,7 +77,7 @@
                 ${(questionnaireLesson.evaluateByTeacher?string("教师评教","课程评教"))!}
             [/@]
             [@b.col property="lesson.teachDepart.name" title="开课院系"/]
-            [@b.col property="lesson.schedule.startWeek" title="起始周" width="5%"/]
+            [#--[@b.col property="lesson.schedule.startWeek" title="起始周" width="5%"/]--]
             [@b.col title="任课教师"]
                 [#list questionnaireLesson.lesson.teachers?if_exists as teacher]
                     ${(teacher.person.name.formatedName)!}

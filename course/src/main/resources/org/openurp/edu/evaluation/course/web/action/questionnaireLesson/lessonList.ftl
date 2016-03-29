@@ -70,7 +70,7 @@
             [@b.col property="schedule.startWeek" title="起始周" width="6%"/]
             [@b.col title="任课教师"]
                 [#list lesson.teachers?if_exists as teacher]
-                    ${(teacher.name)!}
+                    ${(teacher.person.name.formatedName)!}[#if teacher_has_next],[/#if]
                 [/#list]
             [/@]
         [/@]

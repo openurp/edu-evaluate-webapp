@@ -45,11 +45,12 @@
             </tr>
             [/#list]
         [#else]
-            [#if "1" == evaluateMap[questionnaireLesson.lesson.id?string + "_0"]?default("0")]
-                [#assign flag=true]
-            [#else]
+            [#assign flag=true]
+            [#list questionnaireLesson.lesson.teachers as t]
+              [#if !(evaluateMap[questionnaireLesson.lesson.id?string + "_"+ t.id])??]
                 [#assign flag=false]
-            [/#if]
+              [/#if]
+            [/#list]
             <tr class="${lessonClass!}">
                 <td>${(questionnaireLesson.lesson.no)!}</td>
                 <td>${(questionnaireLesson.lesson.course.code)!}</td>
@@ -84,7 +85,7 @@
         var evaluateForm = document.evaluateForm;
         bg.form.addInput(evaluateForm, "semester.id", $("input[name='semester.id']").val());
         bg.form.addInput(evaluateForm, "evaluateState", value);
-        bg.form.addInput(evaluateForm, "evaluateId" ,id);
+        bg.form.addInput(evaluateForm, "lessonId" ,id);
         bg.form.submit(evaluateForm);
     }
 </script>

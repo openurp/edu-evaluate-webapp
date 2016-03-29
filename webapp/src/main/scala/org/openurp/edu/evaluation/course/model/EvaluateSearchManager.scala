@@ -9,16 +9,20 @@ class EvaluateSearchManager {
 
   var  department:Department=_
   /*
-   * 院系需要评教的总人次
+   * 院系总评人次
    */
-  var  countAll:Integer=_
-
+  var  countAll:Long=_
+//  总评人数
+  var  stdAll:Long=_
   /*
-   * 院系已经评教的人次
+   * 院系实评人次
    */
-  var  haveFinish:Integer=_
+  var  haveFinish:Long=_
+//  实评人数
+  var stdFinish:Long=_
   /*
    * 完成率
    */
   var  finishRate:String=_
+  var  stdRate:String=_
 }

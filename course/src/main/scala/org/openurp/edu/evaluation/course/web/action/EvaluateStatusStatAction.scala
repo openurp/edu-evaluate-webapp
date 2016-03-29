@@ -1,25 +1,26 @@
 package org.openurp.edu.evaluation.course.web.action
 
+import java.text.DecimalFormat
+import org.beangle.commons.collection.Collections
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.model.Semester
-import java.util.ArrayList
-import org.openurp.base.model.Semester
-import org.openurp.base.model.Semester
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.base.model.Semester
-import org.openurp.base.model.Semester
 import org.openurp.base.model.Department
+import org.openurp.base.model.Semester
+import org.openurp.base.model.Semester
+import org.openurp.base.model.Semester
+import org.openurp.base.model.Semester
+import org.openurp.base.model.Semester
+import org.openurp.base.model.Semester
+import org.openurp.base.model.Semester
+import org.openurp.edu.base.code.model.StdType
 import org.openurp.edu.base.model.Adminclass
 import org.openurp.edu.evaluation.course.model.EvaluateSearchDepartment
-import org.beangle.data.dao.OqlBuilder
-import org.openurp.edu.base.code.model.StdType
-import org.openurp.base.model.Semester
-import org.beangle.commons.collection.Collections
-import org.openurp.base.model.Semester
 import org.openurp.edu.evaluation.course.model.EvaluateSearchManager
-import org.openurp.edu.lesson.model.CourseTake
-import java.text.DecimalFormat
 import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
+import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
+import org.openurp.edu.lesson.model.CourseTake
+import org.openurp.edu.lesson.model.Lesson
+import org.beangle.commons.lang.Strings
 
 class EvaluateStatusStatAction extends RestfulAction[EvaluateResult] {
 
@@ -39,65 +40,89 @@ class EvaluateStatusStatAction extends RestfulAction[EvaluateResult] {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val departmentId = getInt("department.id").getOrElse(0)
-    if (departmentId != 0) {
-      searchDep(semesterId, departmentId);
-      return forward("searchDep");
-    } else {
+    val lessonNo=get("lesson.no").getOrElse("")
+    val courseCode=get("course.code").getOrElse("")
+    val courseName=get("course.name").getOrElse("")
+    val staffName=get("staff.name").getOrElse("")
+    if (departmentId == 0 && lessonNo=="" && courseCode=="" && courseName=="" && staffName=="") {
       searchSchool(semesterId);
+    } else {
+      searchDep(semesterId);
+      return forward("searchDep");
     }
     forward();
   }
-
-  def searchDep(semesterId:Int, departmentId:Int) ={
+//按照开课院系、教学任务查看回收率
+  def searchDep(semesterId:Int) ={
     val semester = entityDao.get(classOf[Semester], semesterId);
-    val department = entityDao.get(classOf[Department], departmentId);
-    val date = new java.util.Date();
-    // 得到院系下的所有教学班
-    val adminClassQuery = OqlBuilder.from(classOf[Adminclass], "adminClass");
-    adminClassQuery.where("adminClass.department.id=:depIds", departmentId);
-    adminClassQuery.where("adminClass.beginOn<=:efDate", date);
-    adminClassQuery.where("adminClass.endOn is null or adminClass.endOn>=:endOn", date);
-//    adminClassQuery.where("adminClass.project =:project", 1);
-    val adminClassList = entityDao.search(adminClassQuery);
+    val departmentId = getInt("department.id").getOrElse(0)
+//      entityDao.get(classOf[Department], departmentId);
+    val lessonNo=get("lesson.no").get
+    val courseCode=get("course.code").get
+    val courseName=get("course.name").get
+    val staffName=get("staff.name").get
+    // 得到院系下的所有教学任务
+    val lessonQuery = OqlBuilder.from(classOf[Lesson], "lesson");
+    lessonQuery.where("lesson.semester =:semester", semester);
+    if (departmentId!=0){
+    lessonQuery.where("lesson.teachDepart.id=:depIds", departmentId);
+    }
+    if (Strings.isNotBlank(lessonNo)) {
+      lessonQuery.where("lesson.no =:lessonNo", lessonNo);
+    }
+    if (Strings.isNotBlank(courseCode)) {
+      lessonQuery.where("lesson.course.code =:courseCode", courseCode);
+    }
+    if (Strings.isNotBlank(courseName)) {
+      lessonQuery.where("lesson.course.name like :courseName", "%" + courseName + "%");
+    }
+   if (Strings.isNotBlank(staffName)) {
+     lessonQuery.join("lesson.teachers","teacher")
+     lessonQuery.where("teacher.person.name.formatedName like :staffName", "%" + staffName + "%");
+    }
+    val lessonList = entityDao.search(lessonQuery);
     val evaluateSearchDepartmentList = Collections.newBuffer[EvaluateSearchDepartment]
-    adminClassList foreach { adminClass =>
+    lessonList foreach { lesson =>
+      
+      var countAll:Long=0L
+      var haveFinish:Long=0L 
+      var stdFinish:Long=0L
       val query = OqlBuilder.from[Long](classOf[CourseTake].getName, "courseTake");
-      query.select("select count(*)");
-      query.where("courseTake.lesson.semester =:semester", semester);
-      query.where("courseTake.std.state.department.id=:depIds", departmentId);
-      query.where("exists( from "+classOf[QuestionnaireLesson].getName +" questionnaireLesson where questionnaireLesson.lesson=courseTake.lesson)");
-      query.where("courseTake.std.state.adminclass =:adminClass)", adminClass);
-      query.where("courseTake.std.state.adminclass is not null")
+      query.select("count(*)");
+      query.where("courseTake.lesson =:lesson", lesson);
+//      query.where("courseTake.lesson.teachDepart.id=:depIds", departmentId);
+//      query.where("exists( from "+classOf[QuestionnaireLesson].getName +" questionnaireLesson where questionnaireLesson.lesson=courseTake.lesson)");
 //      query.orderBy(Order.parse(get("orderBy")));
       val list = entityDao.search(query);
       // 得到指定学期，院系的学生评教人次总数
-      val countAll1 = list(0)
-      val countAll = countAll1.intValue();
+      countAll = list(0)
 
-      val query1 = OqlBuilder.from[Long](classOf[EvaluateResult].getName, "rs");
-      query1.select("select count(*)");
-      query1.where("rs.lesson.semester =:semester", semester);
-      query1.where("rs.student.state.department in(:departments)", department);
-      query1.where("rs.student.state.adminclass =:adminClass)", adminClass);
+      val query1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName, "rs");
+      query1.select("count(*),count(distinct student_id)");
+      query1.where("rs.lesson =:lesson", lesson);
+//      query1.where("rs.student.state.department in(:departments)", department);
+//      query1.where("rs.student.state.adminclass =:adminClass)", adminClass);
 //      query1.orderBy(Order.parse(get("orderBy")));
-      val list1 = entityDao.search(query1);
+      entityDao.search(query1) foreach {list1 =>
       // 得到指定学期，已经评教的学生人次数
-      val haveFinish1 =  list1(0)
-      val haveFinish = haveFinish1.intValue();
+      haveFinish =  list1(0).asInstanceOf[Long]
+      stdFinish = list1(1).asInstanceOf[Long]
+      }
       var finishRate = "";
       if (countAll != 0) {
-        var finishRate1 = (haveFinish * 100 / countAll).toFloat
         val df = new DecimalFormat("0.0");
-        finishRate = df.format(finishRate1)+"%"
+        finishRate = df.format( (haveFinish * 100 / countAll).toFloat)+"%"
       }
+      if (finishRate!=""){
       val esd = new EvaluateSearchDepartment();
       esd.semester=semester
-      esd.adminclass=adminClass
+      esd.lesson=lesson
       esd.countAll=countAll
       esd.haveFinish=haveFinish
+      esd.stdFinish=stdFinish
       esd.finishRate=finishRate
       evaluateSearchDepartmentList +=esd
-    
+      }
     }
 //    
     // Collections.sort(evaluateSearchDepartmentList, new PropertyComparator("adminClass.code"));
@@ -112,39 +137,51 @@ class EvaluateStatusStatAction extends RestfulAction[EvaluateResult] {
     // departQuery.where("department.level =:lever", 1);
     // departQuery.where("department.enabled =:enabled", true);
     val departmentList = entityDao.search(departQuery);
+    
     departmentList foreach {department =>
-      
-      val query = OqlBuilder.from[Long](classOf[CourseTake].getName, "courseTake");
-      query.select("select count(*)");
+      var countAll:Long =0L
+      var stdAll:Long =0L
+      var haveFinish:Long =0L
+      var stdFinish:Long =0L
+      //总评人次
+      val query = OqlBuilder.from[Array[Any]](classOf[CourseTake].getName, "courseTake");
+      query.select("count(*),count(distinct std)");
       query.where("courseTake.lesson.semester =:semester", semester);
-      query.where("courseTake.std.state.department =:manageDepartment", department);
-      query.where("exists( from "+classOf[QuestionnaireLesson].getName +" questionnaireLesson where questionnaireLesson.lesson=courseTake.lesson)");
-      val list = entityDao.search(query);
+      query.where("courseTake.lesson.teachDepart =:manageDepartment", department);
+//      query.where("exists( from "+classOf[QuestionnaireLesson].getName +" questionnaireLesson where questionnaireLesson.lesson=courseTake.lesson)");
+      entityDao.search(query) foreach { list =>
       // 得到指定学期，院系的学生评教人次总数
-      val countAll1 =  list(0)
-      val countAll = countAll1.intValue();
-
-      val query1 = OqlBuilder.from[Long](classOf[EvaluateResult].getName, "rs");
-      query1.select("select count(*)");
-      query1.where("rs.lesson.semester =:semester", semester);
-      query1.where("rs.student.state.department =:manageDepartment", department);
-      val list1 = entityDao.search(query1);
-      // 得到指定学期，已经评教的学生人次数
-      val haveFinish1 = list1(0)
-      val haveFinish = haveFinish1.intValue();
-      var finishRate = "";
-      if (countAll != 0) {
-        var finishRate1 =  (haveFinish * 100 / countAll).toFloat
-        val df = new DecimalFormat("0.0");
-        finishRate = df.format(finishRate1) + "%";
+       countAll =  list(0).asInstanceOf[Long]
+       stdAll=list(1).asInstanceOf[Long]
       }
+      val query1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName, "rs");
+      query1.select("count(*),count(distinct student)");
+      query1.where("rs.lesson.semester =:semester", semester);
+      query1.where("rs.lesson.teachDepart =:manageDepartment", department);
+      entityDao.search(query1) foreach {list1=>
+      // 得到指定学期，已经评教的学生人次数
+       haveFinish = list1(0).asInstanceOf[Long]
+       stdFinish=list1(1).asInstanceOf[Long]
+      }
+      var finishRate = "";
+      var stdRate =""
+      if (countAll != 0L) {
+        val df = new DecimalFormat("0.0");
+        finishRate = df.format((haveFinish * 100 / countAll).toFloat) + "%";
+        stdRate=df.format((stdFinish*100/stdAll).toFloat)+"%"
+      }
+      if (finishRate!=""){
       val esm = new EvaluateSearchManager();
       esm.semester=semester
       esm.department=department
       esm.countAll=countAll
+      esm.stdAll=stdAll
       esm.haveFinish=haveFinish
+      esm.stdFinish=stdFinish
       esm.finishRate=finishRate
+      esm.stdRate=stdRate
       evaluateSearchManagerList +=esm
+      }
     
     }
     put("evaluateSearchManagerList", evaluateSearchManagerList);

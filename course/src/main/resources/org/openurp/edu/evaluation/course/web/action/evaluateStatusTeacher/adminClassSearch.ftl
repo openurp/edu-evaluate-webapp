@@ -4,7 +4,7 @@
     bar.addClose();
 [/@]
 [@b.form name="evaluateSearchAdminClassSearchForm" action="!search" target="contentDiv"]
-    [@b.grid items=evaluateSearchAdminClassList var="evaluateSearchAdminClass" sortable="false"]
+    [@b.grid items=evaluateSearchAdminClassList var="evaluateSearchAdminClass" sortable="true"]
         [@b.row]
             [@b.col property="student.code" title="学号"/]
             [@b.col property="student.person.name.formatedName" title="姓名"]

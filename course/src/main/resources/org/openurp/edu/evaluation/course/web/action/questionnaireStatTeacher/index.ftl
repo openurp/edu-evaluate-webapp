@@ -1,8 +1,7 @@
 [#ftl]
 [@b.head/]
-[@b.toolbar title='我的评教情况' id='textEvaluationBar'/]
+[@b.toolbar title='我的评教结果' id='textEvaluationBar'/]
     
-    [#--[@eams.semesterBar name="project.id" semesterEmpty=false semesterName="semester.id" semesterValue=semester/]--]
       <table width="100%" class="frameTable">
         <tr>
             <td class="index_content">

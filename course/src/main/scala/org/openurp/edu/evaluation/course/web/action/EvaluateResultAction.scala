@@ -53,11 +53,12 @@ class EvaluateResultAction extends RestfulAction[EvaluateResult] {
     val semester = entityDao.get(classOf[Semester], semesterId)
     val statType =getInt("statType").getOrElse(null)
     val evaluateResult =OqlBuilder.from(classOf[EvaluateResult],"evaluateResult")
-     populateConditions(evaluateResult)
+    populateConditions(evaluateResult)
     evaluateResult.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
-    if (statType !=null)
-    evaluateResult.where("evaluateResult.statType=:statType",statType)
     evaluateResult.where("evaluateResult.lesson.semester=:semester",semester)
+    if (statType !=null){
+    evaluateResult.where("evaluateResult.statType=:statType",statType)
+    }
     put("evaluateResults", entityDao.search(evaluateResult))
     forward()
   }

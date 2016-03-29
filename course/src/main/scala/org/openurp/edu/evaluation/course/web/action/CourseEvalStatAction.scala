@@ -105,6 +105,30 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat]{
     forward()
   }
 
+  
+    override def  remove():View = {
+    val questionSIds= longIds("courseEvalStat")
+//    val idStr = get("questionnaireStat.id").orNull
+//    val Ids = idStr.split(",")
+//    val questionSIds = new Long[Ids.length]
+   
+//    for (i = 0 i < Ids.length i++) {
+//      questionSIds[i] = Long.valueOf(Ids[i])
+//    }
+    val query = OqlBuilder.from(classOf[CourseEvalStat], "questionS")
+    query.where("questionS.id in(:ids)", questionSIds)
+    entityDao.remove(entityDao.search(query))
+    redirect("search", "info.remove.success")
+  }
+
+  /**
+   * 清除统计数据
+   **/
+  def remove(educationTypeIds:List[Integer], departmentIds: List[Integer], semesterId:Int) {
+    val query = OqlBuilder.from(classOf[CourseEvalStat], "questionS")
+    query.where("questionS.semester.id=:semesterId", semesterId)
+    entityDao.remove(entityDao.search(query))
+  }
   /**
    * 统计(任务评教结果)
    * 
@@ -121,7 +145,7 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat]{
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     // 删除历史统计数据
-//    remove(educationTypeIds, departmentIds, semesterId)
+    remove(educationTypeIds, departmentIds, semesterId)
     // 问题得分统计
     val que = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR")
     que.where("questionR.result.lesson.semester.id=:semesterId", semesterId)

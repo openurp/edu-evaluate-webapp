@@ -14,9 +14,19 @@ import org.openurp.edu.evaluation.course.model.TextEvaluation
 import org.openurp.edu.lesson.model.CourseTake
 import org.openurp.edu.lesson.model.Lesson
 import org.openurp.hr.base.model.Staff
+import org.openurp.platform.api.security.Securities
 
 class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
-
+    
+  def getStudent(): Student = {
+    val stds = entityDao.search(OqlBuilder.from(classOf[Student], "s").where("s.code=:code", Securities.user))
+    if (stds.isEmpty) {
+      throw new RuntimeException("Cannot find student with code " + Securities.user)
+    } else {
+      stds.head
+    }
+  }
+  
   def getOtherMap(std: Student, semester: Semester, teachers: Seq[Staff]): collection.Map[Long, Buffer[TeacherRemessage]] = {
     val query = OqlBuilder.from(classOf[TeacherRemessage], "teacherRemessage");
     query.join("left", "teacherRemessage.students", "student");
@@ -150,7 +160,7 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
   }
   
     override protected def indexSetting(): Unit = {
-    val std = entityDao.get(classOf[Student], 68285L)
+    val std= getStudent()
     if (std == null) { forward("error.std.stdNo.needed") }
     val semesters = entityDao.getAll(classOf[Semester])
     put("semesters", semesters)
@@ -159,7 +169,8 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
   }
 
   override def search(): String = {
-    val std = entityDao.get(classOf[Student], 68285L)
+    val std= getStudent()
+    if (std == null) { forward("error.std.stdNo.needed") }
     // 页面条件
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
@@ -207,7 +218,7 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
     }
     // 判断(是否更新)
     if ("update".equals(evaluateState)) {
-      val std = entityDao.get(classOf[Student], 68285L)
+      val std= getStudent()
       val textEvaluations = getTextEvaluationList(std, lesson, teacher)
       put("textEvaluations", textEvaluations)
     }
@@ -218,7 +229,7 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
   }
 
   def saveTextEvaluate(): View = {
-    val std = entityDao.get(classOf[Student], 68285L)
+       val std= getStudent()
     val LessonId = longId("lesson")
     val teacherId = getLong("teacherId")
     val lesson = entityDao.get(classOf[Lesson], LessonId)
@@ -244,7 +255,7 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
   }
 
   def remsgList(): String = {
-    val std = entityDao.get(classOf[Student], 68285L)
+    val std= getStudent()
     val ids = longIds("lesson")
     val teachers = getTeachersByLessonIdSeq(ids);
     val lessons= getTeacherLessonByLessonIdSeq(ids)

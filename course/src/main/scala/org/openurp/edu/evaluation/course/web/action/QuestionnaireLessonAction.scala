@@ -1,7 +1,6 @@
 package org.openurp.edu.evaluation.course.web.action
 
 import java.sql.Date
-
 import org.beangle.commons.collection.Order
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.dao.QueryBuilder
@@ -25,6 +24,7 @@ import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.edu.lesson.model.Lesson
 import org.openurp.edu.lesson.model.Lesson
 import org.openurp.edu.lesson.model.Lesson
+import org.beangle.commons.lang.Strings
 
 class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
 
@@ -35,8 +35,8 @@ class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     put("currentSemester", entityDao.search(semesterQuery).head)
     put("departments", entityDao.getAll(classOf[Department]))
-    val examModes = entityDao.getAll(classOf[ExamMode])
-    put("examModes", examModes);
+//    val examModes = entityDao.getAll(classOf[ExamMode])
+//    put("examModes", examModes);
     val courseTypes = entityDao.getAll(classOf[CourseType])
     put("courseTypes", courseTypes);
     put("questionnaires", entityDao.getAll(classOf[Questionnaire]));
@@ -45,9 +45,9 @@ class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
   override def search(): String = {
     val questionnaireId = getLong("questionnaire.id").getOrElse(-1)
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
-    val semesterId =getInt("lesson.semester.id").getOrElse( entityDao.search(semesterQuery).head.id)
+    val semesterId =getInt("semester.id").getOrElse( entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
-    val projectId = getInt("lesson.project.id").getOrElse(1)
+    val projectId = getInt("project.id").getOrElse(1)
     val project = entityDao.get(classOf[Project], projectId)
     // 检查时间
     val evaluateSwitch = evaluateSwitchService.getEvaluateSwitch(semester, project);
@@ -62,7 +62,7 @@ class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
     put("questionnaires", entityDao.search(query));
     // 判断(问卷是否存在)
     questionnaireId match {
-      case 0 =>//无问卷教学任务list
+      case 0 =>//无问卷--教学任务list
         put("lessons", entityDao.search(getQueryBuilderByLesson()))
         forward("lessonList");
       case -1 =>//有问卷
@@ -78,18 +78,23 @@ class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
     val query = OqlBuilder.from(classOf[QuestionnaireLesson], "questionnaireLesson");
      populateConditions(query);
 //    query.where(QueryHelper.extractConditions(classOf[Lesson], "lesson", null))
-    val semesterId = getInt("lesson.semester.id")
-     semesterId foreach { e =>
-      query.where("questionnaireLesson.lesson.semester.id = :semesterId", e);
-    }
+     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId =getInt("semester.id").getOrElse( entityDao.search(semesterQuery).head.id)
+//     semesterId foreach { e =>
+      query.where("questionnaireLesson.lesson.semester.id = :semesterId", semesterId);
+//    }
     // 隐性条件(问卷类别,起始周期,上课人数)
     val questionnaireId = getLong("questionnaire.id").getOrElse(-1)
-    val startWeekFrom = getInt("startWeekFrom");
-    val startWeekEnd = getInt("startWeekEnd");
-    val stdCountFrom = getInt("stdCountFrom");
-    val stdCountEnd = getInt("stdCountEnd");
+//    val startWeekFrom = getInt("startWeekFrom");
+//    val startWeekEnd = getInt("startWeekEnd");
+//    val stdCountFrom = getInt("stdCountFrom");
+//    val stdCountEnd = getInt("stdCountEnd");
 //    val hasTeacher = getBoolean("hasTeacher").get;
-
+    val staffName=get("staff").get
+    if (Strings.isNotBlank(staffName)) {
+     query.join("questionnaireLesson.lesson.teachers","teacher")
+     query.where("teacher.person.name.formatedName like :staffName", "%" + staffName + "%");
+    }
     if ( questionnaireId != -1 && questionnaireId != 0) {
       query.where("questionnaireLesson.questionnaire.id =:questionnaireId", questionnaireId);
       
@@ -124,32 +129,46 @@ class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
    * @return
    */
   protected def getQueryBuilderByLesson(): QueryBuilder[Lesson] = {
-    val query = OqlBuilder.from(classOf[Lesson], "lesson").where("lesson.project.id=:projectId",getInt("project").getOrElse(1))
+
+    val query = OqlBuilder.from(classOf[Lesson], "lesson")
     populateConditions(query);
-    val semesterId = getInt("lesson.semester.id")
-     semesterId foreach { e =>
-      query.where("lesson.semester.id = :semesterId", e);
+    query.where("lesson.project.id=:projectId",getInt("project").getOrElse(1))
+    populateConditions(query);
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId =getInt("semester.id").getOrElse( entityDao.search(semesterQuery).head.id)
+//    val semesterId = getInt("semester.id")
+//     semesterId foreach { e =>
+      query.where("lesson.semester.id = :semesterId", semesterId);
+//    }
+    val staffName=get("staff").getOrElse("")
+    if (Strings.isNotBlank(staffName)) {
+     query.join("lesson.teachers","teacher")
+     query.where("teacher.person.name.formatedName like :staffName", "%" + staffName + "%");
     }
+//        val lessonNo= get("questionnaireLesson.lesson.no").get
+//    lessonNo foreach {e => 
+//      query.where("lesson.no =:no",e)
+//      }
     // 隐性条件(问卷类别,起始周期,上课人数)
-    val startWeekFrom = getInt("startWeekFrom");
-    val startWeekEnd = getInt("startWeekEnd");
-    val stdCountFrom = getInt("stdCountFrom");
-    val stdCountEnd = getInt("stdCountEnd");
-    val hasTeacher = 1
+//    val startWeekFrom = getInt("startWeekFrom");
+//    val startWeekEnd = getInt("startWeekEnd");
+//    val stdCountFrom = getInt("stdCountFrom");
+//    val stdCountEnd = getInt("stdCountEnd");
+//    val hasTeacher = 1
 //      getBoolean("hasTeacher");
     
-        startWeekFrom foreach { a =>
-          query.where("lesson.schedule.startWeek >=:startWeekFrom", a);
-        }
-        startWeekEnd foreach {a =>
-          query.where("lesson.schedule.startWeek <=:startWeekEnd", a);
-        }
-    stdCountFrom foreach { s =>
-      query.where("lesson.teachclass.stdCount >=:stdCountFrom", s);
-    }
-    stdCountEnd foreach { e =>
-      query.where("lesson.teachclass.stdCount <=:stdCountEnd", e);
-    }
+//        startWeekFrom foreach { a =>
+//          query.where("lesson.schedule.startWeek >=:startWeekFrom", a);
+//        }
+//        startWeekEnd foreach {a =>
+//          query.where("lesson.schedule.startWeek <=:startWeekEnd", a);
+//        }
+//    stdCountFrom foreach { s =>
+//      query.where("lesson.teachclass.stdCount >=:stdCountFrom", s);
+//    }
+//    stdCountEnd foreach { e =>
+//      query.where("lesson.teachclass.stdCount <=:stdCountEnd", e);
+//    }
 //    if (hasTeacher!=null) {
 //      if (hasTeacher==1) {
 //        query.where("size(lesson.teachers) != 0");
