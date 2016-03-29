@@ -9,8 +9,6 @@ class CourseEvalStat extends LongId with EvalStat with Rank {
   var staff: Staff = _
   var course: Course = _
   
-  var stdEvaluate:Float=_
-  var depEvaluate:Float=_
 
 }
 

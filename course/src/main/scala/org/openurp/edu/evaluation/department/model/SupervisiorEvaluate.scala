@@ -30,8 +30,8 @@ import org.beangle.commons.collection.Collections
  *
  * @author chaostone
  */
-class DepartEvaluate extends LongId {
-  
+class SupervisiorEvaluate extends LongId {
+
   /**学年学期*/
   var semester: Semester = _
   /** 教师 */
@@ -41,7 +41,7 @@ class DepartEvaluate extends LongId {
   /** 问卷信息 */
   var questionnaire: Questionnaire = _
   /** 问题评教结果 */
-  var questionResults = Collections.newSet[DepartQuestion]
+  var questionResults = Collections.newSet[SupervisiorQuestion]
   /** 评教时间 */
   var evaluateAt: java.util.Date = _
   /**备注*/
