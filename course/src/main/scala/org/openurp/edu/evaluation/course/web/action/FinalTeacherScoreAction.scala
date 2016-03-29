@@ -14,6 +14,8 @@ import org.openurp.edu.evaluation.department.model.SupervisiorEvaluate
 import org.openurp.hr.base.model.Staff
 import org.openurp.edu.evaluation.lesson.stat.model.FinalTeacherScore
 import org.beangle.webmvc.api.view.View
+import org.openurp.edu.base.code.model.Education
+import org.openurp.edu.base.code.model.StdType
 
 class FinalTeacherScoreAction extends RestfulAction[FinalTeacherScore] {
   
@@ -32,20 +34,50 @@ class FinalTeacherScoreAction extends RestfulAction[FinalTeacherScore] {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
-    val finalScores =OqlBuilder.from(classOf[FinalTeacherScore],"finalScore")
+    val finalScores =OqlBuilder.from(classOf[FinalTeacherScore],"finalTeacherScore")
     populateConditions(finalScores)
     finalScores.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
-    finalScores.where("finalScore.semester=:semester",semester)
-    put("finalScores", entityDao.search(finalScores))
+    finalScores.where("finalTeacherScore.semester=:semester",semester)
+    put("finalTeacherScores", entityDao.search(finalScores))
     
     forward()
   }
-
+  /**
+   * 清除统计数据
+   **/
+  def remove(semesterId:Int) {
+    val query = OqlBuilder.from(classOf[FinalTeacherScore], "finalScore")
+    query.where("finalScore.semester.id=:semesterId", semesterId)
+    entityDao.remove(entityDao.search(query))
+  }
   
+  
+    /**
+   * 跳转(统计首页面)
+   */
+  def  statHome() :String ={
+    
+    put("stdTypeList", entityDao.getAll(classOf[StdType]))
+    put("departmentList",  entityDao.getAll(classOf[Department]))
+
+    put("educations", entityDao.getAll(classOf[Education]))
+    val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department],"depart").where("depart.teaching =:tea",true))
+    put("departments",teachingDeparts)
+    
+    val semesters = entityDao.getAll(classOf[Semester])
+    put("semesters", semesters)
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    put("currentSemester", entityDao.search(semesterQuery).head)
+    forward()
+  }
   def  stat():View = {
     
     val semesterId = getInt("semester.id").get
     val semester = entityDao.get(classOf[Semester], semesterId)
+    
+        // 删除历史统计数据
+    remove(semesterId)
+    
     val que = OqlBuilder.from[Array[Any]](classOf[TeacherEvalStat].getName + " teacherEvalStat,"+ classOf[DepartEvaluate].getName + " departEvaluate,"+ classOf[SupervisiorEvaluate].getName + " supervisiorEvaluate");
     que.select("teacherEvalStat.staff.id,teacherEvalStat.score,supervisiorEvaluate.totalScore,departEvaluate.totalScore");
     que.where("teacherEvalStat.semester.id=departEvaluate.semester.id");
