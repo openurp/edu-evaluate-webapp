@@ -10,6 +10,6 @@ class FinalTeacherScore extends LongId with Rank {
   var stdScore:Float=_
   var supviScore:Float=_
   var departScore:Float=_
-  var finalScore:Double=_
+  var score:Float=_
 
 }

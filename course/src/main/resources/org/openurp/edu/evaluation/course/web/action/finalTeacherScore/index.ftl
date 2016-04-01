@@ -2,6 +2,7 @@
 [@b.head/]
 [@b.toolbar title='教师综合评教结果' id='finalTeacherScoreBar']
 bar.addItem("初始化/重新统计","statisticResult()");
+bar.addItem("排名统计","statisticRank()");
     bar.addBlankItem();
 [/@]
 
@@ -26,6 +27,10 @@ bar.addItem("初始化/重新统计","statisticResult()");
         form.target="_blank";
         bg.form.submit(form, "${b.url('!statHome')}","main");
         form.target="contentDiv";
+    }
+    function statisticRank(){
+        bg.form.addInput(form,"semester.id",document.finalTeacherScoreIndexForm['semester.id'].value);
+        bg.form.submit(form, "${b.url('!rankStat')}");
     }
     
 </script>

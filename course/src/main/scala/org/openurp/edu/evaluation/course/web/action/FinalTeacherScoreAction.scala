@@ -1,21 +1,24 @@
 package org.openurp.edu.evaluation.course.web.action
 
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.evaluation.lesson.stat.model.TeacherEvalStat
+import org.beangle.commons.collection.Order
+import org.beangle.commons.lang.ClassLoaders
 import org.beangle.data.dao.OqlBuilder
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
+import org.beangle.webmvc.api.context.ActionContext
+import org.beangle.webmvc.api.view.Status
+import org.beangle.webmvc.api.view.View
+import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.base.model.Semester
-import org.beangle.commons.collection.Order
-import org.openurp.edu.evaluation.department.model.DepartEvaluate
-import scala.collection.mutable.Buffer
-import scala.collection.mutable.ListBuffer
-import org.openurp.edu.evaluation.department.model.SupervisiorEvaluate
-import org.openurp.hr.base.model.Staff
-import org.openurp.edu.evaluation.lesson.stat.model.FinalTeacherScore
-import org.beangle.webmvc.api.view.View
 import org.openurp.edu.base.code.model.Education
 import org.openurp.edu.base.code.model.StdType
+import org.openurp.edu.evaluation.department.model.DepartEvaluate
+import org.openurp.edu.evaluation.department.model.SupervisiorEvaluate
+import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
+import org.openurp.edu.evaluation.lesson.stat.model.FinalTeacherScore
+import org.openurp.edu.evaluation.lesson.stat.model.TeacherEvalStat
+import org.openurp.hr.base.model.Staff
+import net.sf.jxls.transformer.XLSTransformer
+import org.openurp.edu.evaluation.course.service.Ranker
 
 class FinalTeacherScoreAction extends RestfulAction[FinalTeacherScore] {
   
@@ -39,9 +42,64 @@ class FinalTeacherScoreAction extends RestfulAction[FinalTeacherScore] {
     finalScores.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
     finalScores.where("finalTeacherScore.semester=:semester",semester)
     put("finalTeacherScores", entityDao.search(finalScores))
-    
+    put("semesterId",semesterId)
     forward()
   }
+  /**
+   * 导出
+   */
+  def export(): View = {
+    val semesterId = getInt("semester.id").get
+    val finalScores =OqlBuilder.from(classOf[FinalTeacherScore],"finalTeacherScore")
+    populateConditions(finalScores)
+    finalScores.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
+    finalScores.where("finalTeacherScore.semester.id=:semesterId",semesterId)
+    val list = collection.JavaConversions.asJavaCollection(entityDao.search(finalScores))
+    //查出信息并放到map中
+    val beans = new java.util.HashMap[String, Any]
+    beans.put("list", list)
+    //获得模板路径
+    val path = ClassLoaders.getResourceAsStream("template/finalTeacherScore.xls")
+    //准备输出流
+    val response = ActionContext.current.response
+    response.setContentType("application/x-excel")
+    response.setHeader("Content-Disposition", "attachmentfilename=finalTeacherScore.xls")
+    val os = response.getOutputStream()
+    val transformer = new XLSTransformer()
+    try {
+      //将beans通过模板输入流写到workbook中
+      val workbook = transformer.transformXLS(path, beans)
+      //将workbook中的内容用输出流写出去
+      workbook.write(os)
+    } finally {
+      if (os != null) {
+        os.close()
+      }
+    }
+    Status.Ok
+  }
+
+   def rankStat():View = {
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val semester = entityDao.get(classOf[Semester], semesterId)
+    //    排名
+     val rankQuery = OqlBuilder.from(classOf[FinalTeacherScore], "finalTeacherScore")
+     rankQuery.where("finalTeacherScore.semester.id=:semesterId", semesterId)
+     val evals = entityDao.search(rankQuery)
+     Ranker.rOver(evals){(x,r) => 
+       x.rank=r;
+     }
+     val departEvalMaps = evals.groupBy ( x => x.staff.state.department )
+     departEvalMaps.values foreach{ departEvals =>
+         Ranker.rOver(departEvals){(x,r) => 
+         x.departRank=r;
+       }
+     }
+     entityDao.saveOrUpdate(evals);
+     redirect("index", "info.action.success")
+  }
+ 
   /**
    * 清除统计数据
    **/
@@ -100,7 +158,7 @@ class FinalTeacherScoreAction extends RestfulAction[FinalTeacherScore] {
           questionS.stdScore = ob(1).toString().toFloat
           questionS.supviScore= ob(2).toString().toFloat
           questionS.departScore=ob(3).toString().toFloat
-          questionS.finalScore=ob(1).toString().toFloat*0.5 + ob(2).toString().toFloat*0.3 + ob(3).toString().toFloat*0.2
+          questionS.score=(ob(1).toString().toFloat*0.5 + ob(2).toString().toFloat*0.3 + ob(3).toString().toFloat*0.2).toFloat
           entityDao.saveOrUpdate(questionS)
     }
     redirect("index", "info.action.success")

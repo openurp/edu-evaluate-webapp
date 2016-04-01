@@ -19,6 +19,7 @@
     <openurp.platform.version>0.0.6</openurp.platform.version>
     <openurp.api.version>0.0.6</openurp.api.version>
     <beangle.webui.version>0.0.5</beangle.webui.version>
+    <jxls.version>1.0.3</jxls.version>
   </properties>
 
   <modules>
