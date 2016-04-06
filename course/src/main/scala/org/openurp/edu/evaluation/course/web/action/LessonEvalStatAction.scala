@@ -408,39 +408,13 @@ class LessonEvalStatAction  extends RestfulAction[LessonEvalStat]{
 //    quer.where("questionR.result.lesson.course.education.id in(:eduIds)", educationTypeIds)
     quer.where("questionR.question.addition is false")
     quer.select("questionR.result.lesson.id,questionR.result.staff.id,questionR.result.questionnaire.id,"
-        + "sum(questionR.score),case when questionR.result.statType =1 then count(questionR.result.id) end," 
+        + "sum(questionR.score),case when questionR.result.statType =1 then count(distinct questionR.result.id) end," 
         + "count(distinct questionR.result.id),case when questionR.result.statType =1 then sum(questionR.score) end,"
         + "sum(questionR.score)/count(distinct questionR.result.id)")
 //        +"rank() over (order by sum(questionR.score)/count(distinct questionR.result.id) desc)")
 //        +"rank() over (partition by questionR.result.department.id order by sum(questionR.score)/count(distinct questionR.result.id) desc)")
     quer.groupBy("questionR.result.lesson.id,questionR.result.staff.id,questionR.result.questionnaire.id,questionR.result.statType")
     val wjStat = entityDao.search(quer)
-//    // 排名
-//    val query = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR")
-//    val query = "select qR.result.department.id,qR.result.lesson.id,qR.result.staff.id,"+
-//    "sum(qR.score)/count(distinct qR.result.id), "+
-//    "rank()over(order by sum(qR.score)/count(distinct qR.result.id) desc), "+
-//    "rank()over(partition by qR.result.department.id order by sum(qR.score)/count(distinct qR.result.id) desc) "+
-//    " from  org.openurp.edu.evaluation.lesson.result.model.QuestionResult qR "+
-//    "where qR.result.lesson.semester.id="+ semesterId +" " +
-//    "and qR.result.statType is 1 "+
-//    "and qR.result.staff is not null "+
-//    query.where(" questionR.result.lesson.semester.id=:semesterId",semesterId)
-//    query.where( "questionR.result.statType is 1")
-//    query.where ("questionR.result.staff is not null")
-//     query.where("questionR.result.department.id in(:depIds)", departmentIds)
-//    query.where("questionR.result.lesson.course.education.id in(:eduIds)", educationTypeIds)
-//    "and qR.question.addition is false "+
-//    query.select("questionR.result.department.id,questionR.result.lesson.id,questionR.result.staff.id,"+
-//        "sum(questionR.score)/count(distinct questionR.result.id) as x,"+
-//        "rank() over(order by x desc),"+
-//        "rank() over(partition by questionR.result.department.id order by x desc) ")
-//    "group by qR.result.department.id,qR.result.lesson.id,qR.result.staff.id"
-//    query.orderBy("sum(questionR.score)/count(distinct questionR.result.id) desc,questionR.result.department.id,questionR.result.staff.id")
-//    val pmStatMap = new collection.mutable.HashMap[Tuple2[Any,Any],Tuple3[Number,Integer,Integer]]
-//    entityDao.search[Array[Any]](query) foreach { a =>
-//    pmStatMap.getOrElseUpdate((a(1),a(2)),Tuple3(a(3).asInstanceOf[Number],a(4).asInstanceOf[Integer],a(5).asInstanceOf[Integer]))
-//    }
     // 问题类别统计
     val tyquery = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR")
     tyquery.where("questionR.result.lesson.semester.id=:semesterId", semesterId)
@@ -492,7 +466,7 @@ class LessonEvalStatAction  extends RestfulAction[LessonEvalStat]{
           questionS.lesson= new Lesson()
           questionS.lesson.id=evaObject(0).asInstanceOf[Long]
           questionS.score=evaObject(7).toString().toFloat*10
-          questionS.validScore=evaObject(6).toString().toFloat*10
+          questionS.validScore=evaObject(6).toString().toFloat*10/Integer.valueOf(evaObject(4).toString())
           questionS.validTickets=Integer.valueOf(evaObject(4).toString())
           questionS.allTickets=Integer.valueOf(evaObject(5).toString())
 //          questionS.rank=Integer.valueOf(evaObject(8).toString())

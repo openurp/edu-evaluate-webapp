@@ -6,6 +6,7 @@
     bar.addItem("学校教师评教历史汇总","historyCollegeStat()");
     bar.addItem("学校教师评教分项汇总","collegeGroupItemInfo()");
     bar.addItem("初始化/重新统计","statisticResult()");
+            bar.addItem("排名统计","statisticRank()");
 [/@]
 <table class="indexpanel">
     <tr>
@@ -15,11 +16,11 @@
             [@b.textfield style="width:100px" name="teacherEvalStat.staff.code" label="工号" /]
             [@b.textfield style="width:100px" name="teacherEvalStat.staff.person.name.formatedName" label="姓名" /]
             [@b.select style="width:105px" name="teacherEvalStat.staff.state.department.id" label="部门" items=departments empty="..."/]
-            [@b.select name="teacherEvalStat.questionnaire.id" label="所用问卷" items=[] ]
+            [#--[@b.select name="teacherEvalStat.questionnaire.id" label="所用问卷" items=[] ]
                 [#list questionnaires as q]
                     <option value="${q.id}">${q.description}</option>
                 [/#list]
-            [/@]
+            [/@]--]
         [/@]
         </td>
         <td class="index_content">
@@ -53,6 +54,10 @@
         form.target="_blank";
         bg.form.submit(form, "${b.url('!statHome')}","main");
         form.target="contentDiv";
+    }
+  function statisticRank(){
+        bg.form.addInput(form,"semester.id",document.teacherEvaluateStatIndexForm['semester.id'].value);
+        bg.form.submit(form, "${b.url('!rankStat')}");
     }
     
 

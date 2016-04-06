@@ -135,6 +135,8 @@ class FinalTeacherScoreAction extends RestfulAction[FinalTeacherScore] {
     
         // 删除历史统计数据
     remove(semesterId)
+//    怎么保证TeacherEvalStat/DepartEvaluate/SupervisiorEvaluate中每个教师只有一个成绩
+//    一个老师可能有两个不同的问卷？
     
     val que = OqlBuilder.from[Array[Any]](classOf[TeacherEvalStat].getName + " teacherEvalStat,"+ classOf[DepartEvaluate].getName + " departEvaluate,"+ classOf[SupervisiorEvaluate].getName + " supervisiorEvaluate");
     que.select("teacherEvalStat.staff.id,teacherEvalStat.score,supervisiorEvaluate.totalScore,departEvaluate.totalScore");

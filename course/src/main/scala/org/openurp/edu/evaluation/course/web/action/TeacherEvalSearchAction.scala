@@ -10,6 +10,7 @@ import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
 import org.openurp.edu.evaluation.lesson.stat.model.TeacherEvalStat
 import org.openurp.edu.evaluation.model.Option
 import org.openurp.edu.evaluation.model.Question
+import org.openurp.edu.lesson.model.CourseTake
 import org.openurp.edu.lesson.model.Lesson
 import org.openurp.edu.lesson.model.Lesson
 
@@ -68,14 +69,24 @@ class TeacherEvalSearchAction extends RestfulAction[TeacherEvalStat] {
       }
     }
     put("options", list);
-//    val querys = OqlBuilder.from[Long](classOf[Lesson].getName, "lesson");
-//    querys.join("lesson.teachers", "teacher");
-//    querys.where("teacher=:teach",questionnaireStat.staff);
-//    querys.where("lesson=:lesson", questionnaireStat.lesson);
-//    querys.join("lesson.teachclass.courseTakes", "courseTake");
-//    querys.select("count(courseTake.std.id)");
-//    val numbers=entityDao.search(querys)(0)
-//    put("numbers", entityDao.search(querys)(0));
+    val lessonQue =OqlBuilder.from[Lesson](classOf[EvaluateResult].getName,"evalResult")
+    lessonQue.select("distinct evalResult.lesson")
+    lessonQue.where("evalResult.lesson.semester.id =:semesterId",questionnaireStat.semester.id);
+    lessonQue.join("evalResult.lesson.teachers", "teacher");
+    lessonQue.where("teacher.id=:staffId",questionnaireStat.staff.id);
+     var numbers=0L
+    val lessons = entityDao.search(lessonQue)
+    lessons foreach {lesson =>
+    val querys = OqlBuilder.from[Long](classOf[CourseTake].getName, "courseTake");
+    querys.join("courseTake.lesson.teachers", "teacher");
+    querys.where("teacher.id=:staffId",questionnaireStat.staff.id);
+    querys.where("courseTake.semester.id=:semesterId",questionnaireStat.semester.id);
+    querys.where("courseTake.lesson = (:lesson)",lesson)
+    querys.select("count(courseTake.std.id)");
+    numbers +=  entityDao.search(querys)(0)
+      }
+    put("numbers", numbers);
+    
     val que = OqlBuilder.from(classOf[QuestionResult], "questionR");
     que.where("questionR.result.staff=:teaId", questionnaireStat.staff);
     que.where("questionR.result.questionnaire=:quen", questionnaireStat.questionnaire);

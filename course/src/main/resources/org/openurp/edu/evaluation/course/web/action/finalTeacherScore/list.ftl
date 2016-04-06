@@ -4,7 +4,6 @@
     <input type="hidden" name="semester.id" value="${semesterId!}">
     [@b.grid items=finalTeacherScores var="finalTeacherScore" sortable="true"]    
         [@b.gridbar title="教师评教最终结果"]
-        bar.addItem("${b.text('action.info')}", action.info());
         bar.addItem("导出","exportData()");
         [/@]
         [@b.row]

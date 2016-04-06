@@ -32,6 +32,7 @@ import org.openurp.edu.evaluation.lesson.stat.model.TeacherOptionStat
 import org.openurp.edu.evaluation.lesson.stat.model.TeacherQuestionTypeStat
 import org.beangle.commons.collection.Order
 import org.openurp.edu.evaluation.model.EvaluationCriteriaItem
+import org.openurp.edu.evaluation.course.service.Ranker
 
 class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
 
@@ -156,7 +157,10 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
     quer.where("questionR.result.department.id in(:depIds)", departmentIds)
 //    quer.where("questionR.result.lesson.course.education.id in(:eduIds)", educationTypeIds)
     quer.where("questionR.question.addition is false")
-    quer.select("questionR.result.lesson.semester.id,questionR.result.staff.id,questionR.result.questionnaire.id,"+ "sum(questionR.score),case when questionR.result.statType =1 then count(questionR.result.id) end," + "count(distinct questionR.result.id),case when questionR.result.statType =1 then sum(questionR.score) end," + "sum(questionR.score)/count(distinct questionR.result.id)")
+    quer.select("questionR.result.lesson.semester.id,questionR.result.staff.id,questionR.result.questionnaire.id,"
+        + "sum(questionR.score),case when questionR.result.statType =1 then count(distinct questionR.result.id) end," 
+        + "count(distinct questionR.result.id),case when questionR.result.statType =1 then sum(questionR.score) end," 
+        + "sum(questionR.score)/count(distinct questionR.result.id)")
     quer.groupBy("questionR.result.lesson.semester.id,questionR.result.staff.id,questionR.result.questionnaire.id,questionR.result.statType")
     val wjStat = entityDao.search(quer)  
     
@@ -209,7 +213,7 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
 //          questionS.lesson= new Lesson()
 //          questionS.lesson.id=evaObject(0).asInstanceOf[Long]
           questionS.score=evaObject(7).toString().toFloat*10
-          questionS.validScore=evaObject(6).toString().toFloat*10
+          questionS.validScore=evaObject(6).toString().toFloat*10/Integer.valueOf(evaObject(5).toString())
           questionS.validTickets=Integer.valueOf(evaObject(4).toString())
           questionS.allTickets=Integer.valueOf(evaObject(5).toString())
           // 添加问卷
@@ -263,8 +267,47 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
           questionS.questionTypeStats = questionTypeStats
           entityDao.saveOrUpdate(questionS)
     }
+    
+
+    //    排名
+//     val rankQuery = OqlBuilder.from(classOf[TeacherEvalStat], "teacherEvalStat")
+//     rankQuery.where("teacherEvalStat.semester.id=:semesterId", semesterId)
+//     val evals = entityDao.search(rankQuery)
+//     Ranker.over(evals){(x,r) => 
+//       x.rank=r;
+//     }
+//     val departEvalMaps = evals.groupBy ( x => x.staff.state.department )
+//     departEvalMaps.values foreach{ departEvals =>
+//         Ranker.over(departEvals){(x,r) => 
+//         x.departRank=r;
+//       }
+//     }
+//     entityDao.saveOrUpdate(evals);
+
         redirect("index", "info.action.success")
   }
+  
+    def rankStat():View = {
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val semester = entityDao.get(classOf[Semester], semesterId)
+    //    排名
+     val rankQuery = OqlBuilder.from(classOf[TeacherEvalStat], "teacherEvalStat")
+     rankQuery.where("teacherEvalStat.semester.id=:semesterId", semesterId)
+     val evals = entityDao.search(rankQuery)
+     Ranker.over(evals){(x,r) => 
+       x.rank=r;
+     }
+     val departEvalMaps = evals.groupBy ( x => x.staff.state.department )
+     departEvalMaps.values foreach{ departEvals =>
+         Ranker.over(departEvals){(x,r) => 
+         x.departRank=r;
+       }
+     }
+     entityDao.saveOrUpdate(evals);
+     redirect("index", "info.action.success")
+  }
+  
   
   
    /**

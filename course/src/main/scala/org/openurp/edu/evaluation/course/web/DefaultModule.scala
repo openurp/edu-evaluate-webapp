@@ -57,6 +57,8 @@ class DefaultModule extends AbstractBindModule {
 
     
 //-------------------------------问卷评教统计分析
+//  教师最终得分排名统计查询导出
+    bind(classOf[FinalTeacherScoreAction])
     
 //  问卷评教统计--按任务得分统计 包括：排名??，院系任务统计，学校任务历史，学校分项统计*****教务处
     bind(classOf[LessonEvalStatAction])
@@ -78,14 +80,10 @@ class DefaultModule extends AbstractBindModule {
 //  问卷评教统计查询---按开课院系查询********院系管理员？
     bind(classOf[DepartEvalSearchAction])
 
-    
+ //--暂不使用的页面     
 //  问卷评教的各类统计:  -------  在做什么？
     bind(classOf[EvaluateStatisticsAction])
-    
-//  最终结果统计查询导出
-    bind(classOf[FinalTeacherScoreAction])
-    
-//--没用的页面    
+
 //  查看任务问卷评教各问题类别结果及总分，+更改教师？？？+各院系比较
     bind(classOf[QuestionnaireStatAction])
 //  查看任务问卷评教各问题类别结果及总分   
@@ -94,10 +92,12 @@ class DefaultModule extends AbstractBindModule {
     
     
     
-//*****学生菜单   评教->问卷评教   
+//*****学生菜单   评教->问卷评教    备注可以拿掉吗？
     bind(classOf[EvaluateStdAction])
 //               评教->文字评教 
     bind(classOf[TextEvaluateStdAction])   
+    
+    
     
 // *****教师菜单  评教查询->文字评教
 //  教师个人查看自己的评教回收率
