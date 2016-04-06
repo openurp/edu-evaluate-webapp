@@ -19,6 +19,7 @@ import org.openurp.edu.evaluation.lesson.stat.model.TeacherEvalStat
 import org.openurp.hr.base.model.Staff
 import net.sf.jxls.transformer.XLSTransformer
 import org.openurp.edu.evaluation.course.service.Ranker
+import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
 
 class FinalTeacherScoreAction extends RestfulAction[FinalTeacherScore] {
   
@@ -138,29 +139,52 @@ class FinalTeacherScoreAction extends RestfulAction[FinalTeacherScore] {
 //    怎么保证TeacherEvalStat/DepartEvaluate/SupervisiorEvaluate中每个教师只有一个成绩
 //    一个老师可能有两个不同的问卷？
     
-    val que = OqlBuilder.from[Array[Any]](classOf[TeacherEvalStat].getName + " teacherEvalStat,"+ classOf[DepartEvaluate].getName + " departEvaluate,"+ classOf[SupervisiorEvaluate].getName + " supervisiorEvaluate");
-    que.select("teacherEvalStat.staff.id,teacherEvalStat.score,supervisiorEvaluate.totalScore,departEvaluate.totalScore");
-    que.where("teacherEvalStat.semester.id=departEvaluate.semester.id");
-    que.where("teacherEvalStat.staff.id=departEvaluate.staff.id");
-    que.where("teacherEvalStat.semester.id=supervisiorEvaluate.semester.id");
-    que.where("teacherEvalStat.staff.id=supervisiorEvaluate.staff.id");
-    que.where("teacherEvalStat.semester.id =:semesterId", semesterId);
+    val quer = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName +" questionR,"
+        + classOf[DepartEvaluate].getName + " departEvaluate,"
+        + classOf[SupervisiorEvaluate].getName + " supervisiorEvaluate")
+        
+    quer.where("questionR.result.lesson.semester.id=:semesterId", semesterId)
+    quer.where("questionR.result.statType is 1")
+    quer.select("questionR.result.staff.id,"
+//        + "sum(questionR.score),case when questionR.result.statType =1 then count(distinct questionR.result.id) end," 
+//        + "count(distinct questionR.result.id),case when questionR.result.statType =1 then sum(questionR.score) end," 
+       + "supervisiorEvaluate.totalScore,departEvaluate.totalScore,"
+        + "sum(questionR.score)/count(distinct questionR.result.id)");
+    quer.where("questionR.result.lesson.semester.id=departEvaluate.semester.id");
+    quer.where("questionR.result.staff.id=departEvaluate.staff.id");
+    quer.where("questionR.result.lesson.semester.id=supervisiorEvaluate.semester.id");
+    quer.where("questionR.result.staff.id=supervisiorEvaluate.staff.id");
+    quer.where("questionR.result.lesson.semester.id =:semesterId", semesterId);
+    quer.groupBy("questionR.result.staff.id,supervisiorEvaluate.totalScore,departEvaluate.totalScore")
+//    val wjStat = entityDao.search(quer)  
+    
+    
+    
+//    val que = OqlBuilder.from[Array[Any]](classOf[TeacherEvalStat].getName + " teacherEvalStat,"
+//        + classOf[DepartEvaluate].getName + " departEvaluate,"
+//        + classOf[SupervisiorEvaluate].getName + " supervisiorEvaluate");
+//    que.select("teacherEvalStat.staff.id,teacherEvalStat.score,supervisiorEvaluate.totalScore,departEvaluate.totalScore");
+//    que.where("teacherEvalStat.semester.id=departEvaluate.semester.id");
+//    que.where("teacherEvalStat.staff.id=departEvaluate.staff.id");
+//    que.where("teacherEvalStat.semester.id=supervisiorEvaluate.semester.id");
+//    que.where("teacherEvalStat.staff.id=supervisiorEvaluate.staff.id");
+//    que.where("teacherEvalStat.semester.id =:semesterId", semesterId);
     
 //    val finalScoreMap = new collection.mutable.HashMap[Long,Buffer[Tuple4[Number,Number,Number,Number]]]
 //    entityDao.search(que) foreach { a =>
 //      val buffer = finalScoreMap.getOrElseUpdate(a(0).asInstanceOf[Long],new ListBuffer[Tuple4[Number,Number,Number,Number]])
 //      buffer += Tuple4(a(1).asInstanceOf[Number],a(2).asInstanceOf[Number],a(3).asInstanceOf[Number],(a(1).toString().toFloat)*0.5+(a(2).toString().toFloat)*0.3+(a(3).toString().toFloat)*0.2)
 //    }
-    val finalScores=entityDao.search(que)
+    val finalScores=entityDao.search(quer)
      finalScores foreach { ob =>
           val questionS = new FinalTeacherScore
           questionS.staff = new Staff()
           questionS.staff.id=ob(0).asInstanceOf[Long]
           questionS.semester=semester
-          questionS.stdScore = ob(1).toString().toFloat
-          questionS.supviScore= ob(2).toString().toFloat
-          questionS.departScore=ob(3).toString().toFloat
-          questionS.score=(ob(1).toString().toFloat*0.5 + ob(2).toString().toFloat*0.3 + ob(3).toString().toFloat*0.2).toFloat
+          questionS.stdScore = ob(3).toString().toFloat*10
+          questionS.supviScore= ob(1).toString().toFloat
+          questionS.departScore=ob(2).toString().toFloat
+          questionS.score=(ob(3).toString().toFloat*10*0.5 + ob(1).toString().toFloat*0.3 + ob(2).toString().toFloat*0.2).toFloat
           entityDao.saveOrUpdate(questionS)
     }
     redirect("index", "info.action.success")
