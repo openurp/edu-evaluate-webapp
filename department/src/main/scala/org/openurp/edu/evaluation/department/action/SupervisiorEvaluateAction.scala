@@ -1,26 +1,27 @@
 package org.openurp.edu.evaluation.department.action
 
+import java.util.Date
+import scala.collection.mutable.Buffer
+import org.beangle.commons.collection.Collections
+import org.beangle.commons.collection.Order
+import org.beangle.commons.lang.ClassLoaders
 import org.beangle.data.dao.OqlBuilder
-import org.openurp.base.model.Department
+import org.beangle.data.transfer.TransferListener
+import org.beangle.data.transfer.importer.listener.ImporterForeignerListener
+import org.beangle.webmvc.api.view.Stream
+import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
+import org.openurp.base.model.Department
 import org.openurp.base.model.Semester
-import org.openurp.edu.evaluation.department.model.SupervisiorEvaluate
+import org.openurp.edu.evaluation.department.helper.ImportSupervisiorListener
 import org.openurp.edu.evaluation.department.model.EvaluateSwitch
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.hr.base.model.Staff
+import org.openurp.edu.evaluation.department.model.SupervisiorEvaluate
 import org.openurp.edu.evaluation.department.model.SupervisiorQuestion
+import org.openurp.edu.evaluation.model.Question
 import org.openurp.edu.evaluation.model.QuestionType
 import org.openurp.edu.evaluation.model.Questionnaire
-import scala.collection.mutable.Buffer
-import org.beangle.webmvc.api.view.{ Stream, View }
-import org.beangle.commons.collection.Collections
-import java.util.Date
 import org.openurp.edu.lesson.model.Lesson
-import org.beangle.commons.collection.Order
-import org.beangle.data.transfer.TransferListener
-import org.beangle.commons.lang.ClassLoaders
-import org.beangle.data.transfer.importer.listener.ImporterForeignerListener
-import org.openurp.edu.evaluation.department.helper.ImportSupervisiorListener
+import org.openurp.edu.base.model.Teacher
 
 /**
  * @author xinzhou
@@ -39,13 +40,13 @@ class SupervisiorEvaluateAction extends RestfulAction[SupervisiorEvaluate] with 
     getInt("supervisiorEvaluate.semester.id") foreach { semesterId => builder.where("lesson.semester.id=:id", semesterId) }
     builder.join("lesson.teachers", "teacher")
     builder.select("distinct teacher.id , lesson.teachDepart.id , lesson.semester.id")
-    builder.where("not exists (from "+classOf[SupervisiorEvaluate].getName+" se where se.semester = lesson.semester and se.staff = teacher and se.department = lesson.teachDepart)")
+    builder.where("not exists (from " + classOf[SupervisiorEvaluate].getName + " se where se.semester = lesson.semester and se.staff = teacher and se.department = lesson.teachDepart)")
     val datas = entityDao.search(builder)
     val supervisiorEvaluates = Collections.newBuffer[SupervisiorEvaluate]
     datas foreach { data =>
       val supervisiorEvaluate = new SupervisiorEvaluate
-      supervisiorEvaluate.staff = new Staff
-      supervisiorEvaluate.staff.id = data(0).asInstanceOf[Long]
+      supervisiorEvaluate.teacher = new Teacher
+      supervisiorEvaluate.teacher.id = data(0).asInstanceOf[Long]
       supervisiorEvaluate.department = new Department
       supervisiorEvaluate.department.id = data(1).asInstanceOf[Int]
       supervisiorEvaluate.semester = new Semester
@@ -58,7 +59,6 @@ class SupervisiorEvaluateAction extends RestfulAction[SupervisiorEvaluate] with 
     val semesterId = get("supervisiorEvaluate.semester.id").orNull
     redirect("search", s"orderBy=supervisiorEvaluate.staff.code asc&supervisiorEvaluate.semester.id=$semesterId", "导入完成")
   }
-
 
   override protected def getQueryBuilder(): OqlBuilder[SupervisiorEvaluate] = {
     val query = OqlBuilder.from(classOf[SupervisiorEvaluate], "supervisiorEvaluate")

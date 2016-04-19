@@ -21,10 +21,10 @@ package org.openurp.edu.evaluation.department.model
 import scala.collection.mutable.HashSet
 import org.beangle.data.model.LongId
 import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.hr.base.model.Staff
 import org.openurp.base.model.Department
 import org.openurp.base.model.Semester
 import org.beangle.commons.collection.Collections
+import org.openurp.edu.base.model.Teacher
 /**
  * 院系问卷评教结果
  *
@@ -35,7 +35,7 @@ class SupervisiorEvaluate extends LongId {
   /**学年学期*/
   var semester: Semester = _
   /** 教师 */
-  var staff: Staff = _
+  var teacher: Teacher = _
   /** 开课院系 */
   var department: Department = _
   /** 问卷信息 */

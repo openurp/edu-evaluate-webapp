@@ -6,7 +6,6 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.transfer.importer.listener.ItemImporterListener
 import org.openurp.edu.base.model.Student
 import org.beangle.data.transfer.TransferResult
-import org.openurp.hr.base.model.Staff
 import org.openurp.edu.evaluation.department.model.SupervisiorEvaluate
 import org.openurp.base.model.Semester
 import java.util.Date

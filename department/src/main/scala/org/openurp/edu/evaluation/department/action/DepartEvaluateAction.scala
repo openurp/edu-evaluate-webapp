@@ -4,7 +4,6 @@ import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.department.model.DepartEvaluate
 import org.openurp.base.model.Department
 import org.beangle.data.dao.OqlBuilder
-import org.openurp.hr.base.model.Staff
 import org.beangle.commons.collection.Order
 import org.beangle.commons.collection.page.PageLimit
 import org.beangle.data.model.LongId
@@ -29,6 +28,7 @@ import org.beangle.data.transfer.TransferListener
 import org.beangle.commons.lang.ClassLoaders
 import org.beangle.data.transfer.importer.listener.ImporterForeignerListener
 import org.openurp.edu.evaluation.department.helper.ImportDepartListener
+import org.openurp.edu.base.model.Teacher
 
 /**
  * @author xinzhou
@@ -48,14 +48,14 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ImportData
     getInt("departEvaluate.semester.id") foreach { semesterId => builder.where("lesson.semester.id=:id", semesterId) }
     builder.join("lesson.teachers", "teacher")
     builder.select("distinct teacher.id , lesson.teachDepart.id , lesson.semester.id")
-    builder.where("lesson.teachDepart.id=:departId", getStaff.state.department.id)
+    builder.where("lesson.teachDepart.id=:departId", getTeacher.department.id)
     builder.where("not exists (from " + classOf[DepartEvaluate].getName + " de where de.semester = lesson.semester and de.staff = teacher and de.department = lesson.teachDepart)")
     val datas = entityDao.search(builder)
     val departEvaluates = Collections.newBuffer[DepartEvaluate]
     datas foreach { data =>
       val departEvaluate = new DepartEvaluate
-      departEvaluate.staff = new Staff
-      departEvaluate.staff.id = data(0).asInstanceOf[Long]
+      departEvaluate.teacher = new Teacher
+      departEvaluate.teacher.id = data(0).asInstanceOf[Long]
       departEvaluate.department = new Department
       departEvaluate.department.id = data(1).asInstanceOf[Int]
       departEvaluate.semester = new Semester
@@ -76,17 +76,17 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ImportData
       case Some(false) => query.where("departEvaluate.totalScore is null")
       case None =>
     }
-    query.where("departEvaluate.department.id=:id", getStaff.state.department.id)
+    query.where("departEvaluate.department.id=:id", getTeacher.department.id)
     populateConditions(query)
     query.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
   }
 
-  def getStaff(): Staff = {
-    val staffs = entityDao.findBy(classOf[Staff], "code", List(Securities.user))
-    if (staffs.isEmpty) {
-      throw new RuntimeException("Cannot find staff with code " + Securities.user)
+  def getTeacher(): Teacher = {
+    val teachers = entityDao.findBy(classOf[Teacher], "code", List(Securities.user))
+    if (teachers.isEmpty) {
+      throw new RuntimeException("Cannot find teacher with code " + Securities.user)
     } else {
-      staffs.head
+      teachers.head
     }
   }
 
