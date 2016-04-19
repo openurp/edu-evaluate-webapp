@@ -20,7 +20,7 @@
             ${(teacher.code)!}<br>
             [/#list]
             [/@]--]
-            [@b.col property="staff.person.name.formatedName" title="教师姓名"/]
+            [@b.col property="teacher.person.name.formatedName" title="教师姓名"/]
         [#--[@b.col title="教师姓名"]
             [#list (evaluateResult.lesson.teachers)?if_exists as teacher]
             ${(teacher.person.name.formatedName)!}[#if teacher_has_next],[/#if]

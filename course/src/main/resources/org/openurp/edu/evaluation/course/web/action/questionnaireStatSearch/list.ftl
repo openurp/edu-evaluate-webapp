@@ -10,7 +10,7 @@
         [@b.row]
             [@b.boxcol/]
             [@b.col property="lesson.teachDepart.name" title="开课院系"/]
-            [@b.col property="staff.person.name.formatedName" title="任课教师"/]
+            [@b.col property="teacher.person.name.formatedName" title="任课教师"/]
             [@b.col property="lesson.course.name" title="课程名称"/]
             [@b.col property="lesson.course.code" title="课程代码"/]
             [@b.col property="lesson.no" title="课程序号"/]

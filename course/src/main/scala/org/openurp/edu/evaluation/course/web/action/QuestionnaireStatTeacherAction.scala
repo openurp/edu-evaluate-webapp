@@ -73,7 +73,7 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
     val questionnaireStat = entityDao.get(classOf[LessonEvalStat], getLong("teacherStatId").get);
     put("questionnaireStat", questionnaireStat);
     val query = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName, "result");
-    query.where("result.staff=:teaId", questionnaireStat.teacher);
+    query.where("result.teacher=:teaId", questionnaireStat.teacher);
     query.where("result.lesson=:less", questionnaireStat.lesson);
     query.select("case when result.statType =1 then count(result.id) end,count(result.id)");
     query.groupBy("result.statType");
@@ -112,13 +112,13 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
     querys.select("count(courseTake.std.id)");
     put("numbers", entityDao.search(querys)(0));
     val que = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR");
-    que.where("questionR.result.staff=:teaId", questionnaireStat.teacher);
+    que.where("questionR.result.teacher=:teaId", questionnaireStat.teacher);
     que.where("questionR.result.lesson=:less", questionnaireStat.lesson);
     que.select("questionR.question.id,questionR.option.id,count(*)");
     que.groupBy("questionR.question.id,questionR.option.id");
     put("questionRs", entityDao.search(que));
     val quer = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR");
-    quer.where("questionR.result.staff=:teaId", questionnaireStat.teacher);
+    quer.where("questionR.result.teacher=:teaId", questionnaireStat.teacher);
     quer.where("questionR.result.lesson=:less", questionnaireStat.lesson);
     quer.select("questionR.question.id,questionR.question.content,sum(questionR.score)/count(questionR.id)");
     quer.groupBy("questionR.question.id,questionR.question.content");
@@ -174,7 +174,7 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
     querdep.where("evaluateResult.lesson.semester.id=" + semesterId);
     if (lesson != null) {
       querdep.where("evaluateResult.lesson.teachDepart.id=:depId", lesson.teachDepart.id);
-      // querdep.where("evaluateResult.teacher.staff.department.id=:depId",teacher.getDepartment().getId());
+      // querdep.where("evaluateResult.teacher.teacher.department.id=:depId",teacher.getDepartment().getId());
     }
     put("depScores", entityDao.search(querdep)(0).toString().toFloat);
     /** 全校平均分 */
@@ -218,7 +218,7 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
     querydep.where("evaluateResult.lesson.semester.id=" + semesterId);
     if (lesson != null) {
       querdep.where("evaluateResult.lesson.teachDepart.id=:depId", lesson.teachDepart.id);
-      // querdep.where("evaluateResult.teacher.staff.department.id=:depId",teacher.getDepartment().getId());
+      // querdep.where("evaluateResult.teacher.teacher.department.id=:depId",teacher.getDepartment().getId());
     }
     querydep.groupBy("evaluateResult.lesson.id");
     querydep.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc");
@@ -247,7 +247,7 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
     quer.where("evaluateResult.lesson.semester.id=" + semesterId);
 
     if (teaId != 0L) {
-      quer.where("evaluateResult.staff.id=:teaId", teaId);
+      quer.where("evaluateResult.teacher.id=:teaId", teaId);
     }
     if (lessonId != 0L) {
       quer.where("evaluateResult.lesson.id=:lessonId", lessonId);
@@ -261,7 +261,7 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
     quer1.where("evaluateResult.id=questionResult.result.id");
     quer1.where("evaluateResult.lesson.semester.id=" + semesterId);
     if (teaId != 0L) {
-      quer1.where("evaluateResult.staff.id=:teaId", teaId);
+      quer1.where("evaluateResult.teacher.id=:teaId", teaId);
     }
     if (lessonId != 0L) {
       quer1.where("evaluateResult.lesson.id=:lessonId", lessonId);

@@ -43,13 +43,13 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ImportData
 
   }
 
-  def importStaffs(): View = {
+  def importTeachers(): View = {
     val builder = OqlBuilder.from[Array[Any]](classOf[Lesson].getName, "lesson")
     getInt("departEvaluate.semester.id") foreach { semesterId => builder.where("lesson.semester.id=:id", semesterId) }
     builder.join("lesson.teachers", "teacher")
     builder.select("distinct teacher.id , lesson.teachDepart.id , lesson.semester.id")
     builder.where("lesson.teachDepart.id=:departId", getTeacher.department.id)
-    builder.where("not exists (from " + classOf[DepartEvaluate].getName + " de where de.semester = lesson.semester and de.staff = teacher and de.department = lesson.teachDepart)")
+    builder.where("not exists (from " + classOf[DepartEvaluate].getName + " de where de.semester = lesson.semester and de.teacher = teacher and de.department = lesson.teachDepart)")
     val datas = entityDao.search(builder)
     val departEvaluates = Collections.newBuffer[DepartEvaluate]
     datas foreach { data =>
@@ -66,7 +66,7 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ImportData
     }
     entityDao.saveOrUpdate(departEvaluates)
     val semesterId = get("departEvaluate.semester.id").orNull
-    redirect("search", s"orderBy=departEvaluate.staff.code asc&departEvaluate.semester.id=$semesterId", "导入完成")
+    redirect("search", s"orderBy=departEvaluate.teacher.code asc&departEvaluate.semester.id=$semesterId", "导入完成")
   }
 
   override protected def getQueryBuilder(): OqlBuilder[DepartEvaluate] = {

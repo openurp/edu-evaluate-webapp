@@ -8,11 +8,11 @@
 <table class="infoTable">
   <tr>
    <td class="title">教师工号:</td>
-   <td class="content"> ${supervisiorEvaluate.staff.code}</td>
+   <td class="content"> ${supervisiorEvaluate.teacher.code}</td>
    <td class="title">教师姓名:</td>
-   <td class="content">${supervisiorEvaluate.staff.person.name.formatedName}</td>
+   <td class="content">${supervisiorEvaluate.teacher.person.name.formatedName}</td>
    <td class="title">所在院系:</td>
-   <td class="content"> ${supervisiorEvaluate.staff.state.department.name}</td>
+   <td class="content"> ${supervisiorEvaluate.teacher.department.name}</td>
   </tr>
   <tr>
    <td class="title">开课院系:</td>

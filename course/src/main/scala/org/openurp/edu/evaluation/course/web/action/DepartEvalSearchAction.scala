@@ -65,20 +65,20 @@ override def  index():String= {
     put("options", list);
     val querys = OqlBuilder.from[Long](classOf[Lesson].getName, "lesson");
     querys.join("lesson.teachers", "teacher");
-//    querys.where("teacher=:teach",questionnaireStat.staff);
+//    querys.where("teacher=:teach",questionnaireStat.teacher);
     querys.where("lesson.teachDepart=:depart", questionnaireStat.department);
     querys.join("lesson.teachclass.courseTakes", "courseTake");
     querys.select("count(courseTake.std.id)");
     val numbers=entityDao.search(querys)(0)
     put("numbers", entityDao.search(querys)(0));
     val que = OqlBuilder.from(classOf[QuestionResult], "questionR");
-//    que.where("questionR.result.staff=:teaId", questionnaireStat.staff);
+//    que.where("questionR.result.teacher=:teaId", questionnaireStat.teacher);
     que.where("questionR.result.department=:depart", questionnaireStat.department);
     que.select("questionR.question.id,questionR.option.id,count(*)");
     que.groupBy("questionR.question.id,questionR.option.id");
     put("questionRs", entityDao.search(que));
     val quer = OqlBuilder.from(classOf[QuestionResult], "questionR");
-//    quer.where("questionR.result.staff=:teaId", questionnaireStat.staff);
+//    quer.where("questionR.result.teacher=:teaId", questionnaireStat.teacher);
     quer.where("questionR.result.department=:depart", questionnaireStat.department);
     quer.select("questionR.question.id,questionR.question.content,sum(questionR.score)/count(questionR.id)*100");
     quer.groupBy("questionR.question.id,questionR.question.content");

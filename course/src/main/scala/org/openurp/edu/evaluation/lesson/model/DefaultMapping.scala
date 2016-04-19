@@ -150,7 +150,7 @@ class DefaultMapping extends Mapping {
     bind[SchoolQuestionTypeStat].on(e => declare(
       e.evalStat is (notnull, target[SchoolEvalStat])))
 
-    //staff
+    //teacher
     bind[TeacherEvalStat].on(e => declare(
       e.teacher is notnull,
       e.questionStats is depends(classOf[TeacherQuestionStat], "evalStat"),

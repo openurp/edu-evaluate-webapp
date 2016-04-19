@@ -140,8 +140,8 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
     que.where("questionR.question.addition is false")
     que.where("questionR.result.department.id in(:depIds)", departmentIds)
     //  que.where("questionR.result.lesson.course.education.id in(:eduIds)", educationTypeIds)
-    que.select("questionR.result.lesson.semester.id,questionR.result.staff.id,questionR.question.id,sum(questionR.score),avg(questionR.score),count(questionR.id)")
-    que.groupBy("questionR.result.lesson.semester.id,questionR.result.staff.id,questionR.question.id")
+    que.select("questionR.result.lesson.semester.id,questionR.result.teacher.id,questionR.question.id,sum(questionR.score),avg(questionR.score),count(questionR.id)")
+    que.groupBy("questionR.result.lesson.semester.id,questionR.result.teacher.id,questionR.question.id")
     val wtStatMap = new collection.mutable.HashMap[Tuple2[Any, Any], Buffer[Tuple4[Long, Number, Number, Number]]]
     entityDao.search(que) foreach { a =>
       val buffer = wtStatMap.getOrElseUpdate((a(0), a(1)), new ListBuffer[Tuple4[Long, Number, Number, Number]])
@@ -154,23 +154,23 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
     quer.where("questionR.result.department.id in(:depIds)", departmentIds)
     //    quer.where("questionR.result.lesson.course.education.id in(:eduIds)", educationTypeIds)
     quer.where("questionR.question.addition is false")
-    quer.select("questionR.result.lesson.semester.id,questionR.result.staff.id,questionR.result.questionnaire.id,"
+    quer.select("questionR.result.lesson.semester.id,questionR.result.teacher.id,questionR.result.questionnaire.id,"
       + "sum(questionR.score),case when questionR.result.statType =1 then count(distinct questionR.result.id) end,"
       + "count(distinct questionR.result.id),case when questionR.result.statType =1 then sum(questionR.score) end,"
       + "sum(questionR.score)/count(distinct questionR.result.id)")
-    quer.groupBy("questionR.result.lesson.semester.id,questionR.result.staff.id,questionR.result.questionnaire.id,questionR.result.statType")
+    quer.groupBy("questionR.result.lesson.semester.id,questionR.result.teacher.id,questionR.result.questionnaire.id,questionR.result.statType")
     val wjStat = entityDao.search(quer)
 
     // 问题类别统计
     val tyquery = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR")
     tyquery.where("questionR.result.lesson.semester.id=:semesterId", semesterId)
     tyquery.where("questionR.result.statType is 1")
-    tyquery.where("questionR.result.staff is not null")
+    tyquery.where("questionR.result.teacher is not null")
     tyquery.where("questionR.result.department.id in(:depIds)", departmentIds)
     tyquery.where("questionR.question.addition is false")
     //    tyquery.where("questionR.result.lesson.course.education.id in(:eduIds)", educationTypeIds)
-    tyquery.select("questionR.result.lesson.semester.id,questionR.result.staff.id,questionR.question.questionType.id,sum(questionR.score)/count(distinct questionR.result.id)")
-    tyquery.groupBy("questionR.result.lesson.semester.id,questionR.result.staff.id,questionR.question.questionType.id")
+    tyquery.select("questionR.result.lesson.semester.id,questionR.result.teacher.id,questionR.question.questionType.id,sum(questionR.score)/count(distinct questionR.result.id)")
+    tyquery.groupBy("questionR.result.lesson.semester.id,questionR.result.teacher.id,questionR.question.questionType.id")
 
     val typeStatMap = new collection.mutable.HashMap[Tuple2[Any, Any], Buffer[Tuple2[Long, Number]]]
     entityDao.search(tyquery) foreach { a =>
@@ -184,8 +184,8 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
     opQuery.where("questionR.result.department.id in(:depIds)", departmentIds)
     opQuery.where("questionR.question.addition is false")
     //    opQuery.where("questionR.result.lesson.course.education.id in(:eduIds)", educationTypeIds)
-    opQuery.select("questionR.result.lesson.semester.id,questionR.result.staff.id,questionR.question.id,questionR.option.id,count(questionR.id)")
-    opQuery.groupBy("questionR.result.lesson.semester.id,questionR.result.staff.id,questionR.question.id,questionR.option.id")
+    opQuery.select("questionR.result.lesson.semester.id,questionR.result.teacher.id,questionR.question.id,questionR.option.id,count(questionR.id)")
+    opQuery.groupBy("questionR.result.lesson.semester.id,questionR.result.teacher.id,questionR.question.id,questionR.option.id")
     val optionStatMap = new collection.mutable.HashMap[Tuple3[Any, Any, Any], Buffer[Tuple2[Long, Number]]]
     entityDao.search(opQuery) foreach { a =>
       val buffer = optionStatMap.getOrElseUpdate((a(0), a(1), a(2)), new ListBuffer[Tuple2[Long, Number]])
@@ -199,7 +199,7 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
     val lquery = OqlBuilder.from(classOf[Teacher], "sf")
     //  lquery.where("le.course.education.id in(:eduIds)", educationTypeIds)
     lquery.where("sf.state.department.id in(:depIds)", departmentIds)
-    val staffList = entityDao.search(lquery)
+    val teacherList = entityDao.search(lquery)
     //教师问卷得分统计
     wjStat foreach { evaObject =>
       val questionS = new TeacherEvalStat
@@ -246,7 +246,7 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
       questionS.questionStats = questionDetailStats
       //           添加排名
 
-      //            pmStatMap.get(questionS.lesson.id,questionS.staff.id) foreach { pm =>
+      //            pmStatMap.get(questionS.lesson.id,questionS.teacher.id) foreach { pm =>
       //                questionS.rank= pm._2.intValue()
       //                questionS.departRank= pm._3.intValue()
       //            }
@@ -272,7 +272,7 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
     //     Ranker.over(evals){(x,r) =>
     //       x.rank=r;
     //     }
-    //     val departEvalMaps = evals.groupBy ( x => x.staff.state.department )
+    //     val departEvalMaps = evals.groupBy ( x => x.teacher.state.department )
     //     departEvalMaps.values foreach{ departEvals =>
     //         Ranker.over(departEvals){(x,r) =>
     //         x.departRank=r;
@@ -311,7 +311,7 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
     val id = getLong("teacherEvalStat.id").get
     val questionnaires = entityDao.get(classOf[TeacherEvalStat], id)
     val query = OqlBuilder.from(classOf[TeacherEvalStat], "questionnaires")
-    query.where("questionnaires.staff.id=:teaIds", questionnaires.teacher.id)
+    query.where("questionnaires.teacher.id=:teaIds", questionnaires.teacher.id)
     query.orderBy("questionnaires.semester.beginOn")
     put("teacher", questionnaires.teacher)
     put("teachEvaluates", entityDao.search(query))
@@ -346,10 +346,10 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
     //    put("evaluateResults", fl)
 
     val query = OqlBuilder.from(classOf[TeacherEvalStat], "evaluateR")
-    query.select("evaluateR.staff.state.department.id,count( evaluateR.staff.id)")
+    query.select("evaluateR.teacher.state.department.id,count( evaluateR.teacher.id)")
     query.where("evaluateR.semester.id =:semesterId ", semesterId)
-    query.groupBy("evaluateR.staff.state.department.id,evaluateR.semester.id")
-    //    val hql = "select evaluateR.lesson.teachDepart.id,count( evaluateR.staff.id) from" +
+    query.groupBy("evaluateR.teacher.state.department.id,evaluateR.semester.id")
+    //    val hql = "select evaluateR.lesson.teachDepart.id,count( evaluateR.teacher.id) from" +
     //    " org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat evaluateR "  +
     //    "where evaluateR.lesson.semester.id=" + semesterId + " " +
     //    "group by evaluateR.lesson.teachDepart.id,evaluateR.lesson.semester.id "
@@ -359,10 +359,10 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
     lis foreach { evaluationCriteriaItem =>
       val query = OqlBuilder.from(classOf[TeacherEvalStat], "questionnaireStat")
       query.where("questionnaireStat.semester.id=:semesterId", semesterId)
-      query.select("questionnaireStat.staff.state.department.id,count(questionnaireStat.staff.id)")
+      query.select("questionnaireStat.teacher.state.department.id,count(questionnaireStat.teacher.id)")
       query.where("questionnaireStat.score>=" + evaluationCriteriaItem.min
         + " and questionnaireStat.score<" + evaluationCriteriaItem.max)
-      query.groupBy("questionnaireStat.staff.state.department.id")
+      query.groupBy("questionnaireStat.teacher.state.department.id")
       maps.put(evaluationCriteriaItem.id.toString(), entityDao.search(query))
     }
     put("questionDeps", maps)
@@ -386,7 +386,7 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
 
     val evaquery = OqlBuilder.from(classOf[EvaluateResult], "evaluateR")
     evaquery.select("distinct evaluateR.lesson.semester.id")
-    evaquery.where("evaluateR.staff.state.department.id=:depId", depId)
+    evaquery.where("evaluateR.teacher.state.department.id=:depId", depId)
     val semesterIds = entityDao.search(evaquery)
     val qur = OqlBuilder.from(classOf[Semester], "semester")
     qur.where("semester.beginOn<=:dat", new java.util.Date())
@@ -399,17 +399,17 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
       qur.where("semester.id is null")
       quetionQuery.where("questionnaireS.semester.id is null")
     }
-    quetionQuery.where("questionnaireS.staff.state.department.id=:depId", depId)
+    quetionQuery.where("questionnaireS.teacher.state.department.id=:depId", depId)
     put("evaSemesters", entityDao.search(qur))
-    quetionQuery.select("questionnaireS.semester.id,count(questionnaireS.staff.id)")
+    quetionQuery.select("questionnaireS.semester.id,count(questionnaireS.teacher.id)")
     quetionQuery.groupBy("questionnaireS.semester.id")
     put("questionNums", entityDao.search(quetionQuery))
     val maps = Collections.newMap[String, Seq[TeacherEvalStat]]
     lis foreach { evaluationCriteriaItem =>
       val query = OqlBuilder.from(classOf[TeacherEvalStat], "questionnaireStat")
-      query.select("questionnaireStat.semester.id,count(questionnaireStat.staff.id)")
+      query.select("questionnaireStat.semester.id,count(questionnaireStat.teacher.id)")
       query.where("questionnaireStat.score>=" + evaluationCriteriaItem.min + " and questionnaireStat.score<" + evaluationCriteriaItem.max)
-      query.where("questionnaireStat.staff.state.department.id=:depId", depId)
+      query.where("questionnaireStat.teacher.state.department.id=:depId", depId)
       query.groupBy("questionnaireStat.semester.id")
       maps.put(evaluationCriteriaItem.id.toString(), entityDao.search(query))
     }
@@ -439,14 +439,14 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
       quetionQuery.where("questionnaireS.semester.id is null")
     }
     put("evaSemesters", entityDao.search(qur))
-    quetionQuery.select("questionnaireS.semester.id,count(questionnaireS.staff.id)")
+    quetionQuery.select("questionnaireS.semester.id,count(questionnaireS.teacher.id)")
     quetionQuery.groupBy("questionnaireS.semester.id")
     put("questionNums", entityDao.search(quetionQuery))
     val maps = Collections.newMap[String, Seq[TeacherEvalStat]]
     lis foreach { evaluationCriteriaItem =>
       //    for (EvaluationCriteriaItem evaluationCriteriaItem : lis) {
       val query = OqlBuilder.from(classOf[TeacherEvalStat], "questionnaireStat")
-      query.select("questionnaireStat.semester.id,count(questionnaireStat.staff.id)")
+      query.select("questionnaireStat.semester.id,count(questionnaireStat.teacher.id)")
       query.where("questionnaireStat.score>=" + evaluationCriteriaItem.min
         + " and questionnaireStat.score<" + evaluationCriteriaItem.max)
       query.groupBy("questionnaireStat.semester.id")
@@ -481,7 +481,7 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
       quetionQuery.where("questionTypeStat.questionType.id is null")
     }
     put("questionTypes", entityDao.search(quTqur))
-    quetionQuery.select("questionTypeStat.questionType.id,count(questionnaireS.staff.id)")
+    quetionQuery.select("questionTypeStat.questionType.id,count(questionnaireS.teacher.id)")
     quetionQuery.groupBy("questionTypeStat.questionType.id")
     put("quesTypeNums", entityDao.search(quetionQuery))
 
@@ -490,7 +490,7 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
       val query = OqlBuilder.from(classOf[TeacherEvalStat], "questionnaireStat")
       query.where("questionnaireStat.semester.id=:semesId", getInt("semester.id").get)
       query.join("questionnaireStat.questionTypeStats", "questionTypeStat")
-      query.select("questionTypeStat.questionType.id,count(questionnaireStat.staff.id)")
+      query.select("questionTypeStat.questionType.id,count(questionnaireStat.teacher.id)")
       query.where("questionTypeStat.score>=" + evaluationCriteriaItem.min + " and questionTypeStat.score<" + evaluationCriteriaItem.max)
       query.groupBy("questionTypeStat.questionType.id")
       maps.put(evaluationCriteriaItem.id.toString(), entityDao.search(query))
@@ -499,7 +499,7 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
     val que = OqlBuilder.from(classOf[EvaluateResult], "evaluateR")
     que.where("evaluateR.lesson.semester.id=:seiD", getInt("semester.id").get)
     // que.where("evaluateR.statType is 1")
-    que.select("distinct evaluateR.staff.id")
+    que.select("distinct evaluateR.teacher.id")
     val list = entityDao.search(que)
     put("persons", list.size)
     //    put("questionTypes", entityDao.getAll(classOf[QuestionType]))
@@ -516,7 +516,7 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
   //    questionnaires foreach { questionnaire =>
   //      val questionnaireId = questionnaire.id
   //      val query = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
-  //          + classOf[QuestionResult].getName + " questionResult," + classOf[Staff].getName + " teach");
+  //          + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teach");
   //      query.select("teach.id,sum(questionResult.score)/count(distinct evaluateResult.id)");
   //      query.join("evaluateResult.lesson.teachers", "tea");
   //      query.where("tea.id = teach.id");
@@ -527,13 +527,13 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
   //      query.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc");
   //      val li = entityDao.search(query);
   ////////      val depEvaluates = entityDao.search(OqlBuilder.from(classOf[DepartEvaluate], "de").where("de.semester.id=:id", semesterId))
-  //      val teaList = entityDao.search(OqlBuilder.from(classOf[Staff], "staff").where("staff.state.id=:id",1L))
+  //      val teaList = entityDao.search(OqlBuilder.from(classOf[Teacher], "teacher").where("teacher.state.id=:id",1L))
   //      val evaluates =Collections.newBuffer[TeacherEvalStat]
   //      val df = new DecimalFormat("#.00 ");
   //      teaList foreach { teacher =>
   //        var fl = 0f;
   //        val evaluate = new TeacherEvalStat
-  //        evaluate.staff=teacher
+  //        evaluate.teacher=teacher
   //        evaluate.semester=entityDao.get(classOf[Semester], semesterId)
   //        evaluate.questionnaire=questionnaire
   //        li foreach { bo =>
@@ -548,7 +548,7 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
   //        }
   //        depEvaluates foreach {departEvaluation =>
   //
-  //          if (departEvaluation.staff.id.toString().equals(teacher.id.toString())) {
+  //          if (departEvaluation.teacher.id.toString().equals(teacher.id.toString())) {
   //            if (departEvaluation.totalScore!= null) {
   //
   //              evaluate.depEvaluate=departEvaluation.totalScore
@@ -559,7 +559,7 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
   //
   //        }
   //        for (DepartEvaluation departEvaluation : depEvaluates) {
-  //          if (departEvaluation.getStaff().getId().toString().equals(teacher.getId().toString())) {
+  //          if (departEvaluation.getTeacher().getId().toString().equals(teacher.getId().toString())) {
   //            if (departEvaluation.getScore() != null) {
   //
   //              evaluate.setDepEvaluate(departEvaluation.getScore());
@@ -581,12 +581,12 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
   //        var num = 0;
   //        for (j <- 0 to evaluates.size) {
   //          val courseEvaluate = evaluates(j);
-  //          val t1 = courseEvaluate.staff
-  //          val t2 = courseEvalStat.staff
+  //          val t1 = courseEvaluate.teacher
+  //          val t2 = courseEvalStat.teacher
   //          if (t1.state.department != null && t2.state.department != null) {
   //            if (t1.state.department.id.toString().equals(t2.state.department.id.toString())) {
   //              num += 1;
-  //              if (courseEvaluate.staff.id.toString().equals(courseEvalStat.staff.id.toString())) {
+  //              if (courseEvaluate.teacher.id.toString().equals(courseEvalStat.teacher.id.toString())) {
   //                courseEvalStat.departRank=num
   //              }
   //            }
@@ -597,13 +597,13 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
   //      val list = Collections.newBuffer[CourseEvalStat]
   //      evaluates foreach {courseEvalStat =>
   //
-  //        if ((courseEvalStat.staff.state.department != null)) {
+  //        if ((courseEvalStat.teacher.state.department != null)) {
   //          list +=courseEvalStat
   //        } else {
   //          val lists = entityDao.getAll(classOf[Department])
   //          lists foreach {department =>
   //
-  //            val teacher = courseEvalStat.staff
+  //            val teacher = courseEvalStat.teacher
   //            if (null != teacher.state.department) {
   //              if (teacher.state.department.id.toString().equals(department.id.toString())) {
   //                list += courseEvalStat

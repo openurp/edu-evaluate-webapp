@@ -38,7 +38,7 @@ class CourseEvalSearchAction extends RestfulAction[CourseEvalStat] {
     put("questionnaireStat", questionnaireStat);
     // zongrenci fix
     val query = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName, "result");
-    query.where("result.staff =:tea", questionnaireStat.teacher);
+    query.where("result.teacher =:tea", questionnaireStat.teacher);
     query.where("result.lesson.course=:course", questionnaireStat.course)
     query.select("case when result.statType =1 then count(result.id) end,count(result.id)");
     query.groupBy("result.statType");
@@ -72,13 +72,13 @@ class CourseEvalSearchAction extends RestfulAction[CourseEvalStat] {
     val numbers = entityDao.search(querys)(0)
     put("numbers", entityDao.search(querys)(0));
     val que = OqlBuilder.from(classOf[QuestionResult], "questionR");
-    que.where("questionR.result.staff=:teaId", questionnaireStat.teacher);
+    que.where("questionR.result.teacher=:teaId", questionnaireStat.teacher);
     que.where("questionR.result.lesson.course=:less", questionnaireStat.course);
     que.select("questionR.question.id,questionR.option.id,count(*)");
     que.groupBy("questionR.question.id,questionR.option.id");
     put("questionRs", entityDao.search(que));
     val quer = OqlBuilder.from(classOf[QuestionResult], "questionR");
-    quer.where("questionR.result.staff=:teaId", questionnaireStat.teacher);
+    quer.where("questionR.result.teacher=:teaId", questionnaireStat.teacher);
     quer.where("questionR.result.lesson.course=:less", questionnaireStat.course);
     quer.select("questionR.question.id,questionR.question.content,sum(questionR.score)/count(questionR.id)*100");
     quer.groupBy("questionR.question.id,questionR.question.content");

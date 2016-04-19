@@ -43,8 +43,8 @@ class EvaluateStatusStatAction extends RestfulAction[EvaluateResult] {
     val lessonNo=get("lesson.no").getOrElse("")
     val courseCode=get("course.code").getOrElse("")
     val courseName=get("course.name").getOrElse("")
-    val staffName=get("staff.name").getOrElse("")
-    if (departmentId == 0 && lessonNo=="" && courseCode=="" && courseName=="" && staffName=="") {
+    val teacherName=get("teacher.name").getOrElse("")
+    if (departmentId == 0 && lessonNo=="" && courseCode=="" && courseName=="" && teacherName=="") {
       searchSchool(semesterId);
     } else {
       searchDep(semesterId);
@@ -60,7 +60,7 @@ class EvaluateStatusStatAction extends RestfulAction[EvaluateResult] {
     val lessonNo=get("lesson.no").get
     val courseCode=get("course.code").get
     val courseName=get("course.name").get
-    val staffName=get("staff.name").get
+    val teacherName=get("teacher.name").get
     // 得到院系下的所有教学任务
     val lessonQuery = OqlBuilder.from(classOf[Lesson], "lesson");
     lessonQuery.where("lesson.semester =:semester", semester);
@@ -76,9 +76,9 @@ class EvaluateStatusStatAction extends RestfulAction[EvaluateResult] {
     if (Strings.isNotBlank(courseName)) {
       lessonQuery.where("lesson.course.name like :courseName", "%" + courseName + "%");
     }
-   if (Strings.isNotBlank(staffName)) {
+   if (Strings.isNotBlank(teacherName)) {
      lessonQuery.join("lesson.teachers","teacher")
-     lessonQuery.where("teacher.person.name.formatedName like :staffName", "%" + staffName + "%");
+     lessonQuery.where("teacher.person.name.formatedName like :teacherName", "%" + teacherName + "%");
     }
     val lessonList = entityDao.search(lessonQuery);
     val evaluateSearchDepartmentList = Collections.newBuffer[EvaluateSearchDepartment]

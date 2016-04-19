@@ -7,9 +7,9 @@
     <table class="infoTable" width="90%" align="center">
         <tr>
             <td class="title" style="text-align:center;">教师姓名</td>
-            <td style="padding-left:10px;">${(questionnaireStat.staff.person.name.formatedName)!}</td>
+            <td style="padding-left:10px;">${(questionnaireStat.teacher.person.name.formatedName)!}</td>
             <td class="title" style="text-align:center;">职称</td>
-            <td style="padding-left:10px;">${(questionnaireStat.staff.title.name)!}</td>
+            <td style="padding-left:10px;">${(questionnaireStat.teacher.title.name)!}</td>
             <td class="title" style="text-align:center;">总分</td>
             <td style="padding-left:10px;">${(questionnaireStat.score)!}</td> 
         </tr>

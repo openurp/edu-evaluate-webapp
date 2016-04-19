@@ -90,10 +90,10 @@ class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
     //    val stdCountFrom = getInt("stdCountFrom");
     //    val stdCountEnd = getInt("stdCountEnd");
     //    val hasTeacher = getBoolean("hasTeacher").get;
-    val staffName = get("teacher").orNull
-    if (Strings.isNotBlank(staffName)) {
+    val teacherName = get("teacher").orNull
+    if (Strings.isNotBlank(teacherName)) {
       query.join("questionnaireLesson.lesson.teachers", "teacher")
-      query.where("teacher.person.name.formatedName like :staffName", "%" + staffName + "%");
+      query.where("teacher.person.name.formatedName like :teacherName", "%" + teacherName + "%");
     }
     if (questionnaireId != -1 && questionnaireId != 0) {
       query.where("questionnaireLesson.questionnaire.id =:questionnaireId", questionnaireId);
@@ -140,10 +140,10 @@ class QuestionnaireLessonAction extends RestfulAction[QuestionnaireLesson] {
     //     semesterId foreach { e =>
     query.where("lesson.semester.id = :semesterId", semesterId);
     //    }
-    val staffName = get("staff").getOrElse("")
-    if (Strings.isNotBlank(staffName)) {
+    val teacherName = get("teacher").getOrElse("")
+    if (Strings.isNotBlank(teacherName)) {
       query.join("lesson.teachers", "teacher")
-      query.where("teacher.person.name.formatedName like :staffName", "%" + staffName + "%");
+      query.where("teacher.person.name.formatedName like :teacherName", "%" + teacherName + "%");
     }
     //        val lessonNo= get("questionnaireLesson.lesson.no").get
     //    lessonNo foreach {e =>

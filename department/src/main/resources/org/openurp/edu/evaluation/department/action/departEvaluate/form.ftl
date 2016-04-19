@@ -8,13 +8,13 @@
 <table class="infoTable">
   <tr>
    <td class="title">教师工号:</td>
-   <td class="content"> ${departEvaluate.staff.code}</td>
+   <td class="content"> ${departEvaluate.teacher.code}</td>
    <td class="title">教师姓名:</td>
-   <td class="content">${departEvaluate.staff.person.name.formatedName}</td>
+   <td class="content">${departEvaluate.teacher.person.name.formatedName}</td>
   </tr>
   <tr>
    <td class="title">所在院系:</td>
-   <td class="content"> ${departEvaluate.staff.state.department.name}</td>
+   <td class="content"> ${departEvaluate.teacher.department.name}</td>
    <td class="title" style="font-weight:bold;">评教总分:</td>
    <td class="content" style="color:red; font-weight:bold;">${(departEvaluate.totalScore)!}</td>
   </tr>

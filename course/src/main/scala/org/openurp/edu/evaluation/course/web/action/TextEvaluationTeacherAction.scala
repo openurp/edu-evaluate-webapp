@@ -75,7 +75,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     var textEvaluations: Seq[TextEvaluation] = Seq()
     val query = OqlBuilder.from(classOf[TextEvaluation], "textEvaluation");
     query.where("textEvaluation.lesson.id =:lessonId", lessonId);
-    query.where("textEvaluation.staff =:teacher", teacher);
+    query.where("textEvaluation.teacher =:teacher", teacher);
 
     val switchQuery = OqlBuilder.from(classOf[TextEvaluateSwitch], "switch").where("switch.semester.id=:semesterId", lesson.semester.id)
     val textEvaluationSwitch = entityDao.search(switchQuery)
@@ -215,7 +215,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     val semesterId = entityDao.get(classOf[Lesson], lessonId).semester.id
     val query = OqlBuilder.from(classOf[TeacherRemessage], "teacherRemessage");
     query.where("teacherRemessage.visible = false");
-    query.where("teacherRemessage.textEvaluation.staff =:teacher", teacher);
+    query.where("teacherRemessage.textEvaluation.teacher =:teacher", teacher);
     query.where("teacherRemessage.textEvaluation.lesson.semester.id =:semesterId", semesterId);
     query.orderBy("teacherRemessage.createdAt desc").limit(getPageLimit)
     put("teacherRemessages", entityDao.search(query));

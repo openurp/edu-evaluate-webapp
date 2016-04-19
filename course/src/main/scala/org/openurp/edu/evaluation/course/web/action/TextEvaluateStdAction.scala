@@ -89,10 +89,10 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
       //      val evaluateTeacherRemessages =
       annMap.getOrElseUpdate(teacherRemessage.textEvaluation.teacher.id, Collections.newBuffer[TeacherRemessage]) +=
         teacherRemessage
-      //      var evaluateTeacherRemessages:Buffer[EvaluateTeacherRemessage] = annMap.get(evaluateTeacherRemessage.textEvaluation.staff.id).orNull
+      //      var evaluateTeacherRemessages:Buffer[EvaluateTeacherRemessage] = annMap.get(evaluateTeacherRemessage.textEvaluation.teacher.id).orNull
       //      if (evaluateTeacherRemessages == null) {
       //       evaluateTeacherRemessages = Collections.newBuffer[EvaluateTeacherRemessage]
-      //       annMap.put(evaluateTeacherRemessage.textEvaluation.staff.id, evaluateTeacherRemessages)
+      //       annMap.put(evaluateTeacherRemessage.textEvaluation.teacher.id, evaluateTeacherRemessages)
       //      }
       //       evaluateTeacherRemessages += evaluateTeacherRemessage
 
@@ -114,8 +114,8 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
 
   def getTeacherLessonByLessonIdSeq(lessonIdSeq: List[Long]): Seq[Array[Any]] = {
     val query = OqlBuilder.from[Array[Any]](classOf[Lesson].getName + " lesson")
-    query.join("lesson.teachers", "staff");
-    query.select("staff,lesson")
+    query.join("lesson.teachers", "teacher");
+    query.select("teacher,lesson")
     query.where("lesson.id in (:lessonIdSeq)", lessonIdSeq)
     entityDao.search(query)
   }
@@ -124,7 +124,7 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
     val query = OqlBuilder.from(classOf[TextEvaluation], "textEvaluation")
     query.where("textEvaluation.student =:student", student);
     query.where("textEvaluation.lesson =:lesson", lesson);
-    query.where("textEvaluation.staff =:teacher", teacher);
+    query.where("textEvaluation.teacher =:teacher", teacher);
     entityDao.search(query)
   }
 
@@ -136,7 +136,7 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
   }
   def getLessonIdAndTeacherIdOfResult(student: Student, semester: Semester): collection.Map[String, String] = {
     val query = OqlBuilder.from(classOf[TextEvaluation], "textEvaluation")
-    //    query.select("textEvaluation.lesson.id,textEvaluation.staff.id")
+    //    query.select("textEvaluation.lesson.id,textEvaluation.teacher.id")
     query.where("textEvaluation.student = :student ", student)
     query.where("textEvaluation.lesson.semester = :semester", semester)
     val a = entityDao.search(query)

@@ -6,7 +6,7 @@
 [@b.form name="modifyTeacherForm" action="!saveTeacher" title="更改教师" theme="list"]
 <input type="hidden" name="questionnaireStat.id" value="${(questionnaireStat.id)!}">
     <li>
-        <label class="title">现有教师:</label>${(questionnaireStat.staff.person.name.formatedName)!}
+        <label class="title">现有教师:</label>${(questionnaireStat.teacher.person.name.formatedName)!}
     </li>
     [@b.field label="修改教师" required="true"]
         [@b.textfield title="正确工号" theme="html" id="teacherCode" value="" name="teacherCode" comment="<input type='button' value='查询' onClick='searchTeacher()'/>输入教师工号查询"/]

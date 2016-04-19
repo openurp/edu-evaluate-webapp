@@ -18,7 +18,7 @@ import org.openurp.edu.base.model.Teacher
  */
 class ImportDepartListener(entityDao: EntityDao) extends ItemImporterListener {
   override def onItemStart(tr: TransferResult) {
-    val staffCode = importer.curData.get("staff.code").get
+    val teacherCode = importer.curData.get("teacher.code").get
     val semesterCode = importer.curData.get("semester.code").get.toString()
     val departmentId = getTeacher().department.id
     val semesterBuilder = OqlBuilder.from(classOf[Semester], "s").where("s.code=:code ", semesterCode)
@@ -27,7 +27,7 @@ class ImportDepartListener(entityDao: EntityDao) extends ItemImporterListener {
       tr.addFailure("学期数据格式非法", semesterCode)
     } else {
       val builder = OqlBuilder.from(classOf[DepartEvaluate], "de")
-      builder.where("de.staff.code=:code and de.semester.code=:scode and de.department.id=:id", staffCode, semesterCode, departmentId)
+      builder.where("de.teacher.code=:code and de.semester.code=:scode and de.department.id=:id", teacherCode, semesterCode, departmentId)
       entityDao.search(builder) foreach { s =>
         this.importer.current = s
       }
@@ -44,11 +44,11 @@ class ImportDepartListener(entityDao: EntityDao) extends ItemImporterListener {
   }
 
   def getTeacher(): Teacher = {
-    val staffs = entityDao.findBy(classOf[Teacher], "code", List(Securities.user))
-    if (staffs.isEmpty) {
+    val teachers = entityDao.findBy(classOf[Teacher], "code", List(Securities.user))
+    if (teachers.isEmpty) {
       throw new RuntimeException("Cannot find teacher with code " + Securities.user)
     } else {
-      staffs.head
+      teachers.head
     }
   }
 }

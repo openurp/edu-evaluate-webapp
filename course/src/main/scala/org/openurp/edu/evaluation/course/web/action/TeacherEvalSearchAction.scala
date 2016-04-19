@@ -42,7 +42,7 @@ class TeacherEvalSearchAction extends RestfulAction[TeacherEvalStat] {
     put("questionnaireStat", questionnaireStat);
     // zongrenci fix
     val query = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName, "result");
-    query.where("result.staff =:tea", questionnaireStat.teacher);
+    query.where("result.teacher =:tea", questionnaireStat.teacher);
     query.where("result.questionnaire=:quen", questionnaireStat.questionnaire)
     //    query.where("result.lesson=:less", questionnaireStat.lesson)
     query.select("case when result.statType =1 then count(result.id) end,count(result.id)");
@@ -72,13 +72,13 @@ class TeacherEvalSearchAction extends RestfulAction[TeacherEvalStat] {
     lessonQue.select("distinct evalResult.lesson")
     lessonQue.where("evalResult.lesson.semester.id =:semesterId", questionnaireStat.semester.id);
     lessonQue.join("evalResult.lesson.teachers", "teacher");
-    lessonQue.where("teacher.id=:staffId", questionnaireStat.teacher.id);
+    lessonQue.where("teacher.id=:teacherId", questionnaireStat.teacher.id);
     var numbers = 0L
     val lessons = entityDao.search(lessonQue)
     lessons foreach { lesson =>
       val querys = OqlBuilder.from[Long](classOf[CourseTake].getName, "courseTake");
       querys.join("courseTake.lesson.teachers", "teacher");
-      querys.where("teacher.id=:staffId", questionnaireStat.teacher.id);
+      querys.where("teacher.id=:teacherId", questionnaireStat.teacher.id);
       querys.where("courseTake.semester.id=:semesterId", questionnaireStat.semester.id);
       querys.where("courseTake.lesson = (:lesson)", lesson)
       querys.select("count(courseTake.std.id)");
@@ -87,13 +87,13 @@ class TeacherEvalSearchAction extends RestfulAction[TeacherEvalStat] {
     put("numbers", numbers);
 
     val que = OqlBuilder.from(classOf[QuestionResult], "questionR");
-    que.where("questionR.result.staff=:teaId", questionnaireStat.teacher);
+    que.where("questionR.result.teacher=:teaId", questionnaireStat.teacher);
     que.where("questionR.result.questionnaire=:quen", questionnaireStat.questionnaire);
     que.select("questionR.question.id,questionR.option.id,count(*)");
     que.groupBy("questionR.question.id,questionR.option.id");
     put("questionRs", entityDao.search(que));
     val quer = OqlBuilder.from(classOf[QuestionResult], "questionR");
-    quer.where("questionR.result.staff=:teaId", questionnaireStat.teacher);
+    quer.where("questionR.result.teacher=:teaId", questionnaireStat.teacher);
     quer.where("questionR.result.questionnaire=:quen", questionnaireStat.questionnaire);
     quer.select("questionR.question.id,questionR.question.content,sum(questionR.score)/count(questionR.id)*100");
     quer.groupBy("questionR.question.id,questionR.question.content");

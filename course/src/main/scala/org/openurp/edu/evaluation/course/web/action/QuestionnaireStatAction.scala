@@ -287,7 +287,7 @@ class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with Servlet
     }
     put("evaluateResults", fl);
     val hql = OqlBuilder.from(classOf[LessonEvalStat], "evaluateR")
-    hql.select("evaluateR.lesson.teachDepart.id,count( evaluateR.staff.id)")
+    hql.select("evaluateR.lesson.teachDepart.id,count( evaluateR.teacher.id)")
     hql.where("evaluateR.lesson.semester.id=" + semesterId)
     hql.groupBy("evaluateR.lesson.teachDepart.id,evaluateR.lesson.semester.id")
     put("questionNums", entityDao.search(hql));
@@ -295,7 +295,7 @@ class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with Servlet
     lis foreach { evaluationCriteriaItem =>
       val query = OqlBuilder.from[Array[Any]](classOf[LessonEvalStat].getName, "questionnaireStat");
       query.where("questionnaireStat.semester.id=:semesterId", semesterId);
-      query.select("questionnaireStat.lesson.teachDepart.id,count(questionnaireStat.staff.id)");
+      query.select("questionnaireStat.lesson.teachDepart.id,count(questionnaireStat.teacher.id)");
       query.where("questionnaireStat.score>=" + evaluationCriteriaItem.min
         + " and questionnaireStat.score<" + evaluationCriteriaItem.max);
       query.groupBy("questionnaireStat.lesson.teachDepart.id");

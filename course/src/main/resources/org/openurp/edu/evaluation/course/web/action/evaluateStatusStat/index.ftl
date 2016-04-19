@@ -11,7 +11,7 @@
             [@b.textfield name="lesson.no" label="课程序号"/]
             [@b.textfield name="course.code" label="课程代码"/]
             [@b.textfield name="course.name" label="课程名称"/]
-            [@b.textfield style="width:100px" name="staff.name" label="教师姓名" /]
+            [@b.textfield style="width:100px" name="teacher.name" label="教师姓名" /]
         [/@]
         </td>
         

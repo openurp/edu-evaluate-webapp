@@ -16,7 +16,7 @@ import org.openurp.edu.evaluation.model.Questionnaire
  */
 class ImportSupervisiorListener(entityDao: EntityDao) extends ItemImporterListener {
   override def onItemStart(tr: TransferResult) {
-    val staffCode = importer.curData.get("staff.code").get
+    val teacherCode = importer.curData.get("teacher.code").get
     val semesterCode = importer.curData.get("semester.code").get.toString()
     val departmentCode = importer.curData.get("department.code").get
     val semesterBuilder = OqlBuilder.from(classOf[Semester], "s").where("s.code=:code ", semesterCode)
@@ -24,7 +24,7 @@ class ImportSupervisiorListener(entityDao: EntityDao) extends ItemImporterListen
     if (semesters.isEmpty) {
       tr.addFailure("学期数据格式非法", semesterCode)
     } else {
-      val builder = OqlBuilder.from(classOf[SupervisiorEvaluate], "s").where("s.staff.code=:code and s.semester.code=:scode and s.department.code=:dcode", staffCode, semesterCode, departmentCode)
+      val builder = OqlBuilder.from(classOf[SupervisiorEvaluate], "s").where("s.teacher.code=:code and s.semester.code=:scode and s.department.code=:dcode", teacherCode, semesterCode, departmentCode)
       entityDao.search(builder) foreach { s =>
         this.importer.current = s
       }

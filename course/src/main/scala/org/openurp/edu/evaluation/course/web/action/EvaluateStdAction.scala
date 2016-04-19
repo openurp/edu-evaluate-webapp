@@ -48,9 +48,9 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
     query.where("evaluateResult.student.id =:stdId", stdId);
     query.where("evaluateResult.lesson.id =:lessonId", lessonId);
     if (0 != teacherId) {
-      query.where("evaluateResult.staff.id =:teacherId", teacherId);
+      query.where("evaluateResult.teacher.id =:teacherId", teacherId);
     } else {
-      query.where("evaluateResult.staff is null");
+      query.where("evaluateResult.teacher is null");
     }
     val result = entityDao.search(query);
 
@@ -59,7 +59,7 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
 
   def getLessonIdAndTeacherIdOfResult(student: Student, semester: Semester): collection.Map[String, String] = {
     val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult")
-    //    query.select("evaluateResult.lesson.id,evaluateResult.staff.id")
+    //    query.select("evaluateResult.lesson.id,evaluateResult.teacher.id")
     query.where("evaluateResult.student = :student ", student)
     query.where("evaluateResult.lesson.semester = :semester", semester)
     val a = entityDao.search(query)
@@ -228,34 +228,34 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
     if (teacherIds.size == 0) {
       evaluateResults = entityDao.search(queryResult);
     } else if (teacherIds.size == 1) {
-      queryResult.where("evaluateResult.staff.id =:teacherId", teacherId);
+      queryResult.where("evaluateResult.teacher.id =:teacherId", teacherId);
       evaluateResults = entityDao.search(queryResult);
     } //    如果是多个教师且为课程评教
     else if (teacherIds.size > 1) {
-      queryResult.where("evaluateResult.staff.id in(:teacherIds)", teacherIds);
+      queryResult.where("evaluateResult.teacher.id in(:teacherIds)", teacherIds);
       evaluateResults = entityDao.search(queryResult);
     }
     //        & (!questionnaireLesson.evaluateByTeacher)） {
-    //      queryResult.where("evaluateResult.staff.id in(:teacherIds)", teacherIds);
+    //      queryResult.where("evaluateResult.teacher.id in(:teacherIds)", teacherIds);
     //      evaluateResults = entityDao.search(queryResult);
     //    }
     //    如果是多个教师且为教师评教
     //    else {
     //      //      teacherId = getLong("teacherId").get
-    //      queryResult.where("evaluateResult.staff.id in(:teacherIds)", teacherIds);
+    //      queryResult.where("evaluateResult.teacher.id in(:teacherIds)", teacherIds);
     //      evaluateResults = entityDao.search(queryResult);
     //    }
 
     var lesson: Lesson = null;
     var teacher: Teacher = null;
-    var staffIds = Collections.newBuffer[Long]
+    var newTeacherIds = Collections.newBuffer[Long]
     try {
       // 更新评教记录
       if (evaluateResults.size > 0) {
         evaluateResults foreach { evaluateResult =>
           lesson = evaluateResult.lesson
           teacher = evaluateResult.teacher
-          staffIds += teacher.id
+          newTeacherIds += teacher.id
           // 修改(问题选项)
           val questionResults = evaluateResult.questionResults
           val questions = questionnaireLesson.questionnaire.questions
@@ -296,9 +296,9 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
         }
         var newId: Long = 0L
         //       一门课有新增教师，要为新增教师新增评教记录
-        if (teacherIds.size > staffIds.size) {
+        if (teacherIds.size > newTeacherIds.size) {
           teacherIds foreach { id =>
-            if (!staffIds.contains(id)) {
+            if (!newTeacherIds.contains(id)) {
               newId = id
             }
           }
@@ -362,12 +362,12 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
         }
         //        如果是按照课程评教，且是多个教师
         if (teachers.size > 1 & (!questionnaireLesson.evaluateByTeacher)) {
-          teachers foreach { staff =>
+          teachers foreach { teacher =>
             val evaluateResult = new EvaluateResult()
             evaluateResult.lesson = lesson
             evaluateResult.department = lesson.teachDepart
             evaluateResult.student = std
-            evaluateResult.teacher = staff
+            evaluateResult.teacher = teacher
             evaluateResult.evaluateAt = new java.util.Date()
             questionnaire.questions foreach { question =>
               val optionId = getLong("select" + question.id).get
