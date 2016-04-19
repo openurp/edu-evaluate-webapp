@@ -1,34 +1,34 @@
 package org.openurp.edu.evaluation.department.action
 
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.evaluation.department.model.DepartEvaluate
-import org.openurp.base.model.Department
-import org.beangle.data.dao.OqlBuilder
+import java.util.Date
+
+import scala.collection.mutable.Buffer
+
+import org.beangle.commons.collection.Collections
 import org.beangle.commons.collection.Order
 import org.beangle.commons.collection.page.PageLimit
-import org.beangle.data.model.LongId
-import org.beangle.commons.lang.Numbers
-import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.edu.evaluation.model.QuestionType
-import scala.collection.mutable.Buffer
-import org.beangle.commons.collection.Collections
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.base.model.Semester
-import org.openurp.edu.evaluation.department.model.DepartEvaluate
-import org.openurp.edu.evaluation.department.model.DepartQuestion
-import org.openurp.edu.evaluation.department.model.DepartQuestion
-import org.openurp.edu.evaluation.department.model.DepartEvaluate
-import java.util.Date
-import org.beangle.webmvc.api.view.{ Stream, View }
-import org.openurp.edu.lesson.model.Lesson
-import org.openurp.edu.evaluation.department.model.EvaluateSwitch
-import org.openurp.platform.api.security.Securities
-import org.openurp.edu.base.model.Course
-import org.beangle.data.transfer.TransferListener
 import org.beangle.commons.lang.ClassLoaders
+import org.beangle.data.dao.OqlBuilder
+import org.beangle.data.model.LongId
+import org.beangle.data.transfer.TransferListener
 import org.beangle.data.transfer.importer.listener.ImporterForeignerListener
-import org.openurp.edu.evaluation.department.helper.ImportDepartListener
+import org.beangle.webmvc.api.view.Stream
+import org.beangle.webmvc.api.view.View
+import org.beangle.webmvc.entity.action.RestfulAction
+import org.openurp.base.model.Department
+import org.openurp.base.model.Semester
+import org.openurp.edu.base.model.Course
 import org.openurp.edu.base.model.Teacher
+import org.openurp.edu.evaluation.department.helper.ImportDepartListener
+import org.openurp.edu.evaluation.department.model.DepartEvaluate
+import org.openurp.edu.evaluation.department.model.DepartQuestion
+import org.openurp.edu.evaluation.department.model.DepartQuestion
+import org.openurp.edu.evaluation.department.model.EvaluateSwitch
+import org.openurp.edu.evaluation.model.Question
+import org.openurp.edu.evaluation.model.QuestionType
+import org.openurp.edu.evaluation.model.Questionnaire
+import org.openurp.edu.lesson.model.Lesson
+import org.openurp.platform.api.security.Securities
 
 /**
  * @author xinzhou
@@ -45,7 +45,7 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ImportData
 
   def importTeachers(): View = {
     val builder = OqlBuilder.from[Array[Any]](classOf[Lesson].getName, "lesson")
-    getInt("departEvaluate.semester.id") foreach { semesterId => builder.where("lesson.semester.id=:id", semesterId) }
+    getInt("departEvaluation.semester.id") foreach { semesterId => builder.where("lesson.semester.id=:id", semesterId) }
     builder.join("lesson.teachers", "teacher")
     builder.select("distinct teacher.id , lesson.teachDepart.id , lesson.semester.id")
     builder.where("lesson.teachDepart.id=:departId", getTeacher.department.id)

@@ -7,11 +7,11 @@ import org.beangle.data.transfer.TransferResult
 import org.beangle.data.transfer.importer.listener.ItemImporterListener
 import org.openurp.base.model.Semester
 import org.openurp.edu.base.model.Student
-import org.openurp.edu.evaluation.department.model.DepartEvaluate
 import org.openurp.edu.evaluation.department.model.SupervisiorEvaluate
 import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.platform.api.security.Securities
 import org.openurp.edu.base.model.Teacher
+import org.openurp.edu.evaluation.department.model.DepartEvaluate
 
 /**
  * @author xinzhou

@@ -20,8 +20,6 @@ package org.openurp.edu.evaluation.department.model
 
 import org.beangle.data.model.LongId
 import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.QuestionType
-import org.openurp.edu.evaluation.model.Option
 
 /**
  * 院系问题评教结果

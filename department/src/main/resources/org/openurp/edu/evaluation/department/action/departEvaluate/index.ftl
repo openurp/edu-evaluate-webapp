@@ -2,7 +2,7 @@
 [@b.head]
    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"/>
 [/@]
-[@b.toolbar title='院系评教管理' id='departmentEvaluateBar']
+[@b.toolbar title='院系评教管理' id='departmentEvaluationBar']
   bar.addItem("导入被评教师名单","importTeachers()");
 [/@]
 <table class="indexpanel">
