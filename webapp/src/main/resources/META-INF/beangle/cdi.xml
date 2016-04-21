@@ -2,6 +2,7 @@
 <cdi>
   <container name="web">
     <module class="org.openurp.edu.web.view.TagModule"/>
+    <module class="org.openurp.edu.evaluation.web.DefaultModule"/>
   </container>
   <container>
     <module class="org.openurp.edu.evaluation.service.DaoModule"/>
