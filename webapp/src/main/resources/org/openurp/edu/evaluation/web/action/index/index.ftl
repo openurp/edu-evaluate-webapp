@@ -83,7 +83,7 @@
     for(var i=0;i<apps.length;i++){
       var app = apps[i];
       [#noparse]
-      appendHtml = appTemplate.replace('{app.url}',app.url.replace('${openurp.webapp}',webappBase));
+      appendHtml = appTemplate.replace('{app.url}',app.url.replace('{openurp.webapp}',webappBase));
       [/#noparse]
       appendHtml = appendHtml.replace('{app.title}',app.title);
       appendHtml = appendHtml.replace('{active_class}',app.name=='${thisAppName}'?"active":"");
