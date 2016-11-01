@@ -109,7 +109,7 @@
     }
   }
   addApps(apps,jQuery('#app_nav_bar'));
-  addMenus(menuProfiles[0].menus,jQuery('#menu_ul'));
+  addMenus(menuProfiles,jQuery('#menu_ul'));
   
   jQuery("ul.menu li a.p_1").click(function() {
     jQuery("ul.menu li.current").removeClass('current');

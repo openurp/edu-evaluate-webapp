@@ -55,7 +55,7 @@ class QuestionAction extends RestfulAction[Question] {
       question.beginOn = getDate("question.beginOn").get
       val invalidat = getDate("question.endOn").get
       if (!"".equals(invalidat) && invalidat != null) {
-        question.endOn = invalidat
+        question.endOn = Option(invalidat)
       }
       if (remark != null) {
         question.remark = remark.replaceAll("<", "&#60;").replaceAll(">", "&#62;")
@@ -72,7 +72,7 @@ class QuestionAction extends RestfulAction[Question] {
           if (question.state) {
             question.beginOn = new Date(System.currentTimeMillis())
           } else {
-            question.endOn = new Date(System.currentTimeMillis())
+            question.endOn = Some(new Date(System.currentTimeMillis()))
           }
         }
 

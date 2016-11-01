@@ -87,7 +87,7 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] {
     val questionnaire = entity.asInstanceOf[Questionnaire];
     questionnaire.beginOn = getDate("questionnaire.beginOn").get
     getDate("questionnaire.endOn") foreach { invalidAt =>
-      questionnaire.endOn = invalidAt
+      questionnaire.endOn = Option(invalidAt)
     }
     if (!questionnaire.persisted) {
       if (questionnaire.state) {
@@ -99,7 +99,7 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] {
         if (questionnaire.state) {
           questionnaire.beginOn = new Date(System.currentTimeMillis())
         } else {
-          questionnaire.endOn = new Date(System.currentTimeMillis())
+          questionnaire.endOn = Some(new Date(System.currentTimeMillis()))
         }
       }
 

@@ -4,7 +4,6 @@
     <url path="/questionnaire" suffix=""  style="seo" />
     <interceptors>
       <interceptor name="web.Interceptor.hibernate"/>
-      <interceptor name="web.Interceptor.flash"/>
      </interceptors>
   </profile>
 </mvc>

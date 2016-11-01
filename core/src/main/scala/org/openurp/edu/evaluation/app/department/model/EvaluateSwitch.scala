@@ -13,7 +13,7 @@ class EvaluateSwitch extends LongId with TemporalOn {
 
   def isOpen(): Boolean = {
     val date = new java.util.Date()
-    this.opened && date.before(this.endOn) && date.after(this.beginOn)
+    this.opened && date.before(this.endOn.get) && date.after(this.beginOn)
   }
 }
 
