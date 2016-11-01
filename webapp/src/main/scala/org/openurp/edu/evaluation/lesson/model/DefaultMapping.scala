@@ -64,8 +64,8 @@ class DefaultMapping extends Mapping {
       e.result & e.questionType & e.question are notnull))
 
     // department eval and questionanire
-    bind[DepartEvaluation].on(e => declare(
-      e.teacher & e.semester & e.course & e.userName & e.updateAt & e.score are notnull))
+//    bind[DepartEvaluation].on(e => declare(
+//      e.teacher & e.semester & e.course & e.userName & e.updateAt & e.score are notnull))
 
     bind[QuestionnaireLesson].on(e => declare(
       e.lesson & e.questionnaire are notnull))

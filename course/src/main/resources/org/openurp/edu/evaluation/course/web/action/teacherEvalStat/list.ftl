@@ -13,7 +13,7 @@
             [@b.col property="teacher.code" title="教师工号" width="5%"/]
             [@b.col property="teacher.person.name.formatedName" title="教师姓名" width="5%"/]
             [@b.col title="性别" property="teacher.person.gender.name" width="5%"]${(evaluate.teacher.teacher.gender.name)!}[/@]
-            [@b.col title="部门" property="teacher.department.name" width="10%"/]
+            [@b.col title="部门" property="teacher.user.department.name" width="10%"/]
             [@b.col title="问卷类型" property="questionnaire.description" width="10%"/]
             [#--[@b.col title="职称" property="teacher.titleInfo.title.name" width="10%"/]
             [@b.col title="教师类型" property="teacher.teacherType.name" width="8%"/]
@@ -62,7 +62,7 @@
     function exportData(){
         bg.form.addHiddens(form,action.page.paramstr);
         bg.form.addParamsInput(form,action.page.paramstr);
-        bg.form.addInput(form, "keys", "teacher.code,teacher.name,teacher.teacher.gender.name,teacher.teacherType.name,teacher.department.name,teacher.title.name,teacher.title.level.name,teacher.state.name,teaching,stdEvaluate,depEvaluate,score,departRank,rank");
+        bg.form.addInput(form, "keys", "teacher.code,teacher.name,teacher.teacher.gender.name,teacher.teacherType.name,teacher.user.department.name,teacher.title.name,teacher.title.level.name,teacher.state.name,teaching,stdEvaluate,depEvaluate,score,departRank,rank");
         bg.form.addInput(form, "titles", "教师工号,教师姓名,性别,教师类型,部门,职称,职称等级,在职状态,任课,学生评分,部门评分,总分,院系排名,全校排名");
         bg.form.addInput(form, "fileName", "评教汇总统计");
         form.target = "_News";

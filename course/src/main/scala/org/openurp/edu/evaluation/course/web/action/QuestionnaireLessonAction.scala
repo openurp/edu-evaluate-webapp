@@ -18,7 +18,7 @@ import org.openurp.edu.base.code.model.CourseType
 import org.openurp.edu.base.code.model.ExamMode
 import org.openurp.edu.base.code.model.ExamMode
 import org.openurp.edu.base.model.Project
-import org.openurp.edu.evaluation.course.service.StdEvaluateSwitchService
+import org.openurp.edu.evaluation.app.lesson.service.StdEvaluateSwitchService
 import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
 import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.edu.lesson.model.Lesson

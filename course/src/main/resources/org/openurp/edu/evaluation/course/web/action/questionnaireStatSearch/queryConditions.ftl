@@ -114,7 +114,7 @@
         </tr>
         </table>
         <input type="hidden" name="titles" value="开课院系,教师部门,教师代码,教师名称,教师类别,课程代码,课程序号,课程名称,有效票数,<#list questionTypeList?if_exists as questionType>${questionType.name?js_string},</#list>总评成绩,学年度,学期">
-        <input type="hidden" name="keys" value="depart.name,teacher.department.name,teacher.code,teacher.name,teacher.teacherType.name,course.code,taskSeqNo,course.name,validTickets,<#list questionTypeList?if_exists as questionType>questionTypeStat_${questionType.id},</#list>scoreDisplay,semester.schoolYear,semester.name">
+        <input type="hidden" name="keys" value="depart.name,teacher.user.department.name,teacher.code,teacher.name,teacher.teacherType.name,course.code,taskSeqNo,course.name,validTickets,<#list questionTypeList?if_exists as questionType>questionTypeStat_${questionType.id},</#list>scoreDisplay,semester.schoolYear,semester.name">
         </form>
         </td>
         <td valign="top">

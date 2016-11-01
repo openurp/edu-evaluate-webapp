@@ -1,0 +1,59 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.openurp.edu.evaluation</groupId>
+    <artifactId>openurp-edu-evaluation-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <groupId>org.openurp.edu.evaluation</groupId>
+  <artifactId>openurp-edu-evaluation-core</artifactId>
+  <packaging>jar</packaging>
+  <name>OpenURP Edu-evaluation Core</name>
+
+  <properties>
+    <bundle.symbolicName>org.openurp.edu.evaluation.core</bundle.symbolicName>
+    <bundle.namespace>org.openurp.edu.evaluation</bundle.namespace>
+  </properties>
+
+    <dependencies>
+      <dependency>
+        <groupId>org.openurp.edu.base</groupId>
+        <artifactId>openurp-edu-base-api</artifactId>
+        <version>${openurp.api.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openurp.edu.evaluation</groupId>
+        <artifactId>openurp-edu-evaluation-api</artifactId>
+        <version>${openurp.api.version}</version>
+      </dependency>
+    <dependency>
+      <groupId>org.openurp.platform.api</groupId>
+      <artifactId>openurp-platform-api-cas</artifactId>
+      <version>${openurp.platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.beangle.webmvc</groupId>
+      <artifactId>beangle-webmvc-entity-plugin_2.12</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.beangle.data</groupId>
+      <artifactId>beangle-data-transfer_2.12</artifactId>
+        <version>${beangle.data.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openurp.platform.api</groupId>
+      <artifactId>openurp-platform-api-core</artifactId>
+      <version>${openurp.platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+    </dependency>
+        <dependency>
+      <groupId>net.sf.jxls</groupId>
+      <artifactId>jxls-core</artifactId>
+      <version>${jxls.version}</version>
+    </dependency>
+   </dependencies>
+</project>

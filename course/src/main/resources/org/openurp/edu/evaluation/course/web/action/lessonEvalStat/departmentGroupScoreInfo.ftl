@@ -24,7 +24,7 @@
 <#list  questionnaires  as questionnaireStat>
 <tr>
     <td >${(questionnaireStat.task.seqNo)!}</td>
-    <td >${(questionnaireStat.teacher.department.name)!}</td>
+    <td >${(questionnaireStat.teacher.user.department.name)!}</td>
     <td >${(questionnaireStat.course.name)!}</td>
     <td >${(questionnaireStat.course.code)!}</td>
     <td >${(questionnaireStat.teacher.name)!}</td>

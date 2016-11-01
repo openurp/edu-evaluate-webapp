@@ -5,7 +5,7 @@ import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
 import org.openurp.edu.lesson.model.Lesson
 import org.beangle.webmvc.api.view.View
-import org.openurp.edu.evaluation.course.model.StdEvaluateSwitch
+import org.openurp.edu.evaluation.app.lesson.model.StdEvaluateSwitch
 import org.openurp.base.model.Semester
 import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.edu.base.model.Project

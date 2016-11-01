@@ -73,7 +73,7 @@ class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with Servlet
       val teacher = teachers(0)
       response.setCharacterEncoding("utf-8");
       response.getWriter().print(
-        teacher.id + "_" + teacher.person.name.formatedName + "_" + teacher.department.name);
+        teacher.id + "_" + teacher.user.name + "_" + teacher.user.department.name);
     } else {
       response.getWriter().print("");
     }

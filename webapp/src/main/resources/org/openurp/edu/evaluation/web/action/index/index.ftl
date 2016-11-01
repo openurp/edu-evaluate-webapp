@@ -72,7 +72,7 @@
   function editAccount(){
         window.open("${b.url('/security/my')}");
   }
-  var menus = ${menuJson}
+  var menuProfiles = ${menuJson}
   var apps = ${appJson}
   var foldTemplate='<li style="margin:0px;" class="{active_class}"><a href="javascript:void(0)" class="first_menu">{menu.title}</a><ul class="acitem" style="display: none;"><div class="scroll_box" id="menu{menu.id}"></div></ul></li>'
   var menuTempalte='<li><a class="p_1" onclick="return bg.Go(this,\'main\')" href="{menu.entry}">{menu.title}</a></li>';
@@ -83,7 +83,7 @@
     for(var i=0;i<apps.length;i++){
       var app = apps[i];
       [#noparse]
-      appendHtml = appTemplate.replace('{app.url}',app.url.replace('{openurp.webapp}',webappBase));
+      appendHtml = appTemplate.replace('{app.url}',app.url.replace('${openurp.webapp}',webappBase));
       [/#noparse]
       appendHtml = appendHtml.replace('{app.title}',app.title);
       appendHtml = appendHtml.replace('{active_class}',app.name=='${thisAppName}'?"active":"");
@@ -109,7 +109,7 @@
     }
   }
   addApps(apps,jQuery('#app_nav_bar'));
-  addMenus(menus,jQuery('#menu_ul'));
+  addMenus(menuProfiles[0].menus,jQuery('#menu_ul'));
   
   jQuery("ul.menu li a.p_1").click(function() {
     jQuery("ul.menu li.current").removeClass('current');

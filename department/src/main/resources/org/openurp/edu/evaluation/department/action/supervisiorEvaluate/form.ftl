@@ -12,7 +12,7 @@
    <td class="title">教师姓名:</td>
    <td class="content">${supervisiorEvaluate.teacher.person.name.formatedName}</td>
    <td class="title">所在院系:</td>
-   <td class="content"> ${supervisiorEvaluate.teacher.department.name}</td>
+   <td class="content"> ${supervisiorEvaluate.teacher.user.department.name}</td>
   </tr>
   <tr>
    <td class="title">开课院系:</td>

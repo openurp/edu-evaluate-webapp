@@ -1,34 +1,24 @@
 package org.openurp.edu.evaluation.department.action
 
 import java.util.Date
-
 import scala.collection.mutable.Buffer
-
-import org.beangle.commons.collection.Collections
-import org.beangle.commons.collection.Order
-import org.beangle.commons.collection.page.PageLimit
+import org.beangle.commons.collection.{ Collections, Order }
 import org.beangle.commons.lang.ClassLoaders
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.data.model.LongId
-import org.beangle.data.transfer.TransferListener
 import org.beangle.data.transfer.importer.listener.ImporterForeignerListener
-import org.beangle.webmvc.api.view.Stream
-import org.beangle.webmvc.api.view.View
+import org.beangle.webmvc.api.view.{ Stream, View }
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.model.Department
-import org.openurp.base.model.Semester
-import org.openurp.edu.base.model.Course
+import org.openurp.base.model.{ Department, Semester }
 import org.openurp.edu.base.model.Teacher
 import org.openurp.edu.evaluation.department.helper.ImportDepartListener
-import org.openurp.edu.evaluation.department.model.DepartEvaluate
-import org.openurp.edu.evaluation.department.model.DepartQuestion
-import org.openurp.edu.evaluation.department.model.DepartQuestion
-import org.openurp.edu.evaluation.department.model.EvaluateSwitch
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.QuestionType
-import org.openurp.edu.evaluation.model.Questionnaire
+import org.openurp.edu.evaluation.model.{ Question, QuestionType, Questionnaire }
 import org.openurp.edu.lesson.model.Lesson
 import org.openurp.platform.api.security.Securities
+import org.beangle.data.transfer.TransferListener
+import org.openurp.edu.evaluation.app.department.model.EvaluateSwitch
+import org.openurp.edu.evaluation.department.model.DepartEvaluate
+import org.openurp.edu.evaluation.department.model.DepartQuestion
+import org.beangle.data.transfer.importer.listener.ImporterForeignerListener
 
 /**
  * @author xinzhou
@@ -48,7 +38,7 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ImportData
     getInt("departEvaluation.semester.id") foreach { semesterId => builder.where("lesson.semester.id=:id", semesterId) }
     builder.join("lesson.teachers", "teacher")
     builder.select("distinct teacher.id , lesson.teachDepart.id , lesson.semester.id")
-    builder.where("lesson.teachDepart.id=:departId", getTeacher.department.id)
+    builder.where("lesson.teachDepart.id=:departId", getTeacher.user.department.id)
     builder.where("not exists (from " + classOf[DepartEvaluate].getName + " de where de.semester = lesson.semester and de.teacher = teacher and de.department = lesson.teachDepart)")
     val datas = entityDao.search(builder)
     val departEvaluates = Collections.newBuffer[DepartEvaluate]
@@ -76,7 +66,7 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ImportData
       case Some(false) => query.where("departEvaluate.totalScore is null")
       case None =>
     }
-    query.where("departEvaluate.department.id=:id", getTeacher.department.id)
+    query.where("departEvaluate.department.id=:id", getTeacher.user.department.id)
     populateConditions(query)
     query.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
   }

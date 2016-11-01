@@ -17,10 +17,10 @@
   </properties>
 
     <dependencies>
-      <dependency>
-        <groupId>org.openurp.edu</groupId>
-        <artifactId>openurp-edu-evaluation</artifactId>
-        <version>${openurp.api.version}</version>
+    <dependency>
+        <groupId>org.openurp.edu.evaluation</groupId>
+        <artifactId>openurp-edu-evaluation-core</artifactId>
+        <version>${project.version}</version>
       </dependency>
     <dependency>
       <groupId>org.openurp.platform.api</groupId>

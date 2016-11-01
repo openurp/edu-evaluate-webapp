@@ -4,22 +4,17 @@ import org.beangle.commons.collection.Order
 import org.beangle.commons.lang.ClassLoaders
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.context.ActionContext
-import org.beangle.webmvc.api.view.Status
-import org.beangle.webmvc.api.view.View
+import org.beangle.webmvc.api.view.{ Status, View }
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.model.Department
-import org.openurp.base.model.Semester
-import org.openurp.edu.base.code.model.Education
-import org.openurp.edu.base.code.model.StdType
-import org.openurp.edu.evaluation.department.model.DepartEvaluate
-import org.openurp.edu.evaluation.department.model.SupervisiorEvaluate
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.evaluation.lesson.stat.model.FinalTeacherScore
-import org.openurp.edu.evaluation.lesson.stat.model.TeacherEvalStat
-import net.sf.jxls.transformer.XLSTransformer
-import org.openurp.edu.evaluation.course.service.Ranker
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
+import org.openurp.base.model.{ Department, Semester }
+import org.openurp.edu.base.code.model.{ Education, StdType }
 import org.openurp.edu.base.model.Teacher
+import org.openurp.edu.evaluation.department.model.{ DepartEvaluate, SupervisiorEvaluate }
+import org.openurp.edu.evaluation.app.lesson.service.Ranker
+import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
+import org.openurp.edu.evaluation.lesson.stat.model.FinalTeacherScore
+
+import net.sf.jxls.transformer.XLSTransformer
 
 class FinalTeacherScoreAction extends RestfulAction[FinalTeacherScore] {
 
@@ -90,7 +85,7 @@ class FinalTeacherScoreAction extends RestfulAction[FinalTeacherScore] {
     Ranker.rOver(evals) { (x, r) =>
       x.rank = r;
     }
-    val departEvalMaps = evals.groupBy(x => x.teacher.department)
+    val departEvalMaps = evals.groupBy(x => x.teacher.user.department)
     departEvalMaps.values foreach { departEvals =>
       Ranker.rOver(departEvals) { (x, r) =>
         x.departRank = r;

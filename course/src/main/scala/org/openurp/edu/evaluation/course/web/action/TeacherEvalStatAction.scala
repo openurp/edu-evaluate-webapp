@@ -22,7 +22,6 @@ import scala.collection.mutable.ListBuffer
 import org.openurp.edu.evaluation.model.QuestionType
 import org.openurp.edu.evaluation.model.Question
 import org.openurp.edu.evaluation.model.Option
-import org.openurp.edu.evaluation.lesson.model.DepartEvaluation
 import org.openurp.edu.evaluation.lesson.stat.model.TeacherQuestionStat
 import org.openurp.edu.evaluation.lesson.stat.model.OptionStat
 import org.openurp.edu.evaluation.lesson.stat.model.QuestionStat
@@ -31,7 +30,7 @@ import org.openurp.edu.evaluation.lesson.stat.model.TeacherOptionStat
 import org.openurp.edu.evaluation.lesson.stat.model.TeacherQuestionTypeStat
 import org.beangle.commons.collection.Order
 import org.openurp.edu.evaluation.model.EvaluationCriteriaItem
-import org.openurp.edu.evaluation.course.service.Ranker
+import org.openurp.edu.evaluation.app.lesson.service.Ranker
 import org.openurp.edu.base.model.Teacher
 
 class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
@@ -294,7 +293,7 @@ class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
     Ranker.over(evals) { (x, r) =>
       x.rank = r;
     }
-    val departEvalMaps = evals.groupBy(x => x.teacher.department)
+    val departEvalMaps = evals.groupBy(x => x.teacher.user.department)
     departEvalMaps.values foreach { departEvals =>
       Ranker.over(departEvals) { (x, r) =>
         x.departRank = r;

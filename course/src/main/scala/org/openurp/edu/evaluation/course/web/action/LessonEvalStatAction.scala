@@ -38,7 +38,7 @@ import org.beangle.commons.lang.Strings
 import scala.collection.mutable.Buffer
 import scala.collection.mutable.ListBuffer
 import org.beangle.commons.collection.Order
-import org.openurp.edu.evaluation.course.service.Ranker
+import org.openurp.edu.evaluation.app.lesson.service.Ranker
 import org.openurp.edu.base.model.Teacher
 
 class LessonEvalStatAction extends RestfulAction[LessonEvalStat] {

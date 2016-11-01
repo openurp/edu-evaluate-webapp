@@ -145,7 +145,7 @@ class MultiEntityImporter extends AbstractItemImporter with EntityImporter with 
           currentEntities.put(alias, entity)
           entity
         case None =>
-          error("Not register entity type for $alias")
+          logger.error("Not register entity type for $alias")
           throw new IllegalImportFormatException("Not register entity type for " + alias, null)
       }
     }

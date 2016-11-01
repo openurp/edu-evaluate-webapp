@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.openurp</groupId>
 		<artifactId>openurp-parent</artifactId>
-		<version>0.1.0</version>
+		<version>0.1.1</version>
 	</parent>
   <groupId>org.openurp.edu.evaluation</groupId>
   <artifactId>openurp-edu-evaluation-parent</artifactId>
@@ -16,15 +16,18 @@
     <bundle.symbolicName>org.openurp.edu.evaluation.parent</bundle.symbolicName>
     <bundle.namespace>org.openurp</bundle.namespace>
     <hibernate.version>4.3.1.Final</hibernate.version>
-    <openurp.platform.version>0.0.8</openurp.platform.version>
-    <openurp.api.version>0.0.8</openurp.api.version>
+    <openurp.platform.version>0.0.11</openurp.platform.version>
+    <openurp.api.version>0.0.11-SNAPSHOT</openurp.api.version>
     <jxls.version>1.0.3</jxls.version>
   </properties>
 
   <modules>
+    <module>core</module>
     <module>course</module>
     <module>department</module>
     <module>questionnaire</module>
+    <module>student</module>
+    <module>teacher</module>
     <module>webapp</module>
   </modules>
 

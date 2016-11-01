@@ -20,7 +20,7 @@ class ImportDepartListener(entityDao: EntityDao) extends ItemImporterListener {
   override def onItemStart(tr: TransferResult) {
     val teacherCode = importer.curData.get("teacher.code").get
     val semesterCode = importer.curData.get("semester.code").get.toString()
-    val departmentId = getTeacher().department.id
+    val departmentId = getTeacher().user.department.id
     val semesterBuilder = OqlBuilder.from(classOf[Semester], "s").where("s.code=:code ", semesterCode)
     val semesters = entityDao.search(semesterBuilder)
     if (semesters.isEmpty) {
@@ -39,7 +39,7 @@ class ImportDepartListener(entityDao: EntityDao) extends ItemImporterListener {
     val questionnaire = entityDao.get(classOf[Questionnaire], 322L)
     departEvaluate.questionnaire = questionnaire
     departEvaluate.evaluateAt = new Date()
-    departEvaluate.department = getTeacher().department
+    departEvaluate.department = getTeacher().user.department
     entityDao.saveOrUpdate(departEvaluate)
   }
 

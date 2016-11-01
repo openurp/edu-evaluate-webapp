@@ -1,19 +1,14 @@
 package org.openurp.edu.evaluation.department.action
 
-import java.io.{ File, FileInputStream }
-import org.beangle.commons.lang.Strings
 import org.beangle.data.model.Entity
-import org.beangle.data.transfer.{ TransferListener, TransferResult }
+import org.beangle.data.transfer.TransferResult
 import org.beangle.data.transfer.importer.{ EntityImporter, IllegalImportFormatException, ImporterFactory }
 import org.beangle.data.transfer.importer.listener.ImporterForeignerListener
 import org.beangle.data.transfer.io.TransferFormat
-import org.beangle.webmvc.entity.action.RestfulAction
 import org.beangle.webmvc.api.context.ActionContext
-import javax.servlet.http.Part
 import org.beangle.webmvc.entity.helper.PopulateHelper
-
-
-import org.beangle.webmvc.api.context.ActionContext
+import javax.servlet.http.Part
+import org.beangle.data.transfer.TransferListener
 import org.beangle.webmvc.entity.action.RestfulAction
 
 /**
@@ -50,13 +45,13 @@ trait ImportDataSupport[T <: Entity[_]] {
       logger.error("cannot get upload file $upload")
       return null;
     }
-//    val fileName = get(upload + "FileName").get;
+    //    val fileName = get(upload + "FileName").get;
     val is = filePart.getInputStream
-//    val formatName = Strings.capitalize(Strings.substringAfterLast(fileName, "."));
+    //    val formatName = Strings.capitalize(Strings.substringAfterLast(fileName, "."));
     val format = TransferFormat.withName("Xls")
-    val importer= ImporterFactory.getEntityImporter(format, is, clazz, null)
-    importer.entityMetadata=this.entityMetaData
-    importer.populator=PopulateHelper.populator
+    val importer = ImporterFactory.getEntityImporter(format, is, clazz, null)
+    importer.entityMetadata = this.entityMetaData
+    importer.populator = PopulateHelper.populator
     importer
   }
 

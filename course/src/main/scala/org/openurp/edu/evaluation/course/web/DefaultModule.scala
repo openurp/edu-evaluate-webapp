@@ -1,33 +1,9 @@
 package org.openurp.edu.evaluation.course.web
 
 import org.beangle.commons.inject.bind.AbstractBindModule
-import org.openurp.edu.evaluation.course.web.action.QuestionnaireLessonAction
-import org.openurp.edu.evaluation.course.web.action.EvaluateResultAction
-import org.openurp.edu.evaluation.course.service.StdEvaluateSwitchService
-import org.openurp.edu.evaluation.course.web.action.StdEvaluateSwitchAction
-import org.openurp.edu.evaluation.course.web.action.EvaluateStdAction
-import org.openurp.edu.evaluation.course.web.action.TextEvaluationAction
-import org.openurp.edu.evaluation.course.web.action.TextEvaluateStdAction
-import org.openurp.edu.evaluation.course.web.action.TextEvaluationSearchAction
-import org.openurp.edu.evaluation.course.web.action.TextEvaluationTeacherAction
-import org.openurp.edu.evaluation.course.web.action.TextEvaluateSwitchAction
-import org.openurp.edu.evaluation.course.web.action.EvaluateStatisticsAction
-import org.openurp.edu.evaluation.course.model.EvaluateSearchDepartment
-import org.openurp.edu.evaluation.course.model.EvaluateSearchAdminclass
-import org.openurp.edu.evaluation.course.web.action.EvaluateStatusStatAction
-import org.openurp.edu.evaluation.course.web.action.QuestionnaireStatAction
-import org.openurp.edu.evaluation.course.web.action.QuestionnaireStatTeacherAction
-import org.openurp.edu.evaluation.course.web.action.QuestionnaireStatSearchAction
-import org.openurp.edu.evaluation.course.web.action.TeacherEvalStatAction
-import org.openurp.edu.evaluation.course.web.action.TeacherEvalSearchAction
-import org.openurp.edu.evaluation.course.web.action.LessonEvalStatAction
-import org.openurp.edu.evaluation.course.web.action.LessonEvalSearchAction
-import org.openurp.edu.evaluation.course.web.action.CourseEvalSearchAction
-import org.openurp.edu.evaluation.course.web.action.CourseEvalStatAction
-import org.openurp.edu.evaluation.course.web.action.DepartEvalSearchAction
-import org.openurp.edu.evaluation.course.web.action.DepartEvalStatAction
-import org.openurp.edu.evaluation.course.web.action.EvaluateStatusTeacherAction
-import org.openurp.edu.evaluation.course.web.action.FinalTeacherScoreAction
+import org.openurp.edu.evaluation.app.lesson.model.{ EvaluateSearchAdminclass, EvaluateSearchDepartment }
+import org.openurp.edu.evaluation.app.lesson.service.StdEvaluateSwitchService
+import org.openurp.edu.evaluation.course.web.action.{ CourseEvalSearchAction, CourseEvalStatAction, DepartEvalSearchAction, DepartEvalStatAction, EvaluateResultAction, EvaluateStatisticsAction, EvaluateStatusStatAction, EvaluateStatusTeacherAction, FinalTeacherScoreAction, LessonEvalSearchAction, LessonEvalStatAction, QuestionnaireLessonAction, QuestionnaireStatAction, QuestionnaireStatSearchAction, QuestionnaireStatTeacherAction, StdEvaluateSwitchAction, TeacherEvalSearchAction, TeacherEvalStatAction, TextEvaluateSwitchAction, TextEvaluationAction, TextEvaluationSearchAction, TextEvaluationTeacherAction }
 
 class DefaultModule extends AbstractBindModule {
 
@@ -85,18 +61,5 @@ class DefaultModule extends AbstractBindModule {
     bind(classOf[QuestionnaireStatAction])
     //  查看任务问卷评教各问题类别结果及总分
     bind(classOf[QuestionnaireStatSearchAction])
-
-    //*****学生菜单   评教->问卷评教    备注可以拿掉吗？
-    bind(classOf[EvaluateStdAction])
-    //               评教->文字评教
-    bind(classOf[TextEvaluateStdAction])
-
-    // *****教师菜单  评教查询->文字评教
-    //  教师个人查看自己的评教回收率
-    bind(classOf[EvaluateStatusTeacherAction])
-    //  教师个人查看自己的评教结果
-    bind(classOf[QuestionnaireStatTeacherAction])
-    //  教师回复学生文字评教、发布公告
-    bind(classOf[TextEvaluationTeacherAction])
   }
 }

@@ -16,10 +16,10 @@ class FinalTeacherScore extends LongId with Rank {
   var score: Float = _
 
   def getTeacherName: String = {
-    teacher.person.name.formatedName
+    teacher.user.name
   }
 
   def getName(): String = {
-    teacher.person.name.formatedName
+    teacher.user.name
   }
 }

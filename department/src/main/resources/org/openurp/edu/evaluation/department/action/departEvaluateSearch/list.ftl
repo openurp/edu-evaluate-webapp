@@ -7,7 +7,7 @@
             [@b.col property="teacher.code" title="工号" width="10%"/]
             [@b.col property="teacher.person.name.formatedName" title="姓名" width="10%"/]
             [@b.col title="性别" property="teacher.person.gender.name" width="10%"/]
-            [@b.col title="所在院系" property="teacher.department.name" width="20%"/]
+            [@b.col title="所在院系" property="teacher.user.department.name" width="20%"/]
             [@b.col title="评教状态" width="20%"]
               [#if (departEvaluate.totalScore) ??]已评
               [#else]未评

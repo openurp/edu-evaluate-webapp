@@ -174,7 +174,7 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
     querdep.where("evaluateResult.lesson.semester.id=" + semesterId);
     if (lesson != null) {
       querdep.where("evaluateResult.lesson.teachDepart.id=:depId", lesson.teachDepart.id);
-      // querdep.where("evaluateResult.teacher.teacher.department.id=:depId",teacher.getDepartment().getId());
+      // querdep.where("evaluateResult.teacher.teacher.user.department.id=:depId",teacher.getDepartment().getId());
     }
     put("depScores", entityDao.search(querdep)(0).toString().toFloat);
     /** 全校平均分 */
@@ -218,7 +218,7 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
     querydep.where("evaluateResult.lesson.semester.id=" + semesterId);
     if (lesson != null) {
       querdep.where("evaluateResult.lesson.teachDepart.id=:depId", lesson.teachDepart.id);
-      // querdep.where("evaluateResult.teacher.teacher.department.id=:depId",teacher.getDepartment().getId());
+      // querdep.where("evaluateResult.teacher.teacher.user.department.id=:depId",teacher.getDepartment().getId());
     }
     querydep.groupBy("evaluateResult.lesson.id");
     querydep.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc");

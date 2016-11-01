@@ -14,7 +14,7 @@
   </tr>
   <tr>
    <td class="title">所在院系:</td>
-   <td class="content"> ${departEvaluate.teacher.department.name}</td>
+   <td class="content"> ${departEvaluate.teacher.user.department.name}</td>
    <td class="title" style="font-weight:bold;">评教总分:</td>
    <td class="content" style="color:red; font-weight:bold;">${(departEvaluate.totalScore)!}</td>
   </tr>

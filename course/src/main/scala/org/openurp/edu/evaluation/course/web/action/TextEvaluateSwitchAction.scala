@@ -6,7 +6,7 @@ import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Semester
 import org.openurp.base.model.Semester
 import org.openurp.base.model.Semester
-import org.openurp.edu.evaluation.course.model.TextEvaluateSwitch
+import org.openurp.edu.evaluation.app.lesson.model.TextEvaluateSwitch
 import org.openurp.edu.base.model.Project
 
 class TextEvaluateSwitchAction extends RestfulAction[TextEvaluateSwitch] {

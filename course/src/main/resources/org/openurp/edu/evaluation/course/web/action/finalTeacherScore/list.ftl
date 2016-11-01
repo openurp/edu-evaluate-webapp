@@ -8,7 +8,7 @@
         [/@]
         [@b.row]
             [@b.boxcol/]
-            [@b.col  property="teacher.department.name" title="教师所属部门" width="20%"/]
+            [@b.col  property="teacher.user.department.name" title="教师所属部门" width="20%"/]
             [@b.col  property="teacher.code" title="教师工号"/]
             [@b.col  property="teacher.person.name.formatedName" title="教师姓名"/]
             [@b.col  property="stdScore" title="学生评教"]${finalTeacherScore.stdScore}[/@]

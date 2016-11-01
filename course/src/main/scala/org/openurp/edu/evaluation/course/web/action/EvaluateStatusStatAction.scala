@@ -14,8 +14,8 @@ import org.openurp.base.model.Semester
 import org.openurp.base.model.Semester
 import org.openurp.edu.base.code.model.StdType
 import org.openurp.edu.base.model.Adminclass
-import org.openurp.edu.evaluation.course.model.EvaluateSearchDepartment
-import org.openurp.edu.evaluation.course.model.EvaluateSearchManager
+import org.openurp.edu.evaluation.app.lesson.model.EvaluateSearchDepartment
+import org.openurp.edu.evaluation.app.lesson.model.EvaluateSearchManager
 import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
 import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
 import org.openurp.edu.lesson.model.CourseTake

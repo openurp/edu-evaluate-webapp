@@ -1,13 +1,12 @@
 package org.openurp.edu.evaluation.questionnaire.service
 
 import org.openurp.edu.evaluation.model.Question
-import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.EntityDao
 import org.beangle.data.dao.OqlBuilder
 import org.openurp.edu.evaluation.model.QuestionType
 import java.util.Date
-import scala.collection.mutable.Map
-import scala.collection.mutable.HashMap
+import org.openurp.edu.evaluation.model.Question
+import org.openurp.edu.evaluation.model.Question
 class QuestionTypeService(entityDao: EntityDao) {
 
   def getQuestionTypes():Seq[QuestionType] = {
