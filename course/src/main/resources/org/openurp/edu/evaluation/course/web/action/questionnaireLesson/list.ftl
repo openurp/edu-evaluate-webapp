@@ -77,10 +77,10 @@
                 ${(questionnaireLesson.evaluateByTeacher?string("教师评教","课程评教"))!}
             [/@]
             [@b.col property="lesson.teachDepart.name" title="开课院系"/]
-            [#--[@b.col property="lesson.schedule.startWeek" title="起始周" width="5%"/]--]
+            [#--[@b.col property="lesson.schedule.firstWeek" title="起始周" width="5%"/]--]
             [@b.col title="任课教师"]
                 [#list questionnaireLesson.lesson.teachers?if_exists as teacher]
-                    ${(teacher.person.name.formatedName)!}
+                    ${(teacher.user.name)!}
                 [/#list]
             [/@]
         [/@]

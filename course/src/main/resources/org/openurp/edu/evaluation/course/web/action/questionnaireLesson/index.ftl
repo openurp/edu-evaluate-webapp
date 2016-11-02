@@ -6,7 +6,7 @@
     <tr>
         <td style="width:200px" class="index_view">
         [@b.form action="!search" name="questionnaireLessonIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
-            [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code")  value=currentSemester option = "id,code" empty="..."/]
+            [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") option = "id,code" empty="..."/]
             [@b.textfields style="width:130px" names="questionnaireLesson.lesson.no;课程序号,questionnaireLesson.lesson.course.code;课程代码,questionnaireLesson.lesson.course.name;课程名称"/]
             [@b.textfield style="width:100px" name="teacher" label="教师姓名" /]
             [@b.select style="width:134px" name="questionnaireLesson.lesson.courseType.id" label="课程类别" items=courseTypes empty="..."/]

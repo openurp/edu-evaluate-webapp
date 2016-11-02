@@ -45,6 +45,10 @@
      <ul class="nav navbar-nav" style="height: 50px;" id="app_nav_bar"></ul>
      <ul class="nav navbar-nav navbar-right" style="height: 35px; padding-top: 15px;">
        <li>
+        [#if projects?? && projects?size > 1]
+            [@b.select id="homeProjectId" name="contextProject" items=projects title="项目"  option = "code,name" onchange = "changeProject(this.value)"
+             style="width:150px;margin-right:5px;" value=currentProject.code/]
+        [/#if]
         <span class="glyphicon glyphicon-user" aria-hidden="true">[@b.a href="/security/my" target="_blank" title="查看登录记录"]${user.name}&nbsp;[/@]</span>
        </li>
      <li>
@@ -72,7 +76,7 @@
   function editAccount(){
         window.open("${b.url('/security/my')}");
   }
-  var menuProfiles = ${menuJson}
+  var menus = ${menuJson}
   var apps = ${appJson}
   var foldTemplate='<li style="margin:0px;" class="{active_class}"><a href="javascript:void(0)" class="first_menu">{menu.title}</a><ul class="acitem" style="display: none;"><div class="scroll_box" id="menu{menu.id}"></div></ul></li>'
   var menuTempalte='<li><a class="p_1" onclick="return bg.Go(this,\'main\')" href="{menu.entry}">{menu.title}</a></li>';
@@ -83,7 +87,7 @@
     for(var i=0;i<apps.length;i++){
       var app = apps[i];
       [#noparse]
-      appendHtml = appTemplate.replace('{app.url}',app.url.replace('${openurp.webapp}',webappBase));
+      appendHtml = appTemplate.replace('{app.url}',app.url.replace('{openurp.webapp}',webappBase));
       [/#noparse]
       appendHtml = appendHtml.replace('{app.title}',app.title);
       appendHtml = appendHtml.replace('{active_class}',app.name=='${thisAppName}'?"active":"");
@@ -92,6 +96,7 @@
   }
   function addMenus(menus,jqueryElem){
     var appendHtml='';
+    var entry='';
     for(var i=0;i<menus.length;i++){
       var menu = menus[i];
       if(menu.children){
@@ -103,13 +108,14 @@
       }else{
         appendHtml = menuTempalte.replace('{menu.id}',menu.id);
         appendHtml = appendHtml.replace('{menu.title}',menu.title);
-        appendHtml = appendHtml.replace('{menu.entry}',bg.getContextPath()+menu.entry+".action");
+        entry  = menu.entry.replace("{project}",'${Parameters['project']}')
+        appendHtml = appendHtml.replace('{menu.entry}',bg.getContextPath()+entry);
         jqueryElem.append(appendHtml);
       }
     }
   }
   addApps(apps,jQuery('#app_nav_bar'));
-  addMenus(menuProfiles,jQuery('#menu_ul'));
+  addMenus(menus,jQuery('#menu_ul'));
   
   jQuery("ul.menu li a.p_1").click(function() {
     jQuery("ul.menu li.current").removeClass('current');
@@ -130,6 +136,11 @@
     });
   });
   
+  function changeProject(code){
+    var url= "${b.url("!project?project=")}";
+    url=url.substring(0,url.lastIndexOf("/"))+"/"+code;
+    document.location =url;
+  }
 </script>
 
 [@b.foot/]
