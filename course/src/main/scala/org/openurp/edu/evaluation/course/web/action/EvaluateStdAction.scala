@@ -1,31 +1,22 @@
 package org.openurp.edu.evaluation.course.web.action
 
-import org.openurp.base.model.Semester
-import org.openurp.edu.evaluation.course.service.LessonFilterStrategyFactory
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.lesson.model.CourseTake
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
-import org.openurp.edu.evaluation.course.service.StdEvaluateSwitchService
-import org.beangle.data.dao.OqlBuilder
-import org.openurp.edu.lesson.model.Lesson
-import org.openurp.edu.base.model.Student
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.Option
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
 import org.beangle.commons.collection.Collections
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
-import org.openurp.platform.api.security.Securities
+import org.beangle.webmvc.entity.action.RestfulAction
+import org.openurp.base.model.Semester
+import org.openurp.edu.base.model.Student
 import org.openurp.edu.base.model.Teacher
+import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
+import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
+import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
+import org.openurp.edu.evaluation.model.Option
+import org.openurp.edu.evaluation.model.Question
+import org.openurp.edu.lesson.model.CourseTake
+import org.openurp.edu.lesson.model.Lesson
+import org.openurp.platform.api.security.Securities
+import org.openurp.edu.evaluation.app.lesson.service.LessonFilterStrategyFactory
+import org.openurp.edu.evaluation.app.lesson.service.StdEvaluateSwitchService
 
 class EvaluateStdAction extends RestfulAction[EvaluateResult] {
 

@@ -8,8 +8,7 @@
         <td class="index_content">
         [@b.form name="textEvaluateSwitchIndexForm" action="!search" target="contentDiv" theme="search"]
         [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code")  option = "id,code" empty="..."  style="width:100px"/]
-         [@b.select  name="project.id" label="教学项目" items=projects?sort_by("id") value=defaultProject   option = "name" empty="..."  style="width:100px"/]
-        [@b.select  name="opened" label="开关状态" items={'1':'开放','0':'关闭'} value='1'  empty="..."  style="width:100px"/]
+        [@b.select  name="opened" label="开关状态" items={'1':'开放','0':'关闭'} value='1'  style="width:100px"/]
         <input type="hidden" name="orderBy" value="textEvaluateSwitch.id"/>
         [/@]
         </td> 

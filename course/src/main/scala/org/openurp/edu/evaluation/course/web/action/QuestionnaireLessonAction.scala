@@ -28,7 +28,7 @@ import org.beangle.commons.lang.Strings
 import org.beangle.webmvc.api.annotation.action
 
 @action("{project}/questionnaire-lesson")
-class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson]{
+class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson] {
 
   var evaluateSwitchService: StdEvaluateSwitchService = _
 
@@ -46,10 +46,8 @@ class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
-    val projectId = getInt("project.id").getOrElse(1)
-    val project = entityDao.get(classOf[Project], projectId)
     // 检查时间
-    val evaluateSwitch = evaluateSwitchService.getEvaluateSwitch(semester, project)
+    val evaluateSwitch = evaluateSwitchService.getEvaluateSwitch(semester, currentProject)
     if (null != evaluateSwitch) {
       //        && evaluateSwitch.checkOpen(new java.util.Date())) {
       put("isEvaluateSwitch", true)
@@ -77,11 +75,12 @@ class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson
     val query = OqlBuilder.from(classOf[QuestionnaireLesson], "questionnaireLesson")
     populateConditions(query)
     //    query.where(QueryHelper.extractConditions(classOf[Lesson], "lesson", null))
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
-    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
-    //     semesterId foreach { e =>
-    query.where("questionnaireLesson.lesson.semester.id = :semesterId", semesterId)
-    //    }
+    //    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterId = getInt("semester.id") //.getOrElse(entityDao.search(semesterQuery).head.id)
+    semesterId foreach { semesterId =>
+      query.where("questionnaireLesson.lesson.semester.id = :semesterId", semesterId)
+    }
+    query.where("questionnaireLesson.lesson.project = :project", currentProject)
     // 隐性条件(问卷类别,起始周期,上课人数)
     val questionnaireId = getLong("questionnaire.id").getOrElse(-1)
     //    val startWeekFrom = getInt("startWeekFrom")
@@ -131,14 +130,13 @@ class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson
 
     val query = OqlBuilder.from(classOf[Lesson], "lesson")
     populateConditions(query)
-    query.where("lesson.project.id=:projectId", getInt("project").getOrElse(1))
+    query.where("lesson.project=:project", currentProject)
     populateConditions(query)
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
-    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
-    //    val semesterId = getInt("semester.id")
-    //     semesterId foreach { e =>
-    query.where("lesson.semester.id = :semesterId", semesterId)
-    //    }
+    val semesterId = getInt("semester.id") //.getOrElse(entityDao.search(semesterQuery).head.id)
+    semesterId foreach { semesterId =>
+      query.where("lesson.semester.id = :semesterId", semesterId)
+    }
     val teacherName = get("teacher").getOrElse("")
     if (Strings.isNotBlank(teacherName)) {
       query.join("lesson.teachers", "teacher")
@@ -253,8 +251,8 @@ class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson
     //        redirect("search", "----..---info.action.failure")
     //    }
   }
-
-  def setEvaluateSwitchService(evaluateSwitchService: StdEvaluateSwitchService) {
-    this.evaluateSwitchService = evaluateSwitchService
-  }
+//
+//  def setEvaluateSwitchService(evaluateSwitchService: StdEvaluateSwitchService) {
+//    this.evaluateSwitchService = evaluateSwitchService
+//  }
 }

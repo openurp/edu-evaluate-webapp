@@ -16,47 +16,43 @@ class StdEvaluateSwitchAction extends ProjectRestfulAction[StdEvaluateSwitch] {
 
   protected override def indexSetting(): Unit = {
     put("semesters", getSemesters())
-//    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
-//    put("currentSemester", entityDao.search(semesterQuery).head)
+    //    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    //    put("currentSemester", entityDao.search(semesterQuery).head)
   }
-  
+
   override def search(): String = {
-    val opened = getBoolean("evaluateSwitch.opened").getOrElse(true)
-    val semesterId = getInt("evaluateSwitch.semester.id").getOrElse(0)
-    val projectId = getInt("evaluateSwitch.project.id").getOrElse(1)
+    val opened = getBoolean("evaluateSwitch.opened")
+    val semesterId = getInt("evaluateSwitch.semester.id")
     val queryQuestionnaire = OqlBuilder.from[Array[Any]](classOf[QuestionnaireLesson].getName, "questionnaireLesson")
-    if (semesterId!=0){
-    queryQuestionnaire.where("questionnaireLesson.lesson.semester.id =:semesterId", semesterId)
-    }
-    queryQuestionnaire.where("questionnaireLesson.lesson.project.id =:projectId", projectId)
+    semesterId.foreach { semesterId => queryQuestionnaire.where("questionnaireLesson.lesson.semester.id =:semesterId", semesterId) }
+    queryQuestionnaire.where("questionnaireLesson.lesson.project =:project", currentProject)
     queryQuestionnaire.groupBy("questionnaireLesson.lesson.semester.id ")
     queryQuestionnaire.select("questionnaireLesson.lesson.semester.id,count(*)")
-    val countMap =entityDao.search(queryQuestionnaire).map(a => (a(0).asInstanceOf[Int],a(1).asInstanceOf[Number])).toMap
+    val countMap = entityDao.search(queryQuestionnaire).map(a => (a(0).asInstanceOf[Int], a(1).asInstanceOf[Number])).toMap
     put("countMap", countMap)
     val queryLesson = OqlBuilder.from[Array[Any]](classOf[Lesson].getName, "lesson")
-    if(semesterId!=0)
-    queryLesson.where("lesson.semester.id =:semesterId", semesterId)
-    queryLesson.where("lesson.project.id =:projectId", projectId)
+    semesterId.foreach { semesterId => queryLesson.where("lesson.semester.id =:semesterId", semesterId) }
+    queryLesson.where("lesson.project =:project", currentProject)
     // 排除(已有问卷)
     queryLesson.where("not exists(from " + classOf[QuestionnaireLesson].getName + " questionnaireLesson"
       + " where questionnaireLesson.lesson = lesson)")
     queryLesson.groupBy("lesson.semester.id")
     queryLesson.select("lesson.semester.id, count(*)")
-    val lessonCountMap =entityDao.search(queryLesson).map(a => (a(0).asInstanceOf[Int],a(1).asInstanceOf[Number])).toMap
+    val lessonCountMap = entityDao.search(queryLesson).map(a => (a(0).asInstanceOf[Int], a(1).asInstanceOf[Number])).toMap
     put("lessonCountMap", lessonCountMap)
-    val stdEvaluateSwitchs=getQueryBuilder()
-    if(semesterId!=0) stdEvaluateSwitchs.where("stdEvaluateSwitch.semester.id=:semesterId", semesterId)
-    if(projectId!=0) stdEvaluateSwitchs.where("stdEvaluateSwitch.project.id=:projectId",projectId)
-    stdEvaluateSwitchs.where("stdEvaluateSwitch.opened=:opened",opened)
+    val stdEvaluateSwitchs = getQueryBuilder()
+    semesterId.foreach { semesterId => stdEvaluateSwitchs.where("stdEvaluateSwitch.semester.id=:semesterId", semesterId) }
+    stdEvaluateSwitchs.where("stdEvaluateSwitch.project=:project", currentProject)
+    opened.foreach { opened => stdEvaluateSwitchs.where("stdEvaluateSwitch.opened=:opened", opened) }
     put("stdEvaluateSwitchs", entityDao.search(stdEvaluateSwitchs))
     forward()
   }
 
   override def editSetting(entity: StdEvaluateSwitch): Unit = {
-//    put("semesterId", getLong("evaluateSwitch.semester.id").get)
-//    put("semesterId", 20141)
+    //    put("semesterId", getLong("evaluateSwitch.semester.id").get)
+    //    put("semesterId", 20141)
     put("semesters", entityDao.getAll(classOf[Semester]))
-    put("projects",entityDao.getAll(classOf[Project]))
+    put("projects", entityDao.getAll(classOf[Project]))
   }
 
   override def saveAndRedirect(evaluateSwitch: StdEvaluateSwitch): View = {
@@ -66,15 +62,15 @@ class StdEvaluateSwitchAction extends ProjectRestfulAction[StdEvaluateSwitch] {
       query.where("evaluateSwitch.project.id =:project", evaluateSwitch.project.id)
       val evaluateSwitchs = entityDao.search(query)
       if (!evaluateSwitchs.isEmpty) {
-        return redirect("search", "该学期评教开关已存在,请删除后再新增!","&evaluateSwitch.project.id=" + evaluateSwitch.project.id + "&evaluateSwitch.semester.id=" + evaluateSwitch.semester.id)
+        return redirect("search", "该学期评教开关已存在,请删除后再新增!", "&evaluateSwitch.project.id=" + evaluateSwitch.project.id + "&evaluateSwitch.semester.id=" + evaluateSwitch.semester.id)
       }
     }
     try {
       saveOrUpdate(evaluateSwitch)
-       redirect("search", "info.save.success", "success,&evaluateSwitch.project.id=" + evaluateSwitch.project.id + "&evaluateSwitch.semester.id=" + evaluateSwitch.semester.id)
+      redirect("search", "info.save.success", "success,&evaluateSwitch.project.id=" + evaluateSwitch.project.id + "&evaluateSwitch.semester.id=" + evaluateSwitch.semester.id)
     } catch {
       case e: Exception =>
-         redirect("search", "info.save.failure", "failure,&evaluateSwitch.project.id=" + evaluateSwitch.project.id + "&evaluateSwitch.semester.id=" + evaluateSwitch.semester.id)
+        redirect("search", "info.save.failure", "failure,&evaluateSwitch.project.id=" + evaluateSwitch.project.id + "&evaluateSwitch.semester.id=" + evaluateSwitch.semester.id)
     }
   }
 

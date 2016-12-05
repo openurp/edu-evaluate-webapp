@@ -26,9 +26,9 @@
     <module>course</module>
     <module>department</module>
     <module>questionnaire</module>
-    <module>student</module>
     <module>teacher</module>
-    <module>webapp</module>
+    <module>adminapp</module>
+    <module>studentapp</module>
   </modules>
 
 </project>
