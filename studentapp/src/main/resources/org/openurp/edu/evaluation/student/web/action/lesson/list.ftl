@@ -35,7 +35,7 @@
                 <td>${(questionnaireLesson.lesson.course.code)!}</td>
                 <td>${(questionnaireLesson.lesson.course.name)!}</td>
                 <td>${(questionnaireLesson.lesson.teachDepart.name)!}</td>
-                <td>${(teacher.person.name.formatedName)!}</td>
+                <td>${(teacher.user.name)!}</td>
                 <td>[#if flag]已评教[#else]未评教[/#if]</td>
                 <td>
                     <a href="javascript:doEvaluate('${flag?string("update","evaluate")}','${(questionnaireLesson.lesson.id)!},${(teacher.id)!}')">
@@ -58,7 +58,7 @@
                 <td>${(questionnaireLesson.lesson.teachDepart.name)!}</td>
                 <td>
                 [#list (questionnaireLesson.lesson.teachers)?if_exists as teacher]
-                    ${(teacher.person.name.formatedName)!}[#if teacher_has_next],[/#if]
+                    ${(teacher.user.name)!}[#if teacher_has_next],[/#if]
                 [/#list]
                 </td>
                 <td>[#if flag]已评教[#else]未评教[/#if]</td>

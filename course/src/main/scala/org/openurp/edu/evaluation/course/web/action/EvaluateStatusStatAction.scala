@@ -18,7 +18,7 @@ import org.openurp.edu.evaluation.app.lesson.model.EvaluateSearchDepartment
 import org.openurp.edu.evaluation.app.lesson.model.EvaluateSearchManager
 import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
 import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.lesson.model.CourseTake
+import org.openurp.edu.lesson.model.CourseTaker
 import org.openurp.edu.lesson.model.Lesson
 import org.beangle.commons.lang.Strings
 
@@ -87,7 +87,7 @@ class EvaluateStatusStatAction extends RestfulAction[EvaluateResult] {
       var countAll:Long=0L
       var haveFinish:Long=0L 
       var stdFinish:Long=0L
-      val query = OqlBuilder.from[Long](classOf[CourseTake].getName, "courseTake");
+      val query = OqlBuilder.from[Long](classOf[CourseTaker].getName, "courseTake");
       query.select("count(*)");
       query.where("courseTake.lesson =:lesson", lesson);
 //      query.where("courseTake.lesson.teachDepart.id=:depIds", departmentId);
@@ -144,7 +144,7 @@ class EvaluateStatusStatAction extends RestfulAction[EvaluateResult] {
       var haveFinish:Long =0L
       var stdFinish:Long =0L
       //总评人次
-      val query = OqlBuilder.from[Array[Any]](classOf[CourseTake].getName, "courseTake");
+      val query = OqlBuilder.from[Array[Any]](classOf[CourseTaker].getName, "courseTake");
       query.select("count(*),count(distinct std)");
       query.where("courseTake.lesson.semester =:semester", semester);
       query.where("courseTake.lesson.teachDepart =:manageDepartment", department);

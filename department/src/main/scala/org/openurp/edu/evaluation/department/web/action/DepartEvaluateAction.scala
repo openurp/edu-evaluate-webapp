@@ -1,4 +1,4 @@
-package org.openurp.edu.evaluation.department.action
+package org.openurp.edu.evaluation.department.web.action
 
 import java.util.Date
 import scala.collection.mutable.Buffer
@@ -14,11 +14,16 @@ import org.openurp.edu.evaluation.department.helper.ImportDepartListener
 import org.openurp.edu.evaluation.model.{ Question, QuestionType, Questionnaire }
 import org.openurp.edu.lesson.model.Lesson
 import org.openurp.platform.api.security.Securities
-import org.beangle.data.transfer.TransferListener
 import org.openurp.edu.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.edu.evaluation.department.model.DepartEvaluate
 import org.openurp.edu.evaluation.department.model.DepartQuestion
 import org.beangle.data.transfer.importer.listener.ImporterForeignerListener
+import org.openurp.base.model.Department
+import org.openurp.base.model.Semester
+import org.openurp.edu.evaluation.app.department.model.EvaluateSwitch
+import org.openurp.edu.evaluation.model.Questionnaire
+import org.openurp.edu.lesson.model.Lesson
+import org.beangle.data.transfer.TransferListener
 
 /**
  * @author xinzhou

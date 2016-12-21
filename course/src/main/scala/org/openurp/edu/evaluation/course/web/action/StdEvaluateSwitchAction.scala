@@ -11,7 +11,6 @@ import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.edu.base.model.Project
 import org.beangle.webmvc.api.annotation.action
 
-@action("{project}/std-evaluate-switch")
 class StdEvaluateSwitchAction extends ProjectRestfulAction[StdEvaluateSwitch] {
 
   protected override def indexSetting(): Unit = {

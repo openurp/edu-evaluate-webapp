@@ -10,11 +10,11 @@ import org.openurp.edu.base.model.{ Student, Teacher }
 import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
 import org.openurp.edu.evaluation.lesson.result.model.{ EvaluateResult, QuestionResult }
 import org.openurp.edu.evaluation.model.{ Option, Question }
-import org.openurp.edu.lesson.model.{ CourseTake, Lesson }
+import org.openurp.edu.lesson.model.{ CourseTaker, Lesson }
 import org.openurp.platform.api.security.Securities
 import org.openurp.edu.evaluation.app.lesson.service.StdEvaluateSwitchService
 
-class EvaluateStdAction extends RestfulAction[EvaluateResult] {
+class LessonAction extends RestfulAction[EvaluateResult] {
 
   //  public List<Object[]> getLessonIdAndTeacherIdOfResult(Student student, Semester semester) {
   //    List<Object[]> results = CollectUtils.newArrayList();
@@ -54,18 +54,11 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
   }
 
   def getStdLessons(student: Student, semester: Semester): Seq[Lesson] = {
-
-    val query = OqlBuilder.from(classOf[CourseTake], "courseTake")
-    query.select("distinct courseTake.lesson.id ")
-    query.where("courseTake.std=:std", student)
-    query.where("courseTake.semester =:semester", semester)
-    val lessonIds = entityDao.search(query)
-    var stdLessons: Seq[Lesson] = Seq()
-    if (!lessonIds.isEmpty) {
-      val entityquery = OqlBuilder.from(classOf[Lesson], "lesson").where("lesson.id in (:lessonIds)", lessonIds)
-      stdLessons = entityDao.search(entityquery)
-    }
-    stdLessons
+    val query = OqlBuilder.from[Lesson](classOf[CourseTaker].getName, "courseTaker")
+    query.select("courseTaker.lesson")
+    query.where("courseTaker.std=:std", student)
+    query.where("courseTaker.semester =:semester", semester)
+    entityDao.search(query)
   }
 
   var evaluateSwitchService: StdEvaluateSwitchService = _
@@ -179,7 +172,9 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
   }
 
   def getStudent(): Student = {
-    val stds = entityDao.search(OqlBuilder.from(classOf[Student], "s").where("s.code=:code", Securities.user))
+    val stds = entityDao.search(OqlBuilder.from(classOf[Student], "s")
+      .where("s.code=:code", Securities.user)
+      .where("s.project.code=:project_code", get("project").get))
     if (stds.isEmpty) {
       throw new RuntimeException("Cannot find student with code " + Securities.user)
     } else {

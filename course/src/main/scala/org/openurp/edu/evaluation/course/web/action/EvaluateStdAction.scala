@@ -12,7 +12,7 @@ import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
 import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
 import org.openurp.edu.evaluation.model.Option
 import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.lesson.model.CourseTake
+import org.openurp.edu.lesson.model.CourseTaker
 import org.openurp.edu.lesson.model.Lesson
 import org.openurp.platform.api.security.Securities
 import org.openurp.edu.evaluation.app.lesson.service.LessonFilterStrategyFactory
@@ -59,10 +59,10 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
 
   def getStdLessons(student: Student, semester: Semester): Seq[Lesson] = {
 
-    val query = OqlBuilder.from(classOf[CourseTake], "courseTake")
-    query.select("distinct courseTake.lesson.id ")
-    query.where("courseTake.std=:std", student)
-    query.where("courseTake.semester =:semester", semester)
+    val query = OqlBuilder.from(classOf[CourseTaker], "courseTaker")
+    query.select("distinct courseTaker.lesson.id ")
+    query.where("courseTaker.std=:std", student)
+    query.where("courseTaker.semester =:semester", semester)
     val lessonIds = entityDao.search(query)
     var stdLessons: Seq[Lesson] = Seq()
     if (!lessonIds.isEmpty) {

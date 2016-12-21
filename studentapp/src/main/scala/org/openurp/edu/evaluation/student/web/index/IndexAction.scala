@@ -1,4 +1,4 @@
-package org.openurp.edu.evaluation.web.action
+package org.openurp.edu.evaluation.student.web.index
 
 import org.openurp.platform.api.app.UrpApp
 import org.beangle.webmvc.api.action.ActionSupport
@@ -7,18 +7,15 @@ import org.beangle.data.dao.EntityDao
 import org.beangle.security.realm.cas.CasConfig
 import org.beangle.webmvc.api.view.View
 import org.beangle.security.mgt.SecurityManager
-import org.beangle.commons.io.IOs
-import java.net.URL
-import org.openurp.base.model.School
 import org.openurp.platform.api.security.Securities
 import org.openurp.base.model.User
-import org.openurp.base.model.School
-import org.openurp.base.model.School
 import org.openurp.platform.api.security.RemoteService
 import org.openurp.edu.base.model.Project
 import org.beangle.webmvc.api.annotation.param
 import org.beangle.webmvc.api.annotation.mapping
 import org.beangle.data.dao.OqlBuilder
+import org.openurp.edu.base.model.Project
+import org.openurp.edu.base.model.Project
 
 /**
  * @author xinzhou

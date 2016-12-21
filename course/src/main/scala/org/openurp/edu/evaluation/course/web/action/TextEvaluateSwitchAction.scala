@@ -10,7 +10,6 @@ import org.openurp.edu.evaluation.app.lesson.model.TextEvaluateSwitch
 import org.openurp.edu.base.model.Project
 import org.beangle.webmvc.api.annotation.action
 
-@action("{project}/text-evaluate-switch")
 class TextEvaluateSwitchAction extends ProjectRestfulAction[TextEvaluateSwitch] {
 
   protected override def indexSetting(): Unit = {

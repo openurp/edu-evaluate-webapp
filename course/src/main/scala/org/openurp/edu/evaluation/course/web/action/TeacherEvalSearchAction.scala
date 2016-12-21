@@ -10,7 +10,7 @@ import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
 import org.openurp.edu.evaluation.lesson.stat.model.TeacherEvalStat
 import org.openurp.edu.evaluation.model.Option
 import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.lesson.model.CourseTake
+import org.openurp.edu.lesson.model.CourseTaker
 import org.openurp.edu.lesson.model.Lesson
 import org.openurp.edu.lesson.model.Lesson
 
@@ -76,7 +76,7 @@ class TeacherEvalSearchAction extends RestfulAction[TeacherEvalStat] {
     var numbers = 0L
     val lessons = entityDao.search(lessonQue)
     lessons foreach { lesson =>
-      val querys = OqlBuilder.from[Long](classOf[CourseTake].getName, "courseTake");
+      val querys = OqlBuilder.from[Long](classOf[CourseTaker].getName, "courseTake");
       querys.join("courseTake.lesson.teachers", "teacher");
       querys.where("teacher.id=:teacherId", questionnaireStat.teacher.id);
       querys.where("courseTake.semester.id=:semesterId", questionnaireStat.semester.id);

@@ -6,7 +6,7 @@ import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Semester
 import org.openurp.edu.base.model.{ Student, Teacher }
 import org.openurp.edu.evaluation.lesson.model.{ TeacherRemessage, TextEvaluation }
-import org.openurp.edu.lesson.model.{ CourseTake, Lesson }
+import org.openurp.edu.lesson.model.{ CourseTaker, Lesson }
 import org.openurp.platform.api.security.Securities
 import org.openurp.edu.evaluation.app.lesson.model.TextEvaluateSwitch
 
@@ -150,7 +150,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     }
     // 查询(班级)
     //    val hql = "select courseTake"+ " from org.openurp.edu.teach.lesson.model.Lesson lesson"+ " join lesson.teachers teacher join lesson.teachclass.courseTakes courseTake"+ " where teacher =:teacher and lesson.semester.id =:semesterId and lesson.teachclass.name in (:classNames)";
-    val query = OqlBuilder.from[CourseTake](classOf[Lesson].getName, "lesson")
+    val query = OqlBuilder.from[CourseTaker](classOf[Lesson].getName, "lesson")
     query.join("left", "lesson.teachers", "teacher")
     query.join("left", "lesson.teachclass.courseTakes", "courseTake")
     query.select("lesson.teachclass.courseTakes")
@@ -167,7 +167,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     courseTakes foreach { courseTake =>
       teacherRemessage.students += courseTake.std
     }
-    //    for (CourseTake courseTake : courseTakes) {
+    //    for (CourseTaker courseTake : courseTakes) {
     //      evaluateTeacherRemessage.addStudent(courseTake.getStd());
     //    }
     if (!isAnn) {

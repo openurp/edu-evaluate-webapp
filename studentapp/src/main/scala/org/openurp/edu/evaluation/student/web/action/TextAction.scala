@@ -7,13 +7,13 @@ import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Semester
 import org.openurp.edu.base.model.{ Student, Teacher }
-import org.openurp.edu.lesson.model.{ CourseTake, Lesson }
+import org.openurp.edu.lesson.model.{ CourseTaker, Lesson }
 import org.openurp.platform.api.security.Securities
 import org.openurp.edu.evaluation.app.lesson.model.TextEvaluateSwitch
 import org.openurp.edu.evaluation.lesson.model.TeacherRemessage
 import org.openurp.edu.evaluation.lesson.model.TextEvaluation
 
-class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
+class TextAction extends RestfulAction[TextEvaluation] {
 
   def getStudent(): Student = {
     val stds = entityDao.search(OqlBuilder.from(classOf[Student], "s").where("s.code=:code", Securities.user))
@@ -143,7 +143,7 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
 
   def getStdLessons(student: Student, semester: Semester): Seq[Lesson] = {
 
-    val query = OqlBuilder.from(classOf[CourseTake], "courseTake")
+    val query = OqlBuilder.from(classOf[CourseTaker], "courseTake")
     query.select("distinct courseTake.lesson.id ")
     query.where("courseTake.std=:std", student)
     query.where("courseTake.semester =:semester", semester)

@@ -9,7 +9,7 @@ import org.openurp.base.model.Semester
 import org.openurp.edu.base.model.Teacher
 import org.openurp.edu.evaluation.app.lesson.model.EvaluateSearchDepartment
 import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.lesson.model.{ CourseTake, Lesson }
+import org.openurp.edu.lesson.model.{ CourseTaker, Lesson }
 import org.openurp.platform.api.security.Securities
 
 class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
@@ -54,7 +54,7 @@ class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
 
       var countAll: Long = 0L
       var haveFinish: Long = 0L
-      val query = OqlBuilder.from[Long](classOf[CourseTake].getName, "courseTake");
+      val query = OqlBuilder.from[Long](classOf[CourseTaker].getName, "courseTake");
       query.select("select count(*)");
       query.where("courseTake.lesson =:lesson", lesson);
       //      query.where("courseTake.std.state.department.id=:depIds", departmentId);
@@ -123,7 +123,7 @@ class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
   //    val evaluateSearchAdminClassList = Collections.newBuffer[EvaluateSearchAdminclass]
   //    if (studentList.size > 0) {
   //      // 得到指定学期，院系的学生评教人次总数
-  //      val query = OqlBuilder.from[Array[Any]](classOf[CourseTake].getName, "courseTake");
+  //      val query = OqlBuilder.from[Array[Any]](classOf[CourseTaker].getName, "courseTake");
   //      query.select("courseTake.std.id,count(*)");
   //      query.where("courseTake.lesson.semester.id=:semesterId", semesterId);
   //      if (studentList.size > 0) {
@@ -187,7 +187,7 @@ class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
   //    val stuId = getLong("stuIds").get
   //    val semester =entityDao.get(classOf[Semester], semesterId);
   //    // 得到指定学期，院系的学生评教人次总数
-  //    val query = OqlBuilder.from(classOf[CourseTake], "courseTake");
+  //    val query = OqlBuilder.from(classOf[CourseTaker], "courseTake");
   //    query.where("courseTake.lesson.semester =:semester", semester);
   //    query.where("courseTake.std.id =:stdId", stuId);
   ////    query.where("exists ( from "+classOf[QuestionnaireLesson].getName +" questionn where questionn.lesson = courseTake.lesson)");

@@ -27,7 +27,6 @@ import org.openurp.edu.lesson.model.Lesson
 import org.beangle.commons.lang.Strings
 import org.beangle.webmvc.api.annotation.action
 
-@action("{project}/questionnaire-lesson")
 class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson] {
 
   var evaluateSwitchService: StdEvaluateSwitchService = _
@@ -191,11 +190,12 @@ class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson
     // 获取(更新对象)
     if ("all".equals(isAll)) {
       val qurey = getQueryBuilderByLesson()
-      lessons = entityDao.search(getQueryBuilderByLesson())
+      lessons = entityDao.search(getQueryBuilderByLesson().limit(null))
     } else {
       val ids = longIds("lesson")
       lessons = entityDao.find(classOf[Lesson], ids)
     }
+    println(lessons.size)
     val questionnaireId = longId("questionnaire")
     if (questionnaireId != 0) {
       val isEvaluate = getBoolean("isEvaluate").get

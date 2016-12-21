@@ -13,7 +13,7 @@ import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
 import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
 import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
 import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.lesson.model.ExamTake
+import org.openurp.edu.lesson.model.ExamTaker
 import org.springframework.beans.support.PropertyComparator
 import org.beangle.commons.collection.Order
 import org.openurp.edu.base.model.Teacher
@@ -156,9 +156,9 @@ class EvaluateResultAction extends RestfulAction[EvaluateResult] {
       results foreach { result =>
         //      for (EvaluateResult result : results) {
         //        // TODO kang 怎么确定学生有没有一门课的考试资格
-        val builder = OqlBuilder.from(classOf[ExamTake], "examTake")
-        builder.where("examTake.lesson=:lesson", result.lesson)
-        builder.where("examTake.std=:std", result.student)
+        val builder = OqlBuilder.from(classOf[ExamTaker], "examTaker")
+        builder.where("examTaker.lesson=:lesson", result.lesson)
+        builder.where("examTaker.std=:std", result.student)
         val takes = entityDao.search(builder);
         if (takes.size > 0) {
           if ("违纪".equals(takes.head.examStatus.name)) {

@@ -1,4 +1,4 @@
-package org.openurp.edu.evaluation.department.action
+package org.openurp.edu.evaluation.department.web.action
 
 import org.beangle.data.model.Entity
 import org.beangle.data.transfer.TransferResult

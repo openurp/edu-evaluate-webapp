@@ -10,7 +10,7 @@ import org.openurp.edu.base.model.Student
 import org.openurp.edu.evaluation.course.model.TeacherRemessage
 import org.openurp.edu.evaluation.course.model.TextEvaluateSwitch
 import org.openurp.edu.evaluation.course.model.TextEvaluation
-import org.openurp.edu.lesson.model.CourseTake
+import org.openurp.edu.lesson.model.CourseTaker
 import org.openurp.edu.lesson.model.Lesson
 import org.openurp.platform.api.security.Securities
 import org.openurp.edu.base.model.Teacher
@@ -145,7 +145,7 @@ class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
 
   def getStdLessons(student: Student, semester: Semester): Seq[Lesson] = {
 
-    val query = OqlBuilder.from(classOf[CourseTake], "courseTake")
+    val query = OqlBuilder.from(classOf[CourseTaker], "courseTake")
     query.select("distinct courseTake.lesson.id ")
     query.where("courseTake.std=:std", student)
     query.where("courseTake.semester =:semester", semester)
