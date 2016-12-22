@@ -28,17 +28,11 @@ class DefaultMapping extends Mapping {
     defaultIdGenerator("auto_increment")
     defaultCache("openurp.edu.evaluation", "read-write")
 
-    bind[StdEvaluateSwitch].on(e => declare(
-      e.endAt & e.beginAt & e.opened & e.semester & e.project are notnull))
-   
     bind[TextEvaluation].on(e => declare(
       e.student & e.lesson & e.evaluateByTeacher & e.evaluateAt are notnull ,
       e.teacherRemessages is (depends("textEvaluation"),table("text_evaluation_remsgs"))
       ))
         
-    bind[TextEvaluateSwitch].on(e => declare(
-      e.endAt & e.beginAt & e.opened & e.semester & e.project are notnull))
-      
     bind[TeacherRemessage].on(e => declare(
      e.textEvaluation & e.visible are notnull))
       

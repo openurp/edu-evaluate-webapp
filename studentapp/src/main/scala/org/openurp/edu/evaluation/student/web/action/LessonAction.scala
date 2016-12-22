@@ -13,8 +13,11 @@ import org.openurp.edu.evaluation.model.{ Option, Question }
 import org.openurp.edu.lesson.model.{ CourseTaker, Lesson }
 import org.openurp.platform.api.security.Securities
 import org.openurp.edu.evaluation.app.lesson.service.StdEvaluateSwitchService
+import java.util.Date
 
 class LessonAction extends RestfulAction[EvaluateResult] {
+
+  var evaluateSwitchService: StdEvaluateSwitchService = _
 
   //  public List<Object[]> getLessonIdAndTeacherIdOfResult(Student student, Semester semester) {
   //    List<Object[]> results = CollectUtils.newArrayList();
@@ -61,15 +64,12 @@ class LessonAction extends RestfulAction[EvaluateResult] {
     entityDao.search(query)
   }
 
-  var evaluateSwitchService: StdEvaluateSwitchService = _
-
   override protected def indexSetting(): Unit = {
     val std = getStudent()
     if (std == null) { forward("error.std.stdNo.needed") }
-    val semesters = entityDao.getAll(classOf[Semester])
+    val semesters = evaluateSwitchService.getOpenedSemesters(std.project)
     put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    if (!semesters.isEmpty) put("currentSemester", semesters.head)
   }
 
   override def search(): String = {
@@ -107,23 +107,16 @@ class LessonAction extends RestfulAction[EvaluateResult] {
       addMessage("找不到该课程!");
       return forward("errors");
     }
-    val evaluateSwitch = evaluateSwitchService.getEvaluateSwitch(lesson.semester, lesson.project)
-    if (null == evaluateSwitch) {
+    val evaluateSwitchs = evaluateSwitchService.getEvaluateSwitch(lesson.semester, lesson.project)
+    if (evaluateSwitchs.isEmpty) {
       addMessage("现在还没有开放课程评教!");
       return forward("errors");
     }
-    //    if (!evaluateSwitch.checkOpen(new Date())) {
-    //      addMessage("不在课程评教开放时间内,开放时间为：!" + evaluateSwitch.beginAt + "～" + evaluateSwitch.endAt);
-    //      return forward("errors");
-    //    }
-    //    OqlBuilder<NotEvaluateStudentBean> que = OqlBuilder.from(NotEvaluateStudentBean.class, "notevaluate");
-    //    que.where("notevaluate.std=:std", this.getLoginStudent());
-    //    que.where("notevaluate.semester=:semesterId", lesson.getSemester());
-    //    List<NotEvaluateStudentBean> notList = entityDao.search(que);
-    //    if (notList.size() > 0) {
-    //      addMessage("您并非参评学生，不可评教!");
-    //      return forward("errors");
-    //    }
+    val evaluateSwitch = evaluateSwitchs.head
+    if (!evaluateSwitch.isOpenedAt(new Date())) {
+      addMessage("不在课程评教开放时间内,开放时间为：!" + evaluateSwitch.beginAt + "～" + evaluateSwitch.endAt);
+      return forward("errors");
+    }
     // 获得(课程问卷,根据教学任务)
     val questionnaireLessons = entityDao.findBy(classOf[QuestionnaireLesson], "lesson.id", List(lesson.id));
     if (questionnaireLessons.isEmpty) {

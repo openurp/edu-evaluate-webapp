@@ -10,6 +10,8 @@ import org.openurp.base.model.Semester
 import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.edu.base.model.Project
 import org.beangle.webmvc.api.annotation.action
+import org.openurp.edu.base.model.Project
+import org.openurp.edu.base.model.Project
 
 class StdEvaluateSwitchAction extends ProjectRestfulAction[StdEvaluateSwitch] {
 
@@ -48,10 +50,10 @@ class StdEvaluateSwitchAction extends ProjectRestfulAction[StdEvaluateSwitch] {
   }
 
   override def editSetting(entity: StdEvaluateSwitch): Unit = {
-    //    put("semesterId", getLong("evaluateSwitch.semester.id").get)
-    //    put("semesterId", 20141)
-    put("semesters", entityDao.getAll(classOf[Semester]))
-    put("projects", entityDao.getAll(classOf[Project]))
+    val project = entityDao.findBy(classOf[Project], "code", List(get("project").get)).head;
+    val query = OqlBuilder.from(classOf[Semester], "s").where("s.calendar in(:calendars)", project.calendars)
+    put("semesters", entityDao.search(query))
+    put("project", project);
   }
 
   override def saveAndRedirect(evaluateSwitch: StdEvaluateSwitch): View = {

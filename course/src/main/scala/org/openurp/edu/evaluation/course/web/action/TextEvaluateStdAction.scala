@@ -1,19 +1,20 @@
 package org.openurp.edu.evaluation.course.web.action
 
 import scala.collection.mutable.Buffer
+
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Semester
 import org.openurp.edu.base.model.Student
+import org.openurp.edu.base.model.Teacher
+import org.openurp.edu.evaluation.app.lesson.model.TextEvaluateSwitch
 import org.openurp.edu.evaluation.course.model.TeacherRemessage
-import org.openurp.edu.evaluation.course.model.TextEvaluateSwitch
 import org.openurp.edu.evaluation.course.model.TextEvaluation
 import org.openurp.edu.lesson.model.CourseTaker
 import org.openurp.edu.lesson.model.Lesson
 import org.openurp.platform.api.security.Securities
-import org.openurp.edu.base.model.Teacher
 
 class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
 

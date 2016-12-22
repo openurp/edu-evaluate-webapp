@@ -166,7 +166,6 @@
         
         if(num >0){
             if(str ==""){
-            alert(str);
                 alert("您选择中存在差评，请填写备注信息后提交！");
                 return false;
             }
