@@ -1,6 +1,6 @@
 package org.openurp.edu.evaluation.course.web.action
 
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.commons.dao.OqlBuilder
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
 import org.openurp.edu.lesson.model.Lesson

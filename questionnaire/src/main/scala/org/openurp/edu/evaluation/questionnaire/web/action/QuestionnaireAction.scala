@@ -3,7 +3,7 @@ package org.openurp.edu.evaluation.questionnaire.web.action
 import scala.collection.mutable.Buffer
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.collection.Order
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.commons.dao.OqlBuilder
 import org.beangle.webmvc.api.annotation.param
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
@@ -15,7 +15,7 @@ import org.beangle.webmvc.api.view.View
 import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
 import org.beangle.commons.lang.Numbers
 import org.beangle.commons.lang.Strings
-import org.beangle.data.dao.Condition
+import org.beangle.commons.dao.Condition
 
 class QuestionnaireAction extends RestfulAction[Questionnaire] {
 

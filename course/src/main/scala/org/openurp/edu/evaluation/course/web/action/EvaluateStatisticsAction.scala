@@ -5,7 +5,7 @@ import org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat
 import org.openurp.base.model.Semester
 import org.springframework.beans.support.PropertyComparator
 import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.commons.dao.OqlBuilder
 import org.openurp.base.model.Department
 import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.edu.evaluation.model.Question

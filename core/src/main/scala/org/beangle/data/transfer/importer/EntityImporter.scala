@@ -18,8 +18,8 @@
  */
 package org.beangle.data.transfer.importer
 
-import org.beangle.data.model.meta.EntityMetadata
-import org.beangle.data.model.util.Populator
+import org.beangle.commons.model.meta.EntityMetadata
+import org.beangle.commons.model.util.Populator
 /**
  * EntityImpo
  */

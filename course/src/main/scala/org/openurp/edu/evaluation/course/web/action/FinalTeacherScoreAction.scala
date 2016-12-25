@@ -2,7 +2,7 @@ package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.commons.collection.Order
 import org.beangle.commons.lang.ClassLoaders
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.commons.dao.OqlBuilder
 import org.beangle.webmvc.api.context.ActionContext
 import org.beangle.webmvc.api.view.{ Status, View }
 import org.beangle.webmvc.entity.action.RestfulAction

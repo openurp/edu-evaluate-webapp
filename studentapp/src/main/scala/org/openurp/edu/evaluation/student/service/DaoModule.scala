@@ -19,7 +19,7 @@
 package org.openurp.edu.evaluation.student.service
 
 import org.beangle.commons.cache.concurrent.ConcurrentMapCacheManager
-import org.beangle.commons.inject.bind.AbstractBindModule
+import org.beangle.commons.cdi.bind.AbstractBindModule
 import org.beangle.data.hibernate.HibernateEntityDao
 import org.beangle.data.hibernate.HibernateMetadataFactory
 import org.beangle.data.hibernate.spring.HibernateTransactionManager
@@ -27,7 +27,7 @@ import org.beangle.data.hibernate.spring.LocalSessionFactoryBean
 import org.beangle.data.hibernate.spring.web.OpenSessionInViewInterceptor
 import org.springframework.beans.factory.config.PropertiesFactoryBean
 import org.springframework.transaction.interceptor.TransactionProxyFactoryBean
-import org.beangle.commons.inject.bind.profile
+import org.beangle.commons.cdi.bind.profile
 
 object DaoModule extends AbstractBindModule {
 

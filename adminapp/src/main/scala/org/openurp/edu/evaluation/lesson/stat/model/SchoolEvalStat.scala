@@ -18,7 +18,7 @@
  */
 package org.openurp.edu.evaluation.lesson.stat.model
 
-import org.beangle.data.model.LongId
+import org.beangle.commons.model.LongId
 
 class SchoolEvalStat extends LongId with EvalStat
 

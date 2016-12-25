@@ -19,10 +19,10 @@
 package org.beangle.data.transfer.importer.listener
 
 import org.beangle.commons.lang.Strings
-import org.beangle.data.model.Entity
+import org.beangle.commons.model.Entity
 import org.beangle.data.transfer.TransferResult
 import org.beangle.data.transfer.importer.MultiEntityImporter
-import org.beangle.data.dao.EntityDao
+import org.beangle.commons.dao.EntityDao
 import org.beangle.commons.bean.Properties
 
 object ImporterForeignerListener {

@@ -1,7 +1,7 @@
 package org.openurp.edu.evaluation.app.department.model
 
-import org.beangle.data.model.LongId
-import org.beangle.data.model.TemporalOn
+import org.beangle.commons.model.LongId
+import org.beangle.commons.model.TemporalOn
 import org.openurp.base.model.Semester
 import org.openurp.edu.evaluation.model.Questionnaire
 

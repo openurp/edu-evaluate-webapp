@@ -22,15 +22,15 @@ import java.util.HashMap
 import java.util.Map
 import java.util.Set
 import org.beangle.commons.lang.Strings
-import org.beangle.data.model.Entity
-import org.beangle.data.model.meta.EntityType
-import org.beangle.data.model.util.Populator
+import org.beangle.commons.model.Entity
+import org.beangle.commons.model.meta.EntityType
+import org.beangle.commons.model.util.Populator
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.beangle.data.model.util.Populator
-import org.beangle.data.model.util.Populator
+import org.beangle.commons.model.util.Populator
+import org.beangle.commons.model.util.Populator
 import org.beangle.commons.logging.Logging
-import org.beangle.data.model.util.Populator
+import org.beangle.commons.model.util.Populator
 
 /**
  * MultiEntityImporter class.

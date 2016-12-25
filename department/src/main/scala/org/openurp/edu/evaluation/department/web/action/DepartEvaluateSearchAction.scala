@@ -2,7 +2,7 @@ package org.openurp.edu.evaluation.department.web.action
 
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.department.model.DepartEvaluate
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.commons.dao.OqlBuilder
 import org.openurp.base.model.Department
 import org.openurp.base.model.Semester
 import org.beangle.commons.collection.Order

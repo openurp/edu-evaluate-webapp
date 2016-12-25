@@ -18,7 +18,7 @@
  */
 package org.openurp.edu.evaluation.app.lesson.model
 
-import org.beangle.data.model.bind.Mapping
+import org.beangle.commons.model.bind.Mapping
 
 class DefaultMapping extends Mapping {
 

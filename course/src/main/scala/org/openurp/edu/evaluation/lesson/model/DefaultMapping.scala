@@ -19,7 +19,7 @@
 package org.openurp.edu.evaluation.lesson.model
 
 import scala.reflect.runtime.universe
-import org.beangle.data.model.bind.Mapping
+import org.beangle.commons.model.bind.Mapping
 import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
 import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
 import org.openurp.edu.evaluation.lesson.stat.model.CourseEvalStat

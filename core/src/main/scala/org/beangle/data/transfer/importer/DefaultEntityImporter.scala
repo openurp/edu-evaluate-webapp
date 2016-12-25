@@ -18,7 +18,7 @@
  */
 package org.beangle.data.transfer.importer
 
-import org.beangle.data.model.meta.EntityType
+import org.beangle.commons.model.meta.EntityType
 
 import org.beangle.data.transfer.importer.EntityPrepare
 import org.beangle.data.transfer.importer.MultiEntityImporter

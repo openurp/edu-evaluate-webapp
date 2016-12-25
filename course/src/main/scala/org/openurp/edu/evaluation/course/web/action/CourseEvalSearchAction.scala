@@ -5,7 +5,7 @@ import org.openurp.edu.evaluation.lesson.stat.model.CourseEvalStat
 import org.openurp.base.model.Semester
 import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
 import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.commons.dao.OqlBuilder
 import org.openurp.edu.lesson.model.Lesson
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.collection.Order

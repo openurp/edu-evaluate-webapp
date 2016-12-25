@@ -19,7 +19,7 @@
 package org.openurp.edu.evaluation.department.model
 
 import scala.collection.mutable.HashSet
-import org.beangle.data.model.LongId
+import org.beangle.commons.model.LongId
 import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.base.model.Semester
 import org.beangle.commons.collection.Collections

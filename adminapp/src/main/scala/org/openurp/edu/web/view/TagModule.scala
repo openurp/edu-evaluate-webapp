@@ -1,6 +1,6 @@
 package org.openurp.edu.web.view
 
-import org.beangle.commons.inject.bind.AbstractBindModule
+import org.beangle.commons.cdi.bind.AbstractBindModule
 class TagModule extends AbstractBindModule {
 
   override def binding() {

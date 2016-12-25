@@ -1,9 +1,9 @@
 package org.openurp.edu.evaluation.app.lesson.model
 
-import org.beangle.data.model.IntId
+import org.beangle.commons.model.IntId
 import org.openurp.base.model.Semester
 import org.openurp.edu.base.model.Project
-import org.beangle.data.model.TemporalAt
+import org.beangle.commons.model.TemporalAt
 
 class StdEvaluateSwitch extends IntId with TemporalAt {
 

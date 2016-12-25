@@ -1,8 +1,8 @@
 package org.openurp.edu.evaluation.questionnaire.service
 
 import org.openurp.edu.evaluation.model.Question
-import org.beangle.data.dao.EntityDao
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.commons.dao.EntityDao
+import org.beangle.commons.dao.OqlBuilder
 import org.openurp.edu.evaluation.model.QuestionType
 import java.util.Date
 import org.openurp.edu.evaluation.model.Question

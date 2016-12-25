@@ -1,6 +1,6 @@
 package org.openurp.edu.evaluation.department.web.action
 
-import org.beangle.data.model.Entity
+import org.beangle.commons.model.Entity
 import org.beangle.data.transfer.TransferResult
 import org.beangle.data.transfer.importer.{ EntityImporter, IllegalImportFormatException, ImporterFactory }
 import org.beangle.data.transfer.importer.listener.ImporterForeignerListener

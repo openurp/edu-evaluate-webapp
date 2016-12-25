@@ -2,8 +2,8 @@ package org.openurp.edu.evaluation.course.web.action
 
 import java.sql.Date
 import org.beangle.commons.collection.Order
-import org.beangle.data.dao.OqlBuilder
-import org.beangle.data.dao.QueryBuilder
+import org.beangle.commons.dao.OqlBuilder
+import org.beangle.commons.dao.QueryBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.beangle.webmvc.entity.helper.QueryHelper

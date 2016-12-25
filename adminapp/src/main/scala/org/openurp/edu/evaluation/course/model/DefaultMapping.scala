@@ -20,7 +20,7 @@ package org.openurp.edu.evaluation.course.model
 
 import scala.reflect.runtime.universe
 
-import org.beangle.data.model.bind.Mapping
+import org.beangle.commons.model.bind.Mapping
 
 class DefaultMapping extends Mapping {
 

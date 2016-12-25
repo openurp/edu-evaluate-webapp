@@ -1,7 +1,7 @@
 package org.openurp.edu.evaluation.app.lesson.service
 
-import org.beangle.data.dao.EntityDao
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.commons.dao.EntityDao
+import org.beangle.commons.dao.OqlBuilder
 import org.openurp.base.model.Semester
 import org.openurp.edu.base.model.Project
 import org.openurp.edu.evaluation.app.lesson.model.StdEvaluateSwitch

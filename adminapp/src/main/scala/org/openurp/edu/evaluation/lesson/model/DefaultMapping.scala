@@ -19,8 +19,8 @@
 package org.openurp.edu.evaluation.lesson.model
 
 import scala.reflect.runtime.universe
-import org.beangle.data.model.annotation.code
-import org.beangle.data.model.bind.Mapping
+import org.beangle.commons.model.annotation.code
+import org.beangle.commons.model.bind.Mapping
 import org.openurp.edu.evaluation.lesson.stat.model.CourseEvalStat
 import org.openurp.edu.evaluation.lesson.stat.model.EvalStat
 import org.openurp.edu.evaluation.lesson.stat.model.CourseQuestionStat

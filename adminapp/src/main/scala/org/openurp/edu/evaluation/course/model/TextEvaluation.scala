@@ -1,7 +1,7 @@
 package org.openurp.edu.evaluation.course.model
 
 import org.openurp.edu.base.model.Student
-import org.beangle.data.model.LongId
+import org.beangle.commons.model.LongId
 import org.openurp.edu.lesson.model.Lesson
 import org.beangle.commons.collection.Collections
 import org.openurp.edu.base.model.Teacher

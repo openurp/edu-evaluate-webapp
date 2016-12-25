@@ -3,7 +3,7 @@ package org.openurp.edu.evaluation.questionnaire.web.action
 import java.util.Date
 import java.sql.Date
 import org.beangle.commons.collection.Order
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.commons.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.model.QuestionType

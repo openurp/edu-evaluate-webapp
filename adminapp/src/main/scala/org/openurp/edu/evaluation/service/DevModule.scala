@@ -1,8 +1,8 @@
 package org.openurp.edu.evaluation.service
 
 import org.springframework.beans.factory.config.PropertiesFactoryBean
-import org.beangle.commons.inject.bind.profile
-import org.beangle.commons.inject.bind.AbstractBindModule
+import org.beangle.commons.cdi.bind.profile
+import org.beangle.commons.cdi.bind.AbstractBindModule
 
 @profile("dev")
 object DevModule extends AbstractBindModule {

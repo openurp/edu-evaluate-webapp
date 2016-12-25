@@ -1,8 +1,8 @@
 package org.openurp.edu.evaluation.department.helper
 
 import java.util.Date
-import org.beangle.data.dao.EntityDao
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.commons.dao.EntityDao
+import org.beangle.commons.dao.OqlBuilder
 import org.beangle.data.transfer.TransferResult
 import org.beangle.data.transfer.importer.listener.ItemImporterListener
 import org.openurp.base.model.Semester

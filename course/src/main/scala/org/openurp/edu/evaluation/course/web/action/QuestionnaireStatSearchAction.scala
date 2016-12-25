@@ -3,13 +3,13 @@ package org.openurp.edu.evaluation.course.web.action
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.edu.evaluation.model.EvaluationCriteria
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.commons.dao.OqlBuilder
 import org.openurp.edu.base.code.model.Education
 import org.openurp.edu.evaluation.model.QuestionType
 import org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat
-import org.beangle.data.model.bind.Binder.Collection
-import org.beangle.data.model.bind.Binder.Collection
-import org.beangle.data.model.bind.Binder.Collection
+import org.beangle.commons.model.bind.Binder.Collection
+import org.beangle.commons.model.bind.Binder.Collection
+import org.beangle.commons.model.bind.Binder.Collection
 import org.beangle.commons.collection.Collections
 import org.openurp.base.model.Semester
 import org.openurp.edu.base.code.model.StdType

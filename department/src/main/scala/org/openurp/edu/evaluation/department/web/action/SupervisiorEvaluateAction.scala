@@ -4,7 +4,7 @@ import java.util.Date
 import scala.collection.mutable.Buffer
 import org.beangle.commons.collection.{ Collections, Order }
 import org.beangle.commons.lang.ClassLoaders
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.commons.dao.OqlBuilder
 import org.beangle.data.transfer.importer.listener.ImporterForeignerListener
 import org.beangle.webmvc.api.view.{ Stream, View }
 import org.beangle.webmvc.entity.action.RestfulAction
