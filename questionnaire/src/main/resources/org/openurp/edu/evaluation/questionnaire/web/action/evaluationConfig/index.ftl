@@ -1,8 +1,7 @@
 [#ftl]
 [@b.head/]
+<script language="JavaScript" type="text/JavaScript" src="${base}/static/scripts/itemSelect.js"></script>
 [@b.toolbar title="问卷设置" /]
-
-
     <table class="indexpanel">
         <tr>
             <td class="index_view">
@@ -45,9 +44,9 @@
 <script language="JavaScript">
     function info(td,action){
         var viewTables = document.getElementById("viewTables");
-        //clearSelected(viewTables,td);
-        //setSelectedRow(viewTables,td);
-         bg.form.submit("evaluationConfigForm",action);
+        clearSelected(viewTables,td);
+        setSelectedRow(viewTables,td);
+        bg.form.submit("evaluationConfigForm",action);
     }
     jQuery(function(){
         jQuery("#evaluationConfigForm #infoTd").eq(3).css("fontStyle","italic").css("color","blue").css("backgroundColor","#e9f2f8");
