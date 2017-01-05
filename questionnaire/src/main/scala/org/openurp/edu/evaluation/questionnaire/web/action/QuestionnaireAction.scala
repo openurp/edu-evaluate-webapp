@@ -76,7 +76,7 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] {
         questions = Collections.newBuffer
       }
       questions += question
-      questions.sortWith((x, y) => x.priority < y.priority)
+      questions.sortWith((x, y) => x.priority > y.priority)
       questionTree.put(key, questions);
     }
     put("questionTree", questionTree);

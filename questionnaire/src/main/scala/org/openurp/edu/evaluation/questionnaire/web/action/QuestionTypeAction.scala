@@ -30,7 +30,7 @@ class QuestionTypeAction extends RestfulAction[QuestionType] {
       questionType.updatedAt = new java.util.Date()
       
       val name = questionType.name;
-      val enName = questionType.enName
+      val enName = questionType.enName.orNull
       val remark = questionType.remark.orNull
       questionType.beginOn=  getDate("questionType.beginOn").get
       questionType.endOn =getDate("questionType.endOn")

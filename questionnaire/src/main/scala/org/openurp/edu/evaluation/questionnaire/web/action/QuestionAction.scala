@@ -33,6 +33,7 @@ class QuestionAction extends RestfulAction[Question] {
     val builder = OqlBuilder.from(classOf[Question], "question")
     populateConditions(builder)
     builder.orderBy(get(Order.OrderStr).getOrElse("question.state desc")).limit(getPageLimit)
+    builder.where("question.state=true")
     val questions = entityDao.search(builder)
 
     put("questions", questions)

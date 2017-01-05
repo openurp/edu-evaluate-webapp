@@ -26,7 +26,7 @@ ${(questionnaire.title?html)?default('')}</b>
                         ${key.name}
                     </td>
                     <td align="left">
-                        ${index}:${questionTree.get(key)[0].content}(${questionTree.get(key)[0].priority})
+                        ${index}:${questionTree.get(key)[0].content}
                     </td>
                     <td align="center">
                         [#if (questionTree.get(key)[0].optionGroup.options)?exists]
