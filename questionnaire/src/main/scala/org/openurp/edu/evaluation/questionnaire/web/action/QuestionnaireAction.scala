@@ -16,6 +16,7 @@ import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
 import org.beangle.commons.lang.Numbers
 import org.beangle.commons.lang.Strings
 import org.beangle.commons.dao.Condition
+import org.openurp.platform.api.security.Securities
 
 class QuestionnaireAction extends RestfulAction[Questionnaire] {
 
@@ -86,6 +87,8 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] {
   override def saveAndRedirect(entity: Questionnaire): View = {
     val questionnaire = entity.asInstanceOf[Questionnaire];
     questionnaire.beginOn = getDate("questionnaire.beginOn").get
+    questionnaire.updatedAt = new java.util.Date()
+    questionnaire.createBy=Securities.user
     getDate("questionnaire.endOn") foreach { invalidAt =>
       questionnaire.endOn = Option(invalidAt)
     }

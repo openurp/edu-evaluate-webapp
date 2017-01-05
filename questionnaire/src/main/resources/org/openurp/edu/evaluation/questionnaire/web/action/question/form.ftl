@@ -20,13 +20,13 @@
         [#if questionTypes?size == 0]
             <h2>没有可以使用的问题类别，请先前往问题类别菜单进行维护</h2>
         [#else]
-           [@b.select label="问题类别" required="true" name="question.questionType.id" value=(question.questionType.id)?if_exists items=questionTypes?if_exists/]
+           [@b.select label="问题类别" required="true" name="question.questionType.id" value=(question.questionType.id)?if_exists items=questionTypes?sort_by('name')/]
            [@b.textfield label="分值" required="true" check="assert(checkNum(), '问题分值必须为非负浮点数');" name="question.score" value="${(question.score)?default('')}" maxlength="4" /]
            [@b.textfield label="问题优先级" required="true" check="match('integer', '问题优先级必须为非负整数')" name="question.priority" value="${question.priority?default('1')}" comment="<font color='red'>越高显示越靠前</font>" maxlength="5" /]
            [@b.radios label="是否可用" required="true" name="question.state" value="${(question.state?string('1','0'))?default('1')}"/]
            [@b.radios label="是否附加题" required="true" name="question.addition" value="${(question.addition?string('1','0'))?default('1')}"/]
            [@b.select label="创建部门" required="true" name="question.depart.id" value=(question.depart.id)! empty="..." items=departmentList?if_exists style="width:205px" /]
-           [@b.select label="选项组" name="question.optionGroup.id" value=(question.optionGroup.id)! empty="..." items=optionGroups?if_exists style="width:205px" /]
+           [@b.select label="选项组" required="true" name="question.optionGroup.id" value=(question.optionGroup.id)! empty="..." items=optionGroups?if_exists style="width:205px" /]
            [@b.datepicker label="生效日期" required="true" name="question.beginOn" id="_beginOn" format="yyyy-MM-dd" maxDate="#F{$dp.$D(\\'_endOn\\')}" value=(question.beginOn?string("yyyy-MM-dd"))! maxlength="10" style="width:200px"/]
         [@b.datepicker label="失效日期" name="question.endOn" id="_endOn" format="yyyy-MM-dd" minDate="#F{$dp.$D(\\'_beginOn\\')}" value=(question.endOn?string("yyyy-MM-dd"))! maxlength="10" style="width:200px"/]
         

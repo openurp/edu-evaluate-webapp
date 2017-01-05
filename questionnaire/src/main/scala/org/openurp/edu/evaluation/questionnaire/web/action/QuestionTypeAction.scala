@@ -8,6 +8,7 @@ import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.model.QuestionType
 import org.openurp.edu.evaluation.model.Question
+import org.openurp.edu.base.model.Project
 
 class QuestionTypeAction extends RestfulAction[QuestionType] {
 
@@ -21,22 +22,23 @@ class QuestionTypeAction extends RestfulAction[QuestionType] {
     }
       
   
-  protected  def saveAndForward(entity: QuestionType): View = {
+  protected override def saveAndRedirect(entity: QuestionType): View = {
     try {
       val questionType = entity.asInstanceOf[QuestionType]
+      val projects = entityDao.findBy(classOf[Project], "code", List(get("project").get));
+      questionType.project = projects.head
+      questionType.updatedAt = new java.util.Date()
+      
       val name = questionType.name;
-      val enName = questionType.enName;
-      val remark = questionType.remark;
+      val enName = questionType.enName
+      val remark = questionType.remark.orNull
       questionType.beginOn=  getDate("questionType.beginOn").get
-      val invalidat = getDate("questionType.endOn").get;
-      if (!"".equals(invalidat) && invalidat != null) {
-        questionType.endOn =Option(invalidat)
-      }
+      questionType.endOn =getDate("questionType.endOn")
       if (remark!=null) {
-        questionType.remark=remark.replaceAll("<", "&#60;").replaceAll(">", "&#62;")
+        questionType.remark=Some(remark.replaceAll("<", "&#60;").replaceAll(">", "&#62;"))
       }
       if (enName!=null) {
-        questionType.enName=enName.replaceAll("<", "&#60;").replaceAll(">", "&#62;")
+        questionType.enName=Some(enName.replaceAll("<", "&#60;").replaceAll(">", "&#62;"))
       }
       questionType.name=name.replaceAll("<", "&#60;").replaceAll(">", "&#62;")
       if (!questionType.persisted) {

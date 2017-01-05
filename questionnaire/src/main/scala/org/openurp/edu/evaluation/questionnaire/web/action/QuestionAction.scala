@@ -18,6 +18,7 @@ import org.openurp.edu.evaluation.model.OptionGroup
 import org.openurp.base.model.Department
 import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.edu.evaluation.questionnaire.service.QuestionTypeService
+import org.openurp.edu.base.model.Project
 
 /**
  * 问题维护响应类
@@ -31,7 +32,7 @@ class QuestionAction extends RestfulAction[Question] {
   override def search(): String = {
     val builder = OqlBuilder.from(classOf[Question], "question")
     populateConditions(builder)
-    builder.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
+    builder.orderBy(get(Order.OrderStr).getOrElse("question.state desc")).limit(getPageLimit)
     val questions = entityDao.search(builder)
 
     put("questions", questions)
@@ -47,18 +48,18 @@ class QuestionAction extends RestfulAction[Question] {
     put("departmentList", departmentList);
   }
 
-  protected def saveAndForward(entity: Question): View = {
+  protected override def saveAndRedirect(entity: Question): View = {
     try {
       val question = entity.asInstanceOf[Question]
-      val remark = question.remark
+      val projects = entityDao.findBy(classOf[Project], "code", List(get("project").get));
+      question.project = projects.head
+      question.updatedAt = new java.util.Date()
+      val remark = question.remark.orNull
       val content = question.content
       question.beginOn = getDate("question.beginOn").get
-      val invalidat = getDate("question.endOn").get
-      if (!"".equals(invalidat) && invalidat != null) {
-        question.endOn = Option(invalidat)
-      }
+      question.endOn = getDate("question.endOn")
       if (remark != null) {
-        question.remark = remark.replaceAll("<", "&#60;").replaceAll(">", "&#62;")
+        question.remark = Some(remark.replaceAll("<", "&#60;").replaceAll(">", "&#62;"))
       }
       question.content = content.replaceAll("<", "&#60;").replaceAll(">", "&#62;")
       if (!question.persisted) {
