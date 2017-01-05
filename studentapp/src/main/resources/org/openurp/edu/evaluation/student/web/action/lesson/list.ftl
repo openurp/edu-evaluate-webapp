@@ -6,13 +6,14 @@
     <table class="gridtable">
         <thead class="gridhead">
             <tr>
-                <th width="12%">课程序号</th>
-                <th width="12%">课程代码</th>
-                <th width="12%">课程名称</th>
-                <th width="12%">开课院系</th>
-                <th width="12%">教师姓名</th>
-                <th width="4%">是否评教</th>
-                <th width="8%">操作方式</th>
+                <th width="5%">课程序号</th>
+                <th width="10%">课程代码</th>
+                <th width="30%">课程名称</th>
+                <th width="18%">开课院系</th>
+                <th width="12%">课程类别</th>
+                <th width="10%">教师姓名</th>
+                <th width="5%">是否评教</th>
+                <th width="10%">操作方式</th>
             </tr>
         </thead>
         [#if questionnaireLessons??]
@@ -35,6 +36,7 @@
                 <td>${(questionnaireLesson.lesson.course.code)!}</td>
                 <td>${(questionnaireLesson.lesson.course.name)!}</td>
                 <td>${(questionnaireLesson.lesson.teachDepart.name)!}</td>
+                <td>${(questionnaireLesson.lesson.courseType.name)!}</td>
                 <td>${(teacher.user.name)!}</td>
                 <td>[#if flag]已评教[#else]未评教[/#if]</td>
                 <td>
@@ -56,6 +58,7 @@
                 <td>${(questionnaireLesson.lesson.course.code)!}</td>
                 <td>${(questionnaireLesson.lesson.course.name)!}</td>
                 <td>${(questionnaireLesson.lesson.teachDepart.name)!}</td>
+                <td>${(questionnaireLesson.lesson.courseType.name)!}</td>
                 <td>
                 [#list (questionnaireLesson.lesson.teachers)?if_exists as teacher]
                     ${(teacher.user.name)!}[#if teacher_has_next],[/#if]

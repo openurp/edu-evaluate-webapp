@@ -1,19 +1,23 @@
 package org.openurp.edu.evaluation.student.web.action
 
+import java.util.Date
+
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.dao.OqlBuilder
-import org.beangle.webmvc.api.annotation.ignore
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Semester
-import org.openurp.edu.base.model.{ Student, Teacher }
-import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
-import org.openurp.edu.evaluation.lesson.result.model.{ EvaluateResult, QuestionResult }
-import org.openurp.edu.evaluation.model.{ Option, Question }
-import org.openurp.edu.lesson.model.{ CourseTaker, Lesson }
-import org.openurp.platform.api.security.Securities
+import org.openurp.edu.base.model.Student
+import org.openurp.edu.base.model.Teacher
 import org.openurp.edu.evaluation.app.lesson.service.StdEvaluateSwitchService
-import java.util.Date
+import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
+import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
+import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
+import org.openurp.edu.evaluation.model.Option
+import org.openurp.edu.evaluation.model.Question
+import org.openurp.edu.lesson.model.CourseTaker
+import org.openurp.edu.lesson.model.Lesson
+import org.openurp.platform.api.security.Securities
 
 class LessonAction extends RestfulAction[EvaluateResult] {
 
