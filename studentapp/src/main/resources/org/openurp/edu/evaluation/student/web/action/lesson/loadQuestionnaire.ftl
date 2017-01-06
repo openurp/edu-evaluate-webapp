@@ -59,7 +59,7 @@
             </tbody>
         </table>
     [/@]
-    [@b.field label="备注"]
+    [@b.field label="文字评教"]
     <table  style="width:90%" align="center">
     <tr>
     <td>
