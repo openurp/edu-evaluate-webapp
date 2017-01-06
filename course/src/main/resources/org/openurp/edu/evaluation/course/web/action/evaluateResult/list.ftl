@@ -17,17 +17,17 @@
             [@b.col property="student.person.name.formatedName" title="学生姓名"][/@]
         [#--[@b.col sort="teacher" title="教师工号"]
             [#list evaluateResult.lesson.teachers as teacher]
-            ${(teacher.code)!}<br>
+            ${(teacher.user.code)!}<br>
             [/#list]
             [/@]--]
-            [@b.col property="teacher.person.name.formatedName" title="教师姓名"/]
+            [@b.col property="teacher.user.name" title="教师姓名"/]
         [#--[@b.col title="教师姓名"]
             [#list (evaluateResult.lesson.teachers)?if_exists as teacher]
-            ${(teacher.person.name.formatedName)!}[#if teacher_has_next],[/#if]
+            ${(teacher.user.name)!}[#if teacher_has_next],[/#if]
             [/#list]
             [/@]--]
             [@b.col property="statType" title="是否有效"]
-              [#if evaluateResult.statType==1 ]有效
+              [#if evaluateResult.statType==1]有效
               [#else]无效
               [/#if]
               [/@]

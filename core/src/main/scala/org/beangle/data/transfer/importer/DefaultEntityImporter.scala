@@ -20,8 +20,6 @@ package org.beangle.data.transfer.importer
 
 import org.beangle.commons.model.meta.EntityType
 
-import org.beangle.data.transfer.importer.EntityPrepare
-import org.beangle.data.transfer.importer.MultiEntityImporter
 object DefaultEntityImporter {
 
   val alias = "_entity";

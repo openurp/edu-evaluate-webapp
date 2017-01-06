@@ -11,10 +11,10 @@ import org.openurp.edu.evaluation.model.Questionnaire
 /**
  * @author xinzhou
  */
-class EvaluateSwitchAction extends RestfulAction[EvaluateSwitch] {
+class EvaluateSwitchAction extends ProjectRestfulAction[EvaluateSwitch] {
 
   override def indexSetting(): Unit = {
-    put("semesters", entityDao.getAll(classOf[Semester]))
+    put("semesters", getSemesters())
     put("questionnaires", entityDao.getAll(classOf[Questionnaire]))
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     put("currentSemester", entityDao.search(semesterQuery).head)

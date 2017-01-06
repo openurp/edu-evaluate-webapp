@@ -18,7 +18,7 @@
     课程名称:${(lesson.course.name)!}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     教师姓名:
         [#list teachers?if_exists as teacher]
-        ${(teacher.person.name.formatedName)!}[#if teacher_has_next],[/#if]
+        ${(teacher.user.name)!}[#if teacher_has_next],[/#if]
         <input type="hidden" name="teacherId" value="${(teacher.id)!}" />
         [/#list]
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

@@ -7,7 +7,7 @@
         [@b.col width="10%" property="lesson.course.name" title="课程名称" width="10%"/]
         [@b.col title="教师姓名"]
             [#list evaluateSearchDepartment.lesson.teachers as teacher]
-            ${teacher.person.name.formatedName}<br>
+            ${teacher.user.name}<br>
             [/#list]
         [/@]
         [@b.col property="lesson.teachclass.name" title="教学班" width="30%"/]

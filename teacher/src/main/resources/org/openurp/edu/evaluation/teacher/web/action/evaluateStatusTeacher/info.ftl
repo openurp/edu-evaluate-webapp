@@ -12,7 +12,7 @@
             [/@]
             [@b.col property="" title="教师"]
             [#list courseTake.lesson.teachers as teacher]
-            ${teacher.person.name.formatedName}<br>
+            ${teacher.user.name}<br>
             [/#list]
             [/@]
             [@b.col property="lesson.teachclass.stdCount" title="班级人数"/]

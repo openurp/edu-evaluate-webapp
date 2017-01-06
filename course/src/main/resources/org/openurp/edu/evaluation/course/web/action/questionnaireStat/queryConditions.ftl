@@ -6,7 +6,7 @@
         [@b.form action="!search" name="questionnaireStatIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
             <input type="hidden" name="questionnaireStat.lesson.project.id" value="${(project.id)!}"/>
             [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
-            [@b.textfields style="width:130px" names="questionnaireStat.lesson.no;课程序号,questionnaireStat.lesson.course.code;课程代码,questionnaireStat.lesson.course.name;课程名称,questionnaireStat.teacher.code;教师工号,questionnaireStat.teacher.person.name.formatedName;教师名称"/]
+            [@b.textfields style="width:130px" names="questionnaireStat.lesson.no;课程序号,questionnaireStat.lesson.course.code;课程代码,questionnaireStat.lesson.course.name;课程名称,questionnaireStat.teacher.user.code;教师工号,questionnaireStat.teacher.user.name;教师名称"/]
             [@b.select style="width:134px" name="questionnaireStat.lesson.teachDepart.id" label="开课院系" items=departments empty="..."/]
             [@b.select style="width:134px" name="selectTypeId" label="问题类别" items=questionTypes empty="..."/]
             [@b.select style="width:134px" name="selectMarkId" label="分值类型" items={'A':'优','B':'良','C':'中','D':'差'} empty="..."/]
@@ -114,7 +114,7 @@
         </tr>
         </table>
         <input type="hidden" name="titles" value="开课院系,教师部门,教师代码,教师名称,教师类别,课程代码,课程序号,课程名称,有效票数,<#list questionTypeList?if_exists as questionType>${questionType.name?js_string},</#list>总评成绩,学年度,学期">
-        <input type="hidden" name="keys" value="depart.name,teacher.user.department.name,teacher.code,teacher.name,teacher.teacherType.name,course.code,taskSeqNo,course.name,validTickets,<#list questionTypeList?if_exists as questionType>questionTypeStat_${questionType.id},</#list>scoreDisplay,semester.schoolYear,semester.name">
+        <input type="hidden" name="keys" value="depart.name,teacher.user.department.name,teacher.user.code,teacher.name,teacher.teacherType.name,course.code,taskSeqNo,course.name,validTickets,<#list questionTypeList?if_exists as questionType>questionTypeStat_${questionType.id},</#list>scoreDisplay,semester.schoolYear,semester.name">
         </form>
         </td>
         <td valign="top">

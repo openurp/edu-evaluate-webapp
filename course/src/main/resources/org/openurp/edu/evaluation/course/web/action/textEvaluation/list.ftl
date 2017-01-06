@@ -13,7 +13,7 @@
             [@b.col property="lesson.no" title="课程序号" width="13%"/]
             [@b.col property="lesson.course.code" title="课程代码"/]
             [@b.col property="lesson.course.name" title="课程名称"/]
-            [@b.col property="teacher.person.name.formatedName" title="教师姓名"/]
+            [@b.col property="teacher.user.name" title="教师姓名"/]
             [@b.col property="content" title="评教内容" width="35%"/]
             [@b.col property="evaluateByTeacher" title="评价对象"]${(textEvaluation.evaluateByTeacher?string("教师","课程"))!} [/@]
             [@b.col property="state" title="是否确认"]${(textEvaluation.state?string("已确认","未确认"))!} [/@]
@@ -45,7 +45,7 @@
                     }
                 bg.form.addInput(form,"textEvaluationIds","");
             }
-            bg.form.addInput(form, "keys", "lesson.no,lesson.course.name,teacher.person.name.formatedName,evaluateByTeacher,content,semester.schoolYear,semester.name,state");
+            bg.form.addInput(form, "keys", "lesson.no,lesson.course.name,teacher.user.name,evaluateByTeacher,content,semester.schoolYear,semester.name,state");
             bg.form.addInput(form, "titles", "课程序号,课程名称,教师名称,是否课程评教,评教内容,学年度,学期,是否确认");
             bg.form.addInput(form, "fileName", "学生意见表");
             [#--bg.form.submit(form,"${b.url('!export')}","_self");--]

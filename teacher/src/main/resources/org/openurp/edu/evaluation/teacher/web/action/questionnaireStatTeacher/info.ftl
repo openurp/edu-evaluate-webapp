@@ -38,7 +38,7 @@
         </tr>
         <tr>
         <td  colspan="" align="right">被评教师：</td>
-        <td  colspan="" align="left" >${teacher.person.name.formatedName!}</td>
+        <td  colspan="" align="left" >${teacher.user.name!}</td>
         <td  colspan="" align="right">所属院系：</td>
         <td  colspan="" align="left" >${lesson.teachDepart.name!}</td>
         </tr>

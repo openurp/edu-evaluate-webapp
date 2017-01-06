@@ -18,7 +18,7 @@ import org.springframework.beans.support.PropertyComparator
 import org.beangle.commons.collection.Order
 import org.openurp.edu.base.model.Teacher
 
-class EvaluateResultAction extends RestfulAction[EvaluateResult] {
+class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
 
   //  override def  index() : String = {
   //    val semester = entityDao.get(classOf[Semester],20141)
@@ -32,8 +32,7 @@ class EvaluateResultAction extends RestfulAction[EvaluateResult] {
   //    forward();
   //  }
   override protected def indexSetting(): Unit = {
-    val semesters = entityDao.getAll(classOf[Semester])
-    put("semesters", semesters)
+    put("semesters", getSemesters())
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     put("currentSemester", entityDao.search(semesterQuery).head)
 

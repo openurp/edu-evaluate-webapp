@@ -41,7 +41,7 @@ import org.beangle.commons.collection.Order
 import org.openurp.edu.evaluation.app.lesson.service.Ranker
 import org.openurp.edu.base.model.Teacher
 
-class LessonEvalStatAction extends RestfulAction[LessonEvalStat] {
+class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
   //
   //
   //  protected QuestionTypeService questionTypeService
@@ -49,10 +49,10 @@ class LessonEvalStatAction extends RestfulAction[LessonEvalStat] {
   //  protected QuestionnairStatService questionnairStatService
   //
   override def index(): String = {
-    val stdType = entityDao.get(classOf[StdType], 5)
-    put("stdTypeList", stdType)
-    val department = entityDao.get(classOf[Department], 20)
-    put("departmentList", department)
+//    val stdType = entityDao.get(classOf[StdType], 5)
+//    put("stdTypeList", stdType)
+//    val department = entityDao.get(classOf[Department], 20)
+//    put("departmentList", department)
 
     var searchFormFlag = get("searchFormFlag").orNull
     if (searchFormFlag == null) {
@@ -60,11 +60,10 @@ class LessonEvalStatAction extends RestfulAction[LessonEvalStat] {
     }
     put("searchFormFlag", searchFormFlag)
     //    put("educations", getEducations())
-    put("departments", entityDao.search(OqlBuilder.from(classOf[Department], "dep").where("dep.teaching =:tea", true)))
+    put("departments", findItemsBySchool(classOf[Department]))
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire").where("questionnaire.state =:state", true)
     put("questionnaires", entityDao.search(query))
-    val semesters = entityDao.getAll(classOf[Semester])
-    put("semesters", semesters)
+    put("semesters", getSemesters())
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     put("currentSemester", entityDao.search(semesterQuery).head)
     forward()

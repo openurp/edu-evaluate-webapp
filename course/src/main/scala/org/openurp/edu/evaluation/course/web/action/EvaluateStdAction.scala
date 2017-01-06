@@ -325,7 +325,6 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
           addMessage("评教问卷有误!");
           forward("errors");
         }
-
         //  一个教师
         if (teachers.size == 1) {
           teacher = teachers.head
@@ -349,6 +348,7 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
             evaluateResult.questionResults += questionResult
           }
           evaluateResult.remark = get("evaluateResult.remark").getOrElse("")
+          evaluateResult.statType = 1
           entityDao.saveOrUpdate(evaluateResult)
         }
         //        如果是按照课程评教，且是多个教师
@@ -360,6 +360,7 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
             evaluateResult.student = std
             evaluateResult.teacher = teacher
             evaluateResult.evaluateAt = new java.util.Date()
+            evaluateResult.statType = 1
             questionnaire.questions foreach { question =>
               val optionId = getLong("select" + question.id).get
               val option = entityDao.get(classOf[Option], optionId);

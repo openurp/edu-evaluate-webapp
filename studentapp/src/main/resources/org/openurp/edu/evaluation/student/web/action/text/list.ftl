@@ -36,7 +36,7 @@
                 <td>${(lesson.course.code)!}</td>
                 <td>${(lesson.course.name)!}</td>
                 <td>${(lesson.teachDepart.name)!}</td>
-                <td>${(teacher.person.name.formatedName)!}</td>
+                <td>${(teacher.user.name)!}</td>
                 <td>[#if flag]已评教[#else]未评教[/#if]</td>
                 <td>
                     <a href="javascript:doEvaluate('${flag?string("update","evaluate")}','${(lesson.id)!},${(teacher.id)!}')">

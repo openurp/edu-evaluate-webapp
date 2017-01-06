@@ -9,11 +9,11 @@ import org.beangle.commons.collection.Order
 import org.openurp.base.model.Department
 import org.openurp.base.model.Semester
 
-class DepartEvaluateSearchAction extends RestfulAction[DepartEvaluate] {
+class DepartEvaluateSearchAction extends ProjectRestfulAction[DepartEvaluate] {
 
   override def indexSetting(): Unit = {
-    put("departments", entityDao.getAll(classOf[Department]))
-    put("semesters", entityDao.getAll(classOf[Semester]).sortBy { semester => semester.id })
+    put("departments", findItemsBySchool(classOf[Department]))
+    put("semesters", getSemesters())
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     put("currentSemester", entityDao.search(semesterQuery).head)
 

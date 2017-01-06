@@ -22,17 +22,16 @@ import org.openurp.edu.lesson.model.CourseTaker
 import org.openurp.edu.lesson.model.Lesson
 import org.beangle.commons.lang.Strings
 
-class EvaluateStatusStatAction extends RestfulAction[EvaluateResult] {
+class EvaluateStatusStatAction extends ProjectRestfulAction[EvaluateResult] {
 
 
   override def  index():String = {
-    put("stdTypeList", entityDao.getAll(classOf[StdType]))
-    put("departmentList", entityDao.search(OqlBuilder.from(classOf[Department],"dep").where("dep.teaching =:tea",true)));
-    val semesters = entityDao.getAll(classOf[Semester])
-    put("semesters", semesters)
+//    put("stdTypeList", entityDao.getAll(classOf[StdType]))
+//    put("departmentList", entityDao.search(OqlBuilder.from(classOf[Department],"dep").where("dep.teaching =:tea",true)));
+    put("semesters", getSemesters())
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     put("currentSemester", entityDao.search(semesterQuery).head)
-    put("departments", entityDao.search(OqlBuilder.from(classOf[Department],"dep").where("dep.teaching =:tea",true)))
+    put("departments", findItemsBySchool(classOf[Department]))
     forward()
   }
 

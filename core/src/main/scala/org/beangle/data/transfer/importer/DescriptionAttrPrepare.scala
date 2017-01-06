@@ -19,9 +19,6 @@
 package org.beangle.data.transfer.importer
 
 import org.beangle.data.transfer.io.ItemReader;
-import org.beangle.data.transfer.importer.Importer
-import org.beangle.data.transfer.importer.AbstractItemImporter
-import org.beangle.data.transfer.importer.ImportPrepare
 
 /**
  * DescriptionAttrPrepare class.

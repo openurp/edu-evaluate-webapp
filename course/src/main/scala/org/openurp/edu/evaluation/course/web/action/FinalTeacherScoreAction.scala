@@ -16,12 +16,11 @@ import org.openurp.edu.evaluation.lesson.stat.model.FinalTeacherScore
 
 import net.sf.jxls.transformer.XLSTransformer
 
-class FinalTeacherScoreAction extends RestfulAction[FinalTeacherScore] {
+class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
 
   override def index(): String = {
-    put("departments", entityDao.search(OqlBuilder.from(classOf[Department], "dep").where("dep.teaching =:tea", true)))
-    val semesters = entityDao.getAll(classOf[Semester])
-    put("semesters", semesters)
+    put("departments", findItemsBySchool(classOf[Department]))
+    put("semesters", getSemesters())
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     put("currentSemester", entityDao.search(semesterQuery).head)
     forward();
@@ -49,7 +48,7 @@ class FinalTeacherScoreAction extends RestfulAction[FinalTeacherScore] {
     populateConditions(finalScores)
     finalScores.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
     finalScores.where("finalTeacherScore.semester.id=:semesterId", semesterId)
-    val list = collection.JavaConversions.asJavaCollection(entityDao.search(finalScores))
+    val list = collection.JavaConverters.asJavaCollection(entityDao.search(finalScores))
     //查出信息并放到map中
     val beans = new java.util.HashMap[String, Any]
     beans.put("list", list)

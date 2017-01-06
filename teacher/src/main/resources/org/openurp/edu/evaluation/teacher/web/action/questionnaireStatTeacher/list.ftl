@@ -16,7 +16,7 @@
         [/@]
         [@b.col property="" title="任课教师" width="10%"]
         [#list (teacherStat.lesson.teachers)?if_exists as teacher]
-                       ${teacher.person.name.formatedName}[#if teacher_has_next],[/#if]
+                       ${teacher.user.name}[#if teacher_has_next],[/#if]
                    [/#list]
         [/@]
         [@b.col property="lesson.teachclass.name" title="教学班" width="12%"/]

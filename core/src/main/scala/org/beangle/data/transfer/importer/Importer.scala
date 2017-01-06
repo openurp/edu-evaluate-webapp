@@ -20,7 +20,6 @@ package org.beangle.data.transfer.importer
 
 import org.beangle.data.transfer.Transfer
 import org.beangle.data.transfer.io.Reader;
-import org.beangle.data.transfer.importer.ImportPrepare
 
 /**
  * 数据转换接口

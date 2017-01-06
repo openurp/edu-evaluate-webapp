@@ -8,9 +8,9 @@
 <table class="infoTable">
   <tr>
    <td class="title">教师工号:</td>
-   <td class="content"> ${supervisiorEvaluate.teacher.code}</td>
+   <td class="content"> ${supervisiorEvaluate.teacher.user.code}</td>
    <td class="title">教师姓名:</td>
-   <td class="content">${supervisiorEvaluate.teacher.person.name.formatedName}</td>
+   <td class="content">${supervisiorEvaluate.teacher.user.name}</td>
    <td class="title">所在院系:</td>
    <td class="content"> ${supervisiorEvaluate.teacher.user.department.name}</td>
   </tr>

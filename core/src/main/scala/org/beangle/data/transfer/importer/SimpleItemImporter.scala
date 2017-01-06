@@ -18,8 +18,6 @@
  */
 package org.beangle.data.transfer.importer
 
-import org.beangle.data.transfer.importer.AbstractItemImporter
-
 /**
  * SimpleItemImporter class.
  *

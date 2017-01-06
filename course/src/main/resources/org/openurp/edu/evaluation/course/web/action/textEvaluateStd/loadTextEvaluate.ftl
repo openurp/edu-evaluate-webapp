@@ -13,7 +13,7 @@
         <label class="title">课程名称:</label>${(lesson.course.name)!}
     </li>
     <li>
-        <label class="title">教师姓名:</label>${(teacher.person.name.formatedName)!}
+        <label class="title">教师姓名:</label>${(teacher.user.name)!}
         <input type="hidden" name="teacherId" value="${(teacher.id)!}"/>
     </li>
     [@b.select label="评价对象:" name="evaluateByTeacher" items={'1':'教师','0':'课程'} value=((textEvaluation.evaluateByTeacher)?string("1","0"))! required="true" /]

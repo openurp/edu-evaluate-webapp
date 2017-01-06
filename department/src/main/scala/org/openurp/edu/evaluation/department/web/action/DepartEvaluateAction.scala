@@ -28,11 +28,11 @@ import org.beangle.data.transfer.TransferListener
 /**
  * @author xinzhou
  */
-class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ImportDataSupport[DepartEvaluate] {
+class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate] with ImportDataSupport[DepartEvaluate] {
 
   override def indexSetting(): Unit = {
-    put("departments", entityDao.getAll(classOf[Department]))
-    put("semesters", entityDao.getAll(classOf[Semester]).sortBy { semester => semester.id })
+    put("departments", findItemsBySchool(classOf[Department]))
+    put("semesters", getSemesters())
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     put("currentSemester", entityDao.search(semesterQuery).head)
 

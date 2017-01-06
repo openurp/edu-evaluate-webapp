@@ -1,9 +1,6 @@
 package org.openurp.edu.evaluation.teacher.web.action
 
 import org.beangle.commons.cdi.bind.AbstractBindModule
-import org.openurp.edu.evaluation.teacher.web.action.TextEvaluationTeacherAction
-import org.openurp.edu.evaluation.teacher.web.action.QuestionnaireStatTeacherAction
-import org.openurp.edu.evaluation.teacher.web.action.EvaluateStatusTeacherAction
 
 class DefaultModule extends AbstractBindModule {
 

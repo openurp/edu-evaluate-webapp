@@ -197,7 +197,7 @@ rt
                 <td>${(evaluateR.student.person.name)?if_exists}</td>
                 <td>${(evaluateR.student.department.name)?if_exists}</td>
                 <td>${(evaluateR.student.adminclass.name)?if_exists}</td>
-                <td>${(evaluateR.teacher.code)?if_exists}</td>
+                <td>${(evaluateR.teacher.user.code)?if_exists}</td>
                 <td>${(evaluateR.teacher.name)?if_exists}</td>
                 <td>${(evaluateR.teacher.title.name)?if_exists}</td>
                 <td>${(evaluateR.teacher.user.department.name)?if_exists}</td>

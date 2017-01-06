@@ -15,12 +15,12 @@
         [@b.col width="5%" title="学生班级"]${(evaluateR.student.state.adminclass.name)?if_exists}[/@]
         [@b.col width="5%" title="教师工号"]
         [#list evaluateR.lesson.teachers as teacher]
-        ${(teacher.code)?if_exists}<br>
+        ${(teacher.user.code)?if_exists}<br>
         [/#list]
         [/@]
         [@b.col width="5%" title="教师姓名"]
         [#list evaluateR.lesson.teachers as teacher]
-        ${(teacher.person.name.formatedName)?if_exists}<br>
+        ${(teacher.user.name)?if_exists}<br>
         [/#list]
         [/@]
         [@b.col width="5%" title="教师职称"]

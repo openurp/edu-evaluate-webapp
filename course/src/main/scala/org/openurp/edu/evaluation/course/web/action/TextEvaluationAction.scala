@@ -7,14 +7,15 @@ import org.openurp.base.model.Semester
 import org.openurp.edu.base.model.Project
 import org.openurp.edu.evaluation.lesson.model.TextEvaluation
 import org.beangle.commons.collection.Order
+import org.openurp.base.model.Department
 
-class TextEvaluationAction extends RestfulAction[TextEvaluation] {
+class TextEvaluationAction extends ProjectRestfulAction[TextEvaluation] {
 
   override protected def indexSetting(): Unit = {
-    val semesters = entityDao.getAll(classOf[Semester])
-    put("semesters", semesters)
+    put("semesters", getSemesters())
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     put("currentSemester", entityDao.search(semesterQuery).head)
+    put("departments", findItemsBySchool(classOf[Department]))
   }
   override def search(): String = {
     // 页面条件

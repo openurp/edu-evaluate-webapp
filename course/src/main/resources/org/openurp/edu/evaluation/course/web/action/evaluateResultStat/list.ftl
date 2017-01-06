@@ -14,7 +14,7 @@
             [@b.col property="semester.name" title="学期"/]
             [@b.col property="lesson.no" title="选课号"/]
             [@b.col property="lesson.course.name" title="课程名称"/]
-            [@b.col property="teacher.code" title="教师工号"/]
+            [@b.col property="teacher.user.code" title="教师工号"/]
             [@b.col property="teacher.name" title="教师姓名"/]
             [@b.col property="depart.name" title="院系名称"/]
             [@b.col property="questionnaire.description" title="问卷名称"/]
@@ -61,7 +61,7 @@
      <@table.sortTd width="15%" id="questionnaireStat.semester.name" text="学期"/>
      <@table.sortTd width="12%" id="questionnaireStat.task.teachclass.name" text="选课号"/>
      <@table.sortTd width="10%" id="questionnaireStat.task.course.name" text="课程名称"/>
-     <@table.sortTd width="7%" id="questionnaireStat.teacher.code" text="教师工号"/>
+     <@table.sortTd width="7%" id="questionnaireStat.teacher.user.code" text="教师工号"/>
      <@table.sortTd width="7%" id="questionnaireStat.teacher.name" text="教师姓名"/>
      <@table.sortTd width="7%" id="questionnaireStat.depart.name" text="院系名称"/>
      <@table.sortTd width="7%" id="questionnaireStat.questionnaire.description" text="问卷名称"/>
@@ -75,7 +75,7 @@
          <td>${(questionnaireStat.semesterStr)!}</td>
         <td>${(questionnaireStat.task.teachclass.name)!}</td>
         <td>${(questionnaireStat.task.course.name)!}</td>
-        <td>${(questionnaireStat.teacher.code)!}</td>
+        <td>${(questionnaireStat.teacher.user.code)!}</td>
         <td>${(questionnaireStat.teacher.name)!}</td>
         <td>${(questionnaireStat.depart.name)!}</td>
         <td>${(questionnaireStat.questionnaire.description)!}</td>
@@ -97,7 +97,7 @@
     var action="questionnaireStat.action";
       function exportData(){
        if(${totalSize}>10000){alert("数据量超过一万不能导出");return;}
-       addInput(form,"keys","semesterStr,task.teachclass.name,task.course.name,teacher.code,teacher.name,depart.name,questionnaire.description,validTickets,release,disPlayAvgScore,disPlayAddScore");
+       addInput(form,"keys","semesterStr,task.teachclass.name,task.course.name,teacher.user.code,teacher.name,depart.name,questionnaire.description,validTickets,release,disPlayAvgScore,disPlayAddScore");
        addInput(form,"titles","学年学期,选课号,课程名称,教师工号,教师姓名,院系名称,问卷类型,问卷回收数,选课人数,总分,附加问题分值");
        addInput(form,"fileName","课程评估统计表");
        exportList();

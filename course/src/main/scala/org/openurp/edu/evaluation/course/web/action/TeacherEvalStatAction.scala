@@ -33,16 +33,16 @@ import org.openurp.edu.evaluation.model.EvaluationCriteriaItem
 import org.openurp.edu.evaluation.app.lesson.service.Ranker
 import org.openurp.edu.base.model.Teacher
 
-class TeacherEvalStatAction extends RestfulAction[TeacherEvalStat] {
+class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
 
   override def index(): String = {
     //    put("stdTypeList", getStdTypes());
     //    put("departmentList", getColleges());
     //    put("departments", getDeparts());
-    put("departments", entityDao.search(OqlBuilder.from(classOf[Department], "dep").where("dep.teaching =:tea", true)))
+    put("departments", findItemsBySchool(classOf[Department]))
     /** 本学期是否评教 */
     val builder = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult");
-    val semesters = entityDao.getAll(classOf[Semester])
+    val semesters = getSemesters()
     put("semesters", semesters)
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     put("currentSemester", entityDao.search(semesterQuery).head)

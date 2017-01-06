@@ -13,8 +13,8 @@
     <td class="index_view">
         [@b.form action="!search" name="teacherEvaluateStatIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
             [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
-            [@b.textfield style="width:100px" name="teacherEvalStat.teacher.code" label="工号" /]
-            [@b.textfield style="width:100px" name="teacherEvalStat.teacher.person.name.formatedName" label="姓名" /]
+            [@b.textfield style="width:100px" name="teacherEvalStat.teacher.user.code" label="工号" /]
+            [@b.textfield style="width:100px" name="teacherEvalStat.teacher.user.name" label="姓名" /]
             [@b.select style="width:105px" name="teacherEvalStat.teacher.state.department.id" label="部门" items=departments empty="..."/]
             [#--[@b.select name="teacherEvalStat.questionnaire.id" label="所用问卷" items=[] ]
                 [#list questionnaires as q]

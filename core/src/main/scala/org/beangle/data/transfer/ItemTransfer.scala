@@ -18,8 +18,6 @@
  */
 package org.beangle.data.transfer
 
-import org.beangle.data.transfer.Transfer
-
 /**
  * 基于行的转换器
  *
