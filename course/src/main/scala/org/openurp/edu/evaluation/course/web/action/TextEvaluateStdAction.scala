@@ -10,11 +10,11 @@ import org.openurp.base.model.Semester
 import org.openurp.edu.base.model.Student
 import org.openurp.edu.base.model.Teacher
 import org.openurp.edu.evaluation.app.lesson.model.TextEvaluateSwitch
-import org.openurp.edu.evaluation.course.model.TeacherRemessage
-import org.openurp.edu.evaluation.course.model.TextEvaluation
+import org.openurp.edu.evaluation.lesson.model.TextEvaluation
 import org.openurp.edu.lesson.model.CourseTaker
 import org.openurp.edu.lesson.model.Lesson
 import org.openurp.platform.api.security.Securities
+import org.openurp.edu.evaluation.lesson.model.TeacherRemessage
 
 class TextEvaluateStdAction extends RestfulAction[TextEvaluation] {
 

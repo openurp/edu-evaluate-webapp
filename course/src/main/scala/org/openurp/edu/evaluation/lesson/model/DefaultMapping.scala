@@ -63,8 +63,8 @@ class DefaultMapping extends Mapping {
       e.result & e.questionType & e.question are notnull))
 
     // department eval and questionanire
-//    bind[DepartEvaluation].on(e => declare(
-//      e.teacher & e.semester & e.course & e.userName & e.updateAt & e.score are notnull))
+    //    bind[DepartEvaluation].on(e => declare(
+    //      e.teacher & e.semester & e.course & e.userName & e.updateAt & e.score are notnull))
 
     bind[QuestionnaireLesson].on(e => declare(
       e.lesson & e.questionnaire are notnull))
@@ -166,6 +166,12 @@ class DefaultMapping extends Mapping {
     bind[TeacherQuestionTypeStat].on(e => declare(
       e.evalStat is (notnull, target[TeacherEvalStat])))
 
+    bind[TextEvaluation].on(e => declare(
+      e.student & e.lesson & e.evaluateByTeacher & e.evaluateAt are notnull,
+      e.teacherRemessages is (depends("textEvaluation"), table("text_evaluation_remsgs"))))
+
+    bind[TeacherRemessage].on(e => declare(
+      e.textEvaluation & e.visible are notnull))
   }
 
 }

@@ -2,7 +2,6 @@ package org.openurp.edu.evaluation.app.department.model
 
 import scala.reflect.runtime.universe
 import org.beangle.commons.model.bind.Mapping
-import org.openurp.edu.evaluation.app.department.model.EvaluateSwitch
 
 /**
  * @author xinzhou
