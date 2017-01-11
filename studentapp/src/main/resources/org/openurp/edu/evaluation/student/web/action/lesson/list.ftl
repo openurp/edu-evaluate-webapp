@@ -26,6 +26,7 @@
         [/#if]
         [#if questionnaireLesson.evaluateByTeacher]
             [#list questionnaireLesson.lesson.teachers?if_exists as teacher]
+            [#if teacher??]
             [#if "1" == evaluateMap[questionnaireLesson.lesson.id?string + "_" + teacher.id?string]?default("0")]
                 [#assign flag = true/]
             [#else]
@@ -45,6 +46,7 @@
                     </a>
                 </td>
             </tr>
+            [/#if]
             [/#list]
         [#else]
             [#assign flag=true]
