@@ -64,7 +64,6 @@ class LessonAction extends RestfulAction[EvaluateResult] {
     val query = OqlBuilder.from[Lesson](classOf[CourseTaker].getName, "courseTaker")
     query.select("courseTaker.lesson")
     query.where("courseTaker.std=:std", student)
-    query.where("courseTaker.lesson.no = '3109'")
     query.where("courseTaker.semester =:semester", semester)
     entityDao.search(query)
   }
