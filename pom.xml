@@ -17,7 +17,7 @@
     <bundle.namespace>org.openurp</bundle.namespace>
     <hibernate.version>4.3.1.Final</hibernate.version>
     <openurp.platform.version>0.0.14</openurp.platform.version>
-    <openurp.api.version>0.0.13</openurp.api.version>
+    <openurp.api.version>0.0.14-SNAPSHOT</openurp.api.version>
     <jxls.version>1.0.3</jxls.version>
   </properties>
 
