@@ -12,6 +12,8 @@ import org.beangle.commons.collection.Collections
 import org.openurp.edu.lesson.model.Lesson
 import org.openurp.base.model.Semester
 import org.beangle.commons.collection.Order
+import org.beangle.webmvc.api.annotation.mapping
+import org.beangle.webmvc.api.annotation.param
 
 class LessonEvalSearchAction extends RestfulAction[LessonEvalStat] {
   //
@@ -42,8 +44,9 @@ class LessonEvalSearchAction extends RestfulAction[LessonEvalStat] {
     forward()
   }
 
-  def info(): String = {
-    val questionnaireStat = entityDao.get(classOf[LessonEvalStat], getLong("lessonEvalStat.id").get)
+  @mapping(value = "{id}")
+  override def info(@param("id") id: String): String = {
+    val questionnaireStat = entityDao.get(classOf[LessonEvalStat], java.lang.Long.parseLong(id));
     put("questionnaireStat", questionnaireStat);
     // zongrenci fix
     val query = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName, "result");

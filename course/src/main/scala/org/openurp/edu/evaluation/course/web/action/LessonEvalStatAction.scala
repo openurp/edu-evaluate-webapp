@@ -40,6 +40,8 @@ import scala.collection.mutable.ListBuffer
 import org.beangle.commons.collection.Order
 import org.openurp.edu.evaluation.app.lesson.service.Ranker
 import org.openurp.edu.base.model.Teacher
+import org.openurp.base.model.Semester
+import org.openurp.base.model.Semester
 
 class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
   //
@@ -63,7 +65,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     put("departments", findItemsBySchool(classOf[Department]))
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire").where("questionnaire.state =:state", true)
     put("questionnaires", entityDao.search(query))
-    put("semesters", getSemesters())
+    put("semesters",getSemesters())
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     put("currentSemester", entityDao.search(semesterQuery).head)
     forward()
@@ -281,7 +283,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     put("questionDeps", maps)
     val que = OqlBuilder.from(classOf[EvaluateResult], "evaluateR")
     que.where("evaluateR.lesson.semester.id=:seiD", getInt("semester.id").get)
-    // que.where("evaluateR.statType is 1")
+     que.where("evaluateR.statType is 1")
     que.select("distinct evaluateR.teacher.id")
     val list = entityDao.search(que)
     put("persons", list.size)
@@ -319,7 +321,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:tea", true))
     put("departments", teachingDeparts)
 
-    val semesters = entityDao.getAll(classOf[Semester])
+    val semesters = getSemesters()
     put("semesters", semesters)
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     put("currentSemester", entityDao.search(semesterQuery).head)
@@ -377,32 +379,34 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     val depIds = depStr.split(",")
     val educationTypeIds = Strings.transformToInteger(eduIds).toList
     val departmentIds = Strings.transformToInteger(depIds).toList
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
-    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val semesterId = getInt("semester.id").getOrElse(0)
     val semester = entityDao.get(classOf[Semester], semesterId)
+    val project= this.currentProject;
     // 删除历史统计数据
     remove(educationTypeIds, departmentIds, semesterId)
     // 问题得分统计
     val que = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR")
+    que.where("questionR.result.lesson.project=:project",project)
     que.where("questionR.result.lesson.semester.id=:semesterId", semesterId)
     que.where("questionR.result.statType is 1")
-    que.where("questionR.question.addition is false")
-    que.where("questionR.result.department.id in(:depIds)", departmentIds)
-    //  que.where("questionR.result.lesson.course.education.id in(:eduIds)", educationTypeIds)
+//    que.where("questionR.question.addition is false")
+//    que.where("questionR.result.department.id in(:depIds)", departmentIds)
     que.select("questionR.result.teacher.id,questionR.result.lesson.id,questionR.question.id,sum(questionR.score),avg(questionR.score),count(questionR.id)")
     que.groupBy("questionR.result.teacher.id,questionR.result.lesson.id,questionR.question.id")
     val wtStatMap = new collection.mutable.HashMap[Tuple2[Any, Any], Buffer[Tuple4[Long, Number, Number, Number]]]
-    entityDao.search(que) foreach { a =>
+    val rs2 = entityDao.search(que) 
+    rs2 foreach { a =>
       val buffer = wtStatMap.getOrElseUpdate((a(0), a(1)), new ListBuffer[Tuple4[Long, Number, Number, Number]])
       buffer += Tuple4(a(2).asInstanceOf[Long], a(3).asInstanceOf[Number], a(4).asInstanceOf[Number], a(5).asInstanceOf[Number])
     }
     // 问卷得分统计
     val quer = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR")
     quer.where("questionR.result.lesson.semester.id=:semesterId", semesterId)
+    quer.where("questionR.result.lesson.project=:project",project)
     quer.where("questionR.result.statType is 1")
-    quer.where("questionR.result.department.id in(:depIds)", departmentIds)
+//    quer.where("questionR.result.department.id in(:depIds)", departmentIds)
     //    quer.where("questionR.result.lesson.course.education.id in(:eduIds)", educationTypeIds)
-    quer.where("questionR.question.addition is false")
+//    quer.where("questionR.question.addition is false")
     quer.select("questionR.result.lesson.id,questionR.result.teacher.id,questionR.result.questionnaire.id,"
       + "sum(questionR.score),case when questionR.result.statType =1 then count(distinct questionR.result.id) end,"
       + "count(distinct questionR.result.id),case when questionR.result.statType =1 then sum(questionR.score) end,"
@@ -414,11 +418,11 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     // 问题类别统计
     val tyquery = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR")
     tyquery.where("questionR.result.lesson.semester.id=:semesterId", semesterId)
+    tyquery.where("questionR.result.lesson.project=:project",project)
     tyquery.where("questionR.result.statType is 1")
     tyquery.where("questionR.result.teacher is not null")
-    tyquery.where("questionR.result.department.id in(:depIds)", departmentIds)
-    tyquery.where("questionR.question.addition is false")
-    //    tyquery.where("questionR.result.lesson.course.education.id in(:eduIds)", educationTypeIds)
+//    tyquery.where("questionR.result.department.id in(:depIds)", departmentIds)
+//    tyquery.where("questionR.question.addition is false")
     tyquery.select("questionR.result.lesson.id,questionR.result.teacher.id,questionR.question.questionType.id,sum(questionR.score)/count(distinct questionR.result.id)")
     tyquery.groupBy("questionR.result.lesson.id,questionR.result.teacher.id,questionR.question.questionType.id")
 
@@ -430,9 +434,10 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     // 选项统计
     val opQuery = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR")
     opQuery.where("questionR.result.lesson.semester.id=:semesterId", semesterId)
+    opQuery.where("questionR.result.lesson.project=:project",project)
     opQuery.where("questionR.result.statType is 1")
-    opQuery.where("questionR.result.department.id in(:depIds)", departmentIds)
-    opQuery.where("questionR.question.addition is false")
+//    opQuery.where("questionR.result.department.id in(:depIds)", departmentIds)
+//    opQuery.where("questionR.question.addition is false")
     //    opQuery.where("questionR.result.lesson.course.education.id in(:eduIds)", educationTypeIds)
     opQuery.select("questionR.result.lesson.id," + "questionR.result.teacher.id,questionR.question.id,questionR.option.id,count(questionR.id)")
     opQuery.groupBy("questionR.result.lesson.id,questionR.result.teacher.id,questionR.question.id,questionR.option.id")
@@ -446,12 +451,6 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     val questiontyMap = entityDao.getAll(classOf[QuestionType]).map(o => (o.id, o)).toMap
     val optionMap = entityDao.getAll(classOf[Option]).map(o => (o.id, o)).toMap
 
-    // 任务
-    val lquery = OqlBuilder.from(classOf[Lesson], "le")
-    lquery.where("le.semester.id=:seId", semesterId)
-    //  lquery.where("le.course.education.id in(:eduIds)", educationTypeIds)
-    lquery.where("le.teachDepart.id in(:depIds)", departmentIds)
-    val lessonList = entityDao.search(lquery)
     //任务问卷得分统计
     wjStat foreach { evaObject =>
       val questionS = new LessonEvalStat
@@ -499,7 +498,6 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
       }
       questionS.questionStats = questionDetailStats
       //           添加排名
-
       //            pmStatMap.get(questionS.lesson.id,questionS.teacher.id) foreach { pm =>
       //                questionS.rank= pm._2.intValue()
       //                questionS.departRank= pm._3.intValue()
@@ -549,22 +547,4 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     redirect("index", "info.action.success")
   }
 
-  //
-  //  public void setQuestionTypeService(QuestionTypeService questionTypeService) {
-  //    this.questionTypeService = questionTypeService
-  //  }
-  //
-  //  public QuestionnairStatService getQuestionnairStatService() {
-  //    return questionnairStatService
-  //  }
-  //
-  //  public void setQuestionnairStatService(QuestionnairStatService questionnairStatService) {
-  //    this.questionnairStatService = questionnairStatService
-  //  }
-  //
-  //  public QuestionTypeService getQuestionTypeService() {
-  //    return questionTypeService
-  //  }
-  //
-  //
 }

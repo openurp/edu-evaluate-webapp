@@ -59,7 +59,9 @@ var form = document.questionnaireStatSearchForm;
                 return false;
         }
         bg.form.addInput(form,"lessonEvalStat.id",questionnaireStatIds);
-        bg.form.submit(form,"${b.url('lesson-eval-search!info')}");
+        var url= "${b.url('lesson-eval-search!info?id=aaa')}"
+        url=url.replace('aaa',questionnaireStatIds);
+        bg.form.submit(form,url);
     }
     var searchForm = document.questionnaireStatSearchForm;
 
