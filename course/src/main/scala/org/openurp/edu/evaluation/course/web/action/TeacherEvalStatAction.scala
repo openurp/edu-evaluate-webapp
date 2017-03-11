@@ -208,10 +208,10 @@ class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
       questionS.statAt = new java.util.Date()
       //          questionS.lesson= new Lesson()
       //          questionS.lesson.id=evaObject(0).asInstanceOf[Long]
-      questionS.score = evaObject(7).toString().toFloat * 10
-      questionS.validScore = evaObject(6).toString().toFloat * 10 / Integer.valueOf(evaObject(5).toString())
-      questionS.validTickets = Integer.valueOf(evaObject(4).toString())
-      questionS.allTickets = Integer.valueOf(evaObject(5).toString())
+      questionS.totalScore = evaObject(7).toString().toFloat * 10
+      questionS.avgScore = evaObject(6).toString().toFloat * 10 / Integer.valueOf(evaObject(5).toString())
+      questionS.tickets = Integer.valueOf(evaObject(4).toString())
+      questionS.totalTickets = Integer.valueOf(evaObject(5).toString())
       // 添加问卷
       questionS.questionnaire = new Questionnaire()
       questionS.questionnaire.id = evaObject(2).asInstanceOf[Long]
@@ -222,8 +222,8 @@ class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
           val detailStat = new TeacherQuestionStat
           // 添加问题
           detailStat.question = questionMap(wt._1)
-          detailStat.total = wt._2.toString().toFloat * 100
-          detailStat.average = wt._3.toString().toFloat * 100
+          detailStat.totalScore = wt._2.toString().toFloat * 100
+          detailStat.avgScore = wt._3.toString().toFloat * 100
           //            detailStat.stddev=stddev
           detailStat.evalStat = questionS
 
@@ -254,7 +254,7 @@ class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
       typeStatMap.get((questionS.semester.id, questionS.teacher.id)) foreach { buffer =>
         buffer foreach { os =>
           val questionTs = new TeacherQuestionTypeStat
-          questionTs.score = os._2.toString().toFloat * 100
+          questionTs.totalScore = os._2.toString().toFloat * 100
           questionTs.evalStat = questionS
           questionTs.questionType = questiontyMap(os._1)
           questionTypeStats += questionTs
@@ -286,7 +286,7 @@ class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
-    //    排名
+    //排名
     val rankQuery = OqlBuilder.from(classOf[TeacherEvalStat], "teacherEvalStat")
     rankQuery.where("teacherEvalStat.semester.id=:semesterId", semesterId)
     val evals = entityDao.search(rankQuery)

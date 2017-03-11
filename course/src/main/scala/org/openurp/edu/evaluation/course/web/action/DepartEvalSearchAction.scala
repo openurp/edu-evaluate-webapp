@@ -67,8 +67,8 @@ override def  index():String= {
     querys.join("lesson.teachers", "teacher");
 //    querys.where("teacher=:teach",questionnaireStat.teacher);
     querys.where("lesson.teachDepart=:depart", questionnaireStat.department);
-    querys.join("lesson.teachclass.courseTakes", "courseTake");
-    querys.select("count(courseTake.std.id)");
+    querys.join("lesson.teachclass.courseTakers", "courseTaker");
+    querys.select("count(courseTaker.id)");
     val numbers=entityDao.search(querys)(0)
     put("numbers", entityDao.search(querys)(0));
     val que = OqlBuilder.from(classOf[QuestionResult], "questionR");

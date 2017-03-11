@@ -79,8 +79,8 @@ class LessonEvalSearchAction extends RestfulAction[LessonEvalStat] {
     querys.join("lesson.teachers", "teacher");
     querys.where("teacher=:teach", questionnaireStat.teacher);
     querys.where("lesson=:lesson", questionnaireStat.lesson);
-    querys.join("lesson.teachclass.courseTakes", "courseTake");
-    querys.select("count(courseTake.std.id)");
+    querys.join("lesson.teachclass.courseTakers", "courseTaker");
+    querys.select("count(courseTaker.std.id)");
     val numbers = entityDao.search(querys)(0)
     put("numbers", entityDao.search(querys)(0));
     val que = OqlBuilder.from(classOf[QuestionResult], "questionR");
@@ -92,7 +92,7 @@ class LessonEvalSearchAction extends RestfulAction[LessonEvalStat] {
     val quer = OqlBuilder.from(classOf[QuestionResult], "questionR");
     quer.where("questionR.result.teacher=:teaId", questionnaireStat.teacher);
     quer.where("questionR.result.lesson=:less", questionnaireStat.lesson);
-    quer.select("questionR.question.id,questionR.question.content,sum(questionR.score)/count(questionR.id)*100");
+    quer.select("questionR.question.id,questionR.question.content,sum(questionR.score)/count(questionR.id)");
     quer.groupBy("questionR.question.id,questionR.question.content");
     put("questionResults", entityDao.search(quer));
     forward()

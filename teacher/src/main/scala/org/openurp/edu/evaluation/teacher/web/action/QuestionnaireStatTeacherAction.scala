@@ -108,8 +108,8 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
     querys.join("questionnaireL.lesson.teachers", "teacher");
     querys.where("teacher=:teach", questionnaireStat.teacher);
     querys.where("questionnaireL.lesson=:lesso", questionnaireStat.lesson);
-    querys.join("questionnaireL.lesson.teachclass.courseTakes", "courseTake");
-    querys.select("count(courseTake.std.id)");
+    querys.join("questionnaireL.lesson.teachclass.courseTakers", "courseTaker");
+    querys.select("count(courseTake.id)");
     put("numbers", entityDao.search(querys)(0));
     val que = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR");
     que.where("questionR.result.teacher=:teaId", questionnaireStat.teacher);

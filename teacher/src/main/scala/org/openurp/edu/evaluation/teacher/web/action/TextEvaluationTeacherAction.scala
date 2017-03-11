@@ -149,26 +149,26 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
       redirect("searchTextEvaluation", "&lesson.id=" + lessonId + "&semesterId=" + semesterId, "保存失败,你没有权限!");
     }
     // 查询(班级)
-    //    val hql = "select courseTake"+ " from org.openurp.edu.teach.lesson.model.Lesson lesson"+ " join lesson.teachers teacher join lesson.teachclass.courseTakes courseTake"+ " where teacher =:teacher and lesson.semester.id =:semesterId and lesson.teachclass.name in (:classNames)";
+    //    val hql = "select courseTake"+ " from org.openurp.edu.teach.lesson.model.Lesson lesson"+ " join lesson.teachers teacher join lesson.teachclass.courseTakers courseTake"+ " where teacher =:teacher and lesson.semester.id =:semesterId and lesson.teachclass.name in (:classNames)";
     val query = OqlBuilder.from[CourseTaker](classOf[Lesson].getName, "lesson")
     query.join("left", "lesson.teachers", "teacher")
-    query.join("left", "lesson.teachclass.courseTakes", "courseTake")
-    query.select("lesson.teachclass.courseTakes")
+    query.join("left", "lesson.teachclass.courseTakers", "courseTaker")
+    query.select("courseTaker")
     query.where("teacher=:teacher", teacher);
     query.where("lesson.semester.id = :semesterId", semesterId);
     query.where("lesson.teachclass.name in (:classNames)", classNames.split(','))
-    val courseTakes = entityDao.search(query);
-    if (courseTakes.isEmpty) { redirect("searchTextEvaluation", "保存失败,班级为空!", "&lesson.id=" + lessonId + "&semesterId=" + semesterId); }
+    val courseTakers = entityDao.search(query);
+    if (courseTakers.isEmpty) { redirect("searchTextEvaluation", "保存失败,班级为空!", "&lesson.id=" + lessonId + "&semesterId=" + semesterId); }
     // 创建对象
     val textEvaluation = entityDao.get(classOf[TextEvaluation], textEvaluationId);
     val date = new java.util.Date();
     val teacherRemessage = new TeacherRemessage();
     teacherRemessage.textEvaluation = textEvaluation
-    courseTakes foreach { courseTake =>
-      teacherRemessage.students += courseTake.std
+    courseTakers foreach { courseTaker =>
+      teacherRemessage.students += courseTaker.std
     }
-    //    for (CourseTaker courseTake : courseTakes) {
-    //      evaluateTeacherRemessage.addStudent(courseTake.getStd());
+    //    for (CourseTaker courseTaker : courseTakers) {
+    //      evaluateTeacherRemessage.addStudent(courseTaker.getStd());
     //    }
     if (!isAnn) {
       val std = entityDao.get(classOf[Student], stdId.get);

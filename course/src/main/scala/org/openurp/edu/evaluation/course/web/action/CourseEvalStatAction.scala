@@ -244,10 +244,10 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
       questionS.statAt = new java.util.Date()
       questionS.course = new Course()
       questionS.course.id = evaObject(0).asInstanceOf[Long]
-      questionS.score = evaObject(7).toString().toFloat * 10
-      questionS.validScore = evaObject(6).toString().toFloat * 10
-      questionS.validTickets = Integer.valueOf(evaObject(4).toString())
-      questionS.allTickets = Integer.valueOf(evaObject(5).toString())
+      questionS.totalScore = evaObject(7).toString().toFloat
+      questionS.tickets = Integer.valueOf(evaObject(4).toString())
+      questionS.avgScore = questionS.totalScore / questionS.tickets
+      questionS.totalTickets = Integer.valueOf(evaObject(5).toString())
       // 添加问卷
       questionS.questionnaire = new Questionnaire()
       questionS.questionnaire.id = evaObject(2).asInstanceOf[Long]
@@ -258,8 +258,8 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
           val detailStat = new CourseQuestionStat
           // 添加问题
           detailStat.question = questionMap(wt._1)
-          detailStat.total = wt._2.toString().toFloat * 100
-          detailStat.average = wt._3.toString().toFloat * 100
+          detailStat.totalScore = wt._2.toString().toFloat
+          detailStat.avgScore = wt._3.toString().toFloat
           //            detailStat.stddev=stddev
           detailStat.evalStat = questionS
 
@@ -290,7 +290,7 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
       typeStatMap.get((questionS.course.id, questionS.teacher.id)) foreach { buffer =>
         buffer foreach { os =>
           val questionTs = new CourseQuestionTypeStat
-          questionTs.score = os._2.toString().toFloat * 100
+          questionTs.totalScore = os._2.toString().toFloat
           questionTs.evalStat = questionS
           questionTs.questionType = questiontyMap(os._1)
           questionTypeStats += questionTs

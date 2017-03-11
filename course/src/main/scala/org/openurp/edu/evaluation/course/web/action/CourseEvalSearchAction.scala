@@ -67,8 +67,8 @@ class CourseEvalSearchAction extends RestfulAction[CourseEvalStat] {
     querys.join("lesson.teachers", "teacher");
     querys.where("teacher=:teach", questionnaireStat.teacher);
     querys.where("lesson.course=:lesson", questionnaireStat.course);
-    querys.join("lesson.teachclass.courseTakes", "courseTake");
-    querys.select("count(courseTake.std.id)");
+    querys.join("lesson.teachclass.courseTakers", "courseTaker");
+    querys.select("count(courseTaker.id)");
     val numbers = entityDao.search(querys)(0)
     put("numbers", entityDao.search(querys)(0));
     val que = OqlBuilder.from(classOf[QuestionResult], "questionR");
