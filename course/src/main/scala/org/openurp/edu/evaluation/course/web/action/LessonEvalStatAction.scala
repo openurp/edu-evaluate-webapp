@@ -452,7 +452,8 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
       questionS.questionnaire.id = evaObject(2).asInstanceOf[Long]
 
       questionS.totalScore = evaObject(3).toString().toFloat
-      questionS.avgScore = evaObject(4).toString().toFloat
+      val avgScore = evaObject(4).toString().toFloat
+      questionS.avgScore = (Math.round(avgScore*100)*1.0/100).floatValue
       questionS.tickets = Integer.valueOf(evaObject(5).toString())
       questionS.totalTickets = questionS.tickets
       //questionS.totalTickets = Integer.valueOf(evaObject(5).toString())
