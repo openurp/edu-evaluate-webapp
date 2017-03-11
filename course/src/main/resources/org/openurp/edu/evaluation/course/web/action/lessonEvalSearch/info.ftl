@@ -18,35 +18,31 @@
             <td style="padding-left:10px;">${(questionnaireStat.teacher.user.name)!}</td>
             <td class="title" style="text-align:center;">职称</td>
             <td style="padding-left:10px;">${(questionnaireStat.teacher.title.name)!}</td>
-            <td class="title" style="text-align:center;">总分</td>
-            <td style="padding-left:10px;">${(questionnaireStat.score)!}</td> 
+            <td class="title" style="text-align:center;">平均分</td>
+            <td style="padding-left:10px;">${(questionnaireStat.avgScore)!}</td> 
         </tr>
         <tr>
             <td class="title" style="text-align:center;">问卷下发数量</td>
-            <td style="padding-left:10px;">${numbers!0}</td>
+            <td style="padding-left:10px;">${questionnaireStat.lesson.teachclass.stdCount}</td>
             <td class="title" style="text-align:center;">问卷回收数量</td>
-            <td style="padding-left:10px;">${(number2)!}</td>
+            <td style="padding-left:10px;">${questionnaireStat.totalTickets}</td>
             <td class="title" style="text-align:center;">问卷有效数量</td>
-            <td style="padding-left:10px;">${(number1)!}</td> 
+            <td style="padding-left:10px;">${questionnaireStat.tickets}</td> 
         </tr>
     </table>
-    [@b.grid items=questionResults var="questionResult" sortable="false"]
+    [@b.grid items=questionnaireStat.questionStats var="qs" sortable="false"]
         [@b.row]
-            [@b.col title="问题内容" width="30%"]${(questionResult[1])!}[/@]
+            [@b.col title="问题内容" width="30%"]${qs.question.content}[/@]
             [#list options as option]
             [@b.col title="${option.name!}"]
-            [#assign numb =0 /]
-                [#list questionRs as questionR]
-                    [#if questionR[0]==questionResult[0]]
-                            [#if questionR[1]==option.id]
-                            [#assign numb=questionR[2] /]
-                            [/#if]
+                [#list qs.optionStats as os]
+                    [#if os.option==option]
+                      ${os.amount}[#break/]
                     [/#if]
                 [/#list]
-                ${numb!0}
                 [/@]
             [/#list]
-            [@b.col title="平均得分"]${(questionResult[2])!}[/@]
+            [@b.col title="平均得分"]${qs.avgScore}[/@]
         [/@]
     [/@]
 </div>

@@ -14,7 +14,7 @@
             [@b.col property="lesson.course.name" title="课程名称"/]
             [@b.col property="teacher.user.name" title="教师姓名"/]
             [@b.col property="teacher.user.code" title="教师工号"/]
-            [@b.col property="score" title="教师任务得分"]${lessonEvalStat.score}[/@]
+            [@b.col property="avgScore" title="教师任务得分"/]
             [@b.col property="rank" title="全校排名"/]
             [@b.col property="departRank" title="院系排名"/]
         [/@]

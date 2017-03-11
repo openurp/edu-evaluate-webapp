@@ -48,16 +48,7 @@ class LessonEvalSearchAction extends RestfulAction[LessonEvalStat] {
   override def info(@param("id") id: String): String = {
     val questionnaireStat = entityDao.get(classOf[LessonEvalStat], java.lang.Long.parseLong(id));
     put("questionnaireStat", questionnaireStat);
-    // zongrenci fix
-    val query = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName, "result");
-    query.where("result.teacher =:tea", questionnaireStat.teacher);
-    query.where("result.lesson=:less", questionnaireStat.lesson)
-    query.select("case when result.statType =1 then count(result.id) end,count(result.id)");
-    query.groupBy("result.statType");
-    entityDao.search(query) foreach { a =>
-      put("number1", a(0))
-      put("number2", a(1))
-    }
+    
     val list = Collections.newBuffer[Option]
     val questions = questionnaireStat.questionnaire.questions
     questions foreach { question =>
@@ -75,26 +66,7 @@ class LessonEvalSearchAction extends RestfulAction[LessonEvalStat] {
       }
     }
     put("options", list);
-    val querys = OqlBuilder.from[Long](classOf[Lesson].getName, "lesson");
-    querys.join("lesson.teachers", "teacher");
-    querys.where("teacher=:teach", questionnaireStat.teacher);
-    querys.where("lesson=:lesson", questionnaireStat.lesson);
-    querys.join("lesson.teachclass.courseTakers", "courseTaker");
-    querys.select("count(courseTaker.std.id)");
-    val numbers = entityDao.search(querys)(0)
-    put("numbers", entityDao.search(querys)(0));
-    val que = OqlBuilder.from(classOf[QuestionResult], "questionR");
-    que.where("questionR.result.teacher=:teaId", questionnaireStat.teacher);
-    que.where("questionR.result.lesson=:less", questionnaireStat.lesson);
-    que.select("questionR.question.id,questionR.option.id,count(*)");
-    que.groupBy("questionR.question.id,questionR.option.id");
-    put("questionRs", entityDao.search(que));
-    val quer = OqlBuilder.from(classOf[QuestionResult], "questionR");
-    quer.where("questionR.result.teacher=:teaId", questionnaireStat.teacher);
-    quer.where("questionR.result.lesson=:less", questionnaireStat.lesson);
-    quer.select("questionR.question.id,questionR.question.content,sum(questionR.score)/count(questionR.id)");
-    quer.groupBy("questionR.question.id,questionR.question.content");
-    put("questionResults", entityDao.search(quer));
+    put("questionnaireStat", questionnaireStat);
     forward()
   }
   //
