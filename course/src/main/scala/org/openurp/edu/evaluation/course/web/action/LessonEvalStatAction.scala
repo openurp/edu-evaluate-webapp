@@ -90,13 +90,6 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
 
   override def remove(): View = {
     val questionSIds = longIds("lessonEvalStat")
-    //    val idStr = get("questionnaireStat.id").orNull
-    //    val Ids = idStr.split(",")
-    //    val questionSIds = new Long[Ids.length]
-
-    //    for (i = 0 i < Ids.length i++) {
-    //      questionSIds[i] = Long.valueOf(Ids[i])
-    //    }
     val query = OqlBuilder.from(classOf[LessonEvalStat], "questionS")
     query.where("questionS.id in(:ids)", questionSIds)
     entityDao.remove(entityDao.search(query))
@@ -119,11 +112,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     val lis = entityDao.search(OqlBuilder.from(classOf[EvaluationCriteriaItem], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L))
     if (lis.size < 1) { redirect("search", "未找到评价标准！") }
     put("criterias", lis)
-    val depId = getInt("department.id").getOrElse(20)
-    //    val depId=20
-    //    if (getInt("department.id") != null) {
-    //      depId = getInt("department.id").get
-    //    }
+    val depId = getInt("department.id")
     put("departId", depId)
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department], "dep").where("dep.teaching=true")))
     val evaquery = OqlBuilder.from(classOf[EvaluateResult], "evaluateR")
@@ -381,6 +370,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     val project = this.currentProject;
     // 删除历史统计数据
     removeStats(project, semesterId)
+    //FIXME 去除最高5%和最低分数5%,以及人数少于15人的评教结果
     // teacher、lesson、question问题得分统计
     val que = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR")
     que.where("questionR.result.lesson.project=:project", project)
@@ -403,7 +393,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     //    quer.where("questionR.question.addition is false")
     quer.select("questionR.result.lesson.id,questionR.result.teacher.id,questionR.result.questionnaire.id,"
       + "sum(questionR.score),sum(questionR.score)/count(distinct questionR.result.id),count(distinct questionR.result.id)")
-    quer.groupBy("questionR.result.lesson.id,questionR.result.teacher.id,questionR.result.questionnaire.id,questionR.result.statType")
+    quer.groupBy("questionR.result.lesson.id,questionR.result.teacher.id,questionR.result.questionnaire.id")
 
     val wjStat = entityDao.search(quer)
     // 问题类别统计
