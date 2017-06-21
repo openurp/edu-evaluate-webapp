@@ -1,7 +1,7 @@
 package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.commons.collection.Collections
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.action.ServletSupport
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
@@ -22,6 +22,7 @@ import org.openurp.edu.evaluation.model.EvaluationCriteriaItem
 import org.openurp.edu.evaluation.model.QuestionType
 import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.edu.base.model.Teacher
+import java.time.LocalDate
 
 class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with ServletSupport {
 
@@ -42,7 +43,7 @@ class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with Servlet
     put("questionnaires", entityDao.search(query))
     val semesters = entityDao.getAll(classOf[Semester])
     put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
     put("evaluationCriterias", entityDao.getAll(classOf[EvaluationCriteria]))
     put("questionTypes", entityDao.getAll(classOf[QuestionType]))
@@ -267,7 +268,7 @@ class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with Servlet
    */
   //  @SuppressWarnings({ "unchecked", "rawtypes" })
   def departDistributeStat(): String = {
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val lis = entityDao.search(OqlBuilder.from(classOf[EvaluationCriteriaItem], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L))
     if (lis.size < 1) { redirect("search", "未找到评价标准！"); }

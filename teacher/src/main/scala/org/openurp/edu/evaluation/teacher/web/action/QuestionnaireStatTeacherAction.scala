@@ -1,7 +1,7 @@
 package org.openurp.edu.evaluation.teacher.web.action
 
 import org.beangle.commons.collection.Collections
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.base.model.Semester

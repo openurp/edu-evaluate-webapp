@@ -3,17 +3,15 @@ package org.openurp.edu.evaluation.course.web.action
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.edu.evaluation.model.EvaluationCriteria
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.openurp.edu.base.code.model.Education
 import org.openurp.edu.evaluation.model.QuestionType
 import org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat
-import org.beangle.commons.model.bind.Binder.Collection
-import org.beangle.commons.model.bind.Binder.Collection
-import org.beangle.commons.model.bind.Binder.Collection
 import org.beangle.commons.collection.Collections
 import org.openurp.base.model.Semester
 import org.openurp.edu.base.code.model.StdType
 import org.openurp.edu.evaluation.model.Questionnaire
+import java.time.LocalDate
 
 class QuestionnaireStatSearchAction  extends RestfulAction[LessonEvalStat] {
 
@@ -28,7 +26,7 @@ class QuestionnaireStatSearchAction  extends RestfulAction[LessonEvalStat] {
 //    put("evaluationCriterias", entityDao.getAll(classOf[EvaluationCriteria]));
 //    val semesters = entityDao.getAll(classOf[Semester])
 //    put("semesters", semesters)
-//    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+//    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
 //    put("currentSemester", entityDao.search(semesterQuery).head)
 //    forward()
    
@@ -48,7 +46,7 @@ class QuestionnaireStatSearchAction  extends RestfulAction[LessonEvalStat] {
     put("questionnaires", entityDao.search(query))
     val semesters = entityDao.getAll(classOf[Semester])
     put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
     put("evaluationCriterias",entityDao.getAll(classOf[EvaluationCriteria]))
     put("questionTypes", entityDao.getAll(classOf[QuestionType]))

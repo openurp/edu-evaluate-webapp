@@ -1,10 +1,11 @@
 package org.openurp.edu.evaluation.course.web.action
 
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.lesson.model.TextEvaluation
 import org.openurp.base.model.Semester
 import org.beangle.commons.collection.Order
+import java.time.LocalDate
 
 class TextEvaluationSearchAction extends RestfulAction[TextEvaluation] {
 
@@ -20,13 +21,13 @@ class TextEvaluationSearchAction extends RestfulAction[TextEvaluation] {
   override protected def indexSetting(): Unit = {
     val semesters = entityDao.getAll(classOf[Semester])
     put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
   }
 
   override def search(): String = {
     // 页面条件
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     val state = getBoolean("textEvaluation.state").getOrElse(null)

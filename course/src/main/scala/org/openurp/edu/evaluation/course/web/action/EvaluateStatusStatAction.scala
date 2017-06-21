@@ -2,7 +2,7 @@ package org.openurp.edu.evaluation.course.web.action
 
 import java.text.DecimalFormat
 import org.beangle.commons.collection.Collections
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.base.model.Semester
@@ -21,6 +21,7 @@ import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
 import org.openurp.edu.lesson.model.CourseTaker
 import org.openurp.edu.lesson.model.Lesson
 import org.beangle.commons.lang.Strings
+import java.time.LocalDate
 
 class EvaluateStatusStatAction extends ProjectRestfulAction[EvaluateResult] {
 
@@ -29,14 +30,14 @@ class EvaluateStatusStatAction extends ProjectRestfulAction[EvaluateResult] {
 //    put("stdTypeList", entityDao.getAll(classOf[StdType]))
 //    put("departmentList", entityDao.search(OqlBuilder.from(classOf[Department],"dep").where("dep.teaching =:tea",true)));
     put("semesters", getSemesters())
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
     put("departments", findItemsBySchool(classOf[Department]))
     forward()
   }
 
   override def  search():String= {
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val departmentId = getInt("department.id").getOrElse(0)
     val lessonNo=get("lesson.no").getOrElse("")

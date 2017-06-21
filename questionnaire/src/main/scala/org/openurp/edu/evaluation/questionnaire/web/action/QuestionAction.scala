@@ -2,7 +2,7 @@ package org.openurp.edu.evaluation.questionnaire.web.action
 
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.model.Question
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.commons.collection.Order
 import org.beangle.commons.lang.Strings
 import org.openurp.edu.evaluation.model.Question
@@ -19,6 +19,8 @@ import org.openurp.base.model.Department
 import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.edu.evaluation.questionnaire.service.QuestionTypeService
 import org.openurp.edu.base.model.Project
+import java.time.Instant
+import java.time.LocalDate
 
 /**
  * 问题维护响应类
@@ -54,27 +56,27 @@ class QuestionAction extends RestfulAction[Question] {
       val question = entity.asInstanceOf[Question]
       val projects = entityDao.findBy(classOf[Project], "code", List(get("project").get));
       question.project = projects.head
-      question.updatedAt = new java.util.Date()
+      question.updatedAt = Instant.now
       val remark = question.remark.orNull
       val content = question.content
-      question.beginOn = getDate("question.beginOn").get
-      question.endOn = getDate("question.endOn")
+      question.beginOn = LocalDate.parse(get("question.beginOn").get)
+      question.endOn = Some(LocalDate.parse(get("question.endOn").get))
       if (remark != null) {
         question.remark = Some(remark.replaceAll("<", "&#60;").replaceAll(">", "&#62;"))
       }
       question.content = content.replaceAll("<", "&#60;").replaceAll(">", "&#62;")
       if (!question.persisted) {
         if (question.state) {
-          question.beginOn = new Date(System.currentTimeMillis())
+          question.beginOn = LocalDate.now
         }
       } else {
-        question.updatedAt = new java.util.Date
+        question.updatedAt = Instant.now
         val questionOld = entityDao.get(classOf[Question], question.id);
         if (questionOld.state != question.state) {
           if (question.state) {
-            question.beginOn = new Date(System.currentTimeMillis())
+            question.beginOn = LocalDate.now
           } else {
-            question.endOn = Some(new Date(System.currentTimeMillis()))
+            question.endOn = Some(LocalDate.now)
           }
         }
 

@@ -1,6 +1,6 @@
 package org.openurp.edu.evaluation.course.web.action
 
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Semester
@@ -9,6 +9,8 @@ import org.openurp.edu.evaluation.lesson.model.{ TeacherRemessage, TextEvaluatio
 import org.openurp.edu.lesson.model.{ CourseTaker, Lesson }
 import org.openurp.platform.api.security.Securities
 import org.openurp.edu.evaluation.app.lesson.model.TextEvaluateSwitch
+import java.time.LocalDate
+import java.time.Instant
 
 class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
 
@@ -23,14 +25,14 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
   override protected def indexSetting(): Unit = {
     val semesters = entityDao.getAll(classOf[Semester])
     put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
   }
 
   override def search(): String = {
     val teacher = getTeacher()
     if (teacher == null) { forward("error.teacher.teaNo.needed") }
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     if (teacher == null) {
@@ -54,7 +56,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     val teacher = getTeacher()
     if (teacher == null) { forward("error.teacher.teaNo.needed") }
     val lessonId = getLong("lesson.id").get
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val currentSemester = entityDao.search(semesterQuery).head
     // 判断(是否当前学期)
     val lesson = entityDao.get(classOf[Lesson], lessonId)
@@ -119,8 +121,8 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     teacherRemessage.textEvaluation = textEvaluation
     teacherRemessage.students += std
     teacherRemessage.visible = true
-    teacherRemessage.createdAt = date
-    teacherRemessage.updatedAt = date
+    teacherRemessage.createdAt = Instant.now
+    teacherRemessage.updatedAt = Instant.now
     reMessage.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\r\n", "<br/>").replaceAll("\n", "<br>").replaceAll("\\'", "&acute;").replaceAll("\"", "&quot;").replaceAll(" ", "&nbsp;")
     teacherRemessage.remessage = reMessage
     try {
@@ -175,8 +177,8 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
       teacherRemessage.students += std
     }
     teacherRemessage.visible = (!isAnn)
-    teacherRemessage.createdAt = date
-    teacherRemessage.updatedAt = date
+    teacherRemessage.createdAt = Instant.now
+    teacherRemessage.updatedAt = Instant.now
     reMessage.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\r\n", "<br/>").replaceAll("\n", "<br>").replaceAll("\\'", "&acute;").replaceAll("\"", "&quot;").replaceAll(" ", "&nbsp;")
     teacherRemessage.remessage = reMessage
     try {

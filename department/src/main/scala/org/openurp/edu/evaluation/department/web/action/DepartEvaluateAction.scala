@@ -4,8 +4,7 @@ import java.util.Date
 import scala.collection.mutable.Buffer
 import org.beangle.commons.collection.{ Collections, Order }
 import org.beangle.commons.lang.ClassLoaders
-import org.beangle.commons.dao.OqlBuilder
-import org.beangle.data.transfer.importer.listener.ImporterForeignerListener
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.{ Stream, View }
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.{ Department, Semester }
@@ -17,13 +16,16 @@ import org.openurp.platform.api.security.Securities
 import org.openurp.edu.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.edu.evaluation.department.model.DepartEvaluate
 import org.openurp.edu.evaluation.department.model.DepartQuestion
-import org.beangle.data.transfer.importer.listener.ImporterForeignerListener
 import org.openurp.base.model.Department
 import org.openurp.base.model.Semester
 import org.openurp.edu.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.edu.lesson.model.Lesson
 import org.beangle.data.transfer.TransferListener
+import java.time.LocalDate
+import java.time.Instant
+import org.beangle.data.transfer.listener.ForeignerListener
+import org.openurp.edu.evaluation.web.helper.ImportDataSupport
 
 /**
  * @author xinzhou
@@ -33,7 +35,7 @@ class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate] with Imp
   override def indexSetting(): Unit = {
     put("departments", findItemsBySchool(classOf[Department]))
     put("semesters", getSemesters())
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
 
   }
@@ -55,7 +57,7 @@ class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate] with Imp
       departEvaluate.department.id = data(1).asInstanceOf[Int]
       departEvaluate.semester = new Semester
       departEvaluate.semester.id = data(2).asInstanceOf[Int]
-      departEvaluate.evaluateAt = new Date()
+      departEvaluate.evaluateAt = Instant.now
       departEvaluate.questionnaire = entityDao.get(classOf[Questionnaire], 322L)
       departEvaluates += departEvaluate
     }
@@ -144,11 +146,11 @@ class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate] with Imp
   }
 
   def importTemplate: View = {
-    Stream(ClassLoaders.getResourceAsStream("departEvaluate.xls"), "application/vnd.ms-excel", "评教结果.xls")
+    Stream(ClassLoaders.getResourceAsStream("departEvaluate.xls").get, "application/vnd.ms-excel", "评教结果.xls")
   }
 
   protected override def importerListeners: List[_ <: TransferListener] = {
-    List(new ImporterForeignerListener(entityDao), new ImportDepartListener(entityDao))
+    List(new ForeignerListener(entityDao), new ImportDepartListener(entityDao))
   }
 
 }

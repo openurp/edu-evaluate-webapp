@@ -1,11 +1,11 @@
 package org.openurp.edu.evaluation.service
 
 import org.springframework.beans.factory.config.PropertiesFactoryBean
-import org.beangle.commons.cdi.bind.profile
-import org.beangle.commons.cdi.bind.AbstractBindModule
+import org.beangle.cdi.bind.profile
+import org.beangle.cdi.bind.BindModule
 
 @profile("dev")
-object DevModule extends AbstractBindModule {
+object DevModule extends BindModule {
   protected override def binding(): Unit = {
     bind("HibernateConfig.default", classOf[PropertiesFactoryBean]).property(
       "properties",

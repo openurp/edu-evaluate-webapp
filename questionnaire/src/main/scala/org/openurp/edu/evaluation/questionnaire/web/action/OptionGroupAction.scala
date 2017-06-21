@@ -1,7 +1,7 @@
 package org.openurp.edu.evaluation.questionnaire.web.action
 
 import org.beangle.commons.collection.Order
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.model.OptionGroup
 import org.openurp.edu.evaluation.model.Option

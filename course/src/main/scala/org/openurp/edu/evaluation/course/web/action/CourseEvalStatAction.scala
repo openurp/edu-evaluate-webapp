@@ -1,36 +1,21 @@
 package org.openurp.edu.evaluation.course.web.action
 
-import scala.collection.mutable.Buffer
-import scala.collection.mutable.ListBuffer
-import org.beangle.commons.collection.Collections
-import org.beangle.commons.collection.Order
+import java.time.{ Instant, LocalDate }
+
+import scala.collection.mutable.{ Buffer, ListBuffer }
+
+import org.beangle.commons.collection.{ Collections, Order }
 import org.beangle.commons.lang.Strings
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.model.Department
-import org.openurp.base.model.Semester
-import org.openurp.edu.base.code.model.StdType
+import org.openurp.base.model.{ Department, Semester }
+import org.openurp.edu.base.code.model.{ Education, StdType }
+import org.openurp.edu.base.model.{ Course, Teacher }
 import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.lesson.stat.model.CourseEvalStat
-import org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat
-import org.openurp.edu.evaluation.lesson.stat.model.LessonOptionStat
-import org.openurp.edu.evaluation.lesson.stat.model.LessonQuestionStat
-import org.openurp.edu.evaluation.lesson.stat.model.LessonQuestionTypeStat
-import org.openurp.edu.evaluation.lesson.stat.model.OptionStat
-import org.openurp.edu.evaluation.lesson.stat.model.QuestionStat
-import org.openurp.edu.evaluation.lesson.stat.model.QuestionTypeStat
-import org.openurp.edu.evaluation.model.Option
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.QuestionType
-import org.openurp.edu.evaluation.model.Questionnaire
+import org.openurp.edu.evaluation.lesson.stat.model.{ CourseEvalStat, CourseOptionStat, CourseQuestionStat, CourseQuestionTypeStat, OptionStat, QuestionStat, QuestionTypeStat }
+import org.openurp.edu.evaluation.model.{ Option, Question, QuestionType, Questionnaire }
 import org.openurp.edu.lesson.model.Lesson
-import org.openurp.edu.base.code.model.Education
-import org.openurp.edu.base.model.Course
-import org.openurp.edu.evaluation.lesson.stat.model.CourseQuestionStat
-import org.openurp.edu.evaluation.lesson.stat.model.CourseOptionStat
-import org.openurp.edu.evaluation.lesson.stat.model.CourseQuestionTypeStat
-import org.openurp.edu.base.model.Teacher
 
 class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
 
@@ -51,14 +36,14 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
     put("questionnaires", entityDao.search(query))
     val semesters = entityDao.getAll(classOf[Semester])
     put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
     forward()
   }
 
   override def search(): String = {
     // 页面条件
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     val courseEvalStat = OqlBuilder.from(classOf[CourseEvalStat], "courseEvalStat")
@@ -99,7 +84,7 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
 
     val semesters = entityDao.getAll(classOf[Semester])
     put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
     forward()
   }
@@ -139,7 +124,7 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
     val depIds = depStr.split(",")
     val educationTypeIds = Strings.transformToInteger(eduIds).toList
     val departmentIds = Strings.transformToInteger(depIds).toList
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     // 删除历史统计数据
@@ -241,7 +226,7 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
       questionS.teacher = new Teacher()
       questionS.teacher.id = evaObject(1).asInstanceOf[Long]
       questionS.semester = semester
-      questionS.statAt = new java.util.Date()
+      questionS.statAt = Instant.now
       questionS.course = new Course()
       questionS.course.id = evaObject(0).asInstanceOf[Long]
       questionS.totalScore = evaObject(7).toString().toFloat

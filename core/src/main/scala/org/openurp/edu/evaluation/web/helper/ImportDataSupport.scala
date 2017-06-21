@@ -1,29 +1,26 @@
-package org.openurp.edu.evaluation.department.web.action
+package org.openurp.edu.evaluation.web.helper
 
-import org.beangle.commons.model.Entity
-import org.beangle.data.transfer.TransferResult
-import org.beangle.data.transfer.importer.{ EntityImporter, IllegalImportFormatException, ImporterFactory }
-import org.beangle.data.transfer.importer.listener.ImporterForeignerListener
+import org.beangle.data.model.Entity
+import org.beangle.data.transfer.{ EntityTransfer, ImporterFactory, TransferResult }
 import org.beangle.data.transfer.io.TransferFormat
+import org.beangle.data.transfer.listener.ForeignerListener
 import org.beangle.webmvc.api.context.ActionContext
 import org.beangle.webmvc.entity.helper.PopulateHelper
 import javax.servlet.http.Part
 import org.beangle.data.transfer.TransferListener
 import org.beangle.webmvc.entity.action.RestfulAction
 
-/**
- * @author xinzhou
- */
 trait ImportDataSupport[T <: Entity[_]] {
   self: RestfulAction[T] =>
+
   def importForm: String = {
     forward("/components/importData/form")
   }
   /**
    * 构建实体导入者
    */
-  protected def buildEntityImporter(): EntityImporter = {
-    buildEntityImporter(entityMetaData.getType(entityType.getName).get.entityClass, "importFile")
+  protected def buildEntityImporter(): EntityTransfer = {
+    buildEntityImporter(this.entityDao.domain.getEntity(this.entityName).get.clazz, "importFile")
   }
 
   /**
@@ -32,7 +29,7 @@ trait ImportDataSupport[T <: Entity[_]] {
    * @param upload
    * @param clazz
    */
-  protected def buildEntityImporter(clazz: Class[_], upload: String = "importFile"): EntityImporter = {
+  protected def buildEntityImporter(clazz: Class[_], upload: String = "importFile"): EntityTransfer = {
     val request = ActionContext.current.request
     val parts = request.getParts
     val partIter = parts.iterator
@@ -50,8 +47,6 @@ trait ImportDataSupport[T <: Entity[_]] {
     //    val formatName = Strings.capitalize(Strings.substringAfterLast(fileName, "."));
     val format = TransferFormat.withName("Xls")
     val importer = ImporterFactory.getEntityImporter(format, is, clazz, null)
-    importer.entityMetadata = this.entityMetaData
-    importer.populator = PopulateHelper.populator
     importer
   }
 
@@ -73,20 +68,21 @@ trait ImportDataSupport[T <: Entity[_]] {
         return forward("/components/importData/result");
       }
     } catch {
-      case e: IllegalImportFormatException =>
+      case e: Exception =>
+        e.printStackTrace();
         tr.addFailure(getText("error.importformat"), e.getMessage());
         put("importResult", tr);
         return forward("/components/importData/error");
     }
   }
 
-  protected def configImporter(importer: EntityImporter): Unit = {
+  protected def configImporter(importer: EntityTransfer): Unit = {
     importerListeners.foreach { l =>
       importer.addListener(l);
     }
   }
 
   protected def importerListeners: List[_ <: TransferListener] = {
-    List(new ImporterForeignerListener(entityDao))
+    List(new ForeignerListener(this.entityDao))
   }
 }

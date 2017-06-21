@@ -1,6 +1,6 @@
 package org.openurp.edu.evaluation.lesson.stat.model
 
-import org.beangle.commons.model.LongId
+import org.beangle.data.model.LongId
 import org.openurp.base.model.Semester
 import org.openurp.edu.base.model.Teacher
 

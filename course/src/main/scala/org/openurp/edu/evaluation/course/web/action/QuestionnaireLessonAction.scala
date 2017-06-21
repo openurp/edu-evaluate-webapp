@@ -2,8 +2,8 @@ package org.openurp.edu.evaluation.course.web.action
 
 import java.sql.Date
 import org.beangle.commons.collection.Order
-import org.beangle.commons.dao.OqlBuilder
-import org.beangle.commons.dao.QueryBuilder
+import org.beangle.data.dao.OqlBuilder
+import org.beangle.data.dao.QueryBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.beangle.webmvc.entity.helper.QueryHelper
@@ -26,6 +26,7 @@ import org.openurp.edu.lesson.model.Lesson
 import org.openurp.edu.lesson.model.Lesson
 import org.beangle.commons.lang.Strings
 import org.beangle.webmvc.api.annotation.action
+import java.time.LocalDate
 
 class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson] {
 
@@ -42,7 +43,7 @@ class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson
 
   override def search(): String = {
     val questionnaireId = getLong("questionnaire.id").getOrElse(-1)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     // 检查时间
@@ -74,7 +75,7 @@ class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson
     val query = OqlBuilder.from(classOf[QuestionnaireLesson], "questionnaireLesson")
     populateConditions(query)
     //    query.where(QueryHelper.extractConditions(classOf[Lesson], "lesson", null))
-    //    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    //    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id") //.getOrElse(entityDao.search(semesterQuery).head.id)
     semesterId foreach { semesterId =>
       query.where("questionnaireLesson.lesson.semester.id = :semesterId", semesterId)
@@ -131,7 +132,7 @@ class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson
     populateConditions(query)
     query.where("lesson.project=:project", currentProject)
     populateConditions(query)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id") //.getOrElse(entityDao.search(semesterQuery).head.id)
     semesterId foreach { semesterId =>
       query.where("lesson.semester.id = :semesterId", semesterId)

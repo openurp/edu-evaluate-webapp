@@ -1,6 +1,6 @@
 package org.openurp.edu.evaluation.course.web.action
 
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
 import org.openurp.edu.lesson.model.Lesson
@@ -17,7 +17,7 @@ class StdEvaluateSwitchAction extends ProjectRestfulAction[StdEvaluateSwitch] {
 
   protected override def indexSetting(): Unit = {
     put("semesters", getSemesters())
-    //    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    //    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     //    put("currentSemester", entityDao.search(semesterQuery).head)
   }
 

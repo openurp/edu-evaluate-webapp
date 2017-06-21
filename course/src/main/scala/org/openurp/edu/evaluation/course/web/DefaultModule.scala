@@ -1,11 +1,11 @@
 package org.openurp.edu.evaluation.course.web
 
-import org.beangle.commons.cdi.bind.AbstractBindModule
+import org.beangle.cdi.bind.BindModule
 import org.openurp.edu.evaluation.app.lesson.model.{ EvaluateSearchAdminclass, EvaluateSearchDepartment }
 import org.openurp.edu.evaluation.app.lesson.service.StdEvaluateSwitchService
 import org.openurp.edu.evaluation.course.web.action.{ CourseEvalSearchAction, CourseEvalStatAction, DepartEvalSearchAction, DepartEvalStatAction, EvaluateResultAction, EvaluateStatisticsAction, EvaluateStatusStatAction, EvaluateStatusTeacherAction, FinalTeacherScoreAction, LessonEvalSearchAction, LessonEvalStatAction, QuestionnaireLessonAction, QuestionnaireStatAction, QuestionnaireStatSearchAction, QuestionnaireStatTeacherAction, StdEvaluateSwitchAction, TeacherEvalSearchAction, TeacherEvalStatAction, TextEvaluateSwitchAction, TextEvaluationAction, TextEvaluationSearchAction, TextEvaluationTeacherAction }
 
-class DefaultModule extends AbstractBindModule {
+class DefaultModule extends BindModule {
 
   override def binding() {
 

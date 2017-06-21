@@ -39,7 +39,7 @@
     <dependency>
       <groupId>org.beangle.data</groupId>
       <artifactId>beangle-data-transfer_2.12</artifactId>
-        <version>${beangle.data.version}</version>
+      <version>${beangle.data.version}</version>
     </dependency>
     <dependency>
       <groupId>org.openurp.platform.api</groupId>

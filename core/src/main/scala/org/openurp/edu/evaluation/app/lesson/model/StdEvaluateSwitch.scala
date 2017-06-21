@@ -1,9 +1,9 @@
 package org.openurp.edu.evaluation.app.lesson.model
 
-import org.beangle.commons.model.IntId
+import org.beangle.data.model.IntId
 import org.openurp.base.model.Semester
 import org.openurp.edu.base.model.Project
-import org.beangle.commons.model.TemporalAt
+import org.beangle.data.model.pojo.TemporalAt
 
 class StdEvaluateSwitch extends IntId with TemporalAt {
 
@@ -11,9 +11,9 @@ class StdEvaluateSwitch extends IntId with TemporalAt {
   var opened: Boolean = false
   var project: Project = _
 
-  def isOpenedAt(d: java.util.Date): Boolean = {
-    if (d.before(this.beginAt)) false;
-    if (this.endAt.get.before(d)) false;
+  def isOpenedAt(d: java.time.Instant): Boolean = {
+    if (d.isBefore(this.beginAt)) false;
+    if (this.endAt.get.isBefore(d)) false;
     opened
   }
 }

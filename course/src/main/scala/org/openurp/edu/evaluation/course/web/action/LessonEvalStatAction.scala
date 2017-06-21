@@ -1,7 +1,7 @@
 package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.commons.collection.Collections
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
@@ -43,6 +43,8 @@ import org.openurp.edu.base.model.Teacher
 import org.openurp.base.model.Semester
 import org.openurp.base.model.Semester
 import org.openurp.edu.base.model.Project
+import java.time.LocalDate
+import java.time.Instant
 
 class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
   //
@@ -67,14 +69,14 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire").where("questionnaire.state =:state", true)
     put("questionnaires", entityDao.search(query))
     put("semesters", getSemesters())
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
     forward()
   }
 
   override def search(): String = {
     // 页面条件
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     val lessonEvalStat = OqlBuilder.from(classOf[LessonEvalStat], "lessonEvalStat")
@@ -150,7 +152,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
    * 院系评教统计
    */
   def departmentChoiceConfig(): String = {
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     val lis = entityDao.search(OqlBuilder.from(classOf[EvaluationCriteriaItem], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L))
@@ -314,7 +316,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
 
     val semesters = getSemesters()
     put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
     forward()
   }
@@ -437,7 +439,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
       questionS.teacher = new Teacher()
       questionS.teacher.id = evaObject(1).asInstanceOf[Long]
       questionS.semester = semester
-      questionS.statAt = new java.util.Date()
+      questionS.statAt = Instant.now
       questionS.questionnaire = new Questionnaire()
       questionS.questionnaire.id = evaObject(2).asInstanceOf[Long]
 

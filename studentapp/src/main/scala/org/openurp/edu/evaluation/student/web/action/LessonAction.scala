@@ -3,7 +3,7 @@ package org.openurp.edu.evaluation.student.web.action
 import java.util.Date
 
 import org.beangle.commons.collection.Collections
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Semester
@@ -18,6 +18,8 @@ import org.openurp.edu.evaluation.model.Question
 import org.openurp.edu.lesson.model.CourseTaker
 import org.openurp.edu.lesson.model.Lesson
 import org.openurp.platform.api.security.Securities
+import java.time.LocalDate
+import java.time.Instant
 
 class LessonAction extends RestfulAction[EvaluateResult] {
 
@@ -78,7 +80,7 @@ class LessonAction extends RestfulAction[EvaluateResult] {
 
   override def search(): String = {
     val std = getStudent()
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     val lessonList = getStdLessons(std, semester)
@@ -117,7 +119,7 @@ class LessonAction extends RestfulAction[EvaluateResult] {
       return forward("errors");
     }
     val evaluateSwitch = evaluateSwitchs.head
-    if (!evaluateSwitch.isOpenedAt(new Date())) {
+    if (!evaluateSwitch.isOpenedAt(Instant.now)) {
       addMessage("不在课程评教开放时间内,开放时间为：!" + evaluateSwitch.beginAt + "～" + evaluateSwitch.endAt);
       return forward("errors");
     }
@@ -284,7 +286,7 @@ class LessonAction extends RestfulAction[EvaluateResult] {
           evaluateResult.department = lesson.teachDepart
           evaluateResult.student = std
           evaluateResult.teacher = entityDao.get(classOf[Teacher], newId)
-          evaluateResult.evaluateAt = new java.util.Date()
+          evaluateResult.evaluateAt = Instant.now
           questionnaireLesson.questionnaire.questions foreach { question =>
             val optionId = getLong("select" + question.id).get
             val option = entityDao.get(classOf[Option], optionId);
@@ -321,7 +323,7 @@ class LessonAction extends RestfulAction[EvaluateResult] {
           evaluateResult.department = lesson.teachDepart
           evaluateResult.student = std
           evaluateResult.teacher = evaluateTeacher
-          evaluateResult.evaluateAt = new java.util.Date()
+          evaluateResult.evaluateAt = Instant.now
           questionnaire.questions foreach { question =>
             val optionId = getLong("select" + question.id).get
             val option = entityDao.get(classOf[Option], optionId);
@@ -345,7 +347,7 @@ class LessonAction extends RestfulAction[EvaluateResult] {
             evaluateResult.department = lesson.teachDepart
             evaluateResult.student = std
             evaluateResult.teacher = teacher
-            evaluateResult.evaluateAt = new java.util.Date()
+            evaluateResult.evaluateAt = Instant.now
             questionnaire.questions foreach { question =>
               val optionId = getLong("select" + question.id).get
               val option = entityDao.get(classOf[Option], optionId);

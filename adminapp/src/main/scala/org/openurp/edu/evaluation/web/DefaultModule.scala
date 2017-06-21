@@ -1,9 +1,9 @@
 package org.openurp.edu.evaluation.web
 
-import org.beangle.commons.cdi.bind.AbstractBindModule
+import org.beangle.cdi.bind.BindModule
 import org.openurp.edu.evaluation.web.index.IndexAction
 
-class DefaultModule extends AbstractBindModule {
+class DefaultModule extends BindModule {
 
   override def binding() {
 

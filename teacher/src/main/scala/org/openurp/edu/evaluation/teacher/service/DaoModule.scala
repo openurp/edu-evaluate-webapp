@@ -18,18 +18,18 @@
  */
 package org.openurp.edu.evaluation.teacher.service
 
-import org.beangle.commons.cache.concurrent.ConcurrentMapCacheManager
-import org.beangle.commons.cdi.bind.AbstractBindModule
+import org.beangle.cache.concurrent.ConcurrentMapCacheManager
+import org.beangle.cdi.bind.BindModule
 import org.beangle.data.hibernate.HibernateEntityDao
-import org.beangle.data.hibernate.HibernateMetadataFactory
 import org.beangle.data.hibernate.spring.HibernateTransactionManager
 import org.beangle.data.hibernate.spring.LocalSessionFactoryBean
 import org.beangle.data.hibernate.spring.web.OpenSessionInViewInterceptor
 import org.springframework.beans.factory.config.PropertiesFactoryBean
 import org.springframework.transaction.interceptor.TransactionProxyFactoryBean
-import org.beangle.commons.cdi.bind.profile
+import org.beangle.cdi.bind.profile
+import org.beangle.data.hibernate.DomainFactory
 
-object DaoModule extends AbstractBindModule {
+object DaoModule extends BindModule {
 
   protected override def binding(): Unit = {
     bind("HibernateConfig.default", classOf[PropertiesFactoryBean]).property(
@@ -45,7 +45,7 @@ object DaoModule extends AbstractBindModule {
       .description("Hibernate配置信息").nowire("propertiesArray")
 
     bind("SessionFactory.default", classOf[LocalSessionFactoryBean])
-      .property("hibernateProperties", ref("HibernateConfig.default"))
+      .property("properties", ref("HibernateConfig.default"))
       .property("configLocations", "classpath*:META-INF/hibernate.cfg.xml")
       .property("ormLocations", "classpath*:META-INF/beangle/orm.xml").primary
 
@@ -57,7 +57,7 @@ object DaoModule extends AbstractBindModule {
         "batch*=PROPAGATION_REQUIRED", "execute*=PROPAGATION_REQUIRED", "remove*=PROPAGATION_REQUIRED",
         "*=PROPAGATION_REQUIRED,readOnly")).primary
 
-    bind("EntityMetadata.hibernate", classOf[HibernateMetadataFactory])
+    bind(classOf[DomainFactory])
 
     bind("EntityDao.hibernate", classOf[TransactionProxyFactoryBean]).proxy("target", classOf[HibernateEntityDao])
       .parent("TransactionProxy.template").primary().description("基于Hibernate提供的通用DAO")

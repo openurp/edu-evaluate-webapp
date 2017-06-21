@@ -3,7 +3,7 @@ package org.openurp.edu.evaluation.questionnaire.web.action
 import scala.collection.mutable.Buffer
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.collection.Order
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.annotation.param
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
@@ -15,8 +15,10 @@ import org.beangle.webmvc.api.view.View
 import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
 import org.beangle.commons.lang.Numbers
 import org.beangle.commons.lang.Strings
-import org.beangle.commons.dao.Condition
+import org.beangle.data.dao.Condition
 import org.openurp.platform.api.security.Securities
+import java.time.LocalDate
+import java.time.Instant
 
 class QuestionnaireAction extends RestfulAction[Questionnaire] {
 
@@ -86,29 +88,29 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] {
 
   override def saveAndRedirect(entity: Questionnaire): View = {
     val questionnaire = entity.asInstanceOf[Questionnaire];
-    questionnaire.beginOn = getDate("questionnaire.beginOn").get
-    questionnaire.updatedAt = new java.util.Date()
-    questionnaire.createBy=Securities.user
-    getDate("questionnaire.endOn") foreach { invalidAt =>
-      questionnaire.endOn = Option(invalidAt)
+    questionnaire.beginOn = LocalDate.parse(get("questionnaire.beginOn").get)
+    questionnaire.updatedAt = Instant.now
+    questionnaire.createBy = Securities.user
+    get("questionnaire.endOn")  foreach { invalidAt =>
+      questionnaire.endOn = Option(LocalDate.parse(invalidAt))
     }
     if (!questionnaire.persisted) {
       if (questionnaire.state) {
-        questionnaire.beginOn = new java.sql.Date(System.currentTimeMillis())
+        questionnaire.beginOn = LocalDate.now
       }
     } else {
       val questionnaireOld = entityDao.get(classOf[Questionnaire], questionnaire.id);
       if (questionnaireOld.state != questionnaire.state) {
         if (questionnaire.state) {
-          questionnaire.beginOn = new Date(System.currentTimeMillis())
+          questionnaire.beginOn = LocalDate.now
         } else {
-          questionnaire.endOn = Some(new Date(System.currentTimeMillis()))
+          questionnaire.endOn = Some(LocalDate.now)
         }
       }
 
     }
     questionnaire.questions.clear();
-    questionnaire.questions ++= entityDao.find(classOf[Question],longIds("questionnaire.question"))
+    questionnaire.questions ++= entityDao.find(classOf[Question], longIds("questionnaire.question"))
 
     entityDao.saveOrUpdate(questionnaire);
     redirect("search", "info.save.success");

@@ -3,7 +3,7 @@ package org.openurp.edu.evaluation.web.index
 import org.openurp.platform.api.app.UrpApp
 import org.beangle.webmvc.api.action.ActionSupport
 import org.beangle.security.context.SecurityContext
-import org.beangle.commons.dao.EntityDao
+import org.beangle.data.dao.EntityDao
 import org.beangle.security.realm.cas.CasConfig
 import org.beangle.webmvc.api.view.View
 import org.beangle.security.mgt.SecurityManager
@@ -18,7 +18,8 @@ import org.openurp.platform.api.security.RemoteService
 import org.openurp.edu.base.model.Project
 import org.beangle.webmvc.api.annotation.param
 import org.beangle.webmvc.api.annotation.mapping
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
+import java.time.LocalDate
 
 /**
  * @author xinzhou
@@ -32,7 +33,7 @@ class IndexAction extends ActionSupport {
   def project(@param("project") project: String): String = {
     put("menuJson", RemoteService.getMenusJson())
     put("appJson", RemoteService.getAppsJson())
-    
+
     val projects = entityDao.findBy(classOf[Project], "code", List(project))
     val currentProject = projects.head
     put("currentProject", currentProject)
@@ -51,17 +52,14 @@ class IndexAction extends ActionSupport {
     securityManager.logout(SecurityContext.session)
     redirect(to(casConfig.casServer + "/logout"), null)
   }
-  
-  
+
   def index(): View = {
-    val now = new java.sql.Date(System.currentTimeMillis())
-    val builder = OqlBuilder.from(classOf[Project], "p").where("p.beginOn <= :now and( p.endOn is null or p.endOn >= :now)", now).orderBy("p.code").cacheable()
+    val builder = OqlBuilder.from(classOf[Project], "p").where("p.beginOn <= :now and( p.endOn is null or p.endOn >= :now)", LocalDate.now).orderBy("p.code").cacheable()
     val projects = entityDao.search(builder)
     if (projects.isEmpty) throw new RuntimeException("Cannot find any valid projects")
 
     redirect("project", "&project=" + projects.head.code, null)
   }
-
 
   def getUser(): User = {
     val users = entityDao.findBy(classOf[User], "code", List(Securities.user))

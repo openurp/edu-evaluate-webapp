@@ -2,7 +2,7 @@ package org.openurp.edu.evaluation.questionnaire.web.action
 
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.model.EvaluationCriteria
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.commons.collection.Order
 import org.beangle.webmvc.api.context.Params
 import org.openurp.base.model.Department

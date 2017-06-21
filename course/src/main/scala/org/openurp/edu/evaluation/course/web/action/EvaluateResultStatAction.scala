@@ -2,12 +2,12 @@ package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.openurp.base.model.Department
 import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.edu.base.code.model.Education
 import org.openurp.edu.base.model.Major
-import org.beangle.commons.model.Entity
+import org.beangle.data.model.Entity
 
 class EvaluateResultStatAction  extends RestfulAction[LessonEvalStat]{
 //

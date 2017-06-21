@@ -1,11 +1,12 @@
 package org.openurp.edu.evaluation.app.lesson.service
 
-import org.beangle.commons.dao.EntityDao
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.EntityDao
+import org.beangle.data.dao.OqlBuilder
 import org.openurp.base.model.Semester
 import org.openurp.edu.base.model.Project
 import org.openurp.edu.evaluation.app.lesson.model.StdEvaluateSwitch
 import org.openurp.edu.evaluation.app.department.model.EvaluateSwitch
+import java.time.Instant
 
 class StdEvaluateSwitchService(entityDao: EntityDao) {
 
@@ -20,7 +21,7 @@ class StdEvaluateSwitchService(entityDao: EntityDao) {
   def getOpenedSemesters(project: Project): Seq[Semester] = {
     val query = OqlBuilder.from[Semester](classOf[StdEvaluateSwitch].getName, "es")
     query.where("es.opened=true and es.project=:project", project)
-      .where(":now between es.beginAt and es.endAt", new java.util.Date())
+      .where(":now between es.beginAt and es.endAt", Instant.now)
       .select("es.semester")
       
     entityDao.search(query);

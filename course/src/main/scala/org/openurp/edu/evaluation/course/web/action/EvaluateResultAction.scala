@@ -1,7 +1,7 @@
 package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.commons.lang.Numbers
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.annotation.param
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
@@ -17,6 +17,7 @@ import org.openurp.edu.lesson.model.ExamTaker
 import org.springframework.beans.support.PropertyComparator
 import org.beangle.commons.collection.Order
 import org.openurp.edu.base.model.Teacher
+import java.time.LocalDate
 
 class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
 
@@ -33,7 +34,7 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
   //  }
   override protected def indexSetting(): Unit = {
     put("semesters", getSemesters())
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
 
   }
@@ -45,7 +46,7 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
   //  }
   override def search(): String = {
     // 页面条件
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     val statType = getInt("statType").getOrElse(null)
@@ -146,7 +147,7 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
    */
   def changeToInvalid(): View = {
 
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult")
     query.where("evaluateResult.lesson.semester.id = :semesterId", semesterId)

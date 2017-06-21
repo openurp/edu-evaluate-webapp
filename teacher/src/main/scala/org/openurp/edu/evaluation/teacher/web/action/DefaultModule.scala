@@ -1,8 +1,8 @@
 package org.openurp.edu.evaluation.teacher.web.action
 
-import org.beangle.commons.cdi.bind.AbstractBindModule
+import org.beangle.cdi.bind.BindModule
 
-class DefaultModule extends AbstractBindModule {
+class DefaultModule extends BindModule {
 
   override def binding() {
     // *****教师菜单  评教查询->文字评教

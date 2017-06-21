@@ -2,7 +2,7 @@ package org.openurp.edu.evaluation.student.web.action
 
 import scala.collection.mutable.Buffer
 import org.beangle.commons.collection.Collections
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Semester
@@ -12,6 +12,8 @@ import org.openurp.platform.api.security.Securities
 import org.openurp.edu.evaluation.app.lesson.model.TextEvaluateSwitch
 import org.openurp.edu.evaluation.lesson.model.TeacherRemessage
 import org.openurp.edu.evaluation.lesson.model.TextEvaluation
+import java.time.LocalDate
+import java.time.Instant
 
 class TextAction extends RestfulAction[TextEvaluation] {
 
@@ -161,7 +163,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
     if (std == null) { forward("error.std.stdNo.needed") }
     val semesters = entityDao.getAll(classOf[Semester])
     put("semesters", semesters)
-    //    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    //    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     //    put("currentSemester", entityDao.search(semesterQuery).head)
   }
 
@@ -169,7 +171,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
     val std = getStudent()
     if (std == null) { forward("error.std.stdNo.needed") }
     // 页面条件
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     val lessons = getStdLessons(std, semester);
@@ -241,7 +243,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
         textEvaluation.teacher = teacher
         textEvaluation.content = textOpinion
         textEvaluation.evaluateByTeacher = evaluateByTeacher
-        textEvaluation.evaluateAt = new java.util.Date()
+        textEvaluation.evaluateAt = Instant.now
         entityDao.saveOrUpdate(textEvaluation)
       }
       redirect("search", "&semester.id=" + lesson.semester.id, "info.save.success")

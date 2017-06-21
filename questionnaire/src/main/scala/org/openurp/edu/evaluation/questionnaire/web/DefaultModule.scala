@@ -1,6 +1,6 @@
 package org.openurp.edu.evaluation.questionnaire.web
 
-import org.beangle.commons.cdi.bind.AbstractBindModule
+import org.beangle.cdi.bind.BindModule
 import org.openurp.edu.evaluation.questionnaire.web.action.QuestionTypeAction
 import org.openurp.edu.evaluation.questionnaire.web.action.QuestionnaireAction
 import org.openurp.edu.evaluation.questionnaire.web.action.EvaluationCriteriaAction
@@ -8,7 +8,7 @@ import org.openurp.edu.evaluation.questionnaire.web.action.EvaluationConfigActio
 import org.openurp.edu.evaluation.questionnaire.web.action.OptionGroupAction
 import org.openurp.edu.evaluation.questionnaire.web.action.QuestionAction
 import org.openurp.edu.evaluation.questionnaire.service.QuestionTypeService
-class DefaultModule extends AbstractBindModule {
+class DefaultModule extends BindModule {
 
   override def binding() {
 

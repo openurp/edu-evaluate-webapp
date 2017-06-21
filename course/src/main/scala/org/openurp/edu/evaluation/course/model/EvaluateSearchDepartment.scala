@@ -2,7 +2,7 @@ package org.openurp.edu.evaluation.course.model
 
 import org.openurp.edu.base.model.Adminclass
 import org.openurp.base.model.Semester
-import org.beangle.commons.model.LongId
+import org.beangle.data.model.LongId
 import org.openurp.edu.lesson.model.Lesson
 
 class EvaluateSearchDepartment  {

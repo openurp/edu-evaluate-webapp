@@ -1,6 +1,6 @@
 package org.openurp.edu.evaluation.course.web.action
 
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
 import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
@@ -14,6 +14,7 @@ import org.openurp.base.model.Semester
 import org.beangle.commons.collection.Order
 import org.beangle.webmvc.api.annotation.mapping
 import org.beangle.webmvc.api.annotation.param
+import java.time.LocalDate
 
 class LessonEvalSearchAction extends RestfulAction[LessonEvalStat] {
   //
@@ -26,14 +27,14 @@ class LessonEvalSearchAction extends RestfulAction[LessonEvalStat] {
   override def index(): String = {
     val semesters = entityDao.getAll(classOf[Semester])
     put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
     forward()
   }
 
   override def search(): String = {
     // 页面条件
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     val lessonEvalStat = OqlBuilder.from(classOf[LessonEvalStat], "lessonEvalStat")

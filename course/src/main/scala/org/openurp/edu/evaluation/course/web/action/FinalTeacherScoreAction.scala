@@ -2,7 +2,7 @@ package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.commons.collection.Order
 import org.beangle.commons.lang.ClassLoaders
-import org.beangle.commons.dao.OqlBuilder
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.context.ActionContext
 import org.beangle.webmvc.api.view.{ Status, View }
 import org.beangle.webmvc.entity.action.RestfulAction
@@ -15,20 +15,21 @@ import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
 import org.openurp.edu.evaluation.lesson.stat.model.FinalTeacherScore
 
 import net.sf.jxls.transformer.XLSTransformer
+import java.time.LocalDate
 
 class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
 
   override def index(): String = {
     put("departments", findItemsBySchool(classOf[Department]))
     put("semesters", getSemesters())
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
     forward();
   }
 
   override def search(): String = {
     // 页面条件
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     val finalScores = OqlBuilder.from(classOf[FinalTeacherScore], "finalTeacherScore")
@@ -53,7 +54,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     val beans = new java.util.HashMap[String, Any]
     beans.put("list", list)
     //获得模板路径
-    val path = ClassLoaders.getResourceAsStream("template/finalTeacherScore.xls")
+    val path = ClassLoaders.getResourceAsStream("template/finalTeacherScore.xls").get
     //准备输出流
     val response = ActionContext.current.response
     response.setContentType("application/x-excel")
@@ -74,7 +75,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
   }
 
   def rankStat(): View = {
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     //    排名
@@ -117,7 +118,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
 
     val semesters = entityDao.getAll(classOf[Semester])
     put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", new java.util.Date())
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
     forward()
   }
