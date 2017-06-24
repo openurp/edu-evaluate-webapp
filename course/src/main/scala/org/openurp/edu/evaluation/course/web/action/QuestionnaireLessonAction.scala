@@ -55,7 +55,7 @@ class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire")
     query.where("questionnaire.state=true").where(
       "questionnaire.beginOn <= :now and (questionnaire.endOn is null or questionnaire.endOn >= :now)",
-      new java.util.Date())
+      LocalDate.now)
     put("questionnaires", entityDao.search(query))
     // 判断(问卷是否存在)
     questionnaireId match {
