@@ -337,6 +337,7 @@ class LessonAction extends RestfulAction[EvaluateResult] {
             evaluateResult.questionResults += questionResult
           }
           evaluateResult.remark = get("evaluateResult.remark").getOrElse("")
+          evaluateResult.score= evaluateResult.questionResults.foldLeft(0f)(_ + _.score)
           entityDao.saveOrUpdate(evaluateResult)
         }
         //        如果是按照课程评教，且是多个教师
@@ -360,11 +361,11 @@ class LessonAction extends RestfulAction[EvaluateResult] {
               evaluateResult.questionnaire = questionnaire
               evaluateResult.questionResults += questionResult
             }
+            evaluateResult.score= evaluateResult.questionResults.foldLeft(0f)(_ + _.score)
             evaluateResult.remark = get("evaluateResult.remark").getOrElse("")
             entityDao.saveOrUpdate(evaluateResult)
           }
         }
-
       }
       redirect("search", "&semester.id=" + lesson.semester.id, "info.save.success")
     } catch {

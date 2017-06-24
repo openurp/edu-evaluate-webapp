@@ -27,6 +27,7 @@ import org.openurp.edu.lesson.model.Lesson
 import org.beangle.commons.lang.Strings
 import org.beangle.webmvc.api.annotation.action
 import java.time.LocalDate
+import org.beangle.commons.collection.Collections
 
 class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson] {
 
@@ -46,6 +47,7 @@ class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
+
     // 检查时间
     val evaluateSwitch = evaluateSwitchService.getEvaluateSwitch(semester, currentProject)
     if (null != evaluateSwitch) {

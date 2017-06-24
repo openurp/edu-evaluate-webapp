@@ -31,7 +31,7 @@ class ImportDepartListener(entityDao: EntityDao) extends AbstractTransferListene
         this.transfer.current = s
       }
     }
-  }
+  }  
 
   override def onItemFinish(tr: TransferResult) {
     val departEvaluate = tr.transfer.current.asInstanceOf[DepartEvaluate]
