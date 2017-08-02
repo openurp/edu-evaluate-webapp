@@ -4,26 +4,30 @@
 	<parent>
 		<groupId>org.openurp</groupId>
 		<artifactId>openurp-parent</artifactId>
-		<version>0.0.17</version>
+		<version>0.2.0</version>
 	</parent>
-  <groupId>org.openurp.edu.evaluate</groupId>
-  <artifactId>openurp-edu-evaluate-parent</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+  <groupId>org.openurp.edu.evaluation</groupId>
+  <artifactId>openurp-edu-evaluation-parent</artifactId>
+	<version>0.0.1</version>
   <packaging>pom</packaging>
-  <name>OpenURP Edu Evaluate Parent</name>
+  <name>OpenURP Edu Evaluation Parent</name>
 
   <properties>
-    <bundle.symbolicName>org.openurp.edu.evaluate.parent</bundle.symbolicName>
+    <bundle.symbolicName>org.openurp.edu.evaluation.parent</bundle.symbolicName>
     <bundle.namespace>org.openurp</bundle.namespace>
-    <beangle.webui.version>0.0.4</beangle.webui.version>
-    <hibernate.version>4.3.1.Final</hibernate.version>
-    <openurp.platform.version>0.0.5</openurp.platform.version>	
+    <openurp.platform.version>0.0.20</openurp.platform.version>
+    <openurp.api.version>0.0.18</openurp.api.version>
+    <jxls.version>1.0.3</jxls.version>
   </properties>
 
   <modules>
+    <module>core</module>
     <module>course</module>
+    <module>department</module>
     <module>questionnaire</module>
-    <module>webapp</module>
+    <module>teacher</module>
+    <module>adminapp</module>
+    <module>studentapp</module>
   </modules>
 
 </project>

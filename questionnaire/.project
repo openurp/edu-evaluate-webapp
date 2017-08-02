@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-  <name>openurp-edu-evaluate-questionnaire</name>
+  <name>openurp-edu-evaluation-questionnaire</name>
   <comment>The Beangle Software provides agile development scaffold and toolkits. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
-  <projects/>
+  <projects>
+    <project>openurp-edu-evaluation-core</project>
+  </projects>
   <buildSpec>
     <buildCommand>
       <name>org.scala-ide.sdt.core.scalabuilder</name>

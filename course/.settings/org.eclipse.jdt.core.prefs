@@ -1,9 +1,9 @@
-#Thu Nov 12 10:29:14 CST 2015
-org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
+#Sat Jun 24 08:29:49 CST 2017
+org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.8
 encoding/src/test/scala=UTF-8
 eclipse.preferences.version=1
-org.eclipse.jdt.core.compiler.source=1.6
+org.eclipse.jdt.core.compiler.source=1.8
 encoding/src/test/resources=UTF-8
 encoding/src/main/resources=UTF-8
 encoding/src/main/scala=UTF-8
-org.eclipse.jdt.core.compiler.compliance=1.6
+org.eclipse.jdt.core.compiler.compliance=1.8

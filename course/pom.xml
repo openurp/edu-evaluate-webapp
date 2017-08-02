@@ -2,30 +2,34 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.openurp.edu.evaluate</groupId>
-    <artifactId>openurp-edu-evaluate-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <groupId>org.openurp.edu.evaluation</groupId>
+    <artifactId>openurp-edu-evaluation-parent</artifactId>
+    <version>0.0.1</version>
   </parent>
-  <groupId>org.openurp.edu.evaluate</groupId>
-  <artifactId>openurp-edu-evaluate-course</artifactId>
+  <groupId>org.openurp.edu.evaluation</groupId>
+  <artifactId>openurp-edu-evaluation-course</artifactId>
   <packaging>jar</packaging>
-  <name>OpenURP Edu-Evaluate Course</name>
+  <name>OpenURP Edu-evaluation Course</name>
 
   <properties>
-    <bundle.symbolicName>org.openurp.edu.evaluate.course</bundle.symbolicName>
-    <bundle.namespace>org.openurp.edu.evaluate</bundle.namespace>
-    <openurp.api.version>0.0.5</openurp.api.version>
+    <bundle.symbolicName>org.openurp.edu.evaluation.course</bundle.symbolicName>
+    <bundle.namespace>org.openurp.edu.evaluation</bundle.namespace>
   </properties>
 
     <dependencies>
-      <dependency>
+    <dependency>
         <groupId>org.openurp.edu.evaluation</groupId>
-        <artifactId>openurp-edu-evaluation-model</artifactId>
-        <version>${openurp.api.version}</version>
+        <artifactId>openurp-edu-evaluation-core</artifactId>
+        <version>${project.version}</version>
       </dependency>
     <dependency>
+      <groupId>org.openurp.platform.api</groupId>
+      <artifactId>openurp-platform-api-cas</artifactId>
+      <version>${openurp.platform.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.beangle.webmvc</groupId>
-      <artifactId>beangle-webmvc-entity-plugin_2.11</artifactId>
+      <artifactId>beangle-webmvc-entity-plugin_2.12</artifactId>
     </dependency>
     <dependency>
       <groupId>org.openurp.platform.api</groupId>
@@ -35,6 +39,11 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
+    </dependency>
+        <dependency>
+      <groupId>net.sf.jxls</groupId>
+      <artifactId>jxls-core</artifactId>
+      <version>${jxls.version}</version>
     </dependency>
    </dependencies>
 </project>

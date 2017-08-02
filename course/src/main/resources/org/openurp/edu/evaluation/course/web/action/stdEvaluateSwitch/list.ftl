@@ -1,0 +1,21 @@
+[#ftl]
+[@b.head/]
+[@b.form name="evaluateSwitchSearchForm" action="!search" target="contentDiv"]
+    [@b.grid items=stdEvaluateSwitchs var="stdEvaluateSwitch" sortable="true"]    
+        [@b.gridbar title="评教开关列表"]
+            bar.addItem("${b.text('action.add')}",action.add());
+            bar.addItem("${b.text('action.edit')}",action.edit());
+            bar.addItem("${b.text('action.delete')}",action.remove("确认删除?"));
+        [/@]
+        [@b.row]
+            [@b.boxcol/]
+            [@b.col width="10%" property="semester.code" title="学年学期"]${(stdEvaluateSwitch.semester.code)!}[/@]
+            [@b.col property="opened" title="开放状态"]${(stdEvaluateSwitch.opened?string("开放","关闭"))!}[/@]
+            [@b.col property="beginAt" title="开始时间"]${(stdEvaluateSwitch.beginAt)!}[/@]
+            [@b.col property="endAt" title="结束时间"]${(stdEvaluateSwitch.endAt)!}[/@]
+            [@b.col title="已设置问卷课程数"]${countMap.get(stdEvaluateSwitch.semester.id)!0}[/@]
+            [@b.col title="未设置问卷课程数"]${lessonCountMap.get(stdEvaluateSwitch.semester.id)!0}[/@]
+        [/@]
+    [/@]
+[/@]
+[@b.foot/]
