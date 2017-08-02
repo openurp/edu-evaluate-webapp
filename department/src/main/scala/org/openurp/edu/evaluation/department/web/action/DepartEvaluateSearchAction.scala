@@ -9,6 +9,7 @@ import org.beangle.commons.collection.Order
 import org.openurp.base.model.Department
 import org.openurp.base.model.Semester
 import java.time.LocalDate
+import org.beangle.webmvc.api.view.View
 
 class DepartEvaluateSearchAction extends ProjectRestfulAction[DepartEvaluate] {
 
@@ -17,10 +18,9 @@ class DepartEvaluateSearchAction extends ProjectRestfulAction[DepartEvaluate] {
     put("semesters", getSemesters())
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
-
   }
 
-  override def search(): String = {
+  override def search(): View = {
     // 页面条件
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("departEvaluate.semester.id").getOrElse(entityDao.search(semesterQuery).head.id)

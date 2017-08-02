@@ -11,9 +11,10 @@ import org.beangle.commons.collection.Collections
 import org.beangle.commons.collection.Order
 import org.openurp.edu.evaluation.model.Option
 import java.time.LocalDate
+import org.beangle.webmvc.api.view.View
 
 class CourseEvalSearchAction extends RestfulAction[CourseEvalStat] {
-  override def index(): String = {
+  override def index(): View = {
     val semesters = entityDao.getAll(classOf[Semester])
     put("semesters", semesters)
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
@@ -21,7 +22,7 @@ class CourseEvalSearchAction extends RestfulAction[CourseEvalStat] {
     forward()
   }
 
-  override def search(): String = {
+  override def search(): View = {
     // 页面条件
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
@@ -34,7 +35,7 @@ class CourseEvalSearchAction extends RestfulAction[CourseEvalStat] {
     forward()
   }
 
-  def info(): String = {
+  def info(): View = {
     val questionnaireStat = entityDao.get(classOf[CourseEvalStat], getLong("courseEvalStat.id").get)
     put("questionnaireStat", questionnaireStat);
     // zongrenci fix

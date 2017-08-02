@@ -40,16 +40,6 @@ class TextAction extends RestfulAction[TextEvaluation] {
     results foreach { teacherRemessage =>
       otherMap.getOrElseUpdate(teacherRemessage.textEvaluation.teacher.id, Collections.newBuffer[TeacherRemessage]) += teacherRemessage
     }
-    //    for (EvaluateTeacherRemessage evaluateTeacherRemessage : entityDao.search(query)) {
-    //      List<EvaluateTeacherRemessage> evaluateTeacherRemessages = otherMap.get(evaluateTeacherRemessage
-    //          .getTextEvaluation().getTeacher().getId());
-    //      if (null == evaluateTeacherRemessages) {
-    //        evaluateTeacherRemessages = CollectUtils.newArrayList();
-    //      }
-    //      evaluateTeacherRemessages.add(evaluateTeacherRemessage);
-    //      otherMap.put(evaluateTeacherRemessage.getTextEvaluation().getTeacher().getId(),
-    //          evaluateTeacherRemessages);
-    //    }
     for (teacher <- teachers) {
       if (!otherMap.contains(teacher.id)) {
         otherMap.put(teacher.id, null);
@@ -163,11 +153,9 @@ class TextAction extends RestfulAction[TextEvaluation] {
     if (std == null) { forward("error.std.stdNo.needed") }
     val semesters = entityDao.getAll(classOf[Semester])
     put("semesters", semesters)
-    //    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    //    put("currentSemester", entityDao.search(semesterQuery).head)
   }
 
-  override def search(): String = {
+  override def search(): View = {
     val std = getStudent()
     if (std == null) { forward("error.std.stdNo.needed") }
     // 页面条件
@@ -193,7 +181,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
     forward()
   }
 
-  def loadTextEvaluate(): String = {
+  def loadTextEvaluate(): View = {
     val evaluateId = get("evaluateId").get
     val evaluateState = get("evaluateState").get
     val ids = get("evaluateId").get.split(",")
@@ -224,7 +212,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
     put("teacher", teacher);
     put("lesson", lesson);
     put("evaluateState", evaluateState);
-    forward();
+    forward()
   }
 
   def saveTextEvaluate(): View = {
@@ -253,7 +241,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
     }
   }
 
-  def remsgList(): String = {
+  def remsgList(): View = {
     val std = getStudent()
     val ids = longIds("lesson")
     val teachers = getTeachersByLessonIdSeq(ids);
@@ -268,6 +256,6 @@ class TextAction extends RestfulAction[TextEvaluation] {
     put("textEvaluationMap", getMyTextEvaluationMap(std, semester, teachers));
     // 获得(评教回复-其他)
     put("otherMap", getOtherMap(std, semester, teachers));
-    forward();
+    forward()
   }
 }

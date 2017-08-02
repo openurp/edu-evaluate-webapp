@@ -22,6 +22,7 @@ import org.beangle.webmvc.api.action.ServletSupport
 import javax.servlet.ServletResponse
 import org.openurp.edu.base.model.Teacher
 import java.time.LocalDate
+import org.beangle.webmvc.api.view.View
 
 class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with ServletSupport {
 
@@ -36,7 +37,7 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
   var semest: Semester = _
   var questis: Questionnaire = _
   //
-  override def index(): String = {
+  override def index(): View = {
     /** 本学期是否评教 */
     val builder = OqlBuilder.from[Questionnaire](classOf[EvaluateResult].getName, "evaluateResult");
     val semesters = entityDao.getAll(classOf[Semester])
@@ -52,11 +53,11 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     put("questionnaires", list);
     val departs = entityDao.search(OqlBuilder.from(classOf[Department], "dep").where("dep.teaching =:tea", true))
     put("departmentList", departs);
-    forward();
+    forward()
   }
 
   /** 学院与教师评教结果统计 */
-  override def search(): String = {
+  override def search(): View = {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val departmentId = getInt("department.id").getOrElse(null)
@@ -133,7 +134,7 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
       que.where("evaluateResult.lesson.semester.id=" + semesterId);
       evaResults = entityDao.search(que)(0).toString().toFloat
       put("evaluateResults", evaResults);
-      forward();
+      forward()
     } else if (searchTypes == 2) {
       this.teacherEvaluate();
       forward("teacherEvaluate");
@@ -153,11 +154,11 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
       this.stuEvaluateResults();
       forward("stuEvaluateResults");
     } else {
-      forward();
+      forward()
     }
   }
 
-  def teacherEvaluate(): String = {
+  def teacherEvaluate(): View = {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val departmentId = getInt("department.id").getOrElse(null)
@@ -248,10 +249,10 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     que.where("evaluateResult.questionnaire.id=:ids", id);
     evaResults = entityDao.search(que)(0).toString().toFloat
     put("evaluateResults", evaResults);
-    forward();
+    forward()
   }
 
-  def teaEvaluateInfo(): String = {
+  def teaEvaluateInfo(): View = {
     val str = get("idStrs").get
     val strs = str.split(",");
     val teaId = strs(1).toLong
@@ -394,7 +395,7 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     schQuery.groupBy("questionResult.question.id");
     schQuery.orderBy("questionResult.question.id");
     put("schQRList", entityDao.search(schQuery));
-    forward();
+    forward()
   }
 
   def lessonEvaluate() {
@@ -499,7 +500,7 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
 
   }
 
-  def lessonTeaEvaluate(): String = {
+  def lessonTeaEvaluate(): View = {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val departmentId = getInt("department.id").getOrElse(null)
@@ -581,10 +582,10 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     put("evaluateRes", evaluateRs);
     put("questionnaires", questis);
     put("evaluateResults", evaResults);
-    forward();
+    forward()
   }
 
-  def lessonTeaEvaluateExport(): String = {
+  def lessonTeaEvaluateExport(): View = {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val departmentId = getInt("department.id").getOrElse(null)
@@ -660,10 +661,10 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     put("evaluateResults", evaResults);
     response.setContentType("application/vnd.ms-excel;charset=UTF-8")
     response.setHeader("Content-Disposition", "attachment;filename=evaluateResultsExport.xls")
-    return forward();
+    return forward()
   }
 
-  def evaluateResultsExport(): String = {
+  def evaluateResultsExport(): View = {
     put("evaluateStasList", list1);
     put("evaluateTeaStasList", list2);
     put("evaluateSMaps", evaluateSMaps);
@@ -673,15 +674,15 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     put("evaluateResults", evaResults);
     response.setContentType("application/vnd.ms-excel;charset=UTF-8")
     response.setHeader("Content-Disposition", "attachment;filename=evaluateResultsExport.xls")
-    forward();
+    forward()
   }
 
-  def lessonEvaluateTwo(): String = {
+  def lessonEvaluateTwo(): View = {
     this.lessonEvaluate();
     forward("lessonEvaluate");
   }
 
-  def evaluateTeaResultsExport(): String = {
+  def evaluateTeaResultsExport(): View = {
     put("evaluateStasList", list1);
     put("evaluateTeaStasList", list2);
     put("evaluateSMaps", evaluateSMaps);
@@ -692,10 +693,10 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     put("questionList", questionLists);
     response.setContentType("application/vnd.ms-excel;charset=UTF-8")
     response.setHeader("Content-Disposition", "attachment;filename=evaluateTeaResultsExport.xls");
-    forward();
+    forward()
   }
 
-  def courseTypeEvaluate(courseType: Boolean): String = {
+  def courseTypeEvaluate(courseType: Boolean): View = {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val departmentId = getInt("department.id").getOrElse(null)
@@ -788,10 +789,10 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     put("evaluateRes", evaluateRs);
     put("questionnaires", questis);
     put("evaluateResults", evaResults);
-    return forward();
+    return forward()
   }
 
-  def stuEvaluateResults(): String = {
+  def stuEvaluateResults(): View = {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val depId = getInt("department.id").getOrElse(null)
@@ -858,10 +859,10 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     //      }
     //    }
     put("evaluateRes", evaluateRs);
-    forward();
+    forward()
   }
 
-  def stuEvalutateResultsExport(): String = {
+  def stuEvalutateResultsExport(): View = {
     val semesterId = getInt("semester.id");
     val depId = getInt("department.id");
     /** 得到本学期的唯一问卷 */
@@ -922,10 +923,10 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
     put("evaluateRes", evaluateRs);
     response.setContentType("application/vnd.ms-excel;charset=UTF-8");
     response.setHeader("Content-Disposition", "attachment;filename=stuEvaluateResultsExport.xls");
-    forward();
+    forward()
   }
 
-  def evaluateHistorys(): String = {
-    forward();
+  def evaluateHistorys(): View = {
+    forward()
   }
 }

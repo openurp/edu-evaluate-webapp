@@ -22,7 +22,7 @@ import java.time.Instant
 
 class QuestionnaireAction extends RestfulAction[Questionnaire] {
 
-  override def search(): String = {
+  override def search(): View = {
     val builder = OqlBuilder.from(classOf[Questionnaire], "questionnaire")
     populateConditions(builder)
     builder.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
@@ -47,24 +47,12 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] {
       questions.sortWith((x, y) => x.priority < y.priority)
       questionTree.put(key, questions);
     }
-    //    val questionTree = Collections.newMap[String,Buffer[Question]]
-    //    questionnaire.questions foreach { question =>
-    //      val key = question.questionType.name
-    //      var questions: Buffer[Question] = questionTree.get(key).orNull
-    //      if (null == questions) {
-    //        questions = Collections.newBuffer
-    //      }
-    //      questions += question
-    //     questions.sortWith((x,y)=> x.priority < y.priority)
-    //      questionTree.put(key, questions);
-    //    }
     put("questions", questionnaire.questions);
     put("questionTree", questionTree);
 
   }
 
-  override def info(@param("id") id: String): String = {
-    //    val entityId = longId("questionnaire");
+  override def info(@param("id") id: String): View = {
     if (id == 0L) {
       logger.info("查看失败");
       redirect("search", "请选择一条记录");
@@ -83,7 +71,7 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] {
     }
     put("questionTree", questionTree);
     put("questionnaire", questionnaire);
-    forward();
+    forward()
   }
 
   override def saveAndRedirect(entity: Questionnaire): View = {
@@ -130,7 +118,7 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] {
     return redirect("search", "删除成功");
   }
 
-  def searchQuestion(): String = {
+  def searchQuestion(): View = {
     val questionSeq = get("questionSeq")
 
     val entityQuery = OqlBuilder.from(classOf[Question], "question")
@@ -148,7 +136,7 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] {
     put("questionSeqIds", questionSeq);
     val questions = entityDao.search(entityQuery)
     put("questions", questions);
-    forward();
+    forward()
   }
 
 }

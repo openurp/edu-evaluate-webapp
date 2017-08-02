@@ -42,7 +42,7 @@ class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson
     put("questionnaires", entityDao.getAll(classOf[Questionnaire]))
   }
 
-  override def search(): String = {
+  override def search(): View = {
     val questionnaireId = getLong("questionnaire.id").getOrElse(-1)
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
@@ -85,11 +85,6 @@ class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson
     query.where("questionnaireLesson.lesson.project = :project", currentProject)
     // 隐性条件(问卷类别,起始周期,上课人数)
     val questionnaireId = getLong("questionnaire.id").getOrElse(-1)
-    //    val startWeekFrom = getInt("startWeekFrom")
-    //    val startWeekEnd = getInt("startWeekEnd")
-    //    val stdCountFrom = getInt("stdCountFrom")
-    //    val stdCountEnd = getInt("stdCountEnd")
-    //    val hasTeacher = getBoolean("hasTeacher").get
     val teacherName = get("teacher").orNull
     if (Strings.isNotBlank(teacherName)) {
       query.join("questionnaireLesson.lesson.teachers", "teacher")
@@ -99,26 +94,6 @@ class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson
       query.where("questionnaireLesson.questionnaire.id =:questionnaireId", questionnaireId)
 
     }
-    //    if (startWeekFrom != null) {
-    //      query.where("lesson.schedule.firstWeek >=:startWeekFrom", startWeekFrom)
-    //    }
-    //    if (startWeekEnd != null) {
-    //      query.where("lesson.schedule.firstWeek <=:startWeekEnd", startWeekEnd)
-    //    }
-    //    stdCountFrom foreach { s =>
-    //      query.where("lesson.teachclass.stdCount >=:stdCountFrom", s)
-    //    }
-    //    stdCountEnd foreach { e =>
-    //      query.where("lesson.teachclass.stdCount <=:stdCountEnd", e)
-    //    }
-    //    if (hasTeacher != null) {
-    //      if (hasTeacher) {
-    //        query.where("size(lesson.teachers) != 0")
-    //      } else {
-    //        query.where("size(lesson.teachers) = 0")
-    //      }
-    //    }
-    //    query.where("lesson.teachDepart.id in (:teachDeparts)", getInt("teachDeparts"))
     query.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
     query
   }
@@ -144,37 +119,6 @@ class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson
       query.join("lesson.teachers", "teacher")
       query.where("teacher.person.name.formatedName like :teacherName", "%" + teacherName + "%")
     }
-    //        val lessonNo= get("questionnaireLesson.lesson.no").get
-    //    lessonNo foreach {e =>
-    //      query.where("lesson.no =:no",e)
-    //      }
-    // 隐性条件(问卷类别,起始周期,上课人数)
-    //    val startWeekFrom = getInt("startWeekFrom")
-    //    val startWeekEnd = getInt("startWeekEnd")
-    //    val stdCountFrom = getInt("stdCountFrom")
-    //    val stdCountEnd = getInt("stdCountEnd")
-    //    val hasTeacher = 1
-    //      getBoolean("hasTeacher")
-
-    //        startWeekFrom foreach { a =>
-    //          query.where("lesson.schedule.firstWeek >=:startWeekFrom", a)
-    //        }
-    //        startWeekEnd foreach {a =>
-    //          query.where("lesson.schedule.firstWeek <=:startWeekEnd", a)
-    //        }
-    //    stdCountFrom foreach { s =>
-    //      query.where("lesson.teachclass.stdCount >=:stdCountFrom", s)
-    //    }
-    //    stdCountEnd foreach { e =>
-    //      query.where("lesson.teachclass.stdCount <=:stdCountEnd", e)
-    //    }
-    //    if (hasTeacher!=null) {
-    //      if (hasTeacher==1) {
-    //        query.where("size(lesson.teachers) != 0")
-    //      } else {
-    //        query.where("size(lesson.teachers) = 0")
-    //      }
-    //    }
     // 排除(已有问卷)
     query.where("not exists(from " + classOf[QuestionnaireLesson].getName + " questionnaireLesson"
       + " where questionnaireLesson.lesson = lesson)")
@@ -254,8 +198,8 @@ class QuestionnaireLessonAction extends ProjectRestfulAction[QuestionnaireLesson
     //        redirect("search", "----..---info.action.failure")
     //    }
   }
-//
-//  def setEvaluateSwitchService(evaluateSwitchService: StdEvaluateSwitchService) {
-//    this.evaluateSwitchService = evaluateSwitchService
-//  }
+  //
+  //  def setEvaluateSwitchService(evaluateSwitchService: StdEvaluateSwitchService) {
+  //    this.evaluateSwitchService = evaluateSwitchService
+  //  }
 }

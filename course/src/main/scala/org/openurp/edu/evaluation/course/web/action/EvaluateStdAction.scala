@@ -1,40 +1,21 @@
 package org.openurp.edu.evaluation.course.web.action
 
+import java.time.{ Instant, LocalDate }
+
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Semester
-import org.openurp.edu.base.model.Student
-import org.openurp.edu.base.model.Teacher
+import org.openurp.edu.base.model.{ Student, Teacher }
+import org.openurp.edu.evaluation.app.lesson.service.{ LessonFilterStrategyFactory, StdEvaluateSwitchService }
 import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.model.Option
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.lesson.model.CourseTaker
-import org.openurp.edu.lesson.model.Lesson
+import org.openurp.edu.evaluation.lesson.result.model.{ EvaluateResult, QuestionResult }
+import org.openurp.edu.evaluation.model.{ Option, Question }
+import org.openurp.edu.lesson.model.{ CourseTaker, Lesson }
 import org.openurp.platform.api.security.Securities
-import org.openurp.edu.evaluation.app.lesson.service.LessonFilterStrategyFactory
-import org.openurp.edu.evaluation.app.lesson.service.StdEvaluateSwitchService
-import java.time.LocalDate
-import java.time.Instant
 
 class EvaluateStdAction extends RestfulAction[EvaluateResult] {
-
-  //  public List<Object[]> getLessonIdAndTeacherIdOfResult(Student student, Semester semester) {
-  //    List<Object[]> results = CollectUtils.newArrayList();
-  //    if (null != student && null != semester) {
-  //      String hql = "select evaluateResult.lesson.id,evaluateResult.teacher.id"
-  //          + " from org.openurp.edu.teach.evaluate.course.model.EvaluateResult evaluateResult"
-  //          + " where evaluateResult.student =:student and evaluateResult.lesson.semester =:semester";
-  //      OqlBuilder<Object[]> query = OqlBuilder.from(hql);
-  //      query.param("student", student);
-  //      query.param("semester", semester);
-  //      results = entityDao.search(query);
-  //    }
-  //    return results;
-  //  }
 
   def getResultByStdIdAndLessonId(stdId: Long, lessonId: Long, teacherId: Long): EvaluateResult = {
     val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult")
@@ -87,7 +68,7 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
     put("currentSemester", entityDao.search(semesterQuery).head)
   }
 
-  override def search(): String = {
+  override def search(): View = {
     val std = getStudent()
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
@@ -105,13 +86,13 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
     val evaluateMap = getLessonIdAndTeacherIdOfResult(std, semester);
     put("evaluateMap", evaluateMap);
     put("questionnaireLessons", myLessons);
-    forward();
+    forward()
   }
 
   /**
    * 跳转(问卷页面)
    */
-  def loadQuestionnaire(): String = {
+  def loadQuestionnaire(): View = {
     val lessonId = get("lessonId").get
     val evaluateState = get("evaluateState").get
     val semesterId = getInt("semester.id").get
@@ -183,7 +164,7 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
     //questionnaire = entityDao.get(classOf[Questionnaire], questionnaireLesson.questionnaire.id);
     put("questionnaire", questionnaireLesson.questionnaire);
     put("evaluateState", evaluateState);
-    forward();
+    forward()
   }
 
   def getStudent(): Student = {

@@ -29,7 +29,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     put("currentSemester", entityDao.search(semesterQuery).head)
   }
 
-  override def search(): String = {
+  override def search(): View = {
     val teacher = getTeacher()
     if (teacher == null) { forward("error.teacher.teaNo.needed") }
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
@@ -49,10 +49,10 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     val results = entityDao.search(query)
     put("lessons", results)
     put("semester", semester)
-    forward();
+    forward()
   }
 
-  def searchTextEvaluation(): String = {
+  def searchTextEvaluation(): View = {
     val teacher = getTeacher()
     if (teacher == null) { forward("error.teacher.teaNo.needed") }
     val lessonId = getLong("lesson.id").get
@@ -96,7 +96,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     put("lesson", entityDao.get(classOf[Lesson], lessonId));
     put("teachclasses", teachClasses)
     put("semester", semester)
-    forward();
+    forward()
   }
 
   def saveEvaluateRemessageToStd(): View = {
@@ -151,7 +151,6 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
       redirect("searchTextEvaluation", "&lesson.id=" + lessonId + "&semesterId=" + semesterId, "保存失败,你没有权限!");
     }
     // 查询(班级)
-    //    val hql = "select courseTake"+ " from org.openurp.edu.teach.lesson.model.Lesson lesson"+ " join lesson.teachers teacher join lesson.teachclass.courseTakers courseTake"+ " where teacher =:teacher and lesson.semester.id =:semesterId and lesson.teachclass.name in (:classNames)";
     val query = OqlBuilder.from[CourseTaker](classOf[Lesson].getName, "lesson")
     query.join("left", "lesson.teachers", "teacher")
     query.join("left", "lesson.teachclass.courseTakers", "courseTaker")
@@ -169,9 +168,6 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     courseTakers foreach { courseTaker =>
       teacherRemessage.students += courseTaker.std
     }
-    //    for (CourseTaker courseTaker : courseTakers) {
-    //      evaluateTeacherRemessage.addStudent(courseTaker.getStd());
-    //    }
     if (!isAnn) {
       val std = entityDao.get(classOf[Student], stdId.get);
       teacherRemessage.students += std
@@ -191,7 +187,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     }
   }
 
-  def showAnn(): String = {
+  def showAnn(): View = {
     var semesterId = getInt("semesterId").getOrElse(0)
     if (0 == semesterId) {
       semesterId = getInt("semester.id").get
@@ -202,7 +198,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     forward()
   }
 
-  def listAnn(): String = {
+  def listAnn(): View = {
     val teacher = getTeacher()
     if (teacher == null) { forward("error.teacher.teaNo.needed") }
     val lessonId = getLong("lessonId").get
@@ -213,12 +209,6 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     query.where("teacherRemessage.textEvaluation.lesson.semester.id =:semesterId", semesterId);
     query.orderBy("teacherRemessage.createdAt desc").limit(getPageLimit)
     put("teacherRemessages", entityDao.search(query));
-    forward();
+    forward()
   }
-  //
-  ////  def setTextEvaluationSwitchService(TextEvaluationSwitchService textEvaluationSwitchService) {
-  ////    this.textEvaluationSwitchService = textEvaluationSwitchService;
-  ////  }
-  //
-  //
 }

@@ -17,11 +17,9 @@ class StdEvaluateSwitchAction extends ProjectRestfulAction[StdEvaluateSwitch] {
 
   protected override def indexSetting(): Unit = {
     put("semesters", getSemesters())
-    //    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    //    put("currentSemester", entityDao.search(semesterQuery).head)
   }
 
-  override def search(): String = {
+  override def search(): View = {
     val opened = getBoolean("evaluateSwitch.opened")
     val semesterId = getInt("evaluateSwitch.semester.id")
     val queryQuestionnaire = OqlBuilder.from[Array[Any]](classOf[QuestionnaireLesson].getName, "questionnaireLesson")

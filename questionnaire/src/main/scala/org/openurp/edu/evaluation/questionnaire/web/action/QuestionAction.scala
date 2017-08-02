@@ -31,7 +31,7 @@ class QuestionAction extends RestfulAction[Question] {
 
   var questionTypeService: QuestionTypeService = _
 
-  override def search(): String = {
+  override def search(): View = {
     val builder = OqlBuilder.from(classOf[Question], "question")
     populateConditions(builder)
     builder.orderBy(get(Order.OrderStr).getOrElse("question.state desc")).limit(getPageLimit)
@@ -89,6 +89,7 @@ class QuestionAction extends RestfulAction[Question] {
         return redirect("search", "info.save.failure");
     }
   }
+
   override def remove(): View = {
     val questionIds = longId("question");
     val questions = entityDao.get(classOf[Question], questionIds);

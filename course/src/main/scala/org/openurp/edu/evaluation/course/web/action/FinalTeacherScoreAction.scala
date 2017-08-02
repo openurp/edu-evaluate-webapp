@@ -19,15 +19,15 @@ import java.time.LocalDate
 
 class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
 
-  override def index(): String = {
+  override def index(): View = {
     put("departments", findItemsBySchool(classOf[Department]))
     put("semesters", getSemesters())
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
-    forward();
+    forward()
   }
 
-  override def search(): String = {
+  override def search(): View = {
     // 页面条件
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
@@ -107,7 +107,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
   /**
    * 跳转(统计首页面)
    */
-  def statHome(): String = {
+  def statHome(): View = {
 
     put("stdTypeList", entityDao.getAll(classOf[StdType]))
     put("departmentList", entityDao.getAll(classOf[Department]))
@@ -122,6 +122,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     put("currentSemester", entityDao.search(semesterQuery).head)
     forward()
   }
+
   def stat(): View = {
 
     val semesterId = getInt("semester.id").get

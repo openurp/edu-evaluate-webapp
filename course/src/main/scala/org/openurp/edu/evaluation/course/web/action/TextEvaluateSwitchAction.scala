@@ -2,13 +2,7 @@ package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.model.Semester
-import org.openurp.base.model.Semester
-import org.openurp.base.model.Semester
 import org.openurp.edu.evaluation.app.lesson.model.TextEvaluateSwitch
-import org.openurp.edu.base.model.Project
-import org.beangle.webmvc.api.annotation.action
 
 class TextEvaluateSwitchAction extends ProjectRestfulAction[TextEvaluateSwitch] {
 
@@ -16,7 +10,7 @@ class TextEvaluateSwitchAction extends ProjectRestfulAction[TextEvaluateSwitch] 
     put("semesters", getSemesters())
   }
 
-  override def search(): String = {
+  override def search(): View = {
     val opened = getBoolean("opened")
     val semesterId = getInt("semester.id")
     val textEvaluationSwitchs = OqlBuilder.from(classOf[TextEvaluateSwitch], "textEvaluateSwitch")

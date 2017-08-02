@@ -47,18 +47,8 @@ import java.time.LocalDate
 import java.time.Instant
 
 class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
-  //
-  //
-  //  protected QuestionTypeService questionTypeService
-  //
-  //  protected QuestionnairStatService questionnairStatService
-  //
-  override def index(): String = {
-    //    val stdType = entityDao.get(classOf[StdType], 5)
-    //    put("stdTypeList", stdType)
-    //    val department = entityDao.get(classOf[Department], 20)
-    //    put("departmentList", department)
 
+  override def index(): View = {
     var searchFormFlag = get("searchFormFlag").orNull
     if (searchFormFlag == null) {
       searchFormFlag = "beenStat"
@@ -74,7 +64,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     forward()
   }
 
-  override def search(): String = {
+  override def search(): View = {
     // 页面条件
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
@@ -110,7 +100,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
   /**
    * 院系历史评教
    */
-  def depHistoryStat(): String = {
+  def depHistoryStat(): View = {
     val lis = entityDao.search(OqlBuilder.from(classOf[EvaluationCriteriaItem], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L))
     if (lis.size < 1) { redirect("search", "未找到评价标准！") }
     put("criterias", lis)
@@ -151,7 +141,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
   /**
    * 院系评教统计
    */
-  def departmentChoiceConfig(): String = {
+  def departmentChoiceConfig(): View = {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
@@ -199,7 +189,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
   /**
    * 历史评教统计
    */
-  def historyCollegeStat(): String = {
+  def historyCollegeStat(): View = {
     val lis = entityDao.search(OqlBuilder.from(classOf[EvaluationCriteriaItem], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L))
     if (lis.size < 1) { redirect("search", "未找到评价标准！") }
     put("criterias", lis)
@@ -237,7 +227,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
   /**
    * 分项评教汇总
    */
-  def collegeGroupItemInfo(): String = {
+  def collegeGroupItemInfo(): View = {
     val lis = entityDao.search(OqlBuilder.from(classOf[EvaluationCriteriaItem], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L))
     if (lis.size < 1) { redirect("search", "未找到评价标准！") }
     put("criterias", lis)
@@ -287,7 +277,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
   /**
    * 教师历史评教
    */
-  def evaluateTeachHistory(): String = {
+  def evaluateTeachHistory(): View = {
     val id = getLong("lessonEvalStat.id").get
     val questionnaires = entityDao.get(classOf[LessonEvalStat], id)
     val query = OqlBuilder.from(classOf[LessonEvalStat], "questionnaires")
@@ -298,7 +288,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     forward()
   }
 
-  def teachQuestionDetailStat(): String = {
+  def teachQuestionDetailStat(): View = {
     put("questionnaires", entityDao.get(classOf[LessonEvalStat], getLong("questionnaireStat.id").get))
     forward()
   }
@@ -306,7 +296,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
   /**
    * 跳转(统计首页面)
    */
-  def statHome(): String = {
+  def statHome(): View = {
     put("stdTypeList", entityDao.getAll(classOf[StdType]))
     put("departmentList", entityDao.getAll(classOf[Department]))
 
@@ -324,18 +314,14 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
   /**
    * 跳转(初始有效值页面)
    */
-  def initValidHome(): String = {
-    //    put("stdTypeList", getStdTypes())
-    //    put("departmentList", getColleges())
-
+  def initValidHome(): View = {
     forward()
   }
 
   /**
    * 设置有效记录
    */
-  def setValid(): String = {
-    //    redirect(new Action(classOf[EvaluateResultStatAction], "search"), "更新成功")
+  def setValid(): View = {
     forward()
   }
 
@@ -445,7 +431,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
 
       questionS.totalScore = evaObject(3).toString().toFloat
       val avgScore = evaObject(4).toString().toFloat
-      questionS.avgScore = (Math.round(avgScore*100)*1.0/100).floatValue
+      questionS.avgScore = (Math.round(avgScore * 100) * 1.0 / 100).floatValue
       questionS.tickets = Integer.valueOf(evaObject(5).toString())
       questionS.totalTickets = questionS.tickets
       //questionS.totalTickets = Integer.valueOf(evaObject(5).toString())

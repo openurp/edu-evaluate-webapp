@@ -15,16 +15,11 @@ import org.beangle.commons.collection.Order
 import org.beangle.webmvc.api.annotation.mapping
 import org.beangle.webmvc.api.annotation.param
 import java.time.LocalDate
+import org.beangle.webmvc.api.view.View
 
 class LessonEvalSearchAction extends RestfulAction[LessonEvalStat] {
-  //
-  //  protected TeacherService teachService;
-  //
-  //  protected QuestionnairStatService questionnairStatService;
-  //
-  //  protected EvaluationCriteriaService evaluationCriteriaService;
 
-  override def index(): String = {
+  override def index(): View = {
     val semesters = entityDao.getAll(classOf[Semester])
     put("semesters", semesters)
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
@@ -32,7 +27,7 @@ class LessonEvalSearchAction extends RestfulAction[LessonEvalStat] {
     forward()
   }
 
-  override def search(): String = {
+  override def search(): View = {
     // 页面条件
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
@@ -46,10 +41,10 @@ class LessonEvalSearchAction extends RestfulAction[LessonEvalStat] {
   }
 
   @mapping(value = "{id}")
-  override def info(@param("id") id: String): String = {
+  override def info(@param("id") id: String): View = {
     val questionnaireStat = entityDao.get(classOf[LessonEvalStat], java.lang.Long.parseLong(id));
     put("questionnaireStat", questionnaireStat);
-    
+
     val list = Collections.newBuffer[Option]
     val questions = questionnaireStat.questionnaire.questions
     questions foreach { question =>
@@ -70,18 +65,5 @@ class LessonEvalSearchAction extends RestfulAction[LessonEvalStat] {
     put("questionnaireStat", questionnaireStat);
     forward()
   }
-  //
-  //  public void setTeachService(TeacherService teachService) {
-  //    this.teachService = teachService;
-  //  }
-  //
-  //  public void setQuestionnairStatService(QuestionnairStatService questionnairStatService) {
-  //    this.questionnairStatService = questionnairStatService;
-  //  }
-  //
-  //  public void setEvaluationCriteriaService(EvaluationCriteriaService evaluationCriteriaService) {
-  //    this.evaluationCriteriaService = evaluationCriteriaService;
-  //  }
-  //
 
 }

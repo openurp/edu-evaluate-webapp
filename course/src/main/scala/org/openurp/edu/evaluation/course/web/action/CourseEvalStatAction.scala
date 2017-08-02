@@ -19,7 +19,7 @@ import org.openurp.edu.lesson.model.Lesson
 
 class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
 
-  override def index(): String = {
+  override def index(): View = {
     val stdType = entityDao.get(classOf[StdType], 5)
     put("stdTypeList", stdType)
     val department = entityDao.get(classOf[Department], 20)
@@ -41,7 +41,7 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
     forward()
   }
 
-  override def search(): String = {
+  override def search(): View = {
     // 页面条件
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
@@ -60,7 +60,7 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
   /**
    * 教师历史评教
    */
-  def evaluateTeachHistory(): String = {
+  def evaluateTeachHistory(): View = {
     val id = getLong("courseEvalStat.id").get
     val questionnaires = entityDao.get(classOf[CourseEvalStat], id)
     val query = OqlBuilder.from(classOf[CourseEvalStat], "questionnaires")
@@ -74,7 +74,7 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
   /**
    * 跳转(统计首页面)
    */
-  def statHome(): String = {
+  def statHome(): View = {
     put("stdTypeList", entityDao.getAll(classOf[StdType]))
     put("departmentList", entityDao.getAll(classOf[Department]))
 

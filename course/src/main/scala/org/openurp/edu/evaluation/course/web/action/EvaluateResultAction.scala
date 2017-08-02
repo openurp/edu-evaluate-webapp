@@ -30,7 +30,7 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
   //    put("stdTypeList", stdType)
   //    val department = entityDao.get(classOf[Department],20)
   //    put("departmentList", department);
-  //    forward();
+  //    forward()
   //  }
   override protected def indexSetting(): Unit = {
     put("semesters", getSemesters())
@@ -42,9 +42,9 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
   //  override def  search(): String = {
   //    val query = getQueryBuilder()
   //    put("evaluateResults", entityDao.search(query))
-  //    forward();
+  //    forward()
   //  }
-  override def search(): String = {
+  override def search(): View = {
     // 页面条件
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
@@ -100,7 +100,7 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
   /**
    * 更改教师
    */
-  def updateTeacher(): String = {
+  def updateTeacher(): View = {
     put("evaluateR", entityDao.get(classOf[EvaluateResult], getLong("evaluateResult").get))
     // put("departments",entityDao.get(Department.class, "",));
     forward()
@@ -122,7 +122,7 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
   /**
    * 查看(详细信息)
    */
-  override def info(@param("id") id: String): String = {
+  override def info(@param("id") id: String): View = {
     //    val entityId = longId("evaluateResult")
     if (null == id) {
       logger.warn("cannot get paremeter {}Id or {}.id")

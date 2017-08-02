@@ -17,32 +17,21 @@ import org.openurp.edu.evaluation.model.EvaluationCriteriaItem
 import org.openurp.edu.evaluation.model.Option
 import org.openurp.edu.evaluation.model.QuestionType
 import org.openurp.edu.lesson.model.Lesson
+import org.beangle.webmvc.api.view.View
+
 class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
 
-  //  protected QuestionnairStatService questionnairStatService;
-
-  override def index(): String = {
+  override def index(): View = {
     put("stdTypeList", entityDao.getAll(classOf[StdType]));
     put("departmentList", entityDao.search(OqlBuilder.from(classOf[Department], "de").where("de.teaching=:tea", true)));
-    //    getSemester();
-    //    put("semesters", entityDao.getAll(classOf[Semester]));
-    //    val teacher = getLoginTeacher();
     val teacher = entityDao.get(classOf[Teacher], 8589L)
     put("teacher", teacher);
-    // OqlBuilder query = OqlBuilder.from(QuestionnaireStat.class,
-    // "questionnaireStat");
-    // query.select("distinct questionnaireStat.stdType");
-    // query.where("questionnaireStat.teacher.id=:teacherId",
-    // teacher.getId()));
-    // List stdTypeList = (List) entityDao.search(query);
-    // put("stdTypeList", stdTypeList);
-    forward();
+    forward()
   }
 
-  override def search(): String = {
+  override def search(): View = {
     val entityQuery = OqlBuilder.from(classOf[LessonEvalStat], "questionnaireStat");
     populateConditions(entityQuery);
-    //    val teacher = getLoginTeacher();
     val teacher = entityDao.get(classOf[Teacher], 8589L)
     entityQuery.join("questionnaireStat.lesson.teachers", "teacher");
     entityQuery.where("teacher.id=:teacherId", teacher.id);
@@ -54,22 +43,15 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
     val questionnaireStatTeachers = entityDao.search(entityQuery);
     put("questionnaireStatTeachers", questionnaireStatTeachers);
     val questionTypeList = entityDao.search(OqlBuilder.from(classOf[QuestionType], "qt").where("qt.state=:state", true));
-    //    Collections.sort(questionTypeList);
     put("questionTypeList", questionTypeList);
     put("criteria", entityDao.search(OqlBuilder.from(classOf[EvaluationCriteriaItem], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L)))
-    forward();
+    forward()
   }
 
   /**
    * 教师个人查询自己被评教的详细情况
-   *
-   * @param
-   * @param form
-   * @param request
-   * @param response
-   * @return @
    */
-  def evaluatePersonInfo(): String = {
+  def evaluatePersonInfo(): View = {
     val questionnaireStat = entityDao.get(classOf[LessonEvalStat], getLong("teacherStatId").get);
     put("questionnaireStat", questionnaireStat);
     val query = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName, "result");
@@ -123,19 +105,13 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
     quer.select("questionR.question.id,questionR.question.content,sum(questionR.score)/count(questionR.id)");
     quer.groupBy("questionR.question.id,questionR.question.content");
     put("questionResults", entityDao.search(quer));
-    forward();
+    forward()
   }
 
   /**
    * 教师个人查询自己被评教的详细情况
-   *
-   * @param mapping
-   * @param form
-   * @param request
-   * @param response
-   * @return @
    */
-  def info(): String = {
+  def info(): View = {
     val id = getLong("teacherStat.id").get
     val questionnaireStat = entityDao.get(classOf[LessonEvalStat], id);
 
@@ -202,12 +178,6 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
       }
 
     }
-    //    for (int i = 0; i < schList.size(); i++) {
-    //      Object[] ob = (Object[]) schList.get(i);
-    //      if (ob[0].toString().equals(lessonId.toString())) {
-    //        schNums = i + 1;
-    //      }
-    //    }
     put("schNum", schNums);
     put("schNums", schList.size);
     /** 课程院系评教排名 */
@@ -231,12 +201,6 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
       }
 
     }
-    //    for (int i = 0; i < depList.size(); i++) {
-    //      Object[] ob = (Object[]) depList.get(i);
-    //      if (ob[0].toString().equals(lessonId.toString())) {
-    //        depNums = i + 1;
-    //      }
-    //    }
     put("depNum", depNums);
     put("depNums", depList.size);
     /** 教师评教总分 */
@@ -290,11 +254,7 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
     schQuery.groupBy("questionResult.question.id");
     schQuery.orderBy("questionResult.question.id");
     put("schQRList", entityDao.search(schQuery));
-    return forward();
+    return forward()
   }
-
-  //  public void setQuestionnairStatService(QuestionnairStatService questionnairStatService) {
-  //    this.questionnairStatService = questionnairStatService;
-  //  }
 
 }

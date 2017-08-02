@@ -29,7 +29,7 @@ class EvaluateResultStatAction  extends RestfulAction[LessonEvalStat]{
 ////  @SuppressWarnings({ "unchecked", "rawtypes" })
 //  override def  search():String= {
 //    put("questionnaireStats", new SinglePage(1, 20, 1, CollectUtils.newArrayList(1)));
-//    forward();
+//    forward()
 
 //    // FIXME 死方法
 //    // put("questionnaireStats", entityDao.search(buildQuery()));
@@ -40,7 +40,7 @@ class EvaluateResultStatAction  extends RestfulAction[LessonEvalStat]{
 //    // OqlBuilder questionnaireQuery = OqlBuilder.from(Questionnaire.class, "questionnaire");
 //    // questionnaireQuery.where("questionnaire.state =:state", true));
 //    // put("questionnaireList", entityDao.search(questionnaireQuery));
-//    // return forward();
+//    // return forward()
 //  }
 //
 //  // FIXME 死方法
@@ -74,7 +74,7 @@ class EvaluateResultStatAction  extends RestfulAction[LessonEvalStat]{
 //
 //  @Override
 //  public String info() throws Exception {
-//    return forward();
+//    return forward()
 //  }
 //
 //  // public String detailEvaluateResult() {
@@ -114,7 +114,7 @@ class EvaluateResultStatAction  extends RestfulAction[LessonEvalStat]{
 //  // put("optionMap", optionMap);
 //  // put("questionnaires", list);
 //  // put("questionnaireStatId", questionnaireStatIds);
-//  // return forward();
+//  // return forward()
 //  // }
 //  //
 //  // // public Map getOptionCode() {

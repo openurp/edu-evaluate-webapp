@@ -9,11 +9,12 @@ import org.beangle.webmvc.entity.helper.PopulateHelper
 import javax.servlet.http.Part
 import org.beangle.data.transfer.TransferListener
 import org.beangle.webmvc.entity.action.RestfulAction
+import org.beangle.webmvc.api.view.View
 
 trait ImportDataSupport[T <: Entity[_]] {
   self: RestfulAction[T] =>
 
-  def importForm: String = {
+  def importForm: View = {
     forward("/components/importData/form")
   }
   /**
@@ -53,7 +54,7 @@ trait ImportDataSupport[T <: Entity[_]] {
   /**
    * 导入信息
    */
-  def importData(): String = {
+  def importData(): View = {
     val tr = new TransferResult();
     val importer = buildEntityImporter();
     if (null == importer) { return forward("/components/importData/error"); }

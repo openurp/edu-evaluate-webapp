@@ -1,23 +1,20 @@
 package org.openurp.edu.evaluation.course.web.action
 
-import org.beangle.commons.collection.Collections
-import org.beangle.commons.collection.Order
+import java.time.LocalDate
+
+import org.beangle.commons.collection.{ Collections, Order }
 import org.beangle.data.dao.OqlBuilder
+import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Semester
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
+import org.openurp.edu.evaluation.lesson.result.model.{ EvaluateResult, QuestionResult }
 import org.openurp.edu.evaluation.lesson.stat.model.TeacherEvalStat
 import org.openurp.edu.evaluation.model.Option
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.lesson.model.CourseTaker
-import org.openurp.edu.lesson.model.Lesson
-import org.openurp.edu.lesson.model.Lesson
-import java.time.LocalDate
+import org.openurp.edu.lesson.model.{ CourseTaker, Lesson }
 
 class TeacherEvalSearchAction extends RestfulAction[TeacherEvalStat] {
 
-  override def index(): String = {
+  override def index(): View = {
     val semesters = entityDao.getAll(classOf[Semester])
     put("semesters", semesters)
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
@@ -25,7 +22,7 @@ class TeacherEvalSearchAction extends RestfulAction[TeacherEvalStat] {
     forward()
   }
 
-  override def search(): String = {
+  override def search(): View = {
     // 页面条件
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
@@ -38,7 +35,7 @@ class TeacherEvalSearchAction extends RestfulAction[TeacherEvalStat] {
     forward()
   }
 
-  def info(): String = {
+  def info(): View = {
     val questionnaireStat = entityDao.get(classOf[TeacherEvalStat], getLong("teacherEvalStat.id").get)
     put("questionnaireStat", questionnaireStat);
     // zongrenci fix

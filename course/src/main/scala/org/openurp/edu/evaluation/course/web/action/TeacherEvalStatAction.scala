@@ -37,10 +37,7 @@ import java.time.Instant
 
 class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
 
-  override def index(): String = {
-    //    put("stdTypeList", getStdTypes());
-    //    put("departmentList", getColleges());
-    //    put("departments", getDeparts());
+  override def index(): View = {
     put("departments", findItemsBySchool(classOf[Department]))
     /** 本学期是否评教 */
     val builder = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult");
@@ -53,20 +50,10 @@ class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
     }
     builder.select("distinct questionnaire");
     put("questionnaires", entityDao.search(builder));
-    forward();
+    forward()
   }
 
-  //  override protected def  getQueryBuilder():OqlBuilder[CourseEvalStat]={
-  ////    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-  //
-  ////    OrElse(entityDao.search(semesterQuery).head.id)
-  //    val queryBuilder = OqlBuilder.from(classOf[CourseEvalStat],"courseEvalStat")
-  //    queryBuilder.where("courseEvalStat.semester.id=:semesterId", semesterId);
-  //    populateConditions(queryBuilder);
-  //    queryBuilder.limit(getPageLimit).orderBy("courseEvalStat.rank asc");
-  //  }
-
-  override def search(): String = {
+  override def search(): View = {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
@@ -74,9 +61,8 @@ class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
     populateConditions(queryBuilder);
     queryBuilder.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
     queryBuilder.where("teacherEvalStat.semester =:semester", semester);
-    //    val builder=queryBuilder.limit(getPageLimit).orderBy("teacherEvalStat.rank asc");
     put("teacherEvalStats", entityDao.search(queryBuilder));
-    forward();
+    forward()
   }
 
   override def remove(): View = {
@@ -101,7 +87,7 @@ class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
   /**
    * 跳转(统计首页面)
    */
-  def statHome(): String = {
+  def statHome(): View = {
     put("stdTypeList", entityDao.getAll(classOf[StdType]))
     put("departmentList", entityDao.getAll(classOf[Department]))
 
@@ -308,7 +294,7 @@ class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
   /**
    * 教师历史评教
    */
-  def evaluateTeachHistory(): String = {
+  def evaluateTeachHistory(): View = {
     val id = getLong("teacherEvalStat.id").get
     val questionnaires = entityDao.get(classOf[TeacherEvalStat], id)
     val query = OqlBuilder.from(classOf[TeacherEvalStat], "questionnaires")
@@ -322,7 +308,7 @@ class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
   /**
    * 院系教师评教统计
    */
-  def departmentChoiceConfig(): String = {
+  def departmentChoiceConfig(): View = {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
@@ -332,28 +318,10 @@ class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:teaching", true)))
     put("semester", semester)
 
-    //    val que = OqlBuilder.from[Any](classOf[EvaluateResult].getName + " evaluateResult,"
-    //        + classOf[QuestionResult].getName + " questionResult")
-    //    que.select("sum(questionResult.score)/count(distinct evaluateResult.id)")
-    //    que.where("evaluateResult.id=questionResult.result.id")
-    //    que.where("evaluateResult.lesson.semester.id=" + semesterId)
-    //    val lit = entityDao.search(que)
-    //    var fl = 0f
-    //    if (lit.size > 0) {
-    //      if (lit(0) != null) {
-    //        fl = lit(0).toString().toFloat
-    //      }
-    //    }
-    //    put("evaluateResults", fl)
-
     val query = OqlBuilder.from(classOf[TeacherEvalStat], "evaluateR")
     query.select("evaluateR.teacher.state.department.id,count( evaluateR.teacher.id)")
     query.where("evaluateR.semester.id =:semesterId ", semesterId)
     query.groupBy("evaluateR.teacher.state.department.id,evaluateR.semester.id")
-    //    val hql = "select evaluateR.lesson.teachDepart.id,count( evaluateR.teacher.id) from" +
-    //    " org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat evaluateR "  +
-    //    "where evaluateR.lesson.semester.id=" + semesterId + " " +
-    //    "group by evaluateR.lesson.teachDepart.id,evaluateR.lesson.semester.id "
     put("questionNums", entityDao.search(query))
 
     val maps = Collections.newMap[String, Seq[TeacherEvalStat]]
@@ -373,15 +341,11 @@ class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
   /**
    * 院系历史评教
    */
-  def depHistoryStat(): String = {
+  def depHistoryStat(): View = {
     val lis = entityDao.search(OqlBuilder.from(classOf[EvaluationCriteriaItem], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L))
     if (lis.size < 1) { redirect("search", "未找到评价标准！") }
     put("criterias", lis)
     val depId = getInt("department.id").getOrElse(20)
-    //    val depId=20
-    //    if (getInt("department.id") != null) {
-    //      depId = getInt("department.id").get
-    //    }
     put("departId", depId)
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department], "dep").where("dep.teaching=true")))
 
@@ -421,7 +385,7 @@ class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
   /**
    * 历史评教统计
    */
-  def historyCollegeStat(): String = {
+  def historyCollegeStat(): View = {
     val lis = entityDao.search(OqlBuilder.from(classOf[EvaluationCriteriaItem], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L))
     if (lis.size < 1) { redirect("search", "未找到评价标准！") }
     put("criterias", lis)
@@ -460,7 +424,7 @@ class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
   /**
    * 分项评教汇总
    */
-  def collegeGroupItemInfo(): String = {
+  def collegeGroupItemInfo(): View = {
     val lis = entityDao.search(OqlBuilder.from(classOf[EvaluationCriteriaItem], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L))
     if (lis.size < 1) { redirect("search", "未找到评价标准！") }
     put("criterias", lis)
@@ -503,126 +467,7 @@ class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
     que.select("distinct evaluateR.teacher.id")
     val list = entityDao.search(que)
     put("persons", list.size)
-    //    put("questionTypes", entityDao.getAll(classOf[QuestionType]))
     forward()
   }
-
-  //
-  //    /** 获取本学期所有已使用的问卷 **/
-  //    val builder = OqlBuilder.from[Questionnaire](classOf[EvaluateResult].getName, "evaluateResult");
-  //    builder.where("evaluateResult.lesson.semester.id=:semesterId", semesterId);
-  //    builder.select("distinct questionnaire");
-  //    val questionnaires = entityDao.search(builder);
-  //    /** 统计每份问卷的评教结果 **/
-  //    questionnaires foreach { questionnaire =>
-  //      val questionnaireId = questionnaire.id
-  //      val query = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
-  //          + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teach");
-  //      query.select("teach.id,sum(questionResult.score)/count(distinct evaluateResult.id)");
-  //      query.join("evaluateResult.lesson.teachers", "tea");
-  //      query.where("tea.id = teach.id");
-  //      query.where("evaluateResult.id=questionResult.result.id ");
-  //      query.where("evaluateResult.lesson.semester.id=" + semesterId);
-  //      query.where("evaluateResult.questionnaire.id=:ids", questionnaireId);
-  //      query.groupBy("teach.id");
-  //      query.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc");
-  //      val li = entityDao.search(query);
-  ////////      val depEvaluates = entityDao.search(OqlBuilder.from(classOf[DepartEvaluate], "de").where("de.semester.id=:id", semesterId))
-  //      val teaList = entityDao.search(OqlBuilder.from(classOf[Teacher], "teacher").where("teacher.state.id=:id",1L))
-  //      val evaluates =Collections.newBuffer[TeacherEvalStat]
-  //      val df = new DecimalFormat("#.00 ");
-  //      teaList foreach { teacher =>
-  //        var fl = 0f;
-  //        val evaluate = new TeacherEvalStat
-  //        evaluate.teacher=teacher
-  //        evaluate.semester=entityDao.get(classOf[Semester], semesterId)
-  //        evaluate.questionnaire=questionnaire
-  //        li foreach { bo =>
-  //          if (bo(0).toString().equals(teacher.id.toString())) {
-  //            if (bo(1) != null && !"".equals(bo(1))) {
-  //              val d = new StringBuffer(" ");
-  //              df.format(bo(1).toString().toFloat, d, new FieldPosition(2));
-  //              evaluate.stdEvaluate=d.toString().toFloat
-  //              fl += bo(1).toString().toFloat * 0.5f;
-  //            }
-  //          }
-  //        }
-  //        depEvaluates foreach {departEvaluation =>
-  //
-  //          if (departEvaluation.teacher.id.toString().equals(teacher.id.toString())) {
-  //            if (departEvaluation.totalScore!= null) {
-  //
-  //              evaluate.depEvaluate=departEvaluation.totalScore
-  //
-  //              fl += departEvaluation.totalScore * 0.5f;
-  //            }
-  //          }
-  //
-  //        }
-  //        for (DepartEvaluation departEvaluation : depEvaluates) {
-  //          if (departEvaluation.getTeacher().getId().toString().equals(teacher.getId().toString())) {
-  //            if (departEvaluation.getScore() != null) {
-  //
-  //              evaluate.setDepEvaluate(departEvaluation.getScore());
-  //
-  //              fl += departEvaluation.getScore() * 0.5f;
-  //            }
-  //          }
-  //        }
-  //        val dd = new StringBuffer(" ");
-  //        df.format(fl, dd, new FieldPosition(2));
-  //        evaluate.score=dd.toString().toFloat
-  //        evaluates += evaluate
-  //////      }
-  ////////      Collections.sort(evaluates, new PropertyComparator("score desc"));
-  //
-  //      for (i<-0 to  evaluates.size) {
-  //        val courseEvalStat = evaluates(i)
-  //        courseEvalStat.rank=i + 1
-  //        var num = 0;
-  //        for (j <- 0 to evaluates.size) {
-  //          val courseEvaluate = evaluates(j);
-  //          val t1 = courseEvaluate.teacher
-  //          val t2 = courseEvalStat.teacher
-  //          if (t1.state.department != null && t2.state.department != null) {
-  //            if (t1.state.department.id.toString().equals(t2.state.department.id.toString())) {
-  //              num += 1;
-  //              if (courseEvaluate.teacher.id.toString().equals(courseEvalStat.teacher.id.toString())) {
-  //                courseEvalStat.departRank=num
-  //              }
-  //            }
-  //          }
-  //
-  //        }
-  //      }
-  //      val list = Collections.newBuffer[CourseEvalStat]
-  //      evaluates foreach {courseEvalStat =>
-  //
-  //        if ((courseEvalStat.teacher.state.department != null)) {
-  //          list +=courseEvalStat
-  //        } else {
-  //          val lists = entityDao.getAll(classOf[Department])
-  //          lists foreach {department =>
-  //
-  //            val teacher = courseEvalStat.teacher
-  //            if (null != teacher.state.department) {
-  //              if (teacher.state.department.id.toString().equals(department.id.toString())) {
-  //                list += courseEvalStat
-  //              }
-  //            }
-  //
-  //          }
-  //        }
-  //
-  //      }
-  //      /** 删除本学期某一问卷的统计结果 **/
-  //      val cBuilder = OqlBuilder.from(classOf[TeacherEvalStat], "stat")
-  //          .where("stat.semester.id= :semesterId", semesterId)
-  //          .where("stat.questionnaire.id=:questionnaireId", questionnaireId);
-  //      entityDao.remove(entityDao.search(cBuilder));
-  //      saveOrUpdate(list);
-  //    }
-  //    redirect("index", "统计完成");
-  //  }
 
 }

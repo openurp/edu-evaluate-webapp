@@ -15,7 +15,7 @@ import org.openurp.edu.evaluation.model.EvaluationCriteriaItem
 
 class EvaluationCriteriaAction extends RestfulAction[EvaluationCriteria] {
 
-  override def search(): String = {
+  override def search(): View = {
     val builder = OqlBuilder.from(classOf[EvaluationCriteria], "criteria")
     populateConditions(builder)
     builder.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)

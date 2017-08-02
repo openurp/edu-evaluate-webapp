@@ -15,7 +15,7 @@ import java.time.LocalDate
 
 class QuestionTypeAction extends RestfulAction[QuestionType] {
 
-  override def search(): String = {
+  override def search(): View = {
     val builder = OqlBuilder.from(classOf[QuestionType], "questionType")
     populateConditions(builder)
     builder.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)

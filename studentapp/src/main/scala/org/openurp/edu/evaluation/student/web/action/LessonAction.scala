@@ -25,20 +25,6 @@ class LessonAction extends RestfulAction[EvaluateResult] {
 
   var evaluateSwitchService: StdEvaluateSwitchService = _
 
-  //  public List<Object[]> getLessonIdAndTeacherIdOfResult(Student student, Semester semester) {
-  //    List<Object[]> results = CollectUtils.newArrayList();
-  //    if (null != student && null != semester) {
-  //      String hql = "select evaluateResult.lesson.id,evaluateResult.teacher.id"
-  //          + " from org.openurp.edu.teach.evaluate.course.model.EvaluateResult evaluateResult"
-  //          + " where evaluateResult.student =:student and evaluateResult.lesson.semester =:semester";
-  //      OqlBuilder<Object[]> query = OqlBuilder.from(hql);
-  //      query.param("student", student);
-  //      query.param("semester", semester);
-  //      results = entityDao.search(query);
-  //    }
-  //    return results;
-  //  }
-
   def getResultByStdIdAndLessonId(stdId: Long, lessonId: Long, teacherId: Long): EvaluateResult = {
     val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult")
     query.where("evaluateResult.student.id =:stdId", stdId);
@@ -78,7 +64,7 @@ class LessonAction extends RestfulAction[EvaluateResult] {
     if (!semesters.isEmpty) put("currentSemester", semesters.head)
   }
 
-  override def search(): String = {
+  override def search(): View = {
     val std = getStudent()
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
@@ -96,13 +82,13 @@ class LessonAction extends RestfulAction[EvaluateResult] {
     val evaluateMap = getLessonIdAndTeacherIdOfResult(std, semester);
     put("evaluateMap", evaluateMap);
     put("questionnaireLessons", myLessons);
-    forward();
+    forward()
   }
 
   /**
    * 跳转(问卷页面)
    */
-  def loadQuestionnaire(): String = {
+  def loadQuestionnaire(): View = {
     val lessonId = get("lessonId").get
     val evaluateState = get("evaluateState").get
     val semesterId = getInt("semester.id").get
@@ -167,7 +153,7 @@ class LessonAction extends RestfulAction[EvaluateResult] {
     //questionnaire = entityDao.get(classOf[Questionnaire], questionnaireLesson.questionnaire.id);
     put("questionnaire", questionnaireLesson.questionnaire);
     put("evaluateState", evaluateState);
-    forward();
+    forward()
   }
 
   def getStudent(): Student = {
@@ -214,16 +200,6 @@ class LessonAction extends RestfulAction[EvaluateResult] {
       queryResult.where("evaluateResult.teacher.id in(:teacherIds)", teacherIds);
       evaluateResults = entityDao.search(queryResult);
     }
-    //        & (!questionnaireLesson.evaluateByTeacher)） {
-    //      queryResult.where("evaluateResult.teacher.id in(:teacherIds)", teacherIds);
-    //      evaluateResults = entityDao.search(queryResult);
-    //    }
-    //    如果是多个教师且为教师评教
-    //    else {
-    //      //      teacherId = getLong("teacherId").get
-    //      queryResult.where("evaluateResult.teacher.id in(:teacherIds)", teacherIds);
-    //      evaluateResults = entityDao.search(queryResult);
-    //    }
 
     var lesson: Lesson = null;
     var teacher: Teacher = null;

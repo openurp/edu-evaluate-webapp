@@ -12,6 +12,7 @@ import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
 import org.openurp.edu.lesson.model.{ CourseTaker, Lesson }
 import org.openurp.platform.api.security.Securities
 import java.time.LocalDate
+import org.beangle.webmvc.api.view.View
 
 class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
 
@@ -24,7 +25,7 @@ class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
     }
   }
 
-  override def index(): String = {
+  override def index(): View = {
     val semesters = entityDao.getAll(classOf[Semester])
     put("semesters", semesters)
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
@@ -36,7 +37,7 @@ class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
    * 教师评教回收情况
    * //
    */
-  override def search(): String = {
+  override def search(): View = {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId);
@@ -93,7 +94,7 @@ class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
     evaluateSearchDepartmentList.sortWith((x, y) => x.lesson.course.code < y.lesson.course.code)
     put("evaluateSearchDepartmentList", evaluateSearchDepartmentList);
     put("semester", semester);
-    forward();
+    forward()
   }
 
   //  /**
@@ -177,7 +178,7 @@ class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
   //    }
   //    put("semester", semester);
   //    put("evaluateSearchAdminClassList", evaluateSearchAdminClassList);
-  //    return forward();
+  //    return forward()
   //  }
 
   //  /**
@@ -200,7 +201,7 @@ class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
   //    val list1 = entityDao.search(query1);
   //    put("questionnaireTaskList", list);
   //    put("evaluateResultList", list1);
-  //    return forward();
+  //    return forward()
   //  }
 
 }

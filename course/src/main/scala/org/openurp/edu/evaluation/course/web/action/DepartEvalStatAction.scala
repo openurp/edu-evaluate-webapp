@@ -36,7 +36,7 @@ import java.time.LocalDate
 import java.time.Instant
 
 class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
-  override def index(): String = {
+  override def index(): View = {
     val stdType = entityDao.get(classOf[StdType], 5)
     put("stdTypeList", stdType)
     val department = entityDao.get(classOf[Department], 20)
@@ -58,7 +58,7 @@ class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
     forward()
   }
 
-  override def search(): String = {
+  override def search(): View = {
     // 页面条件
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
@@ -74,24 +74,10 @@ class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
     forward()
   }
 
-  //     /**
-  //   * 教师历史评教
-  //   */
-  //  def  evaluateTeachHistory():String= {
-  //    val id = getLong("courseEvalStat.id").get
-  //    val questionnaires = entityDao.get(classOf[DepartEvalStat], id)
-  //    val query = OqlBuilder.from(classOf[DepartEvalStat], "questionnaires")
-  //    query.where("questionnaires.teacher.id=:teaIds", questionnaires.teacher.id)
-  //    query.orderBy("questionnaires.semester.beginOn")
-  //    put("teacher", questionnaires.teacher)
-  //    put("courseEvaluates", entityDao.search(query))
-  //    forward()
-  //  }
-
   /**
    * 跳转(统计首页面)
    */
-  def statHome(): String = {
+  def statHome(): View = {
     put("stdTypeList", entityDao.getAll(classOf[StdType]))
     put("departmentList", entityDao.getAll(classOf[Department]))
 
@@ -313,14 +299,13 @@ class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
     query.where("questionS.semester.id=:semesterId", semesterId)
     entityDao.remove(entityDao.search(query))
     redirect("search", "info.remove.success")
-    //    forward("schoolStat")
   }
   /**
    * 统计(全校评教结果)
    *
    * @return
    */
-  def schoolStat(): String = {
+  def schoolStat(): View = {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
@@ -329,15 +314,8 @@ class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
     val schoolEvalStats = entityDao.search(queryS)
     if (!schoolEvalStats.isEmpty) {
       put("schoolEvalStats", schoolEvalStats)
-      forward();
+      forward()
     } else {
-      //    val eduStr = get("educatIds").get
-      //    val depStr = get("departIds").get
-      //    val eduIds = eduStr.split(",")
-      //    val depIds = depStr.split(",")
-      //    val educationTypeIds = Strings.transformToInteger(eduIds).toList
-      //    val departmentIds = Strings.transformToInteger(depIds).toList
-
       // 删除历史统计数据
       //    remove(educationTypeIds, departmentIds, semesterId)
       // 问题得分统计
@@ -497,7 +475,7 @@ class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
       //    redirect("schoolStat", "info.action.success")
       val schoolEvalStats = entityDao.getAll(classOf[SchoolEvalStat])
       put("schoolEvalStats", schoolEvalStats)
-      forward();
+      forward()
     }
   }
 
