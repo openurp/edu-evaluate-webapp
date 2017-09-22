@@ -73,9 +73,6 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     populateConditions(lessonEvalStat)
     lessonEvalStat.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
     lessonEvalStat.where("lessonEvalStat.lesson.semester=:semester", semester)
-    //    get("evaluateTeacherStat.teacher.person.name.formatedName") foreach{ n=>
-    //      lessonEvalStat.where("lessonEvalStat.teacher.person.name.formatedName=:formatedName",n)
-    //    }
     put("lessonEvalStats", entityDao.search(lessonEvalStat))
     forward()
   }
@@ -349,7 +346,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
 
   /**
    * 统计(任务评教结果)
-   *
+   * FIXME 去除最高5%和最低分数5%,以及人数少于15人的评教结果,	也没有正确计算问卷总数（只是将有效问卷和问卷总数相等）
    * @return
    */
   def stat(): View = {
@@ -358,7 +355,6 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     val project = this.currentProject;
     // 删除历史统计数据
     removeStats(project, semesterId)
-    //FIXME 去除最高5%和最低分数5%,以及人数少于15人的评教结果
     // teacher、lesson、question问题得分统计
     val que = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR")
     que.where("questionR.result.lesson.project=:project", project)
@@ -384,6 +380,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     quer.groupBy("questionR.result.lesson.id,questionR.result.teacher.id,questionR.result.questionnaire.id")
 
     val wjStat = entityDao.search(quer)
+    println(wjStat.size)
     // 问题类别统计
     val tyquery = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR")
     tyquery.where("questionR.result.lesson.semester.id=:semesterId", semesterId)
@@ -404,7 +401,6 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     opQuery.where("questionR.result.lesson.semester.id=:semesterId", semesterId)
     opQuery.where("questionR.result.lesson.project=:project", project)
     opQuery.where("questionR.result.statType is 1")
-    //    opQuery.where("questionR.question.addition is false")
     opQuery.select("questionR.result.lesson.id," + "questionR.result.teacher.id,questionR.question.id,questionR.option.id,count(questionR.id)")
     opQuery.groupBy("questionR.result.lesson.id,questionR.result.teacher.id,questionR.question.id,questionR.option.id")
     val optionStatMap = new collection.mutable.HashMap[Tuple3[Any, Any, Any], Buffer[Tuple2[Long, Number]]]
@@ -434,7 +430,6 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
       questionS.avgScore = (Math.round(avgScore * 100) * 1.0 / 100).floatValue
       questionS.tickets = Integer.valueOf(evaObject(5).toString())
       questionS.totalTickets = questionS.tickets
-      //questionS.totalTickets = Integer.valueOf(evaObject(5).toString())
       // 添加问题得分统计
       val questionDetailStats = Collections.newBuffer[QuestionStat]
       wtStatMap.get((questionS.teacher.id, questionS.lesson.id)) foreach { buffer =>

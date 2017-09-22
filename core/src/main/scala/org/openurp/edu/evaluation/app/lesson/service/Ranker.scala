@@ -6,8 +6,8 @@ import org.openurp.edu.evaluation.lesson.stat.model.FinalTeacherScore
 object Ranker {
 
   def over[B <: EvalStat](stats: scala.Seq[B])(f: (B, Int) => Unit): Unit = {
+    if(stats.isEmpty) return
     val sortedStates = stats.sortBy { x => 0 - x.avgScore }
-    println(stats.size)
     val ranks = new collection.mutable.HashMap[B, Int]
     var rank = 1;
     var score = sortedStates.head.avgScore;
@@ -25,7 +25,6 @@ object Ranker {
         score = x.avgScore;
       }
     }
-    println("maxRank",rank)
     ranks foreach {
       case (x, r) =>
         f(x, r)

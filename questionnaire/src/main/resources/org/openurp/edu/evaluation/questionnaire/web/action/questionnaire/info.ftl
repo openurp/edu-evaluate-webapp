@@ -14,7 +14,8 @@ ${(questionnaire.title?html)?default('')}</b>
         <thead class="gridhead">
             <tr>
                 <th width="15%">问题类型</th>
-                <th width="60%">问题内容</th>
+                <th width="10%">问题分数</th>
+                <th width="50%">问题内容</th>
                 <th width="25">选项</th>
             </tr>
         </thead>
@@ -25,6 +26,7 @@ ${(questionnaire.title?html)?default('')}</b>
                     <td rowSpan="${questionTree.get(key)?size}" align="center">
                         ${key.name}
                     </td>
+                    <td align="left">${questionTree.get(key)[0].score}</td>
                     <td align="left">
                         ${index}:${questionTree.get(key)[0].content}
                     </td>
