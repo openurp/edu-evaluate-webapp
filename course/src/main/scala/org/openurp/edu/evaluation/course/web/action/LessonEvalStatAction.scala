@@ -360,7 +360,6 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     que.where("questionR.result.lesson.project=:project", project)
     que.where("questionR.result.lesson.semester.id=:semesterId", semesterId)
     que.where("questionR.result.statType is 1")
-    //    que.where("questionR.question.addition is false")
     que.select("questionR.result.teacher.id,questionR.result.lesson.id,questionR.question.id,sum(questionR.score),avg(questionR.score)")
     que.groupBy("questionR.result.teacher.id,questionR.result.lesson.id,questionR.question.id")
     val wtStatMap = new collection.mutable.HashMap[Tuple2[Any, Any], Buffer[Tuple3[Long, Number, Number]]]
@@ -374,7 +373,6 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     quer.where("questionR.result.lesson.semester.id=:semesterId", semesterId)
     quer.where("questionR.result.lesson.project=:project", project)
     quer.where("questionR.result.statType is 1")
-    //    quer.where("questionR.question.addition is false")
     quer.select("questionR.result.lesson.id,questionR.result.teacher.id,questionR.result.questionnaire.id,"
       + "sum(questionR.score),sum(questionR.score)/count(distinct questionR.result.id),count(distinct questionR.result.id)")
     quer.groupBy("questionR.result.lesson.id,questionR.result.teacher.id,questionR.result.questionnaire.id")
@@ -387,7 +385,6 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     tyquery.where("questionR.result.lesson.project=:project", project)
     tyquery.where("questionR.result.statType is 1")
     tyquery.where("questionR.result.teacher is not null")
-    //    tyquery.where("questionR.question.addition is false")
     tyquery.select("questionR.result.lesson.id,questionR.result.teacher.id,questionR.question.questionType.id,sum(questionR.score),sum(questionR.score)/count(distinct questionR.result.id)")
     tyquery.groupBy("questionR.result.lesson.id,questionR.result.teacher.id,questionR.question.questionType.id")
 
