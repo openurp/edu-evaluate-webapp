@@ -41,8 +41,7 @@
         bg.form.addInput(form,"teacherEvalStat.id",questionnaireStatIds);
         bg.form.submit(form,"${b.url('!evaluateTeachHistory')}");
     }
-    
-    
+
     function info(){
         var questionnaireStatIds = bg.input.getCheckBoxValues("teacherEvalStat.id");
         if(questionnaireStatIds == "" || questionnaireStatIds.split(",").length !=1){
@@ -50,15 +49,15 @@
                 return false;
         }
         bg.form.addInput(form,"teacherEvalStat.id",questionnaireStatIds);
-        bg.form.submit(form,"${b.url('teacher-eval-search!info')}");
+        bg.form.submit(form,"${b.url('!index')}");
     }
-    
+
     function remove(){
         var questionnaireStatIds = bg.input.getCheckBoxValues("teacherEvalStat.id");
         bg.form.addInput(form,"teacherEvalStats.id",questionnaireStatIds);
         bg.form.submit(form,"${b.url('!remove')}");
-        }
-        
+    }
+
     function exportData(){
         bg.form.addHiddens(form,action.page.paramstr);
         bg.form.addParamsInput(form,action.page.paramstr);
