@@ -378,7 +378,6 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     quer.groupBy("questionR.result.lesson.id,questionR.result.teacher.id,questionR.result.questionnaire.id")
 
     val wjStat = entityDao.search(quer)
-    println(wjStat.size)
     // 问题类别统计
     val tyquery = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR")
     tyquery.where("questionR.result.lesson.semester.id=:semesterId", semesterId)

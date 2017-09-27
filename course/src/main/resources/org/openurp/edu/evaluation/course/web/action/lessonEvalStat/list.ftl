@@ -21,9 +21,10 @@
             [@b.col property="lesson.teachDepart.shortName" title="开课院系" width="10%"/]
             [@b.col property="teacher.user.code" title="教师工号" width="10%"/]
             [@b.col property="teacher.user.name" title="教师姓名" width="10%"/]
-            [@b.col property="avgScore" title="教师任务得分" width="10%"/]
-            [@b.col property="rank" title="全校排名" width="10%"/]
-            [@b.col property="departRank" title="院系排名" width="10%"/]
+            [@b.col property="questionnaire.description" title="问卷" width="9%"/]
+            [@b.col property="avgScore" title="平均分" width="7%"/]
+            [@b.col property="rank" title="全校排名" width="7%"/]
+            [@b.col property="departRank" title="院系排名" width="7%"/]
         [/@]
         
     [/@]

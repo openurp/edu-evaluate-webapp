@@ -15,7 +15,7 @@
             [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
             [@b.textfield style="width:100px" name="teacherEvalStat.teacher.user.code" label="工号" /]
             [@b.textfield style="width:100px" name="teacherEvalStat.teacher.user.name" label="姓名" /]
-            [@b.select style="width:105px" name="teacherEvalStat.teacher.state.department.id" label="部门" items=departments empty="..."/]
+            [@b.select style="width:105px" name="teacherEvalStat.teacher.user.department.id" label="部门" items=departments empty="..."/]
             [#--[@b.select name="teacherEvalStat.questionnaire.id" label="所用问卷" items=[] ]
                 [#list questionnaires as q]
                     <option value="${q.id}">${q.description}</option>
