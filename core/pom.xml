@@ -17,6 +17,16 @@
   </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.openurp.app</groupId>
+            <artifactId>openurp-app-cas</artifactId>
+            <version>${openurp.app.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openurp.app</groupId>
+            <artifactId>openurp-app-web</artifactId>
+            <version>${openurp.app.version}</version>
+        </dependency>
       <dependency>
         <groupId>org.openurp.edu.base</groupId>
         <artifactId>openurp-edu-base-api</artifactId>
@@ -28,11 +38,6 @@
         <version>${openurp.api.version}</version>
       </dependency>
     <dependency>
-      <groupId>org.openurp.platform.api</groupId>
-      <artifactId>openurp-platform-api-cas</artifactId>
-      <version>${openurp.platform.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.beangle.webmvc</groupId>
       <artifactId>beangle-webmvc-entity-plugin_2.12</artifactId>
     </dependency>
@@ -40,11 +45,6 @@
       <groupId>org.beangle.data</groupId>
       <artifactId>beangle-data-transfer_2.12</artifactId>
       <version>${beangle.data.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openurp.platform.api</groupId>
-      <artifactId>openurp-platform-api-core</artifactId>
-      <version>${openurp.platform.version}</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>

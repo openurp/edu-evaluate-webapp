@@ -23,6 +23,16 @@
         <version>${project.version}</version>
       </dependency>
     <dependency>
+        <groupId>org.openurp.app</groupId>
+        <artifactId>openurp-app-cas</artifactId>
+        <version>${openurp.app.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.openurp.app</groupId>
+        <artifactId>openurp-app-web</artifactId>
+        <version>${openurp.app.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.openurp.edu.evaluation</groupId>
       <artifactId>openurp-edu-evaluation-course</artifactId>
       <version>${project.version}</version>
@@ -36,16 +46,6 @@
       <groupId>org.openurp.edu.evaluation</groupId>
       <artifactId>openurp-edu-evaluation-questionnaire</artifactId>
       <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openurp.platform.api</groupId>
-      <artifactId>openurp-platform-api-datasource</artifactId>
-      <version>${openurp.platform.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openurp.platform.api</groupId>
-      <artifactId>openurp-platform-api-cas</artifactId>
-      <version>${openurp.platform.version}</version>
     </dependency>
     <dependency>
       <groupId>org.beangle.webmvc</groupId>
