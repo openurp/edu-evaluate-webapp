@@ -2,8 +2,8 @@ package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.evaluation.lesson.model.TextEvaluation
-import org.openurp.base.model.Semester
+import org.openurp.edu.evaluation.course.model.TextEvaluation
+import org.openurp.edu.base.model.Semester
 import org.beangle.commons.collection.Order
 import java.time.LocalDate
 import org.beangle.webmvc.api.view.View

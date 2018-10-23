@@ -4,10 +4,10 @@ import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.evaluation.department.model.DepartEvaluate
 import org.beangle.data.dao.OqlBuilder
 import org.openurp.base.model.Department
-import org.openurp.base.model.Semester
+import org.openurp.edu.base.model.Semester
 import org.beangle.commons.collection.Order
 import org.openurp.base.model.Department
-import org.openurp.base.model.Semester
+import org.openurp.edu.base.model.Semester
 import java.time.LocalDate
 import org.beangle.webmvc.api.view.View
 

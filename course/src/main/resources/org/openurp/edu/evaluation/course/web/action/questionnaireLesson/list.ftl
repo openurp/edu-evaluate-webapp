@@ -1,7 +1,7 @@
 [#ftl]
 [@b.head/]
-[@b.form name="questionnaireLessonSearchForm" action="!search" target="contentDiv"]
-    [@b.grid items=questionnaireLessons var="questionnaireLesson" sortable="true"]
+[@b.form name="questionnaireClazzSearchForm" action="!search" target="contentDiv"]
+    [@b.grid items=questionnaireClazzs var="questionnaireClazz" sortable="true"]
         [@b.gridbar title="课程问卷列表"]
             [#--[#if !isEvaluateSwitch??]--]
             bar.addItem("更新全部问卷","updateIds('all')","update.png");
@@ -10,12 +10,12 @@
             
             function updateIds(item){
                 var form = action.getForm()
-                var id = bg.input.getCheckBoxValues("questionnaireLesson.id");
+                var id = bg.input.getCheckBoxValues("questionnaireClazz.id");
                 if (item == "all"){
                     if (!confirm("你确定要设置当前条件下的所有教学任务吗?")){
                         return false;
                     }
-                    bg.form.addInput(form, "questionnaireLesson.ids", "");
+                    bg.form.addInput(form, "questionnaireClazz.ids", "");
                 } else {
                     if (id == "" || id.length < 1){
                         alert("请选择一些教学任务!");
@@ -24,7 +24,7 @@
                     if (!confirm("确定要设置所选中的这些教学任务吗?")){
                         return false;
                     }
-                    bg.form.addInput(form, "questionnaireLesson.ids", id);
+                    bg.form.addInput(form, "questionnaireClazz.ids", id);
                 }
                 var description = $("#questionnaireId>option:selected").attr("description");
                 var evaluateId = $("#isEvaluate").val();
@@ -48,7 +48,7 @@
                 bg.form.addInput(form, "isAll", item);
                 bg.form.addInput(form,"questionnaire.id",$("#questionnaireId>option:selected").val());
                 bg.form.addInput(form,"isEvaluate",evaluateId);
-                bg.form.submit(form, "${b.url('!updateQuestionnaireLesson')}");
+                bg.form.submit(form, "${b.url('!updateQuestionnaireClazz')}");
             }
            [#-- [/#if]--]
         [/@]
@@ -74,11 +74,11 @@
             [@b.col property="lesson.courseType.name" title="课程类别"/]
             [@b.col property="questionnaire.description" title="使用问卷描述"/]
             [@b.col property="evaluateByTeacher" title="评教方式" width="8%"]
-                ${(questionnaireLesson.evaluateByTeacher?string("教师评教","课程评教"))!}
+                ${(questionnaireClazz.evaluateByTeacher?string("教师评教","课程评教"))!}
             [/@]
             [@b.col property="lesson.teachDepart.name" title="开课院系"/]
             [@b.col title="任课教师"]
-                [#list questionnaireLesson.lesson.teachers?if_exists as teacher]
+                [#list questionnaireClazz.lesson.teachers?if_exists as teacher]
                     ${(teacher.user.name)!}
                 [/#list]
             [/@]

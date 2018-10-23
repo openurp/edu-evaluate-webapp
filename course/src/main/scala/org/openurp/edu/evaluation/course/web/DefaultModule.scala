@@ -3,7 +3,7 @@ package org.openurp.edu.evaluation.course.web
 import org.beangle.cdi.bind.BindModule
 import org.openurp.edu.evaluation.app.lesson.model.{ EvaluateSearchAdminclass, EvaluateSearchDepartment }
 import org.openurp.edu.evaluation.app.lesson.service.StdEvaluateSwitchService
-import org.openurp.edu.evaluation.course.web.action.{ CourseEvalSearchAction, CourseEvalStatAction, DepartEvalSearchAction, DepartEvalStatAction, EvaluateResultAction, EvaluateStatisticsAction, EvaluateStatusStatAction, EvaluateStatusTeacherAction, FinalTeacherScoreAction, LessonEvalSearchAction, LessonEvalStatAction, QuestionnaireLessonAction, QuestionnaireStatAction, QuestionnaireStatSearchAction, QuestionnaireStatTeacherAction, StdEvaluateSwitchAction, TeacherEvalSearchAction, TeacherEvalStatAction, TextEvaluateSwitchAction, TextEvaluationAction, TextEvaluationSearchAction, TextEvaluationTeacherAction }
+import org.openurp.edu.evaluation.course.web.action.{ CourseEvalSearchAction, CourseEvalStatAction, DepartEvalSearchAction, DepartEvalStatAction, EvaluateResultAction, EvaluateStatisticsAction, EvaluateStatusStatAction, EvaluateStatusTeacherAction, FinalTeacherScoreAction, ClazzEvalSearchAction, ClazzEvalStatAction, QuestionnaireClazzAction, QuestionnaireStatAction, QuestionnaireStatSearchAction, QuestionnaireStatTeacherAction, StdEvaluateSwitchAction, TeacherEvalSearchAction, TeacherEvalStatAction, TextEvaluateSwitchAction, TextEvaluationAction, TextEvaluationSearchAction, TextEvaluationTeacherAction }
 
 class DefaultModule extends BindModule {
 
@@ -11,7 +11,7 @@ class DefaultModule extends BindModule {
 
     //******教务处菜单
     //               评教设置->课程问卷 --- 为课程设置问卷和评教方式（教师/课程）
-    bind(classOf[QuestionnaireLessonAction])
+    bind(classOf[QuestionnaireClazzAction])
     // 评教设置->问卷评教开关
     bind(classOf[StdEvaluateSwitchAction])
     bind(classOf[StdEvaluateSwitchService])
@@ -34,9 +34,9 @@ class DefaultModule extends BindModule {
     bind(classOf[FinalTeacherScoreAction])
 
     //  问卷评教统计--按任务得分统计 包括：排名??，院系任务统计，学校任务历史，学校分项统计*****教务处
-    bind(classOf[LessonEvalStatAction])
+    bind(classOf[ClazzEvalStatAction])
     //  问卷评教统计查询---按任务得分查询********院系管理员？
-    bind(classOf[LessonEvalSearchAction])
+    bind(classOf[ClazzEvalSearchAction])
 
     //  问卷评教统计--按问卷统计每个教师个人总分  包括：排名??，院系统计，学校历史，学校分项统计 ***教务处
     bind(classOf[TeacherEvalStatAction])

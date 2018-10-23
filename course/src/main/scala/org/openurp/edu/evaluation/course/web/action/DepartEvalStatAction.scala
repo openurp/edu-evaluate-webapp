@@ -10,30 +10,29 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
-import org.openurp.base.model.Semester
-import org.openurp.edu.base.code.model.Education
+import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.code.model.StdType
 import org.openurp.edu.base.model.Course
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.lesson.stat.model.DepartEvalStat
-import org.openurp.edu.evaluation.lesson.stat.model.DepartEvalStat
-import org.openurp.edu.evaluation.lesson.stat.model.DepartOptionStat
-import org.openurp.edu.evaluation.lesson.stat.model.DepartQuestionStat
-import org.openurp.edu.evaluation.lesson.stat.model.DepartQuestionTypeStat
-import org.openurp.edu.evaluation.lesson.stat.model.OptionStat
-import org.openurp.edu.evaluation.lesson.stat.model.QuestionStat
-import org.openurp.edu.evaluation.lesson.stat.model.QuestionTypeStat
-import org.openurp.edu.evaluation.lesson.stat.model.SchoolEvalStat
-import org.openurp.edu.evaluation.lesson.stat.model.SchoolOptionStat
-import org.openurp.edu.evaluation.lesson.stat.model.SchoolQuestionStat
-import org.openurp.edu.evaluation.lesson.stat.model.SchoolQuestionTypeStat
 import org.openurp.edu.evaluation.model.Option
 import org.openurp.edu.evaluation.model.Question
 import org.openurp.edu.evaluation.model.QuestionType
 import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.edu.lesson.model.Lesson
+import org.openurp.edu.course.model.Clazz
 import java.time.LocalDate
 import java.time.Instant
+import org.openurp.edu.evaluation.course.result.model.QuestionResult
+import org.openurp.edu.evaluation.course.stat.model.SchoolEvalStat
+import org.openurp.edu.evaluation.course.stat.model.DepartQuestionStat
+import org.openurp.edu.evaluation.course.stat.model.DepartOptionStat
+import org.openurp.edu.evaluation.course.stat.model.SchoolQuestionTypeStat
+import org.openurp.edu.evaluation.course.stat.model.OptionStat
+import org.openurp.edu.evaluation.course.stat.model.DepartEvalStat
+import org.openurp.edu.evaluation.course.stat.model.SchoolOptionStat
+import org.openurp.edu.evaluation.course.stat.model.DepartQuestionTypeStat
+import org.openurp.edu.evaluation.course.stat.model.QuestionStat
+import org.openurp.edu.evaluation.course.stat.model.SchoolQuestionStat
+import org.openurp.edu.evaluation.course.stat.model.QuestionTypeStat
+import org.openurp.edu.base.code.model.EduSpan
 
 class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
   override def index(): View = {
@@ -47,7 +46,7 @@ class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
       searchFormFlag = "beenStat"
     }
     put("searchFormFlag", searchFormFlag)
-    //    put("educations", getEducations())
+    //    put("educations", getEduSpans())
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department], "dep").where("dep.teaching =:tea", true)))
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire").where("questionnaire.state =:state", true)
     put("questionnaires", entityDao.search(query))
@@ -81,7 +80,7 @@ class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
     put("stdTypeList", entityDao.getAll(classOf[StdType]))
     put("departmentList", entityDao.getAll(classOf[Department]))
 
-    put("educations", entityDao.getAll(classOf[Education]))
+    put("educations", entityDao.getAll(classOf[EduSpan]))
     val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:tea", true))
     put("departments", teachingDeparts)
 
@@ -218,7 +217,7 @@ class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
     val optionMap = entityDao.getAll(classOf[Option]).map(o => (o.id, o)).toMap
 
     // 任务
-    val lquery = OqlBuilder.from(classOf[Lesson], "le")
+    val lquery = OqlBuilder.from(classOf[Clazz], "le")
     lquery.where("le.semester.id=:seId", semesterId)
     //  lquery.where("le.course.education.id in(:eduIds)", educationTypeIds)
     lquery.where("le.teachDepart.id in(:depIds)", departmentIds)
@@ -404,7 +403,7 @@ class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
       val optionMap = entityDao.getAll(classOf[Option]).map(o => (o.id, o)).toMap
 
       // 任务
-      //    val lquery = OqlBuilder.from(classOf[Lesson], "le")
+      //    val lquery = OqlBuilder.from(classOf[Clazz], "le")
       //    lquery.where("le.semester.id=:seId", semesterId)
       ////  lquery.where("le.course.education.id in(:eduIds)", educationTypeIds)
       //    lquery.where("le.teachDepart.id in(:depIds)", departmentIds)

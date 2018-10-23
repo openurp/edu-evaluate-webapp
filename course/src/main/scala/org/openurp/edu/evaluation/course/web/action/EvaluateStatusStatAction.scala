@@ -5,24 +5,22 @@ import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
-import org.openurp.base.model.Semester
-import org.openurp.base.model.Semester
-import org.openurp.base.model.Semester
-import org.openurp.base.model.Semester
-import org.openurp.base.model.Semester
-import org.openurp.base.model.Semester
-import org.openurp.base.model.Semester
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.code.model.StdType
-import org.openurp.edu.base.model.Adminclass
 import org.openurp.edu.evaluation.app.lesson.model.EvaluateSearchDepartment
 import org.openurp.edu.evaluation.app.lesson.model.EvaluateSearchManager
-import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.lesson.model.CourseTaker
-import org.openurp.edu.lesson.model.Lesson
+import org.openurp.edu.course.model.CourseTaker
 import org.beangle.commons.lang.Strings
 import java.time.LocalDate
 import org.beangle.webmvc.api.view.View
+import org.openurp.edu.evaluation.course.result.model.EvaluateResult
+import org.openurp.edu.course.model.Clazz
 
 class EvaluateStatusStatAction extends ProjectRestfulAction[EvaluateResult] {
 
@@ -62,7 +60,7 @@ class EvaluateStatusStatAction extends ProjectRestfulAction[EvaluateResult] {
     val courseName = get("course.name").get
     val teacherName = get("teacher.name").get
     // 得到院系下的所有教学任务
-    val lessonQuery = OqlBuilder.from(classOf[Lesson], "lesson");
+    val lessonQuery = OqlBuilder.from(classOf[Clazz], "lesson");
     lessonQuery.where("lesson.semester =:semester", semester);
     if (departmentId != 0) {
       lessonQuery.where("lesson.teachDepart.id=:depIds", departmentId);
@@ -91,7 +89,7 @@ class EvaluateStatusStatAction extends ProjectRestfulAction[EvaluateResult] {
       query.select("count(*)");
       query.where("courseTake.lesson =:lesson", lesson);
       //      query.where("courseTake.lesson.teachDepart.id=:depIds", departmentId);
-      //      query.where("exists( from "+classOf[QuestionnaireLesson].getName +" questionnaireLesson where questionnaireLesson.lesson=courseTake.lesson)");
+      //      query.where("exists( from "+classOf[QuestionnaireClazz].getName +" questionnaireClazz where questionnaireClazz.lesson=courseTake.lesson)");
       //      query.orderBy(Order.parse(get("orderBy")));
       val list = entityDao.search(query);
       // 得到指定学期，院系的学生评教人次总数
@@ -148,7 +146,7 @@ class EvaluateStatusStatAction extends ProjectRestfulAction[EvaluateResult] {
       query.select("count(*),count(distinct std)");
       query.where("courseTake.lesson.semester =:semester", semester);
       query.where("courseTake.lesson.teachDepart =:manageDepartment", department);
-      //      query.where("exists( from "+classOf[QuestionnaireLesson].getName +" questionnaireLesson where questionnaireLesson.lesson=courseTake.lesson)");
+      //      query.where("exists( from "+classOf[QuestionnaireClazz].getName +" questionnaireClazz where questionnaireClazz.lesson=courseTake.lesson)");
       entityDao.search(query) foreach { list =>
         // 得到指定学期，院系的学生评教人次总数
         countAll = list(0).asInstanceOf[Long]

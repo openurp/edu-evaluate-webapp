@@ -1,30 +1,24 @@
 package org.openurp.edu.evaluation.course.web.action
 
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat
-import org.openurp.base.model.Semester
-import org.springframework.beans.support.PropertyComparator
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.beangle.data.dao.OqlBuilder
-import org.openurp.base.model.Department
-import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
+import java.time.LocalDate
+
 import org.beangle.commons.collection.Collections
-import org.openurp.edu.evaluation.model.Question
-import java.util.ArrayList
+import org.beangle.data.dao.OqlBuilder
+import org.beangle.webmvc.api.action.ServletSupport
+import org.beangle.webmvc.api.view.View
+import org.beangle.webmvc.entity.action.RestfulAction
+import org.openurp.base.model.Department
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.base.model.Teacher
+import org.openurp.edu.course.model.Clazz
+import org.openurp.edu.evaluation.course.result.model.EvaluateResult
+import org.openurp.edu.evaluation.course.result.model.QuestionResult
+import org.openurp.edu.evaluation.course.stat.model.ClazzEvalStat
 import org.openurp.edu.evaluation.model.Question
 import org.openurp.edu.evaluation.model.QuestionType
-import org.openurp.edu.lesson.model.Lesson
-import org.beangle.webmvc.api.annotation.response
-import org.beangle.webmvc.api.action.ServletSupport
-import javax.servlet.ServletResponse
-import org.openurp.edu.base.model.Teacher
-import java.time.LocalDate
-import org.beangle.webmvc.api.view.View
+import org.openurp.edu.evaluation.model.Questionnaire
 
-class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with ServletSupport {
+class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with ServletSupport {
 
   var list1: Seq[Array[Any]] = Seq()
   var list2: Seq[Array[Any]] = Seq()
@@ -276,9 +270,9 @@ class EvaluateStatisticsAction extends RestfulAction[LessonEvalStat] with Servle
       teacher = entityDao.get(classOf[Teacher], teaId);
     }
     put("teacher", teacher);
-    var lesson: Lesson = null;
+    var lesson: Clazz = null;
     if (lessonId != 0L) {
-      lesson = entityDao.get(classOf[Lesson], lessonId);
+      lesson = entityDao.get(classOf[Clazz], lessonId);
     }
     put("lesson", lesson);
     /** 院系平均分 */

@@ -2,13 +2,13 @@ package org.openurp.edu.evaluation.course.model
 
 import org.openurp.edu.base.model.Student
 import org.openurp.edu.base.model.Adminclass
-import org.openurp.base.model.Semester
-import org.openurp.edu.lesson.model.Lesson
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.course.model.Clazz
 
 class EvaluateSearchAdminClass {
   var  semester:Semester =_
 
-  var  lesson:Lesson=_
+  var  lesson:Clazz=_
 
   var  student:Student=_
   /*

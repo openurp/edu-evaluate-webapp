@@ -4,17 +4,17 @@ import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.edu.evaluation.model.EvaluationCriteria
 import org.beangle.data.dao.OqlBuilder
-import org.openurp.edu.base.code.model.Education
+import org.openurp.edu.base.code.model.EduSpan
 import org.openurp.edu.evaluation.model.QuestionType
-import org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat
+import org.openurp.edu.evaluation.course.stat.model.ClazzEvalStat
 import org.beangle.commons.collection.Collections
-import org.openurp.base.model.Semester
+import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.code.model.StdType
 import org.openurp.edu.evaluation.model.Questionnaire
 import java.time.LocalDate
 import org.beangle.webmvc.api.view.View
 
-class QuestionnaireStatSearchAction extends RestfulAction[LessonEvalStat] {
+class QuestionnaireStatSearchAction extends RestfulAction[ClazzEvalStat] {
 
   override def index(): View = {
     val stdType = entityDao.get(classOf[StdType], 5)

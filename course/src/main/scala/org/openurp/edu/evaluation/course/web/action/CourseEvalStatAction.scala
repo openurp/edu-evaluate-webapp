@@ -9,13 +9,21 @@ import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.model.{ Department, Semester }
-import org.openurp.edu.base.code.model.{ Education, StdType }
 import org.openurp.edu.base.model.{ Course, Teacher }
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.lesson.stat.model.{ CourseEvalStat, CourseOptionStat, CourseQuestionStat, CourseQuestionTypeStat, OptionStat, QuestionStat, QuestionTypeStat }
 import org.openurp.edu.evaluation.model.{ Option, Question, QuestionType, Questionnaire }
-import org.openurp.edu.lesson.model.Lesson
+import org.openurp.edu.course.model.Clazz
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.evaluation.course.result.model.QuestionResult
+import org.openurp.edu.evaluation.course.stat.model.OptionStat
+import org.openurp.edu.evaluation.course.stat.model.QuestionStat
+import org.openurp.edu.evaluation.course.stat.model.QuestionTypeStat
+import org.openurp.edu.evaluation.course.stat.model.CourseEvalStat
+import org.openurp.edu.evaluation.course.stat.model.CourseQuestionStat
+import org.openurp.edu.evaluation.course.stat.model.CourseQuestionTypeStat
+import org.openurp.edu.evaluation.course.stat.model.CourseOptionStat
+import org.openurp.base.model.Department
+import org.openurp.edu.base.code.model.StdType
+import org.openurp.edu.base.code.model.EduSpan
 
 class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
 
@@ -30,7 +38,7 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
       searchFormFlag = "beenStat"
     }
     put("searchFormFlag", searchFormFlag)
-    //    put("educations", getEducations())
+    //    put("educations", getEduSpans())
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department], "dep").where("dep.teaching =:tea", true)))
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire").where("questionnaire.state =:state", true)
     put("questionnaires", entityDao.search(query))
@@ -78,7 +86,7 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
     put("stdTypeList", entityDao.getAll(classOf[StdType]))
     put("departmentList", entityDao.getAll(classOf[Department]))
 
-    put("educations", entityDao.getAll(classOf[Education]))
+    put("educations", entityDao.getAll(classOf[EduSpan]))
     val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:tea", true))
     put("departments", teachingDeparts)
 
@@ -215,7 +223,7 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
     val optionMap = entityDao.getAll(classOf[Option]).map(o => (o.id, o)).toMap
 
     // 任务
-    val lquery = OqlBuilder.from(classOf[Lesson], "le")
+    val lquery = OqlBuilder.from(classOf[Clazz], "le")
     lquery.where("le.semester.id=:seId", semesterId)
     //  lquery.where("le.course.education.id in(:eduIds)", educationTypeIds)
     lquery.where("le.teachDepart.id in(:depIds)", departmentIds)

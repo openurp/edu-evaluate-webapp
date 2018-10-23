@@ -3,14 +3,16 @@ package org.openurp.edu.evaluation.teacher.web.action
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.model.Semester
+import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.model.{ Student, Teacher }
-import org.openurp.edu.evaluation.lesson.model.{ TeacherRemessage, TextEvaluation }
-import org.openurp.edu.lesson.model.{ CourseTaker, Lesson }
-import org.openurp.platform.api.security.Securities
 import org.openurp.edu.evaluation.app.lesson.model.TextEvaluateSwitch
 import java.time.LocalDate
 import java.time.Instant
+import org.beangle.security.Securities
+import org.openurp.edu.course.model.CourseTaker
+import org.openurp.edu.evaluation.course.model.TeacherRemessage
+import org.openurp.edu.evaluation.course.model.TextEvaluation
+import org.openurp.edu.course.model.Clazz
 
 class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
 
@@ -39,7 +41,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
       addMessage("对不起,您没有权限!");
       return forward("errors");
     }
-    val query = OqlBuilder.from(classOf[Lesson], "lesson")
+    val query = OqlBuilder.from(classOf[Clazz], "lesson")
     query.join("left", "lesson.teachers", "teacher")
     query.where("lesson.project.id=:projectId", 1)
     query.where("lesson.semester =:semester", semester)
@@ -59,7 +61,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val currentSemester = entityDao.search(semesterQuery).head
     // 判断(是否当前学期)
-    val lesson = entityDao.get(classOf[Lesson], lessonId)
+    val lesson = entityDao.get(classOf[Clazz], lessonId)
     val semester = entityDao.get(classOf[Semester], lesson.semester.id)
     var isCurrent = false;
     if (currentSemester.id.longValue() == semester.id.longValue()) {
@@ -86,14 +88,14 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     put("textEvaluations", textEvaluations);
 
     // 获得(教学班)
-    val teachClass = OqlBuilder.from(classOf[Lesson], "lesson")
+    val teachClass = OqlBuilder.from(classOf[Clazz], "lesson")
     teachClass.join("left", "lesson.teachers", "teacher")
     teachClass.where("teacher=:teacher", teacher);
     teachClass.where("lesson.semester =:semester", semester);
     teachClass.select("lesson.teachclass")
     val teachClasses = entityDao.search(teachClass)
     put("isCurrent", isCurrent);
-    put("lesson", entityDao.get(classOf[Lesson], lessonId));
+    put("lesson", entityDao.get(classOf[Clazz], lessonId));
     put("teachclasses", teachClasses)
     put("semester", semester)
     forward()
@@ -104,7 +106,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     if (teacher == null) { forward("error.teacher.teaNo.needed") }
     // 页面条件
     val lessonId = getLong("lessonId").get
-    val lesson = entityDao.get(classOf[Lesson], lessonId)
+    val lesson = entityDao.get(classOf[Clazz], lessonId)
     val semesterId = lesson.semester.id
     val stdId = getLong("sendObj").get
     val textEvaluationId = getLong("textEvaluationId").get
@@ -140,7 +142,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     if (teacher == null) { forward("error.teacher.teaNo.needed") }
     // 页面条件
     val lessonId = getLong("lessonId").get
-    val lesson = entityDao.get(classOf[Lesson], lessonId)
+    val lesson = entityDao.get(classOf[Clazz], lessonId)
     val semesterId = lesson.semester.id
     val classNames = get("classNames").get
     val stdId = getLong("stdId");
@@ -151,7 +153,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
       redirect("searchTextEvaluation", "&lesson.id=" + lessonId + "&semesterId=" + semesterId, "保存失败,你没有权限!");
     }
     // 查询(班级)
-    val query = OqlBuilder.from[CourseTaker](classOf[Lesson].getName, "lesson")
+    val query = OqlBuilder.from[CourseTaker](classOf[Clazz].getName, "lesson")
     query.join("left", "lesson.teachers", "teacher")
     query.join("left", "lesson.teachclass.courseTakers", "courseTaker")
     query.select("courseTaker")
@@ -202,7 +204,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     val teacher = getTeacher()
     if (teacher == null) { forward("error.teacher.teaNo.needed") }
     val lessonId = getLong("lessonId").get
-    val semesterId = entityDao.get(classOf[Lesson], lessonId).semester.id
+    val semesterId = entityDao.get(classOf[Clazz], lessonId).semester.id
     val query = OqlBuilder.from(classOf[TeacherRemessage], "teacherRemessage");
     query.where("teacherRemessage.visible = false");
     query.where("teacherRemessage.textEvaluation.teacher =:teacher", teacher);

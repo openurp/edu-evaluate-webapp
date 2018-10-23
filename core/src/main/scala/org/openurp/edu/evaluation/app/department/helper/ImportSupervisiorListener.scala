@@ -1,20 +1,20 @@
 package org.openurp.edu.evaluation.department.helper
 
-import org.beangle.commons.lang.Strings
+import java.time.Instant
+
 import org.beangle.data.dao.EntityDao
 import org.beangle.data.dao.OqlBuilder
-import org.openurp.edu.base.model.Student
+import org.beangle.data.transfer.importer.AbstractImportListener
+import org.beangle.data.transfer.importer.ImportResult
+import org.openurp.edu.base.model.Semester
 import org.openurp.edu.evaluation.department.model.SupervisiorEvaluate
-import org.openurp.base.model.Semester
 import org.openurp.edu.evaluation.model.Questionnaire
-import org.beangle.data.transfer.TransferResult
-import org.beangle.data.transfer.AbstractTransferListener
-import java.time.Instant
+
 /**
  * @author xinzhou
  */
-class ImportSupervisiorListener(entityDao: EntityDao) extends AbstractTransferListener {
-  override def onItemStart(tr: TransferResult) {
+class ImportSupervisiorListener(entityDao: EntityDao) extends AbstractImportListener {
+  override def onItemStart(tr: ImportResult) {
     val teacherCode = transfer.curData.get("teacher.code").get
     val semesterCode = transfer.curData.get("semester.code").get.toString()
     val departmentCode = transfer.curData.get("department.code").get
@@ -30,7 +30,7 @@ class ImportSupervisiorListener(entityDao: EntityDao) extends AbstractTransferLi
     }
   }
 
-  override def onItemFinish(tr: TransferResult) {
+  override def onItemFinish(tr: ImportResult) {
     val supervisiorEvaluate = tr.transfer.current.asInstanceOf[SupervisiorEvaluate]
     val questionnaire = entityDao.get(classOf[Questionnaire], 322L)
     supervisiorEvaluate.questionnaire = questionnaire

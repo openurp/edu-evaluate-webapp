@@ -1,23 +1,19 @@
 package org.openurp.edu.evaluation.course.web.action
 
-import org.beangle.data.dao.OqlBuilder
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.model.Option
-import org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat
+import java.time.LocalDate
+
 import org.beangle.commons.collection.Collections
-import org.openurp.edu.lesson.model.Lesson
-import org.openurp.base.model.Semester
 import org.beangle.commons.collection.Order
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.annotation.mapping
 import org.beangle.webmvc.api.annotation.param
-import java.time.LocalDate
 import org.beangle.webmvc.api.view.View
+import org.beangle.webmvc.entity.action.RestfulAction
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.evaluation.course.stat.model.ClazzEvalStat
+import org.openurp.edu.evaluation.model.Option
 
-class LessonEvalSearchAction extends RestfulAction[LessonEvalStat] {
+class ClazzEvalSearchAction extends RestfulAction[ClazzEvalStat] {
 
   override def index(): View = {
     val semesters = entityDao.getAll(classOf[Semester])
@@ -32,7 +28,7 @@ class LessonEvalSearchAction extends RestfulAction[LessonEvalStat] {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
-    val lessonEvalStat = OqlBuilder.from(classOf[LessonEvalStat], "lessonEvalStat")
+    val lessonEvalStat = OqlBuilder.from(classOf[ClazzEvalStat], "lessonEvalStat")
     populateConditions(lessonEvalStat)
     lessonEvalStat.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
     lessonEvalStat.where("lessonEvalStat.lesson.semester=:semester", semester)
@@ -42,7 +38,7 @@ class LessonEvalSearchAction extends RestfulAction[LessonEvalStat] {
 
   @mapping(value = "{id}")
   override def info(@param("id") id: String): View = {
-    val questionnaireStat = entityDao.get(classOf[LessonEvalStat], java.lang.Long.parseLong(id));
+    val questionnaireStat = entityDao.get(classOf[ClazzEvalStat], java.lang.Long.parseLong(id));
     put("questionnaireStat", questionnaireStat);
 
     val list = Collections.newBuffer[Option]

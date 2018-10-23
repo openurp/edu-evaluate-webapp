@@ -2,11 +2,11 @@ package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
-import org.openurp.edu.lesson.model.Lesson
+import org.openurp.edu.evaluation.course.model.QuestionnaireClazz
+import org.openurp.edu.course.model.Clazz
 import org.beangle.webmvc.api.view.View
 import org.openurp.edu.evaluation.app.lesson.model.StdEvaluateSwitch
-import org.openurp.base.model.Semester
+import org.openurp.edu.base.model.Semester
 import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.edu.base.model.Project
 import org.beangle.webmvc.api.annotation.action
@@ -22,22 +22,22 @@ class StdEvaluateSwitchAction extends ProjectRestfulAction[StdEvaluateSwitch] {
   override def search(): View = {
     val opened = getBoolean("evaluateSwitch.opened")
     val semesterId = getInt("evaluateSwitch.semester.id")
-    val queryQuestionnaire = OqlBuilder.from[Array[Any]](classOf[QuestionnaireLesson].getName, "questionnaireLesson")
-    semesterId.foreach { semesterId => queryQuestionnaire.where("questionnaireLesson.lesson.semester.id =:semesterId", semesterId) }
-    queryQuestionnaire.where("questionnaireLesson.lesson.project =:project", currentProject)
-    queryQuestionnaire.groupBy("questionnaireLesson.lesson.semester.id ")
-    queryQuestionnaire.select("questionnaireLesson.lesson.semester.id,count(*)")
+    val queryQuestionnaire = OqlBuilder.from[Array[Any]](classOf[QuestionnaireClazz].getName, "questionnaireClazz")
+    semesterId.foreach { semesterId => queryQuestionnaire.where("questionnaireClazz.lesson.semester.id =:semesterId", semesterId) }
+    queryQuestionnaire.where("questionnaireClazz.lesson.project =:project", currentProject)
+    queryQuestionnaire.groupBy("questionnaireClazz.lesson.semester.id ")
+    queryQuestionnaire.select("questionnaireClazz.lesson.semester.id,count(*)")
     val countMap = entityDao.search(queryQuestionnaire).map(a => (a(0).asInstanceOf[Int], a(1).asInstanceOf[Number])).toMap
     put("countMap", countMap)
-    val queryLesson = OqlBuilder.from[Array[Any]](classOf[Lesson].getName, "lesson")
-    semesterId.foreach { semesterId => queryLesson.where("lesson.semester.id =:semesterId", semesterId) }
-    queryLesson.where("lesson.project =:project", currentProject)
+    val queryClazz = OqlBuilder.from[Array[Any]](classOf[Clazz].getName, "lesson")
+    semesterId.foreach { semesterId => queryClazz.where("lesson.semester.id =:semesterId", semesterId) }
+    queryClazz.where("lesson.project =:project", currentProject)
     // 排除(已有问卷)
-    queryLesson.where("not exists(from " + classOf[QuestionnaireLesson].getName + " questionnaireLesson"
-      + " where questionnaireLesson.lesson = lesson)")
-    queryLesson.groupBy("lesson.semester.id")
-    queryLesson.select("lesson.semester.id, count(*)")
-    val lessonCountMap = entityDao.search(queryLesson).map(a => (a(0).asInstanceOf[Int], a(1).asInstanceOf[Number])).toMap
+    queryClazz.where("not exists(from " + classOf[QuestionnaireClazz].getName + " questionnaireClazz"
+      + " where questionnaireClazz.lesson = lesson)")
+    queryClazz.groupBy("lesson.semester.id")
+    queryClazz.select("lesson.semester.id, count(*)")
+    val lessonCountMap = entityDao.search(queryClazz).map(a => (a(0).asInstanceOf[Int], a(1).asInstanceOf[Number])).toMap
     put("lessonCountMap", lessonCountMap)
     val stdEvaluateSwitchs = getQueryBuilder()
     semesterId.foreach { semesterId => stdEvaluateSwitchs.where("stdEvaluateSwitch.semester.id=:semesterId", semesterId) }

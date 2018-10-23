@@ -1,22 +1,22 @@
 package org.openurp.edu.evaluation.department.helper
 
 import java.time.Instant
+
 import org.beangle.data.dao.EntityDao
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.data.transfer.TransferResult
-import org.openurp.base.model.Semester
-import org.openurp.edu.base.model.Student
-import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.platform.api.security.Securities
+import org.beangle.data.transfer.importer.AbstractImportListener
+import org.beangle.data.transfer.importer.ImportResult
+import org.beangle.security.Securities
+import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.model.Teacher
 import org.openurp.edu.evaluation.department.model.DepartEvaluate
-import org.beangle.data.transfer.AbstractTransferListener
+import org.openurp.edu.evaluation.model.Questionnaire
 
 /**
  * @author xinzhou
  */
-class ImportDepartListener(entityDao: EntityDao) extends AbstractTransferListener {
-  override def onItemStart(tr: TransferResult) {
+class ImportDepartListener(entityDao: EntityDao) extends AbstractImportListener {
+  override def onItemStart(tr: ImportResult) {
     val teacherCode = transfer.curData.get("teacher.code").get
     val semesterCode = transfer.curData.get("semester.code").get.toString()
     val departmentId = getTeacher().user.department.id
@@ -33,7 +33,7 @@ class ImportDepartListener(entityDao: EntityDao) extends AbstractTransferListene
     }
   }  
 
-  override def onItemFinish(tr: TransferResult) {
+  override def onItemFinish(tr: ImportResult) {
     val departEvaluate = tr.transfer.current.asInstanceOf[DepartEvaluate]
     val questionnaire = entityDao.get(classOf[Questionnaire], 322L)
     departEvaluate.questionnaire = questionnaire

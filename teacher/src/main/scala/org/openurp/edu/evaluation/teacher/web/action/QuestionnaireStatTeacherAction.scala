@@ -4,16 +4,20 @@ import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.model.{ Department, Semester }
 import org.openurp.edu.base.code.model.StdType
 import org.openurp.edu.base.model.Teacher
-import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
-import org.openurp.edu.evaluation.lesson.result.model.{ EvaluateResult, QuestionResult }
-import org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat
+import org.openurp.edu.evaluation.course.model.QuestionnaireClazz
+import org.openurp.edu.evaluation.course.stat.model.ClazzEvalStat
 import org.openurp.edu.evaluation.model.{ EvaluationCriteriaItem, Option, QuestionType }
-import org.openurp.edu.lesson.model.Lesson
+import org.openurp.edu.course.model.Clazz
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.evaluation.course.result.model.QuestionResult
+import org.openurp.edu.evaluation.course.stat.model.ClazzEvalStat
+import org.openurp.edu.evaluation.course.result.model.EvaluateResult
+import org.openurp.edu.evaluation.course.model.QuestionnaireClazz
+import org.openurp.base.model.Department
 
-class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
+class QuestionnaireStatTeacherAction extends RestfulAction[ClazzEvalStat] {
 
   override def index(): View = {
     put("stdTypeList", entityDao.getAll(classOf[StdType]));
@@ -24,7 +28,7 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
   }
 
   override def search(): View = {
-    val entityQuery = OqlBuilder.from(classOf[LessonEvalStat], "questionnaireStat");
+    val entityQuery = OqlBuilder.from(classOf[ClazzEvalStat], "questionnaireStat");
     populateConditions(entityQuery);
     val teacher = entityDao.get(classOf[Teacher], 8589L)
     entityQuery.join("questionnaireStat.lesson.teachers", "teacher");
@@ -46,11 +50,11 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
    * 教师个人查询自己被评教的详细情况
    */
   def evaluatePersonInfo(): View = {
-    val questionnaireStat = entityDao.get(classOf[LessonEvalStat], getLong("teacherStatId").get);
+    val questionnaireStat = entityDao.get(classOf[ClazzEvalStat], getLong("teacherStatId").get);
     put("questionnaireStat", questionnaireStat);
     val query = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName, "result");
     query.where("result.teacher=:teaId", questionnaireStat.teacher);
-    query.where("result.lesson=:less", questionnaireStat.lesson);
+    query.where("result.lesson=:less", questionnaireStat.clazz);
     query.select("case when result.statType =1 then count(result.id) end,count(result.id)");
     query.groupBy("result.statType");
     entityDao.search(query) foreach { a =>
@@ -80,22 +84,22 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
 
     }
     put("options", list);
-    val querys = OqlBuilder.from[Integer](classOf[QuestionnaireLesson].getName, "questionnaireL");
+    val querys = OqlBuilder.from[Integer](classOf[QuestionnaireClazz].getName, "questionnaireL");
     querys.join("questionnaireL.lesson.teachers", "teacher");
     querys.where("teacher=:teach", questionnaireStat.teacher);
-    querys.where("questionnaireL.lesson=:lesso", questionnaireStat.lesson);
+    querys.where("questionnaireL.lesson=:lesso", questionnaireStat.clazz);
     querys.join("questionnaireL.lesson.teachclass.courseTakers", "courseTaker");
     querys.select("count(courseTake.id)");
     put("numbers", entityDao.search(querys)(0));
     val que = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR");
     que.where("questionR.result.teacher=:teaId", questionnaireStat.teacher);
-    que.where("questionR.result.lesson=:less", questionnaireStat.lesson);
+    que.where("questionR.result.lesson=:less", questionnaireStat.clazz);
     que.select("questionR.question.id,questionR.option.id,count(*)");
     que.groupBy("questionR.question.id,questionR.option.id");
     put("questionRs", entityDao.search(que));
     val quer = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR");
     quer.where("questionR.result.teacher=:teaId", questionnaireStat.teacher);
-    quer.where("questionR.result.lesson=:less", questionnaireStat.lesson);
+    quer.where("questionR.result.lesson=:less", questionnaireStat.clazz);
     quer.select("questionR.question.id,questionR.question.content,sum(questionR.score)/count(questionR.id)");
     quer.groupBy("questionR.question.id,questionR.question.content");
     put("questionResults", entityDao.search(quer));
@@ -107,11 +111,11 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
    */
   def info(): View = {
     val id = getLong("teacherStat.id").get
-    val questionnaireStat = entityDao.get(classOf[LessonEvalStat], id);
+    val questionnaireStat = entityDao.get(classOf[ClazzEvalStat], id);
 
     val teaId = questionnaireStat.teacher.id
     val semesterId = questionnaireStat.semester.id
-    val lessonId = questionnaireStat.lesson.id
+    val lessonId = questionnaireStat.clazz.id
     /** 本学期是否评教 */
     val builder = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult");
     builder.where("evaluateResult.lesson.semester.id=" + semesterId);
@@ -131,9 +135,9 @@ class QuestionnaireStatTeacherAction extends RestfulAction[LessonEvalStat] {
       teacher = entityDao.get(classOf[Teacher], teaId);
     }
     put("teacher", teacher);
-    var lesson: Lesson = null;
+    var lesson: Clazz = null;
     if (lessonId != 0L) {
-      lesson = entityDao.get(classOf[Lesson], lessonId);
+      lesson = entityDao.get(classOf[Clazz], lessonId);
     }
     put("lesson", lesson);
     /** 院系平均分 */

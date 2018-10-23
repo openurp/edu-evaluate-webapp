@@ -6,16 +6,18 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.context.ActionContext
 import org.beangle.webmvc.api.view.{ Status, View }
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.model.{ Department, Semester }
-import org.openurp.edu.base.code.model.{ Education, StdType }
 import org.openurp.edu.base.model.Teacher
 import org.openurp.edu.evaluation.department.model.{ DepartEvaluate, SupervisiorEvaluate }
 import org.openurp.edu.evaluation.app.lesson.service.Ranker
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.lesson.stat.model.FinalTeacherScore
+import org.openurp.edu.evaluation.course.stat.model.FinalTeacherScore
 
 import net.sf.jxls.transformer.XLSTransformer
 import java.time.LocalDate
+import org.openurp.edu.evaluation.course.result.model.QuestionResult
+import org.openurp.base.model.Department
+import org.openurp.edu.base.code.model.StdType
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.base.code.model.EduSpan
 
 class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
 
@@ -112,7 +114,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     put("stdTypeList", entityDao.getAll(classOf[StdType]))
     put("departmentList", entityDao.getAll(classOf[Department]))
 
-    put("educations", entityDao.getAll(classOf[Education]))
+    put("educations", entityDao.getAll(classOf[EduSpan]))
     val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:tea", true))
     put("departments", teachingDeparts)
 

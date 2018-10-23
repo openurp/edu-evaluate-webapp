@@ -2,7 +2,7 @@ package org.openurp.edu.evaluation.app.lesson.service
 
 import org.beangle.data.dao.EntityDao
 import org.beangle.data.dao.OqlBuilder
-import org.openurp.base.model.Semester
+import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.model.Project
 import org.openurp.edu.evaluation.app.lesson.model.StdEvaluateSwitch
 import org.openurp.edu.evaluation.app.department.model.EvaluateSwitch
@@ -32,7 +32,7 @@ class StdEvaluateSwitchService(entityDao: EntityDao) {
   //    if (semesteres.isEmpty) true;
   //
   //    val hqlResult = "select evaluateResult.lesson.id"+ " from org.openurp.edu.teach.evaluate.course.model.EvaluateResult evaluateResult" + " where evaluateResult.student =:std and evaluateResult.semester in (:semesteres)";
-  //    val hqlCourse = "select courseTake.lesson.id"+ " from org.openurp.edu.teach.lesson.model.CourseTaker courseTake"+ " where courseTake.std =:std and courseTake.lesson.semester in (:semesteres)"+ " and exists(from org.openurp.edu.teach.evaluate.course.model.QuestionnaireLesson questionnaireLesson"+ " where questionnaireLesson.lesson = courseTake.lesson)";
+  //    val hqlCourse = "select courseTake.lesson.id"+ " from org.openurp.edu.teach.lesson.model.CourseTaker courseTake"+ " where courseTake.std =:std and courseTake.lesson.semester in (:semesteres)"+ " and exists(from org.openurp.edu.teach.evaluate.course.model.QuestionnaireClazz questionnaireClazz"+ " where questionnaireClazz.lesson = courseTake.lesson)";
   //
   //    val queryResult = OqlBuilder.from(hqlResult);
   //    val queryCourse = OqlBuilder.from(hqlCourse);
@@ -41,8 +41,8 @@ class StdEvaluateSwitchService(entityDao: EntityDao) {
   //    params.put("semesteres", semesteres);
   //    queryResult.params(params);
   //    queryCourse.params(params);
-  //    val  myLessonIds = entityDao.search(queryCourse);
-  //    myLessonIds.removeAll(entityDao.search(queryResult));
-  //    myLessonIds.isEmpty;
+  //    val  myClazzIds = entityDao.search(queryCourse);
+  //    myClazzIds.removeAll(entityDao.search(queryResult));
+  //    myClazzIds.isEmpty;
   //  }
 }

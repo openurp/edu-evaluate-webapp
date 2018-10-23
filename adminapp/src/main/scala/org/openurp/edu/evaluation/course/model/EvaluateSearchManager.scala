@@ -1,7 +1,7 @@
 package org.openurp.edu.evaluation.course.model
 
 import org.openurp.base.model.Department
-import org.openurp.base.model.Semester
+import org.openurp.edu.base.model.Semester
 
 class EvaluateSearchManager {
   

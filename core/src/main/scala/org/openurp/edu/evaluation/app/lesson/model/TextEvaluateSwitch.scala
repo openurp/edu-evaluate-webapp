@@ -2,7 +2,7 @@ package org.openurp.edu.evaluation.app.lesson.model
 
 import org.openurp.edu.base.model.Project
 import org.beangle.data.model.IntId
-import org.openurp.base.model.Semester
+import org.openurp.edu.base.model.Semester
 import org.beangle.data.model.pojo.InstantRange
 
 class TextEvaluateSwitch extends IntId with InstantRange {

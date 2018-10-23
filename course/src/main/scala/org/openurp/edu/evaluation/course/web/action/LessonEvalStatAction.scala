@@ -5,48 +5,38 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
-import org.openurp.base.model.Semester
+import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.code.model.StdType
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.lesson.stat.model.EvalStat
-import org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat
-import org.openurp.edu.evaluation.lesson.stat.model.LessonOptionStat
-import org.openurp.edu.evaluation.lesson.stat.model.LessonQuestionStat
-import org.openurp.edu.evaluation.lesson.stat.model.LessonQuestionTypeStat
-import org.openurp.edu.evaluation.lesson.stat.model.OptionStat
-import org.openurp.edu.evaluation.lesson.stat.model.OptionStat
-import org.openurp.edu.evaluation.lesson.stat.model.OptionStat
-import org.openurp.edu.evaluation.lesson.stat.model.QuestionStat
-import org.openurp.edu.evaluation.lesson.stat.model.QuestionTypeStat
 import org.openurp.edu.evaluation.model.EvaluationCriteria
-import org.openurp.edu.evaluation.model.EvaluationCriteriaItem
-import org.openurp.edu.evaluation.model.EvaluationCriteriaItem
-import org.openurp.edu.evaluation.model.EvaluationCriteriaItem
-import org.openurp.edu.evaluation.model.EvaluationCriteriaItem
-import org.openurp.edu.evaluation.model.EvaluationCriteriaItem
-import org.openurp.edu.evaluation.model.EvaluationCriteriaItem
 import org.openurp.edu.evaluation.model.EvaluationCriteriaItem
 import org.openurp.edu.evaluation.model.Option
 import org.openurp.edu.evaluation.model.Question
 import org.openurp.edu.evaluation.model.QuestionType
 import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.edu.lesson.model.Lesson
-import org.openurp.edu.base.code.model.Education
-import org.openurp.code.edu.model.EducationLevel
+import org.openurp.edu.course.model.Clazz
 import org.beangle.commons.lang.Strings
 import scala.collection.mutable.Buffer
 import scala.collection.mutable.ListBuffer
 import org.beangle.commons.collection.Order
 import org.openurp.edu.evaluation.app.lesson.service.Ranker
 import org.openurp.edu.base.model.Teacher
-import org.openurp.base.model.Semester
-import org.openurp.base.model.Semester
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.model.Project
 import java.time.LocalDate
 import java.time.Instant
+import org.openurp.edu.evaluation.course.stat.model.ClazzOptionStat
+import org.openurp.edu.evaluation.course.result.model.QuestionResult
+import org.openurp.edu.evaluation.course.result.model.EvaluateResult
+import org.openurp.edu.evaluation.course.stat.model.OptionStat
+import org.openurp.edu.evaluation.course.stat.model.ClazzQuestionStat
+import org.openurp.edu.evaluation.course.stat.model.ClazzQuestionTypeStat
+import org.openurp.edu.evaluation.course.stat.model.QuestionStat
+import org.openurp.edu.evaluation.course.stat.model.QuestionTypeStat
+import org.openurp.edu.evaluation.course.stat.model.ClazzEvalStat
+import org.openurp.edu.base.code.model.EduSpan
 
-class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
+class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
 
   override def index(): View = {
     var searchFormFlag = get("searchFormFlag").orNull
@@ -54,7 +44,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
       searchFormFlag = "beenStat"
     }
     put("searchFormFlag", searchFormFlag)
-    //    put("educations", getEducations())
+    //    put("educations", getEduSpans())
     put("departments", findItemsBySchool(classOf[Department]))
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire").where("questionnaire.state =:state", true)
     put("questionnaires", entityDao.search(query))
@@ -69,7 +59,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
-    val lessonEvalStat = OqlBuilder.from(classOf[LessonEvalStat], "lessonEvalStat")
+    val lessonEvalStat = OqlBuilder.from(classOf[ClazzEvalStat], "lessonEvalStat")
     populateConditions(lessonEvalStat)
     lessonEvalStat.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
     lessonEvalStat.where("lessonEvalStat.lesson.semester=:semester", semester)
@@ -79,7 +69,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
 
   override def remove(): View = {
     val questionSIds = longIds("lessonEvalStat")
-    val query = OqlBuilder.from(classOf[LessonEvalStat], "questionS")
+    val query = OqlBuilder.from(classOf[ClazzEvalStat], "questionS")
     query.where("questionS.id in(:ids)", questionSIds)
     entityDao.remove(entityDao.search(query))
     redirect("search", "info.remove.success")
@@ -89,7 +79,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
    * 清除统计数据
    */
   private def removeStats(project: Project, semesterId: Int) {
-    val query = OqlBuilder.from(classOf[LessonEvalStat], "les")
+    val query = OqlBuilder.from(classOf[ClazzEvalStat], "les")
     query.where("les.lesson.semester.id=:semesterId", semesterId)
     query.where("les.lesson.project=:project", project)
     entityDao.remove(entityDao.search(query))
@@ -110,7 +100,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     val semesterIds = entityDao.search(evaquery)
     val qur = OqlBuilder.from(classOf[Semester], "semester")
     qur.where("semester.beginOn<=:dat", new java.util.Date())
-    val quetionQuery = OqlBuilder.from(classOf[LessonEvalStat], "questionnaireS")
+    val quetionQuery = OqlBuilder.from(classOf[ClazzEvalStat], "questionnaireS")
     if (semesterIds.size > 0) {
       qur.where("semester.id in(:ids)", semesterIds)
       quetionQuery.where("questionnaireS.lesson.semester.id in(:semesterIds)", semesterIds)
@@ -123,9 +113,9 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     quetionQuery.select("questionnaireS.lesson.semester.id,count(questionnaireS.teacher.id)")
     quetionQuery.groupBy("questionnaireS.lesson.semester.id")
     put("questionNums", entityDao.search(quetionQuery))
-    val maps = Collections.newMap[String, Seq[LessonEvalStat]]
+    val maps = Collections.newMap[String, Seq[ClazzEvalStat]]
     lis foreach { evaluationCriteriaItem =>
-      val query = OqlBuilder.from(classOf[LessonEvalStat], "questionnaireStat")
+      val query = OqlBuilder.from(classOf[ClazzEvalStat], "questionnaireStat")
       query.select("questionnaireStat.semester.id,count(questionnaireStat.teacher.id)")
       query.where("questionnaireStat.score>=" + evaluationCriteriaItem.min + " and questionnaireStat.score<" + evaluationCriteriaItem.max)
       query.where("questionnaireStat.lesson.teachDepart.id=:depId", depId)
@@ -160,18 +150,18 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
       }
     }
     put("evaluateResults", fl)
-    val query = OqlBuilder.from(classOf[LessonEvalStat], "evaluateR")
+    val query = OqlBuilder.from(classOf[ClazzEvalStat], "evaluateR")
     query.select("evaluateR.lesson.teachDepart.id,count( evaluateR.teacher.id)")
     query.where("evaluateR.lesson.semester.id =:semesterId ", semesterId)
     query.groupBy("evaluateR.lesson.teachDepart.id,evaluateR.lesson.semester.id")
     //    val hql = "select evaluateR.lesson.teachDepart.id,count( evaluateR.teacher.id) from" +
-    //    " org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat evaluateR "  +
+    //    " org.openurp.edu.evaluation.lesson.stat.model.ClazzEvalStat evaluateR "  +
     //    "where evaluateR.lesson.semester.id=" + semesterId + " " +
     //    "group by evaluateR.lesson.teachDepart.id,evaluateR.lesson.semester.id "
     put("questionNums", entityDao.search(query))
-    val maps = Collections.newMap[String, Seq[LessonEvalStat]]
+    val maps = Collections.newMap[String, Seq[ClazzEvalStat]]
     lis foreach { evaluationCriteriaItem =>
-      val query = OqlBuilder.from(classOf[LessonEvalStat], "questionnaireStat")
+      val query = OqlBuilder.from(classOf[ClazzEvalStat], "questionnaireStat")
       query.where("questionnaireStat.lesson.semester.id=:semesterId", semesterId)
       query.select("questionnaireStat.lesson.teachDepart.id,count(questionnaireStat.teacher.id)")
       query.where("questionnaireStat.score>=" + evaluationCriteriaItem.min
@@ -195,7 +185,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     val semesterIds = entityDao.search(evaquery)
     val qur = OqlBuilder.from(classOf[Semester], "semester")
     qur.where("semester.beginOn<=:dat", new java.util.Date())
-    val quetionQuery = OqlBuilder.from(classOf[LessonEvalStat], "questionnaireS")
+    val quetionQuery = OqlBuilder.from(classOf[ClazzEvalStat], "questionnaireS")
     if (semesterIds.size > 0) {
       qur.where("semester.id in(:ids)", semesterIds)
       quetionQuery.where("questionnaireS.lesson.semester.id in(:semesterIds)", semesterIds)
@@ -207,10 +197,10 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     quetionQuery.select("questionnaireS.lesson.semester.id,count(questionnaireS.teacher.id)")
     quetionQuery.groupBy("questionnaireS.lesson.semester.id")
     put("questionNums", entityDao.search(quetionQuery))
-    val maps = Collections.newMap[String, Seq[LessonEvalStat]]
+    val maps = Collections.newMap[String, Seq[ClazzEvalStat]]
     lis foreach { evaluationCriteriaItem =>
       //    for (EvaluationCriteriaItem evaluationCriteriaItem : lis) {
-      val query = OqlBuilder.from(classOf[LessonEvalStat], "questionnaireStat")
+      val query = OqlBuilder.from(classOf[ClazzEvalStat], "questionnaireStat")
       query.select("questionnaireStat.lesson.semester.id,count(questionnaireStat.teacher.id)")
       query.where("questionnaireStat.score>=" + evaluationCriteriaItem.min
         + " and questionnaireStat.score<" + evaluationCriteriaItem.max)
@@ -229,14 +219,14 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     if (lis.size < 1) { redirect("search", "未找到评价标准！") }
     put("criterias", lis)
 
-    val evaquery = OqlBuilder.from(classOf[LessonEvalStat], "questionnaireStat")
+    val evaquery = OqlBuilder.from(classOf[ClazzEvalStat], "questionnaireStat")
     evaquery.where("questionnaireStat.lesson.semester.id=:semesId", getInt("semester.id").get)
     evaquery.join("questionnaireStat.questionTypeStats", "questionType")
     evaquery.select("distinct questionType.questionType.id")
     val queTypeIds = entityDao.search(evaquery)
 
     val quTqur = OqlBuilder.from(classOf[QuestionType], "questionType")
-    val quetionQuery = OqlBuilder.from(classOf[LessonEvalStat], "questionnaireS")
+    val quetionQuery = OqlBuilder.from(classOf[ClazzEvalStat], "questionnaireS")
     quetionQuery.join("questionnaireS.questionTypeStats", "questionTypeStat")
     if (queTypeIds.size > 0) {
       quTqur.where("questionType.id in(:ids)", queTypeIds)
@@ -250,9 +240,9 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     quetionQuery.groupBy("questionTypeStat.questionType.id")
     put("quesTypeNums", entityDao.search(quetionQuery))
 
-    val maps = Collections.newMap[String, Seq[LessonEvalStat]]
+    val maps = Collections.newMap[String, Seq[ClazzEvalStat]]
     lis foreach { evaluationCriteriaItem =>
-      val query = OqlBuilder.from(classOf[LessonEvalStat], "questionnaireStat")
+      val query = OqlBuilder.from(classOf[ClazzEvalStat], "questionnaireStat")
       query.where("questionnaireStat.lesson.semester.id=:semesId", getInt("semester.id").get)
       query.join("questionnaireStat.questionTypeStats", "questionTypeStat")
       query.select("questionTypeStat.questionType.id,count(questionnaireStat.teacher.id)")
@@ -276,8 +266,8 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
    */
   def evaluateTeachHistory(): View = {
     val id = getLong("lessonEvalStat.id").get
-    val questionnaires = entityDao.get(classOf[LessonEvalStat], id)
-    val query = OqlBuilder.from(classOf[LessonEvalStat], "questionnaires")
+    val questionnaires = entityDao.get(classOf[ClazzEvalStat], id)
+    val query = OqlBuilder.from(classOf[ClazzEvalStat], "questionnaires")
     query.where("questionnaires.teacher.id=:teaIds", questionnaires.teacher.id)
     query.orderBy("questionnaires.semester.beginOn")
     put("teacher", questionnaires.teacher)
@@ -286,7 +276,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
   }
 
   def teachQuestionDetailStat(): View = {
-    put("questionnaires", entityDao.get(classOf[LessonEvalStat], getLong("questionnaireStat.id").get))
+    put("questionnaires", entityDao.get(classOf[ClazzEvalStat], getLong("questionnaireStat.id").get))
     forward()
   }
 
@@ -297,7 +287,7 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     put("stdTypeList", entityDao.getAll(classOf[StdType]))
     put("departmentList", entityDao.getAll(classOf[Department]))
 
-    put("educations", entityDao.getAll(classOf[Education]))
+    put("educations", entityDao.getAll(classOf[EduSpan]))
     val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:tea", true))
     put("departments", teachingDeparts)
 
@@ -327,14 +317,14 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
     val semester = entityDao.get(classOf[Semester], semesterId)
     val project = this.currentProject;
     //    排名
-    val rankQuery = OqlBuilder.from(classOf[LessonEvalStat], "les")
+    val rankQuery = OqlBuilder.from(classOf[ClazzEvalStat], "les")
     rankQuery.where("les.lesson.semester.id=:semesterId", semesterId)
     rankQuery.where("les.lesson.project=:project", project)
     val evals = entityDao.search(rankQuery)
     Ranker.over(evals) { (x, r) =>
       x.rank = r;
     }
-    val departEvalMaps = evals.groupBy(x => x.lesson.teachDepart)
+    val departEvalMaps = evals.groupBy(x => x.clazz.teachDepart)
     departEvalMaps.values foreach { departEvals =>
       Ranker.over(departEvals) { (x, r) =>
         x.departRank = r;
@@ -411,9 +401,9 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
 
     //任务问卷得分统计
     wjStat foreach { evaObject =>
-      val questionS = new LessonEvalStat
-      questionS.lesson = new Lesson()
-      questionS.lesson.id = evaObject(0).asInstanceOf[Long]
+      val questionS = new ClazzEvalStat
+      questionS.clazz = new Clazz()
+      questionS.clazz.id = evaObject(0).asInstanceOf[Long]
       questionS.teacher = new Teacher()
       questionS.teacher.id = evaObject(1).asInstanceOf[Long]
       questionS.semester = semester
@@ -428,9 +418,9 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
       questionS.totalTickets = questionS.tickets
       // 添加问题得分统计
       val questionDetailStats = Collections.newBuffer[QuestionStat]
-      wtStatMap.get((questionS.teacher.id, questionS.lesson.id)) foreach { buffer =>
+      wtStatMap.get((questionS.teacher.id, questionS.clazz.id)) foreach { buffer =>
         buffer foreach { wt =>
-          val detailStat = new LessonQuestionStat
+          val detailStat = new ClazzQuestionStat
           // 添加问题
           detailStat.question = questionMap(wt._1)
           detailStat.totalScore = wt._2.toString().toFloat
@@ -439,9 +429,9 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
 
           // 添加选项统计
           val optionStates = Collections.newBuffer[OptionStat]
-          optionStatMap.get((questionS.lesson.id, questionS.teacher.id, detailStat.question.id)) foreach { buffer =>
+          optionStatMap.get((questionS.clazz.id, questionS.teacher.id, detailStat.question.id)) foreach { buffer =>
             buffer foreach { os =>
-              val optionstat = new LessonOptionStat
+              val optionstat = new ClazzOptionStat
               optionstat.amount = os._2.intValue()
               optionstat.option = optionMap(os._1)
               optionstat.questionStat = detailStat
@@ -455,9 +445,9 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
       questionS.questionStats = questionDetailStats
       //添加问题类别统计
       val questionTypeStats = Collections.newBuffer[QuestionTypeStat]
-      typeStatMap.get((questionS.lesson.id, questionS.teacher.id)) foreach { buffer =>
+      typeStatMap.get((questionS.clazz.id, questionS.teacher.id)) foreach { buffer =>
         buffer foreach { os =>
-          val questionTs = new LessonQuestionTypeStat
+          val questionTs = new ClazzQuestionTypeStat
           questionTs.totalScore = os._2.floatValue
           questionTs.avgScore = os._3.floatValue
           questionTs.evalStat = questionS
@@ -469,14 +459,14 @@ class LessonEvalStatAction extends ProjectRestfulAction[LessonEvalStat] {
       entityDao.saveOrUpdate(questionS)
     }
     //    排名
-    val rankQuery = OqlBuilder.from(classOf[LessonEvalStat], "les")
+    val rankQuery = OqlBuilder.from(classOf[ClazzEvalStat], "les")
     rankQuery.where("les.lesson.semester.id=:semesterId", semesterId)
     rankQuery.where("les.lesson.project=:project", project)
     val evals = entityDao.search(rankQuery)
     Ranker.over(evals) { (x, r) =>
       x.rank = r;
     }
-    val departEvalMaps = evals.groupBy(x => x.lesson.teachDepart)
+    val departEvalMaps = evals.groupBy(x => x.clazz.teachDepart)
     departEvalMaps.values foreach { departEvals =>
       Ranker.over(departEvals) { (x, r) =>
         x.departRank = r;

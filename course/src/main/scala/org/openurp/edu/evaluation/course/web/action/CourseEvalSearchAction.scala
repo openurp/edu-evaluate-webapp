@@ -1,17 +1,17 @@
 package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.evaluation.lesson.stat.model.CourseEvalStat
-import org.openurp.base.model.Semester
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
+import org.openurp.edu.base.model.Semester
 import org.beangle.data.dao.OqlBuilder
-import org.openurp.edu.lesson.model.Lesson
+import org.openurp.edu.course.model.Clazz
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.collection.Order
 import org.openurp.edu.evaluation.model.Option
 import java.time.LocalDate
 import org.beangle.webmvc.api.view.View
+import org.openurp.edu.evaluation.course.result.model.EvaluateResult
+import org.openurp.edu.evaluation.course.result.model.QuestionResult
+import org.openurp.edu.evaluation.course.stat.model.CourseEvalStat
 
 class CourseEvalSearchAction extends RestfulAction[CourseEvalStat] {
   override def index(): View = {
@@ -65,7 +65,7 @@ class CourseEvalSearchAction extends RestfulAction[CourseEvalStat] {
       }
     }
     put("options", list);
-    val querys = OqlBuilder.from[Long](classOf[Lesson].getName, "lesson");
+    val querys = OqlBuilder.from[Long](classOf[Clazz].getName, "lesson");
     querys.join("lesson.teachers", "teacher");
     querys.where("teacher=:teach", questionnaireStat.teacher);
     querys.where("lesson.course=:lesson", questionnaireStat.course);

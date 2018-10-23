@@ -1,6 +1,6 @@
 [#ftl]
 [@b.head/]
-[@b.form name="questionnaireLessonSearchForm" action="!search" target="contentDiv"]
+[@b.form name="questionnaireClazzSearchForm" action="!search" target="contentDiv"]
     [@b.grid items=lessons var="lesson" sortable="true"]
         [@b.gridbar title="课程问卷列表"]
             bar.addItem("添加全部问卷","updateIds('all')","update.png");
@@ -44,7 +44,7 @@
                 bg.form.addInput(form, "isAll", item);
                 bg.form.addInput(form,"questionnaire.id",$("#questionnaireId>option:selected").val());
                 bg.form.addInput(form,"isEvaluate",evaluateId);
-                bg.form.submit(form, "${b.url('!saveQuestionnaireLesson')}");
+                bg.form.submit(form, "${b.url('!saveQuestionnaireClazz')}");
             }
         [/@]
         <div style="height:23px;line-height:23px;border:1px solid white;text-align:center;">

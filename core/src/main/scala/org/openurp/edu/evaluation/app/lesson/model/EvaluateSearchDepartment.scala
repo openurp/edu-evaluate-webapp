@@ -1,12 +1,12 @@
 package org.openurp.edu.evaluation.app.lesson.model
 
-import org.openurp.base.model.Semester
-import org.openurp.edu.lesson.model.Lesson
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.course.model.Clazz
 
 class EvaluateSearchDepartment  {
   var  semester:Semester =_
 
-  var  lesson:Lesson =_
+  var  lesson:Clazz =_
   /*
    * 院系需要评教的总人次
    */

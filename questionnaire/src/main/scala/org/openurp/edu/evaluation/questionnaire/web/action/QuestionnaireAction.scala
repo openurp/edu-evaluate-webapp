@@ -1,24 +1,23 @@
 package org.openurp.edu.evaluation.questionnaire.web.action
 
+import java.time.Instant
+import java.time.LocalDate
+
 import scala.collection.mutable.Buffer
+
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.collection.Order
+import org.beangle.commons.lang.Numbers
 import org.beangle.data.dao.OqlBuilder
+import org.beangle.security.Securities
 import org.beangle.webmvc.api.annotation.param
+import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
+import org.openurp.edu.evaluation.course.model.QuestionnaireClazz
 import org.openurp.edu.evaluation.model.Question
 import org.openurp.edu.evaluation.model.QuestionType
 import org.openurp.edu.evaluation.model.Questionnaire
-import java.sql.Date
-import org.beangle.webmvc.api.view.View
-import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
-import org.beangle.commons.lang.Numbers
-import org.beangle.commons.lang.Strings
-import org.beangle.data.dao.Condition
-import org.openurp.platform.api.security.Securities
-import java.time.LocalDate
-import java.time.Instant
 
 class QuestionnaireAction extends RestfulAction[Questionnaire] {
 
@@ -109,7 +108,7 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] {
     val query1 = OqlBuilder.from(classOf[Questionnaire], "questionnaire")
     query1.where("questionnaire.id in (:questionnaireIds)", questionnaireIds)
     val questionnaires = entityDao.search(query1);
-    val query = OqlBuilder.from(classOf[QuestionnaireLesson], "ql");
+    val query = OqlBuilder.from(classOf[QuestionnaireClazz], "ql");
     query.where("ql.questionnaire in (:questionnaires)", questionnaires);
     val qls = entityDao.search(query);
     if (!qls.isEmpty) { return redirect("search", "删除失败,选择的数据中已有被课程问卷引用"); }

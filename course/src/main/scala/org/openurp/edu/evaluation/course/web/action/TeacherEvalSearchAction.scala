@@ -2,17 +2,16 @@ package org.openurp.edu.evaluation.course.web.action
 
 import java.time.LocalDate
 
-import org.beangle.commons.collection.{ Collections, Order }
+import org.beangle.commons.collection.Collections
+import org.beangle.commons.collection.Order
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.webmvc.api.view.View
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.model.Semester
-import org.openurp.edu.evaluation.lesson.result.model.{ EvaluateResult, QuestionResult }
-import org.openurp.edu.evaluation.lesson.stat.model.TeacherEvalStat
-import org.openurp.edu.evaluation.model.Option
-import org.openurp.edu.lesson.model.{ CourseTaker, Lesson }
 import org.beangle.webmvc.api.annotation.mapping
 import org.beangle.webmvc.api.annotation.param
+import org.beangle.webmvc.api.view.View
+import org.beangle.webmvc.entity.action.RestfulAction
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.evaluation.course.stat.model.TeacherEvalStat
+import org.openurp.edu.evaluation.model.Option
 
 class TeacherEvalSearchAction extends RestfulAction[TeacherEvalStat] {
 

@@ -118,19 +118,19 @@
                             </td>
                             -->
                             <td>
-                                <select name="educationTypes" MULTIPLE size="10" style="width:200px" onDblClick="JavaScript:moveSelectedOption(this.form['educationTypes'], this.form['SelectedEducationType'])">
+                                <select name="educationTypes" MULTIPLE size="10" style="width:200px" onDblClick="JavaScript:moveSelectedOption(this.form['educationTypes'], this.form['SelectedEduSpanType'])">
                                     <#list educationTypes as educationType>
                                         <option value="${educationType.id}">${educationType.name}</option>
                                     </#list>
                                 </select>
                             </td>
                                <td>
-                                <input OnClick="JavaScript:moveSelectedOption(this.form['educationTypes'], this.form['SelectedEducationType'])" type="button" value="&gt;"> 
+                                <input OnClick="JavaScript:moveSelectedOption(this.form['educationTypes'], this.form['SelectedEduSpanType'])" type="button" value="&gt;"> 
                                 <br>
-                                <input OnClick="JavaScript:moveSelectedOption(this.form['SelectedEducationType'], this.form['educationTypes'])" type="button" value="&lt;"> 
+                                <input OnClick="JavaScript:moveSelectedOption(this.form['SelectedEduSpanType'], this.form['educationTypes'])" type="button" value="&lt;"> 
                             </td>
                             <td>
-                                <select name="SelectedEducationType" MULTIPLE size="10" style="width:200px;" onDblClick="JavaScript:moveSelectedOption(this.form['SelectedEducationType'], this.form['educationTypes'])"></select>
+                                <select name="SelectedEduSpanType" MULTIPLE size="10" style="width:200px;" onDblClick="JavaScript:moveSelectedOption(this.form['SelectedEduSpanType'], this.form['educationTypes'])"></select>
                             </td>
                         </tr>
                      </table>
@@ -182,7 +182,7 @@
 
         function doStatistic(form){
             form.departIdSeq.value=getAllOptionValue(form.Selecteddepartments);
-            form.educationTypeIdSeq.value=getAllOptionValue(form.SelectedEducationType);
+            form.educationTypeIdSeq.value=getAllOptionValue(form.SelectedEduSpanType);
             if(""==form.educationTypeIdSeq.value){
                 alert("请选择学生类别");
                 return;

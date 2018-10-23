@@ -7,14 +7,23 @@ import scala.collection.mutable.{ Buffer, ListBuffer }
 import org.beangle.commons.collection.{ Collections, Order }
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
-import org.openurp.base.model.{ Department, Semester }
-import org.openurp.edu.base.code.model.{ Education, StdType }
 import org.openurp.edu.base.model.{ Project, Teacher }
 import org.openurp.edu.evaluation.app.lesson.service.Ranker
-import org.openurp.edu.evaluation.lesson.result.model.{ EvaluateResult, QuestionResult }
-import org.openurp.edu.evaluation.lesson.stat.model.{ OptionStat, QuestionStat, QuestionTypeStat, TeacherEvalStat, TeacherOptionStat, TeacherQuestionStat, TeacherQuestionTypeStat }
 import org.openurp.edu.evaluation.model.{ EvaluationCriteriaItem, Option, Question, QuestionType, Questionnaire }
 import org.beangle.webmvc.api.annotation.mapping
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.evaluation.course.stat.model.TeacherQuestionTypeStat
+import org.openurp.edu.evaluation.course.result.model.QuestionResult
+import org.openurp.edu.evaluation.course.stat.model.TeacherQuestionStat
+import org.openurp.edu.evaluation.course.result.model.EvaluateResult
+import org.openurp.edu.evaluation.course.stat.model.TeacherOptionStat
+import org.openurp.edu.evaluation.course.stat.model.OptionStat
+import org.openurp.edu.evaluation.course.stat.model.TeacherEvalStat
+import org.openurp.edu.evaluation.course.stat.model.QuestionStat
+import org.openurp.edu.evaluation.course.stat.model.QuestionTypeStat
+import org.openurp.base.model.Department
+import org.openurp.edu.base.code.model.StdType
+import org.openurp.edu.base.code.model.EduSpan
 
 class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
 
@@ -64,7 +73,7 @@ class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
     put("stdTypeList", entityDao.getAll(classOf[StdType]))
     put("departmentList", entityDao.getAll(classOf[Department]))
 
-    put("educations", entityDao.getAll(classOf[Education]))
+    put("educations", entityDao.getAll(classOf[EduSpan]))
     val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:tea", true))
     put("departments", teachingDeparts)
 

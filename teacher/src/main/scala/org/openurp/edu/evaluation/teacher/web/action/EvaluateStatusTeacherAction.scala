@@ -1,18 +1,19 @@
 package org.openurp.edu.evaluation.teacher.web.action
 
 import java.text.DecimalFormat
+import java.time.LocalDate
 
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.model.Semester
-import org.openurp.edu.base.model.Teacher
-import org.openurp.edu.evaluation.app.lesson.model.EvaluateSearchDepartment
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.lesson.model.{ CourseTaker, Lesson }
-import org.openurp.platform.api.security.Securities
-import java.time.LocalDate
+import org.beangle.security.Securities
 import org.beangle.webmvc.api.view.View
+import org.beangle.webmvc.entity.action.RestfulAction
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.base.model.Teacher
+import org.openurp.edu.course.model.Clazz
+import org.openurp.edu.course.model.CourseTaker
+import org.openurp.edu.evaluation.app.lesson.model.EvaluateSearchDepartment
+import org.openurp.edu.evaluation.course.result.model.EvaluateResult
 
 class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
 
@@ -44,7 +45,7 @@ class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
     val teacher = getTeacher()
     if (teacher == null) { forward("error.teacher.teaNo.needed") }
     // 得到院系下的所有级教学任务
-    val lessonQuery = OqlBuilder.from(classOf[Lesson], "lesson");
+    val lessonQuery = OqlBuilder.from(classOf[Clazz], "lesson");
     lessonQuery.where("lesson.semester.id=:semesterId", semesterId);
     if (teacher != null) {
       lessonQuery.join("lesson.teachers", "teacher")

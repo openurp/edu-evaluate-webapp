@@ -1,7 +1,8 @@
 package org.openurp.edu.evaluation.app.lesson.service
 
-import org.openurp.edu.evaluation.lesson.stat.model.EvalStat
-import org.openurp.edu.evaluation.lesson.stat.model.FinalTeacherScore
+import org.openurp.edu.evaluation.course.stat.model.FinalTeacherScore
+import org.openurp.edu.evaluation.course.stat.model.EvalStat
+
 
 object Ranker {
 

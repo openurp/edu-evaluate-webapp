@@ -172,7 +172,7 @@
     var bar=new ToolBar("bar","评估统计结果",null,true,true);
        bar.setMessage('<@getMessage/>');
      
-     var dd = new EducationTypeDepart3Select("educationTypeOfCourse","department","major",null,true,true,true,true);
+     var dd = new EduSpanTypeDepart3Select("educationTypeOfCourse","department","major",null,true,true,true,true);
     dd.init(educationTypeArray,departArray);
     function moveSelectedOptions(srcSelect, destSelect){
         for (var i=0; i<srcSelect.length; i++){

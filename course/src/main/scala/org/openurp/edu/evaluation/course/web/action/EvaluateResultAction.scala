@@ -6,18 +6,16 @@ import org.beangle.webmvc.api.annotation.param
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
-import org.openurp.base.model.Semester
+import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.code.model.StdType
 import org.openurp.edu.base.model.Project
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.lesson.model.ExamTaker
 import org.springframework.beans.support.PropertyComparator
 import org.beangle.commons.collection.Order
 import org.openurp.edu.base.model.Teacher
 import java.time.LocalDate
+import org.openurp.edu.evaluation.course.result.model.EvaluateResult
+import org.openurp.edu.evaluation.course.result.model.QuestionResult
+import org.openurp.edu.course.model.ExamTaker
 
 class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
 
@@ -157,7 +155,7 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
         //      for (EvaluateResult result : results) {
         //        // TODO kang 怎么确定学生有没有一门课的考试资格
         val builder = OqlBuilder.from(classOf[ExamTaker], "examTaker")
-        builder.where("examTaker.lesson=:lesson", result.lesson)
+        builder.where("examTaker.lesson=:lesson", result.clazz)
         builder.where("examTaker.std=:std", result.student)
         val takes = entityDao.search(builder);
         if (takes.size > 0) {

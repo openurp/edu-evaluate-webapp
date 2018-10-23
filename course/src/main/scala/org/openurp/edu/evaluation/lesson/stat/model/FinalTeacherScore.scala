@@ -1,8 +1,9 @@
 package org.openurp.edu.evaluation.lesson.stat.model
 
 import org.beangle.data.model.LongId
-import org.openurp.base.model.Semester
+import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.model.Teacher
+import org.openurp.edu.evaluation.course.stat.model.Rank
 
 class FinalTeacherScore extends LongId with Rank {
   var teacher: Teacher = _
