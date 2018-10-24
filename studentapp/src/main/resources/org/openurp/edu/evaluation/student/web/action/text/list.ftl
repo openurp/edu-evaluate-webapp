@@ -77,4 +77,3 @@
     }
 </script>
 [@b.foot/]
-

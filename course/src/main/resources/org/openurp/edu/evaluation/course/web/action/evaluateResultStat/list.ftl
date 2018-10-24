@@ -7,7 +7,7 @@
             bar.addItem("初始化有效结果","setValidResult()");
             bar.addItem("统计评教结果","statisticResult()");
             bar.addItem("${b.text('action.export')}","exportData()");
-    
+
         [/@]
         [@b.row]
             [@b.boxcol/]
@@ -29,7 +29,7 @@
     var searchForm = document.questionnaireStatSearchForm;
 
     $(".gridempty").html("");
-            
+
     function exportData(){
         alert("有待完善!");
     }

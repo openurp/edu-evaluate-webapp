@@ -18,7 +18,7 @@
     <tr>
        <td class="index_content">
             [@b.div id="contentDiv"  href="!search?&semester.id=${currentSemester.id}" /]
-        </td> 
+        </td>
     </tr>
 </table>
 <script type="text/javascript">

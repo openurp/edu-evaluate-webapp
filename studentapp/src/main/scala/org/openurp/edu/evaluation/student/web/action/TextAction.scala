@@ -1,3 +1,21 @@
+/*
+ * OpenURP, Agile University Resource Planning Solution.
+ *
+ * Copyright © 2005, The OpenURP Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.openurp.edu.evaluation.student.web.action
 
 import scala.collection.mutable.Buffer
@@ -7,13 +25,14 @@ import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.model.{ Student, Teacher }
-import org.openurp.edu.lesson.model.{ CourseTaker, Clazz }
-import org.openurp.platform.api.security.Securities
 import org.openurp.edu.evaluation.app.lesson.model.TextEvaluateSwitch
 import org.openurp.edu.evaluation.course.model.TeacherRemessage
 import org.openurp.edu.evaluation.course.model.TextEvaluation
 import java.time.LocalDate
 import java.time.Instant
+import org.beangle.security.Securities
+import org.openurp.edu.course.model.Clazz
+import org.openurp.edu.course.model.CourseTaker
 
 class TextAction extends RestfulAction[TextEvaluation] {
 
@@ -130,7 +149,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
     query.where("textEvaluation.student = :student ", student)
     query.where("textEvaluation.lesson.semester = :semester", semester)
     val a = entityDao.search(query)
-    a.map(obj => (obj.lesson.id + "_" + (if (null == obj.teacher) "0" else obj.teacher.id), "1")).toMap
+    a.map(obj => (obj.clazz.id + "_" + (if (null == obj.teacher) "0" else obj.teacher.id), "1")).toMap
   }
 
   def getStdClazzs(student: Student, semester: Semester): Seq[Clazz] = {
@@ -227,7 +246,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
       if (!textOpinion.isEmpty) {
         val textEvaluation = new TextEvaluation()
         textEvaluation.student = std
-        textEvaluation.lesson = lesson
+        textEvaluation.clazz = lesson
         textEvaluation.teacher = teacher
         textEvaluation.content = textOpinion
         textEvaluation.evaluateByTeacher = evaluateByTeacher

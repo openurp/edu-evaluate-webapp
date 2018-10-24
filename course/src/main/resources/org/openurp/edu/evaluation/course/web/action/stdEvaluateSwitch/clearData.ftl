@@ -25,9 +25,9 @@
             </select>
             </td>
                <td>
-            <input OnClick="JavaScript:moveSelectedOption(this.form['semesters'], this.form['selectedSemesters'])" type="button" value="&gt;"> 
+            <input OnClick="JavaScript:moveSelectedOption(this.form['semesters'], this.form['selectedSemesters'])" type="button" value="&gt;">
             <br>
-            <input OnClick="JavaScript:moveSelectedOption(this.form['selectedSemesters'], this.form['teachSemesters'])" type="button" value="&lt;"> 
+            <input OnClick="JavaScript:moveSelectedOption(this.form['selectedSemesters'], this.form['teachSemesters'])" type="button" value="&lt;">
             </td>
             <td>
          <select name="selectedSemesters" MULTIPLE size="15" style="width:200px;" onDblClick="JavaScript:moveSelectedOption(this.form['selectedSemesters'], this.form['teachSemesters'])">

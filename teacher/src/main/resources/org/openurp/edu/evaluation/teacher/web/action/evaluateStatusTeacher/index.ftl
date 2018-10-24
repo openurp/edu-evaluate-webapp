@@ -1,7 +1,7 @@
 [#ftl]
 [@b.head/]
 [@b.toolbar title='我的评教回收情况' id='textEvaluationBar'/]
-    
+
       <table width="100%" class="frameTable">
         <tr>
             <td class="index_content">
@@ -11,7 +11,7 @@
         </td>
        <td class="index_content">
             [@b.div id="contentDiv"  href="!search" /]
-        </td> 
-        </tr>    
+        </td>
+        </tr>
     </table>
 [@b.foot/]

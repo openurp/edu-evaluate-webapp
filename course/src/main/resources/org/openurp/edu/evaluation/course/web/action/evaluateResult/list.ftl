@@ -1,7 +1,7 @@
 [#ftl]
 [@b.head/]
 [@b.form name="evaluateResultSearchForm" action="!search" target="contentDiv"]
-    [@b.grid items=evaluateResults var="evaluateResult" sortable="true"]    
+    [@b.grid items=evaluateResults var="evaluateResult" sortable="true"]
         [@b.gridbar title="学生评教结果列表"]
             [#--bar.addItem("查看", action.info());--]
             var evaluateMenu = bar.addMenu('设置状态',null);
@@ -30,7 +30,7 @@
 [/@]
 <script type="text/javaScript">
     var searchForm = document.evaluateResultSearchForm;
-    
+
     function updateState(isEvaluate) {
         var id = bg.input.getCheckBoxValues("evaluateResult.id");
         if (id == "" || id.length < 1){
@@ -41,7 +41,7 @@
         [#--bg.form.submit(searchForm, "evaluateResult!updateState.action");--]
         bg.form.submit(searchForm, "${b.url('!updateState')}")
     }
-    
+
     function updateTeacher(){
         var evaluateResultIds = bg.input.getCheckBoxValues("evaluateResult.id");
         if(evaluateResultIds == "" || evaluateResultIds.split(",").length !=1){

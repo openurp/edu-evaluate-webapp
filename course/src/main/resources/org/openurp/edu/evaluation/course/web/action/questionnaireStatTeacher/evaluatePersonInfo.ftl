@@ -11,7 +11,7 @@
             <td class="title" style="text-align:center;">课程名称</td>
             <td style="padding-left:10px;">${(questionnaireStat.lesson.course.name)!}</td>
             <td class="title" style="text-align:center;">开课院系</td>
-            <td style="padding-left:10px;">${(questionnaireStat.lesson.teachDepart.name)!}</td> 
+            <td style="padding-left:10px;">${(questionnaireStat.lesson.teachDepart.name)!}</td>
         </tr>
         <tr>
             <td class="title" style="text-align:center;">教师姓名</td>
@@ -19,7 +19,7 @@
             <td class="title" style="text-align:center;">职称</td>
             <td style="padding-left:10px;">${(questionnaireStat.teacher.title.name)!}</td>
             <td class="title" style="text-align:center;">总分</td>
-            <td style="padding-left:10px;">${(questionnaireStat.score)!}</td> 
+            <td style="padding-left:10px;">${(questionnaireStat.score)!}</td>
         </tr>
         <tr>
             <td class="title" style="text-align:center;">问卷下发数量</td>
@@ -27,7 +27,7 @@
             <td class="title" style="text-align:center;">问卷回收数量</td>
             <td style="padding-left:10px;">${(number2)!}</td>
             <td class="title" style="text-align:center;">问卷有效数量</td>
-            <td style="padding-left:10px;">${(number1)!}</td> 
+            <td style="padding-left:10px;">${(number1)!}</td>
         </tr>
     </table>
     [@b.grid items=questionResults var="questionResult" sortable="false"]

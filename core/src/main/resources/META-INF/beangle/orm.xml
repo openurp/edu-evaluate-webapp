@@ -3,8 +3,6 @@
   <mapping class="org.openurp.edu.evaluation.app.department.model.DefaultMapping" />
   <mapping class="org.openurp.edu.evaluation.app.lesson.model.DefaultMapping" />
   <naming>
-    <profile package = "org.openurp.edu.evaluation.app" pluralize="true" schema="app_evaluation">
-      <class annotation = "org.beangle.data.model.annotation.code" prefix="xb_" value="school" />
-    </profile>
+    <profile package = "org.openurp.edu.evaluation.app" pluralize="true" schema="app_evaluation"/>
   </naming>
 </orm>

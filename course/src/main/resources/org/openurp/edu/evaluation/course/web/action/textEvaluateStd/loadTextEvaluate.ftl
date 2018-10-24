@@ -59,7 +59,6 @@
     }
 </script>
 
-
 [#--
 <#include "/template/head.ftl"/>
 <script language="JavaScript" type="text/JavaScript" src="scripts/validator.js"></script>
@@ -90,7 +89,7 @@
             <td align="left" class="brightStyle" width="90%">
                 <textarea name="textOpinion" cols="80" rows="4"></textarea>
             </td>
-        </tr> 
+        </tr>
         <tr>
             <td align="center" class="grayStyle" width="10%">历史意见</td>
             <td align="left" class="grayStyle" width="90%">

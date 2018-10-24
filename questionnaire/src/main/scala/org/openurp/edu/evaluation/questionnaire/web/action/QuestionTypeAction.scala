@@ -1,3 +1,21 @@
+/*
+ * OpenURP, Agile University Resource Planning Solution.
+ *
+ * Copyright © 2005, The OpenURP Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.openurp.edu.evaluation.questionnaire.web.action
 
 import java.util.Date
@@ -34,8 +52,13 @@ class QuestionTypeAction extends RestfulAction[QuestionType] {
       val name = questionType.name;
       val enName = questionType.enName.orNull
       val remark = questionType.remark.orNull
-      questionType.beginOn = LocalDate.parse(get("question.beginOn").get)
-      questionType.endOn = Some(LocalDate.parse(get("question.endOn").get))
+      questionType.beginOn = LocalDate.parse(get("questionType.beginOn").get)
+      questionType.endOn =
+        get("questionType.endOn") match {
+          case Some(endOn) =>
+            if (endOn.isEmpty) None else Some(LocalDate.parse(endOn))
+          case None => None
+        }
       if (remark != null) {
         questionType.remark = Some(remark.replaceAll("<", "&#60;").replaceAll(">", "&#62;"))
       }

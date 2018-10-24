@@ -2,10 +2,10 @@
 <style>
     .semesterCalendarMenuPan .ui-state-focus{
         font-weight: normal;
-        margin: -1px;    
+        margin: -1px;
     }
     .semesterCalendarMenuPan .ui-menu iframe{
-        position: absolute;top: 0; left: 0; 
+        position: absolute;top: 0; left: 0;
         border:0 none;
         filter: mask();
     }
@@ -110,7 +110,7 @@
                                     emptyEle.addClass("ui-state-selected");
                                 }else{
                                     emptyEle.removeClass("ui-state-selected");
-                                }    
+                                }
                              }
                             value = value.substring(0,value.length-1);
                             titles = titles.substring(0,titles.length-1);
@@ -128,10 +128,10 @@
                             thisMenu.hide();
                         }
                         if(!unTriggerOnChange){
-                            comboboxValue.change();    
+                            comboboxValue.change();
                         }
                     });
-                    
+
                     text.focus(function(){
                         var value = text.val();
                         text.val("");
@@ -141,14 +141,14 @@
                         text.val(value);
                     }).blur(function(){
                         if(!thisMenu.data("mouseover") && !arrowBtn.hasClass("ui-state-hover")){
-                            thisMenu.hide();    
+                            thisMenu.hide();
                             var span = arrowBtn.find("span");
                             span.removeClass("ui-icon-triangle-1-n").addClass("ui-icon-triangle-1-s");
                         }
                     }).click(function(){
-                        text.focus();    
+                        text.focus();
                     });
-                            
+
                     text.keyup(function(){
                         var flag = false;
                         if(text.val()==""){
@@ -159,7 +159,7 @@
                         }else{
                             thisMenu.find("li").each(function(){
                                 if(jQuery(this).find("ul").length>0 || jQuery(this).hasClass("ui-combobox-item-empty")){
-                                    jQuery(this).hide();        
+                                    jQuery(this).hide();
                                 }
                             });
                             thisMenu.find("a").each(function(){
@@ -170,23 +170,23 @@
                                         flag = true;
                                     }else{
                                         $this.parent().hide();
-                                    }    
+                                    }
                                 }
-                            });    
+                            });
                         }
                         if(flag){
-                            thisMenu.show();    
+                            thisMenu.show();
                         }else{
-                            thisMenu.hide();    
+                            thisMenu.hide();
                         }
                     });
-                    
+
                     thisMenu.find("li").hover(function(){
                         var $this = jQuery(this);
                         var a = $this.children("a");
                         var childMenu = $this.children("ul");
                         if(!a.hasClass("ui-state-selected")){
-                            a.addClass("ui-state-focus");    
+                            a.addClass("ui-state-focus");
                         }
                         thisMenu.data("mouseover",true);
                         childMenu.css({top:a.position().top+1.5,left:a.position().left+a.outerWidth()-1}).show().css("display","inline-block");
@@ -196,7 +196,7 @@
                         thisMenu.removeData("mouseover");
                         jQuery(this).children("ul").hide();
                     });
-                    
+
                     thisMenu.find("a").bind("show",function(){
                         var $this = jQuery(this).show();
                         var li = $this.parent().show();
@@ -206,7 +206,7 @@
                             parentEle.trigger("show");
                         }else{
                             li.show();
-                                
+
                         }
                     }).bind("select",function(){
                         if(jQuery(this).next().length>0){
@@ -221,7 +221,7 @@
                             }
                         }
                         jQuery(this).addClass("ui-state-selected").parentsUntil(".comboboxPan").filter("li").each(function(){
-                            jQuery(this).children("a").addClass("ui-state-selected");    
+                            jQuery(this).children("a").addClass("ui-state-selected");
                         });
                         text.focus();
                     }).bind("cancel",function(){
@@ -248,21 +248,21 @@
                                 }
                             }
                         });
-                        text.focus();    
+                        text.focus();
                     });
-                    
+
                     thisMenu.find("a").click(function(){
                         var $this = jQuery(this);
                         if($this.parent().hasClass("ui-combobox-item-empty")){
                             if(comboboxValue.data("ui-combobox-options").multiple){
                                 if($this.hasClass("ui-state-selected")){
                                     thisMenu.find("a").each(function(){
-                                        jQuery(this).removeClass("ui-state-selected");    
+                                        jQuery(this).removeClass("ui-state-selected");
                                         comboboxValue.data("values",{});
                                     });
                                 }else{
                                     thisMenu.find("a").each(function(){
-                                        jQuery(this).addClass("ui-state-selected");    
+                                        jQuery(this).addClass("ui-state-selected");
                                         if(jQuery(this).attr("entityId")    ){
                                             comboboxValue.data("values")["id_"+jQuery(this).attr("entityId")]=jQuery(this).text();
                                         }
@@ -280,7 +280,7 @@
                                 var span = arrowBtn.find("span");
                                 span.removeClass("ui-icon-triangle-1-n").addClass("ui-icon-triangle-1-s");
                             }
-                            comboboxValue.trigger("changeValue");    
+                            comboboxValue.trigger("changeValue");
                         }else if($this.next().length>0){
                             if(comboboxValue.data("ui-combobox-options").multiple){
                                 if($this.hasClass("ui-state-selected")){
@@ -298,7 +298,7 @@
                                     $this.trigger("cancel");
                                 }else{
                                     $this.parentsUntil(".comboboxPan").filter("li").each(function(){
-                                        jQuery(this).children("a").addClass("ui-state-selected");    
+                                        jQuery(this).children("a").addClass("ui-state-selected");
                                     });
                                     $this.trigger("select");
                                 }
@@ -320,18 +320,18 @@
                         }
                     });
                 };
-                
+
                 var ajaxDataQuery = thisMenu.children().length==0;
                 if(options.empty){
-                    thisMenu.prepend("<li class='ui-menu-item ui-combobox-item-empty'><a class='ui-corner-all"+(comboboxValue.val()==""?" ui-state-selected":"")+"' style='cursor:pointer' class='ui-corner-all'>"+options.empty+"</a></li>")        
-                } 
+                    thisMenu.prepend("<li class='ui-menu-item ui-combobox-item-empty'><a class='ui-corner-all"+(comboboxValue.val()==""?" ui-state-selected":"")+"' style='cursor:pointer' class='ui-corner-all'>"+options.empty+"</a></li>")
+                }
                 if(ajaxDataQuery){
                     var param = {dataType:"semesterCalendar",uiType:"menu"};
                     var res = jQuery.post(bg.getContextPath()+"/data-query.action",param,function(){
                         if(res.status==200){
                             if(res.responseText!=""){
                                 thisMenu.append(res.responseText);
-                                $this.init();    
+                                $this.init();
                                 if(options.defaultVal==""){
                                     var firstLi = thisMenu.find("li:first");
                                     if(options.empty){
@@ -351,14 +351,14 @@
                                     thisMenu.find("ul").each(function(){
                                         w = Math.max(w,jQuery(this).outerWidth());
                                     });
-                                    thisMenu.find("iframe").width(thisMenu.outerWidth()+w).height(thisMenu.height());    
+                                    thisMenu.find("iframe").width(thisMenu.outerWidth()+w).height(thisMenu.height());
                                 }
                                 comboboxValue.trigger("initCallback");
                             }
                         }
                     });
                 }else{
-                    $this.init();    
+                    $this.init();
                     if(options.defaultVal==""){
                         var firstLi = thisMenu.find("li:first");
                         if(options.empty){
@@ -378,7 +378,7 @@
                         thisMenu.find("ul").each(function(){
                             w = Math.max(w,jQuery(this).outerWidth());
                         });
-                        thisMenu.find("iframe").width(thisMenu.outerWidth()+w).height(thisMenu.height());    
+                        thisMenu.find("iframe").width(thisMenu.outerWidth()+w).height(thisMenu.height());
                     }
                     comboboxValue.trigger("initCallback");
                 }
@@ -401,7 +401,7 @@
             },
             [/#if]
             match:function(){
-                
+
             }
         });
     });

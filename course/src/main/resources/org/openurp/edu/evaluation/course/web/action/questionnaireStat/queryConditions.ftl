@@ -15,12 +15,12 @@
         </td>
         <td class="index_content">
             [@b.div id="contentDiv"/]
-        </td> 
+        </td>
     </tr>
 </table>
 <script type="text/javaScript">
     var form = document.questionnaireStatIndexForm;
-    
+
     function changeSemester(){
         bg.form.addInput(form, "questionnaireStat.semester.id", $("input[name='semester.id']").val());
         bg.form.submit(form);
@@ -28,9 +28,8 @@
 </script>
 [@b.foot/]
 
-
 [#--
-<table width="100%"class="frameTable"> 
+<table width="100%"class="frameTable">
     <tr>
     <td width="20%" valign="top" class="frameTable_view">
     <table width="100%" class="searchTable">

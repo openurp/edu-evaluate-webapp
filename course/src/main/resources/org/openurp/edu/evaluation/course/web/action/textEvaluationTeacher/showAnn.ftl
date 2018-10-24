@@ -14,7 +14,7 @@
 </table>
 <script type="text/javaScript">
     var form = document.annTeacherIndexForm;
-    
+
     function changeSemester(){
         bg.form.addInput(form, "semesterId", $("input[name='semester.id']").val());
         bg.form.submit(form);

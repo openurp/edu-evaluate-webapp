@@ -11,7 +11,7 @@
             //detailMenu.addItem("全校分类评教", "doing()", "info.png");
             bar.addItem("${b.text('action.delete')}","remove()");
             bar.addItem("${b.text('action.export')}","exportData()");
-            
+
         [/@]
         [@b.row]
             [@b.boxcol/]
@@ -26,7 +26,7 @@
             [@b.col property="rank" title="全校排名" width="7%"/]
             [@b.col property="departRank" title="院系排名" width="7%"/]
         [/@]
-        
+
     [/@]
 [/@]
 <script type="text/javaScript">
@@ -36,7 +36,7 @@ var form = document.questionnaireStatSearchForm;
             var lessonIds = bg.input.getCheckBoxValues("lessonEvalStat.id");
                 alert(lessonIds);
     }
-    
+
     function remove(){
         var questionnaireStatIds = bg.input.getCheckBoxValues("lessonEvalStat.id");
         bg.form.addInput(form,"lessonEvalStat.id",questionnaireStatIds);
@@ -51,8 +51,7 @@ var form = document.questionnaireStatSearchForm;
         bg.form.addInput(form,"lessonEvalStat.id",questionnaireStatIds);
         bg.form.submit(form,"${b.url('!evaluateTeachHistory')}");
     }
-    
-    
+
     function info(){
         var questionnaireStatIds = bg.input.getCheckBoxValues("lessonEvalStat.id");
         if(questionnaireStatIds == "" || questionnaireStatIds.split(",").length !=1){
@@ -67,7 +66,7 @@ var form = document.questionnaireStatSearchForm;
     var searchForm = document.questionnaireStatSearchForm;
 
     $(".gridempty").html("");
-    
+
     function exportData(){
         alert("有待完善!");
     }

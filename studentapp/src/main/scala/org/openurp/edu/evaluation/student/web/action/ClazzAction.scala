@@ -1,3 +1,21 @@
+/*
+ * OpenURP, Agile University Resource Planning Solution.
+ *
+ * Copyright © 2005, The OpenURP Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.openurp.edu.evaluation.student.web.action
 
 import java.util.Date
@@ -17,9 +35,9 @@ import org.openurp.edu.evaluation.model.Option
 import org.openurp.edu.evaluation.model.Question
 import org.openurp.edu.course.model.CourseTaker
 import org.openurp.edu.course.model.Clazz
-import org.openurp.platform.api.security.Securities
 import java.time.LocalDate
 import java.time.Instant
+import org.beangle.security.Securities
 
 class ClazzAction extends RestfulAction[EvaluateResult] {
 
@@ -45,7 +63,7 @@ class ClazzAction extends RestfulAction[EvaluateResult] {
     query.where("evaluateResult.student = :student ", student)
     query.where("evaluateResult.lesson.semester = :semester", semester)
     val a = entityDao.search(query)
-    a.map(obj => (obj.lesson.id + "_" + (if (null == obj.teacher) "0" else obj.teacher.id), "1")).toMap
+    a.map(obj => (obj.clazz.id + "_" + (if (null == obj.teacher) "0" else obj.teacher.id), "1")).toMap
   }
 
   def getStdClazzs(student: Student, semester: Semester): Seq[Clazz] = {
@@ -208,7 +226,7 @@ class ClazzAction extends RestfulAction[EvaluateResult] {
       // 更新评教记录
       if (evaluateResults.size > 0) {
         evaluateResults foreach { evaluateResult =>
-          lesson = evaluateResult.lesson
+          lesson = evaluateResult.clazz
           teacher = evaluateResult.teacher
           newTeacherIds += teacher.id
           // 修改(问题选项)
@@ -258,7 +276,7 @@ class ClazzAction extends RestfulAction[EvaluateResult] {
             }
           }
           val evaluateResult = new EvaluateResult()
-          evaluateResult.lesson = lesson
+          evaluateResult.clazz = lesson
           evaluateResult.department = lesson.teachDepart
           evaluateResult.student = std
           evaluateResult.teacher = entityDao.get(classOf[Teacher], newId)
@@ -295,7 +313,7 @@ class ClazzAction extends RestfulAction[EvaluateResult] {
           teacher = teachers.head
           var evaluateTeacher = teacher;
           val evaluateResult = new EvaluateResult()
-          evaluateResult.lesson = lesson
+          evaluateResult.clazz = lesson
           evaluateResult.department = lesson.teachDepart
           evaluateResult.student = std
           evaluateResult.teacher = evaluateTeacher
@@ -313,14 +331,14 @@ class ClazzAction extends RestfulAction[EvaluateResult] {
             evaluateResult.questionResults += questionResult
           }
           evaluateResult.remark = get("evaluateResult.remark").getOrElse("")
-          evaluateResult.score= evaluateResult.questionResults.foldLeft(0f)(_ + _.score)
+          evaluateResult.score = evaluateResult.questionResults.foldLeft(0f)(_ + _.score)
           entityDao.saveOrUpdate(evaluateResult)
         }
         //        如果是按照课程评教，且是多个教师
         if (teachers.size > 1 & (!questionnaireClazz.evaluateByTeacher)) {
           teachers foreach { teacher =>
             val evaluateResult = new EvaluateResult()
-            evaluateResult.lesson = lesson
+            evaluateResult.clazz = lesson
             evaluateResult.department = lesson.teachDepart
             evaluateResult.student = std
             evaluateResult.teacher = teacher
@@ -337,7 +355,7 @@ class ClazzAction extends RestfulAction[EvaluateResult] {
               evaluateResult.questionnaire = questionnaire
               evaluateResult.questionResults += questionResult
             }
-            evaluateResult.score= evaluateResult.questionResults.foldLeft(0f)(_ + _.score)
+            evaluateResult.score = evaluateResult.questionResults.foldLeft(0f)(_ + _.score)
             evaluateResult.remark = get("evaluateResult.remark").getOrElse("")
             entityDao.saveOrUpdate(evaluateResult)
           }

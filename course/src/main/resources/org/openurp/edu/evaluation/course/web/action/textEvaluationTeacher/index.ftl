@@ -10,17 +10,17 @@
             <input type="hidden" name="lesson.project.id" value="${(project.id)!}"/>
             [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
             [@b.textfields style="width:130px" names="lesson.no;课程序号,lesson.course.name;课程名称"/]
-            
+
         [/@]
         </td>
         <td class="index_content">
             [@b.div id="contentDiv"  href="!search"/]
-        </td> 
+        </td>
     </tr>
 </table>
 <script type="text/javaScript">
     var form = document.textEvaluationTeacherIndexForm;
-    
+
     function changeSemester(){
         bg.form.addInput(form, "lesson.semester.id", $("input[name='semester.id']").val());
         bg.form.submit(form);

@@ -28,7 +28,7 @@
         width: 0;
         height: 0;
         border-top: 6px solid transparent;
-        border-bottom: 6px solid transparent; 
+        border-bottom: 6px solid transparent;
         border-right:6px solid rgba(0, 0, 0, 0.6);
     top:50%;
     position:absolute;
@@ -116,7 +116,7 @@
   }
   addApps(apps,jQuery('#app_nav_bar'));
   addMenus(menus,jQuery('#menu_ul'));
-  
+
   jQuery("ul.menu li a.p_1").click(function() {
     jQuery("ul.menu li.current").removeClass('current');
     jQuery(this).parent('li').addClass('current');
@@ -135,7 +135,7 @@
       }
     });
   });
-  
+
   function changeProject(code){
     var url= "${b.url("!project?project=")}";
     url=url.substring(0,url.lastIndexOf("/"))+"/"+code;

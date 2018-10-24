@@ -9,7 +9,7 @@
 [/@]
     <b>学校总分加权平均分：${evaluateResults!0}</b>
 <br>
-<script language="javascript"> 
+<script language="javascript">
         var form =document.questionnaireStatSearchForm;
         function infos(){
         bg.form.submitId(form,"evaluateTeaStas.id",false,"evaluateStatistics!teaEvaluateInfo.action");
@@ -17,18 +17,18 @@
         }
     function getIds(){
     var str ="idStrs=";
-        var checkboxs=document.getElementsByTagName("checkBox"); 
-        var i; 
+        var checkboxs=document.getElementsByTagName("checkBox");
+        var i;
         var nm =0;
-        for(i=0;i<checkboxs.length;i++) 
-        { 
-        if(checkboxs[i].type=='checkbox') 
-        { 
+        for(i=0;i<checkboxs.length;i++)
+        {
+        if(checkboxs[i].type=='checkbox')
+        {
         if(checkboxs[i].checked){
         str =str +checkboxs[i].value;
         nm = nm +1;
         }
-        } 
+        }
         }
         if(nm !=1){
             alert("请选择一个！");
@@ -36,7 +36,7 @@
         }
         return(str);
     }
-    
+
     function teaInfo(){
            var ids = getIds();
           form.action="evaluateStatistics.action?method=teaEvaluateInfo&idStrs="+ids;

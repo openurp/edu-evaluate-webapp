@@ -32,7 +32,7 @@
             ${questionDep[1]!0}/${((questionDep[1]!0)/(questionN[1]!1))*100}%
             [/#if]
             [/#list]
-            
+
             [/#if]
             [/#list]
             [/@]

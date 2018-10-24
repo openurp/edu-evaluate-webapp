@@ -69,7 +69,7 @@
                 </td>
             </tr>
         [/#if]
-        [/#list]    
+        [/#list]
         </tbody>
         [/#if]
     </table>

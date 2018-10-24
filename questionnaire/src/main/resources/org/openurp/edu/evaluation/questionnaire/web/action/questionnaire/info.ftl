@@ -41,7 +41,7 @@ ${(questionnaire.title?html)?default('')}</b>
                 [#if questionTree.get(key)?size>1]
                     [#list 1..questionTree.get(key)?size-1 as i]
                         [#assign index=index+1]
-                        <tr class="griddata-${(key_index%2==0)?string("even","odd")}"> 
+                        <tr class="griddata-${(key_index%2==0)?string("even","odd")}">
                             <td align="left">
                                 ${index}:${questionTree.get(key)[i].content}(${questionTree.get(key)[i].priority})
                             </td>
@@ -58,17 +58,17 @@ ${(questionnaire.title?html)?default('')}</b>
                 [#assign index=index+1]
             [/#list]
             <tr style="background-color: #c7dbff;">
-                <td colSpan="3">&nbsp;</td>
+                <td colSpan="4">&nbsp;</td>
                </tr>
         </tbody>
     </table>
-    <br>    
+    <br>
     [#--[#if oppositeQuestions?size >0]
     [@b.grid items=oppositeQuestions var="oppositeQuestion"]
     [@b.row]
         [@b.col property="orginQuestion.content" title="原始问题" width="50%"]${(oppositeQuestion.orginQuestion.content?html)!}[/@]
         [@b.col property="oppoQuestion.content" title="对立问题" width="50%"]${(oppositeQuestion.oppoQuestion.content?html)!}[/@]
-        
+
     [/@]
     [/@]
     [/#if]--]

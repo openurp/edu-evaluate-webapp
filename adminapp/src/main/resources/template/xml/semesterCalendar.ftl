@@ -9,12 +9,12 @@
         <a name="prev" href="#" style="display:none"><img src="${base}/static/themes/default/images/semesterCalendar_prev.gif"/></a>
         <input id="semesterCalendar_year" class="calendar-bar-input" type="text" index="${tag.valueIndex}" value="[#if (tag.defaultValue)??]${tag.defaultValue.schoolYear}[/#if]" maxLength="4" size="4" readonly="true" style="display:none"/><span style="display:none">学年</span>
         <a name="next" href="#" style="display:none"><img src="${base}/static/themes/default/images/semesterCalendar_next.gif"/></a>
-        
+
         <a name="prev" href="#" style="display:none"><img src="${base}/static/themes/default/images/semesterCalendar_prev.gif"/></a>
         <input id="semesterCalendar_term" class="calendar-bar-input" type="text" index="${tag.termIndex}" value="[#if (tag.defaultValue)??]${tag.defaultValue.name}[/#if]" size="4" readonly="true" style="display:none"/><span style="display:none">学期</span>
         <a name="next" href="#" style="display:none"><img src="${base}/static/themes/default/images/semesterCalendar_next.gif"/></a>
         <a href="#" id="allSemester" style="display:none">[#if tag.empty]<span style="padding-left:5px;">全部学期</span>[/#if]</a>
-        
+
         <table id="semesterCalendar_yearTb" class="semesterCalendar_yearTb">
             <tbody>
             [#if !tag.emptyTree]
@@ -61,9 +61,9 @@
                     ]${(entry_index==(tag.semesterTree.entrySet()?size-1))?string("",",")}
                 [/#list]
             });
-            
+
             jQuery("#${tag.id}").semesterCalendar({empty:"${tag.empty?string}"[#if tag.onChange??],onChange:"${tag.onChange}"[/#if][#if (tag.value.id)??],value:"${(tag.value.id)}"[/#if]}[#if tag.initCallback??],"${tag.initCallback}"[/#if]);
-            
+
             if(jQuery.struts2_jquery.scriptCache["/scripts/semesterCalendar.js?s2j="+jQuery.struts2_jquery.version]){
                 jQuery("#${tag.id}").semesterCalendar({empty:"${tag.empty?string}"[#if tag.onChange??],onChange:"${tag.onChange}"[/#if][#if (tag.value.id)??],value:"${(tag.value.id)}"[/#if]}[#if tag.initCallback??],"${tag.initCallback}"[/#if]);
             }else{

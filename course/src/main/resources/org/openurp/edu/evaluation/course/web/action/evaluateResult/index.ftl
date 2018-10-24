@@ -15,7 +15,7 @@
         </td>
         <td class="index_content">
          [@b.div id="contentDiv" href="!search"/]
-        </td> 
+        </td>
     </tr>
 </table>
 [@b.foot/]

@@ -88,7 +88,7 @@
 
  <table id="bar" width="100%"></table>
  <table width="100%"  height="85%" class="frameTable">
-    <tr>     
+    <tr>
      <td style="width:20%" class="frameTable_view">
    <table width="100%" class="searchTable" id="departListTable">
    <form name="tutorForm" target="contentFrame" method="post" action=""  onkeypress="DWRUtil.onReturn(event, search)">
@@ -101,10 +101,10 @@
             <td id="f_department" class="title">院系:</td>
             <td><select id="department" name="questionnaireStat.depart.id" style="width:130px"><option value="">...</option></select></td>
          </tr>
-        <tr style="display:none">       
+        <tr style="display:none">
             <td id="f_major" class="title">专业:</td>
             <td><select id="major" name="questionnaireStat.depart.majors.id" style="width:130px"><option value="">...</option></select></td>
-        </tr>    
+        </tr>
            <tr>
             <td>导师工号:</td><td><input type="text" name="questionnaireStat.teacher.user.code" style="width:100px;"></td>
         </tr>
@@ -140,7 +140,7 @@
              </#list>
              <option value="">...</option>
              </select>
-               </td> 
+               </td>
         </tr>
         <tr>
             <td><input type="button" value="添加" onclick="moveSelectedOptions(this.form['semesterList'], this.form['semesterSelected'])"></td>
@@ -158,7 +158,7 @@
      </td>
      <td valign="top" width="80%">
      <iframe  src="#"
-     id="contentFrame" name="contentFrame" 
+     id="contentFrame" name="contentFrame"
      marginwidth="0" marginheight="0" scrolling="no"
      frameborder="0"  height="100%" width="100%">
      </iframe>
@@ -171,26 +171,26 @@
  <script>
     var bar=new ToolBar("bar","评估统计结果",null,true,true);
        bar.setMessage('<@getMessage/>');
-     
+
      var dd = new EduSpanTypeDepart3Select("educationTypeOfCourse","department","major",null,true,true,true,true);
     dd.init(educationTypeArray,departArray);
     function moveSelectedOptions(srcSelect, destSelect){
         for (var i=0; i<srcSelect.length; i++){
-            if (srcSelect.options[i].selected){ 
+            if (srcSelect.options[i].selected){
                 var op = srcSelect.options[i];
                 if (!hasOption(destSelect, op)){
                    destSelect.options[destSelect.length]= new Option(op.text, op.value);
                 }
              }
-         }      
+         }
     }
     function removeSelectedOptions(select){
         var options = select.options;
-        for (var i=options.length-1; i>=0; i--){   
+        for (var i=options.length-1; i>=0; i--){
                 options[i] = null;
         }
     }
-    
+
     function search() {
             var form = document.tutorForm;
             form.semesterSeqIds.value=getAllOptionValue(form.semesterSelected);
@@ -201,5 +201,5 @@
     search();
 </script>
  </body>
-<#include "/template/foot.ftl"/> 
+<#include "/template/foot.ftl"/>
 --]

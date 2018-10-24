@@ -2,7 +2,7 @@
 [@b.head/]
 [@b.form name="courseEvaluteStatSearchForm" action="!search" target="contentDiv"]    <table id="bar" width="100%"></table>
     <input type="hidden" name="semester.id" value="${semesterId!}">
-    [@b.grid items=lessonEvalStats var="lessonEvalStat" sortable="true"]    
+    [@b.grid items=lessonEvalStats var="lessonEvalStat" sortable="true"]
         [@b.gridbar title="教师个人评教记录"]
         bar.addItem("${b.text('action.info')}", action.info());
         [/@]

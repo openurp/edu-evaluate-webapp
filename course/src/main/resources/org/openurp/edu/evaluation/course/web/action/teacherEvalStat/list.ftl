@@ -1,7 +1,7 @@
 [#ftl]
 [@b.head/]
 [@b.form name="courseEvaluteStatSearchForm" action="!search" target="contentDiv"]
-    [@b.grid items=teacherEvalStats var="teacherEvalStat" sortable="true"]    
+    [@b.grid items=teacherEvalStats var="teacherEvalStat" sortable="true"]
         [@b.gridbar title="课程评教结果统计列表"]
         var detailMenu = bar.addMenu("查看详情", "info()");
         detailMenu.addItem("教师历史评教", "evaluateTeachHistory()", "info.png");
@@ -24,7 +24,7 @@
 <script type="text/javaScript">
 
     var form = document.courseEvaluteStatSearchForm;
-    
+
     function evaluateTeachHistory(){
         var questionnaireStatIds = bg.input.getCheckBoxValues("teacherEvalStat.id");
         if(questionnaireStatIds == "" || questionnaireStatIds.split(",").length !=1){
@@ -61,6 +61,6 @@
         form.target = "_News";
         bg.form.submit(form, "courseEvaluateStat!export.action");
     }
-            
+
 </script>
 [@b.foot/]

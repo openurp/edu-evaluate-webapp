@@ -20,7 +20,7 @@
 
 [#macro blur numField]
     jQuery("#${numField.id}").blur(function(){
-    
+
         function error($ele) {
             if($ele.css("color") != "red") {
                 $ele.data("cssColor",$ele.css("color"));
@@ -31,12 +31,12 @@
             $ele.css("fontWeight","bold");
             $ele.css("color","red");
         }
-        
+
         function normal($ele) {
             $ele.css("color", $ele.data('cssColor'));
             $ele.css("fontWeight", $ele.data('fontWeight'));
         }
-        
+
         function getValidRange(options) {
             var l_min_value = Number.NEGATIVE_INFINITY;
             var l_max_value = Number.POSITIVE_INFINITY;
@@ -48,7 +48,7 @@
                     l_min_value = parseFloat(jQuery(options.minField).val());
                 }
             }
-            
+
             if(options.maxValue === 0 || options.maxValue) {
                 l_max_value = options.maxValue;
             }
@@ -83,7 +83,7 @@
                 }
             }
         }
-        
+
         var $this = jQuery(this);
         var $e;
         var numRegex = /^[+-]?(\d+(\.\d*)?|\.\d+)([Ee]\d+)?$/;
@@ -110,7 +110,7 @@
         } else {
             normal($this);
         }
-        
+
         // 验证最小值
         [#if numField.min?? || numField.max??]
             var $this = jQuery('#${numField.id}');
@@ -125,7 +125,7 @@
                 [#if numField.min?? && numField.min?index_of('#') == 0]
                 rangeOption.minField = "${numField.min}";
                 [/#if]
-                
+
                 [#if numField.max?? && numField.max?index_of('#') == -1]
                 rangeOption.maxValue = ${numField.max};
                 [/#if]

@@ -1,7 +1,7 @@
 [#ftl]
 [@b.head/]
 [@b.toolbar title='我的评教结果' id='textEvaluationBar'/]
-    
+
       <table width="100%" class="frameTable">
         <tr>
             <td class="index_content">
@@ -9,7 +9,7 @@
             <input type="hidden" name="questionnaireStat.teacher.id" value="${teacher.id}">
             [/@]
             [@b.div href="!search" id="contentDiv"/]
-        </td> 
-        </tr>    
+        </td>
+        </tr>
     </table>
 [@b.foot/]

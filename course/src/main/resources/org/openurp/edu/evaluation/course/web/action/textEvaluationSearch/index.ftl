@@ -16,12 +16,12 @@
         </td>
         <td class="index_content">
             [@b.div id="contentDiv" href="!search"/]
-        </td> 
+        </td>
     </tr>
 </table>
 <script type="text/javaScript">
     var form = document.textEvaluationIndexForm;
-    
+
     function changeSemester(){
         bg.form.addInput(form, "textEvaluation.semester.id", $("input[name='semester.id']").val());
         bg.form.submit(form);

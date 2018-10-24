@@ -8,7 +8,7 @@
   </parent>
   <groupId>org.openurp.edu.evaluation</groupId>
   <artifactId>openurp-edu-evaluation-teacher</artifactId>
-  <packaging>war</packaging>
+  <packaging>jar</packaging>
   <name>OpenURP Edu Evaluation Teacher</name>
 
   <properties>

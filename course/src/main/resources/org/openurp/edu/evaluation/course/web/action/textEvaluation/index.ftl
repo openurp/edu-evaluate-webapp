@@ -16,17 +16,10 @@
         </td>
         <td class="index_content">
             [@b.div id="contentDiv" href="!search"/]
-        </td> 
+        </td>
     </tr>
 </table>
 [@b.foot/]
-
-
-
-
-
-
-
 
 [#--
 <#include "/template/head.ftl"/>
@@ -43,7 +36,7 @@
       <#include "/template/time/semester.ftl"/>
      </tr>
    </table>
-    <table   width="100%"  class="frameTable"> 
+    <table   width="100%"  class="frameTable">
         <tr>
             <td width="20%" class="frameTable_view" valign="top">
                 <#include "searchTable.ftl"/>

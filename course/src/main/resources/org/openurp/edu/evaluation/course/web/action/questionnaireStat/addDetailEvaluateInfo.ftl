@@ -94,7 +94,7 @@
            var bar = new ToolBar('backBar','<@text name="field.questionnaireStatistic.addEvaluateResult"/>',null,true,true);
            bar.setMessage('<@getMessage/>');
            var qscore = 0 ;
-           
+
         function loadCourses(){
             var semesterId = document.evaluateForm.semesterId.value;
             var collegeId = document.evaluateForm['evaluateResults.department.id'].value;
@@ -112,11 +112,11 @@
             var url="questionnaireStat.action?method=getCourses&collegeId=" +collegeId+"&semesterId="+semesterId;
             window.open(url, '', 'scrollbars=yes,left=0,top=0,width=500,height=550,status=yes');
         }
-        function setTeachTaskIdAndDescriptions(ids, descriptions){      
+        function setTeachTaskIdAndDescriptions(ids, descriptions){
                document.evaluateForm['taskId'].value = ids;
                document.evaluateForm['courseName'].value = descriptions.replace(/,/gi, "\n");
             }
-        function setQuestionIdAndDescriptions(ids, descriptions,mark){      
+        function setQuestionIdAndDescriptions(ids, descriptions,mark){
                document.evaluateForm['questionId'].value = ids;
                document.evaluateForm['questionName'].value = descriptions.replace(/,/gi, "\n");
                document.evaluateForm['questionMark'].value = mark;
@@ -165,7 +165,7 @@
         function doButtonEstate(inputId, isOpen){
             var input = document.getElementById(inputId);
             input.disabled=isOpen;
-        }    
+        }
     </script>
 </body>
 <#include "/template/foot.ftl"/>

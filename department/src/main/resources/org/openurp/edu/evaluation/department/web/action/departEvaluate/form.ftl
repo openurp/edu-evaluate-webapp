@@ -18,7 +18,7 @@
    <td class="title" style="font-weight:bold;">评教总分:</td>
    <td class="content" style="color:red; font-weight:bold;">${(departEvaluate.totalScore)!}</td>
   </tr>
-</table>  
+</table>
 
 [@b.form name="addTeaEvaluateForm" action="!save"]
   <input type="hidden" name="semester.id" value="${Parameters['departEvaluate.semester.id']!}">
@@ -59,7 +59,7 @@
                 [#if questions?size>1]
                     [#list 1..questions?size-1 as i]
                         [#assign index=index+1]
-                        <tr class="griddata-${(key_index%2==0)?string("even","odd")}"> 
+                        <tr class="griddata-${(key_index%2==0)?string("even","odd")}">
                             <td align="left">
                                 ${questions[i].content}
                             </td>
@@ -85,7 +85,7 @@
                </tr>
         </tbody>
     </table>
-  </div>      
+  </div>
 [/@]
 <script type="text/javaScript">
     function saveTeaEvaluate(){

@@ -3,9 +3,6 @@
 [@b.messages slash="4"/]
 [@b.foot/]
 
-
-
-
 [#--
 <#include "/template/head.ftl"/>
 <table id="taskListBar" width="100%"> </table>

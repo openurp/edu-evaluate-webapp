@@ -7,7 +7,7 @@
             bar.addItem("更新全部问卷","updateIds('all')","update.png");
             bar.addItem("更新选择问卷","updateIds('select')","update.png");
             bar.addItem("${b.text("action.delete")}", action.remove());
-            
+
             function updateIds(item){
                 var form = action.getForm()
                 var id = bg.input.getCheckBoxValues("questionnaireClazz.id");

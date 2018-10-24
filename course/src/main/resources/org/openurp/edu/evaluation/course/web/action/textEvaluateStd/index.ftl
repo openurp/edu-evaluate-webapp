@@ -5,7 +5,7 @@
     [@b.navitem title="文字评教" href="/textEvaluateStudent"/]
 [/@]--]
 [@b.toolbar title='评教' id='textEvaluateStudentBar' /]
- 
+
 [#--[@eams.semesterBar semesterValue=semester name="project.id" semesterName="semester.id" semesterEmpty="false" initCallback="changeSemester(this.value)"/]--]
 <table class="indexpanel">
     <tr>
@@ -16,7 +16,7 @@
         </td>
         <td class="index_content">
             [@b.div id="contentDiv"  href="!search?&semester.id=${(semester.id)!}" /]
-        </td> 
+        </td>
     </tr>
 </table>
 <script type="text/javascript">
@@ -27,10 +27,6 @@
     }
 </script>
 [@b.foot/]
-
-
-
-
 
 [#--
 <#include "/template/head.ftl"/>

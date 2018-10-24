@@ -41,7 +41,7 @@
                 ${(evaluateRes.get(str?string))!0}
                   [/@]
                   [/#list]
-         
+
         [/@]
         [/@]
         [/@]

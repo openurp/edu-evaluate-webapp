@@ -1,7 +1,7 @@
 [#ftl]
 [@b.head/]
 [@b.form name="evaluateSwitchSearchForm" action="!search" target="contentDiv"]
-    [@b.grid items=stdEvaluateSwitchs var="stdEvaluateSwitch" sortable="true"]    
+    [@b.grid items=stdEvaluateSwitchs var="stdEvaluateSwitch" sortable="true"]
         [@b.gridbar title="评教开关列表"]
             bar.addItem("${b.text('action.add')}",action.add());
             bar.addItem("${b.text('action.edit')}",action.edit());

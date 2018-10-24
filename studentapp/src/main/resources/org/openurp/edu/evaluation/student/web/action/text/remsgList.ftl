@@ -7,7 +7,7 @@
         padding-left: 10px;
     }
     #tabnav ul li{
-        margin: 0; 
+        margin: 0;
         padding: 0;
         display: inline;
         list-style-type: none;
@@ -27,7 +27,7 @@
         cursor:pointer;
     }
     #container{
-        width: 95%;    
+        width: 95%;
         height:auto!important;
         height:500px;
         min-height:500px;
@@ -152,7 +152,7 @@
                         </tr>
                     [/#if]
                     [#assign z = z + 1/]
-                [/#list]    
+                [/#list]
             [/#if]
             [#assign k = k + 1/]
         [/#list]
@@ -160,7 +160,7 @@
         [/#if]
     </table>
     </div>
-    
+
     <div id="otherRemsgTable" style="display:none;">
     <table class="gridtable" style="width:90%;margin-top:15px;" align="center">
         <thead class="gridhead">
@@ -228,7 +228,7 @@
         [/#if]
     </table>
     </div>
-    
+
     <div id="annTable" style="display:none">
     <table class="gridtable" style="width:90%;margin-top:15px;" align="center">
         <thead class="gridhead">
@@ -284,7 +284,7 @@
         [/#if]
     </table>
     </div>
-    
+
 </div>
 [/@]
 <div id="infoDiv" style="display:none;">
@@ -307,7 +307,7 @@
             obj.style.color = "#666";
         });
         var tb = $("#" + tbId).get(0);
-        tb.style.borderBottomColor = "#fff";    
+        tb.style.borderBottomColor = "#fff";
         tb.style.background = "#fff";
         tb.style.color = "#000";
         currentTag = tbId;
@@ -339,7 +339,7 @@
             obj.style.background = "#EFF0EA";
         }
     }
-    
+
     function showElement(obj){
         var a = $(obj);
         var tr = $("tr[name='" + a.prop("id") + "SubTr']");

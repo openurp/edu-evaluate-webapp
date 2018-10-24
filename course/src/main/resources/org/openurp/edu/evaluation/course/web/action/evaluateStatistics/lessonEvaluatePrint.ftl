@@ -17,7 +17,7 @@
 .planTable td {
     border: 1px solid #006CB2;
     border-collapse: collapse;
-    overflow: hidden; 
+    overflow: hidden;
     word-wrap:break-word;
     padding:2px 0px;
 }

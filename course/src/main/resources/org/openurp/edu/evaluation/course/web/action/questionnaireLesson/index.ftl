@@ -28,7 +28,7 @@
         </td>
         <td class="index_content">
             [@b.div id="contentDiv" href="!search?&lesson.semester.id=${(semester.id)!}" /]
-        </td> 
+        </td>
     </tr>
 </table>
 [@b.foot/]

@@ -29,7 +29,6 @@
     <td>${(questionDetailStat.stddev)!}</td>
 </tr>
 
-
 </#list>
 <#if (validNum>0) >
 <tr><td colspan="10">附加题部分</td></tr>
@@ -50,7 +49,6 @@
     </#list>
 </#if>
 
-
 <tr>
 <td colspan="10">指标代码含义:A.完全同意 B.同意 C. 一般 D.不同意 E.完全不同意</td>
 </tr>
@@ -65,7 +63,7 @@
     var bar=new ToolBar("bar","课程详细列表",null,true,true);
        bar.setMessage('<@getMessage/>');
     bar.addItem('导出详细', 'dataout()');
-    
+
        function dataout(){
                addInput(form,"questionnaireStatId","${(questionnaireStatId)!}");;
                form.action="exportEvaluate.action?method=export&type=xls";

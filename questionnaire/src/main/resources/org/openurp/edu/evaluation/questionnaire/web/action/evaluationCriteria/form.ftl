@@ -11,14 +11,14 @@
            [@b.select label="制作部门" value=(evaluationCriteria.depart.id)! empty="..." items=departmentList required="true" name="evaluationCriteria.depart.id"/]
            [@b.field label="选项"]
             <table class="formTable" width="60%"  id="evaluationCriteriaTable">
-                <tr align="center"> 
+                <tr align="center">
                     <td class="gridselect"><input type="checkBox" id="criteriaItemBoxId" class="box" onClick="bg.input.toggleCheckBox(document.getElementsByName('criteriaItemId'),event);"></td>
                        <td align="center" style="background-color: #c7dbff;width:33%">评价名称</td>
                        <td align="center" style="background-color: #c7dbff;width:32%">最小分数(包含)</td>
                        <td align="center" style="background-color: #c7dbff;width:32%">最大分数(不包含)</td>
                 </tr>
                 [#list evaluationCriteria.criteriaItems?sort_by("min") as criteriaItem]
-                <tr [#if (criteriaItem_index+1)%2==0]class="griddata-odd" [#else]class="griddata-even"[/#if]>         
+                <tr [#if (criteriaItem_index+1)%2==0]class="griddata-odd" [#else]class="griddata-even"[/#if]>
                     <td class="gridselect">
                         <input class="box" name="criteriaItemId" value="${(criteriaItem.id)?if_exists}" type="checkbox">
                         <input class="criteriaId" type="hidden" name="criteriaItem${criteriaItem_index}.id" value="${(criteriaItem.id)?if_exists}"/>
@@ -35,7 +35,7 @@
                <input name="evaluationCriteria.id"  value="${evaluationCriteria.id}" type="hidden"/>
                [/#if]
               [#--] <input name="evaluationCriteria.id" value="${evaluationCriteria.id?default("")}" type="hidden"/>[--]
-               
+
             [@b.submit value="action.submit" onsubmit="check"/]&nbsp;
             <input type="reset"  name="reset1" value="${b.text("action.reset")}" class="buttonStyle" />
         [/@]
@@ -48,7 +48,7 @@
     if(checkAll.checked){
         checkAll.checked=false;
     }
-        
+
     function addRow(){
          var tr = jQuery("#evaluationCriteriaTable>tbody>tr:last");
          var str="";
@@ -61,7 +61,7 @@
         tr.after(str);
         index++;
     }
-    
+
     function check(form){
         var str="";
         var flag= true;
@@ -114,7 +114,7 @@
            }
            return flag;
     }
-    
+
     function deleteRow(){
         var ids = bg.input.getCheckBoxValues("criteriaItemId");
          if(ids==null || ids==""){
@@ -139,7 +139,6 @@
             checkAll.checked=false;
         }
     }
-
 
  </script>
 [@b.foot/]

@@ -27,7 +27,7 @@
             }
         });
     }
-    
+
     mergeCells();
 </script>
 [@b.foot/]

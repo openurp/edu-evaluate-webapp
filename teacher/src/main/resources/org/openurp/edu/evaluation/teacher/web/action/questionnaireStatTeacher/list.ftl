@@ -48,28 +48,28 @@
            bg.form.addInput(searchForm,"teacherStatId",$("input[name='teacherStat.id']").val());
            bg.form.submit(searchForm, "questionnaire-stat-teacher!evaluatePersonInfo.action");
         }
-        
+
         function info() {
             bg.form.submit(searchForm, "questionnaire-stat-teacher!info.action");
             //form["teacherStat.id"].value = getIds();
             //form.target="_blank";
             //form.action = "questionnaireStatTeacher.action?method=info";
             //form.submit();
-            
+
         }
-        
+
         function getIds(){
             var str ="";
-            var checkboxs=document.getElementsByTagName("checkBox"); 
-            var i; 
+            var checkboxs=document.getElementsByTagName("checkBox");
+            var i;
             var nm =0;
-            for(i=0;i<checkboxs.length;i++){ 
-                if(checkboxs[i].type=='checkbox'){ 
+            for(i=0;i<checkboxs.length;i++){
+                if(checkboxs[i].type=='checkbox'){
                     if(checkboxs[i].checked){
                         str =str +checkboxs[i].value;
                         nm = nm +1;
                     }
-                } 
+                }
             }
             if(nm !=1){
                 alert("请选择一个！");

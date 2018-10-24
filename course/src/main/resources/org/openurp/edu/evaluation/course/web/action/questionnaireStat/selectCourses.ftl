@@ -1,7 +1,7 @@
 <#include "/template/head.ftl"/>
 <BODY onblur="self.focus();" LEFTMARGIN="0" TOPMARGIN="0">
     <table id="backBar" width="100%"></table>
-    <table cellpadding="0" cellspacing="0" width="100%" border="0">  
+    <table cellpadding="0" cellspacing="0" width="100%" border="0">
            <tr>
             <td>
                 <@table.table width="100%">
@@ -36,7 +36,7 @@
            var bar = new ToolBar('backBar','<@text name="field.questionnaireStatistic.courseList"/>',null,true,true);
            bar.setMessage('<@getMessage/>');
            bar.addItem("选课课程","doSubmit()");
-           
+
         var detailArray = {};
         var arraySize = ${(tasks?size)?default(0)};
         var teachTaskArray = new Array(arraySize);
@@ -52,7 +52,7 @@
               return detailArray[id]['name'];
            }else{
               return "";
-           }       
+           }
         }
         function pageGo(pageNo){
            document.pageGoForm.pageNo.value = pageNo;
@@ -62,7 +62,7 @@
             var taskId = getSelectId("taskId");
             if("" == taskId){
                 alert("请选择一个教学任务");
-                return 
+                return
             } else {
                 self.opener.$("taskId").value = taskId;
             }
@@ -74,7 +74,7 @@
                     return;
                 }
             }
-            
+
             opener.addTargetValue("isHasQuestionnaire","false");
             var departmentValue= document.getElementById("questionnaireValue"+taskId);
             if(null!=self.opener.document.getElementById("departmentId")){
@@ -89,7 +89,7 @@
             }
             window.close();
         }
-        
+
         function selectedTeacher(array, id) {
             if (array == null || array == "" || id == null || id == "") {
                 return -1;

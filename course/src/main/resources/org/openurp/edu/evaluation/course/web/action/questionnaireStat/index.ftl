@@ -12,7 +12,7 @@
         bg.form.submit(form, "${b.url('!departDistributeStat')}");
     }
     function lieChart(){
-        
+
     }
 </script>
 [@b.foot/]

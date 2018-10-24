@@ -1,7 +1,7 @@
 [#ftl]
 [@b.head/]
 [@b.form name="textEvaluationSearchForm" action="!search" target="contentDiv"]
-    [@b.grid items=textEvaluations var="textEvaluation" sortable="true"]    
+    [@b.grid items=textEvaluations var="textEvaluation" sortable="true"]
         [@b.gridbar title="学生意见列表"]
             bar.addItem("确认","updateAffirm(1)");
             bar.addItem("取消确认","updateAffirm(0)");
@@ -36,7 +36,7 @@
             var textEvaluationIds = bg.input.getCheckBoxValues("textEvaluation.id");
             var form = action.getForm();
             if (textEvaluationIds) {
-                bg.form.addInput(form,"textEvaluationIds",textEvaluationIds);    
+                bg.form.addInput(form,"textEvaluationIds",textEvaluationIds);
             }else{
                 if(!confirm("是否导出查询条件内的所有数据?")) return;
                     if(""!=action.page.paramstr){

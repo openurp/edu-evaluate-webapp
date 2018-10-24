@@ -79,7 +79,7 @@
         [#if textEvaluations??]
         <tbody>
         [#list textEvaluations as textEvaluation]
-    
+
             [#if i==0 && textEvaluation?exists]
                   [#assign textEvaluationId = textEvaluation.id/]
               [/#if]
@@ -130,7 +130,7 @@
                   [/#list]
                   </td>
               </tr>
-              [#assign i = i+1/]    
+              [#assign i = i+1/]
         [/#list]
         </tbody>
         [/#if]
@@ -185,7 +185,7 @@
     var nowLine;
     var isAnn = false;
     var resultMsgTd;
-    
+
     function showRemsg(line){
         var remsgTd = $("#resultMsgTd" + line);
         var showRemessageDiv = $("#showRemessage" + line);

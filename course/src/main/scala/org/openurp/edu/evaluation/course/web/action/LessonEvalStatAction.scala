@@ -1,3 +1,21 @@
+/*
+ * OpenURP, Agile University Resource Planning Solution.
+ *
+ * Copyright © 2005, The OpenURP Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.commons.collection.Collections
@@ -336,7 +354,7 @@ class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
 
   /**
    * 统计(任务评教结果)
-   * FIXME 去除最高5%和最低分数5%,以及人数少于15人的评教结果,	也没有正确计算问卷总数（只是将有效问卷和问卷总数相等）
+   * FIXME 去除最高5%和最低分数5%,以及人数少于15人的评教结果,  也没有正确计算问卷总数（只是将有效问卷和问卷总数相等）
    * @return
    */
   def stat(): View = {

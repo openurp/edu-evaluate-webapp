@@ -8,24 +8,22 @@
 
 <script>
     function checkNum() {
-        var reg = new RegExp(/^(\d*\.)?\d+$/); 
+        var reg = new RegExp(/^(\d*\.)?\d+$/);
         return reg.test(document.optionGroupForm["optionGroup.oppoVal"].value);
     }
 </script>
-[#assign sa][#if optionGroup.persisted]!update?id=${optionGroup.id}[#else]!save[/#if][/#assign]
-    [@b.form name="optionGroupForm" title="" action=sa theme="list"]
+    [@b.form name="optionGroupForm" title="" action=b.rest.save(optionGroup) theme="list"]
            [@b.textfield id="name" label="名称" required="true" name="optionGroup.name" value="${(optionGroup.name?html)!}" maxlength="30" /]
-           [@b.select label="制作部门" value=(optionGroup.depart.id)! empty="..." items=departmentList required="true" name="optionGroup.depart.id"/]
            [#--][@b.textfield label="倾向性权重" required="true" check="assert(checkNum(), '倾向性权重格式有误');" name="optionGroup.oppoVal" value="${(optionGroup.oppoVal?html)?default('')}" maxlength="3" /][--]
            [@b.field label="选项"]
             <table class="formTable" width="60%"  id="optionTable">
-                <tr align="center"> 
+                <tr align="center">
                     <td class="gridselect"><input type="checkBox" id="optionIdBox" class="box" onClick="bg.input.toggleCheckBox(document.getElementsByName('optionId'),event);"></td>
                        <td align="center" style="background-color: #c7dbff;width:35%">选项名</td>
                        <td align="center" style="background-color: #c7dbff;width:62%">所占比重</td>
                 </tr>
                 [#list optionGroup.options?sort_by("proportion")?reverse as option]
-                <tr [#if (option_index+1)%2==0]class="griddata-odd" [#else]class="griddata-even"[/#if]>         
+                <tr [#if (option_index+1)%2==0]class="griddata-odd" [#else]class="griddata-even"[/#if]>
                     <td class="gridselect">
                         <input class="box" name="optionId" value="${(option.id)?if_exists}" type="checkbox">
                         <input class="optId" type="hidden" name="option${option_index}.id" value="${(option.id)?if_exists}"/>
@@ -34,14 +32,10 @@
                     <td><input class="optProportion" name="option${option_index}.proportion" maxlength="10" value="${(option.proportion)?if_exists}"/></td>
                 </tr>
                 [/#list]
-                
+
             </table>
            [/@]
            [@b.formfoot]
-               [#if optionGroup.persisted]
-               <input name="optionGroup.id"  value="${optionGroup.id}" type="hidden"/>
-               [/#if]
-               
             [@b.submit value="action.submit" onsubmit="check"/]&nbsp;
             <input type="reset"  name="reset1" value="${b.text("action.reset")}" class="buttonStyle" />
         [/@]
@@ -54,7 +48,7 @@
     if(checkAll.checked){
         checkAll.checked=false;
     }
-        
+
     function addRow(){
          var tr = jQuery("#optionTable>tbody>tr:last");
          var str="";
@@ -67,7 +61,7 @@
         tr.after(str);
         index++;
     }
-    
+
     function check(form){
         var str="";
         var flag= true;
@@ -92,7 +86,7 @@
            }
            return flag;
     }
-    
+
     function deleteRow(){
         var ids = bg.input.getCheckBoxValues("optionId");
          if(ids==null || ids==""){
@@ -116,9 +110,6 @@
             checkAll.checked=false;
         }
     }
-    
-  
+
  </script>
 [@b.foot/]
-
-

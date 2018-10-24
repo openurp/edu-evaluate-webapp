@@ -8,8 +8,8 @@
     [@b.select label="开放状态" required="true" name="textEvaluateSwitch.opened" value=((textEvaluationSwitch.opened)?string("1","0"))! items={'1':'开放','0':'关闭'} empty="..." /]
     [@b.select label="教师查询" required="true" name="textEvaluateSwitch.openedTeacher" value=((textEvaluateSwitch.openedTeacher)?string("1","0"))! items={'1':'开放','0':'关闭'} empty="..." /]
     [@b.select label="不限时开放学生文字评教" name="textEvaluateSwitch.textEvaluateOpened"  items={'1':'开放','0':'关闭'}  value=((textEvaluateSwitch.textEvaluateOpened)?string("1","0"))! required="true"  empty="..." /]
-    [@b.startend label="开始结束时间" 
-    name="textEvaluateSwitch.beginAt,textEvaluateSwitch.endAt" required="true,true" 
+    [@b.startend label="开始结束时间"
+    name="textEvaluateSwitch.beginAt,textEvaluateSwitch.endAt" required="true,true"
     start=textEvaluateSwitch.beginAt end=textEvaluateSwitch.endAt format="yyyy-MM-dd HH:mm" /]
     [@b.formfoot]
         [#if textEvaluateSwitch.persisted]<input type="hidden" name="textEvaluateSwitch.id" value="${textEvaluateSwitch.id!}" />[/#if]

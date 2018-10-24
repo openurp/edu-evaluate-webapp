@@ -5,7 +5,7 @@
         [@b.gridbar title="课程问卷列表"]
             bar.addItem("添加全部问卷","updateIds('all')","update.png");
             bar.addItem("添加选择问卷","updateIds('select')","update.png");
-            
+
             function updateIds(item){
                 var form = action.getForm()
                 var id = bg.input.getCheckBoxValues("lesson.id");
@@ -76,4 +76,4 @@
         [/@]
     [/@]
 [/@]
-[@b.foot/]    
+[@b.foot/]

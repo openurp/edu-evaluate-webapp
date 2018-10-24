@@ -1,3 +1,21 @@
+/*
+ * OpenURP, Agile University Resource Planning Solution.
+ *
+ * Copyright © 2005, The OpenURP Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.webmvc.entity.action.RestfulAction
@@ -12,6 +30,7 @@ import org.openurp.edu.evaluation.course.result.model.QuestionResult
 import org.openurp.edu.evaluation.course.stat.model.DepartEvalStat
 import org.beangle.data.dao.OqlBuilder
 import org.openurp.edu.course.model.Clazz
+import org.beangle.webmvc.api.annotation.mapping
 
 class DepartEvalSearchAction extends RestfulAction[DepartEvalStat] {
   override def index(): View = {
@@ -35,8 +54,9 @@ class DepartEvalSearchAction extends RestfulAction[DepartEvalStat] {
     forward()
   }
 
-  def info(): View = {
-    val questionnaireStat = entityDao.get(classOf[DepartEvalStat], getLong("departEvalStat.id").get)
+  @mapping(value = "{id}")
+  override def info(id: String): View = {
+    val questionnaireStat = entityDao.get(classOf[DepartEvalStat], id.toLong)
     put("questionnaireStat", questionnaireStat);
     // zongrenci fix
     val query = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName, "result");

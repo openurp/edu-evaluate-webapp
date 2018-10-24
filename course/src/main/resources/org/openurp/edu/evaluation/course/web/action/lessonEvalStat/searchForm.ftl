@@ -22,20 +22,20 @@
         </td>
         <td class="index_content">
             [@b.div id="contentDiv" href="!search"/]
-        </td> 
+        </td>
     </tr>
 </table>
 <script type="text/javaScript">
     [#if !searchFormFlag?? || searchFormFlag == "beenStat"]
     var form = document.evaluateTeacherStatIndexForm;
-    
+
     function changeSemester(){
         bg.form.addInput(form, "evaluateTeacherStat.semester.id", $("input[name='semester.id']").val());
         bg.form.submit(form);
     }
     [#else]
     var form = document.evaluateResultIndexForm;
-    
+
     function changeSemester(){
         bg.form.addInput(form, "evaluateResult.semester.id", $("input[name='semester.id']").val());
         bg.form.submit(form);
@@ -43,5 +43,3 @@
     [/#if]
 </script>
 [@b.foot/]
-
-

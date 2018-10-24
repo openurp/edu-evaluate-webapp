@@ -1,6 +1,6 @@
 [#ftl]
 [@b.head/]
-    [@b.grid items=departEvaluates var="departEvaluate" sortable="true"]    
+    [@b.grid items=departEvaluates var="departEvaluate" sortable="true"]
         [@b.gridbar title="部门评教列表"/]
         [@b.row]
             [@b.boxcol/]

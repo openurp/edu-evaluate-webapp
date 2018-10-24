@@ -15,7 +15,7 @@
   <properties>
     <bundle.symbolicName>org.openurp.edu.evaluation.parent</bundle.symbolicName>
     <bundle.namespace>org.openurp</bundle.namespace>
-    <openurp.app.version>0.1.3</openurp.app.version>
+    <openurp.app.version>0.1.4-SNAPSHOT</openurp.app.version>
     <openurp.api.version>0.2.0</openurp.api.version>
     <jxls.version>1.0.3</jxls.version>
   </properties>

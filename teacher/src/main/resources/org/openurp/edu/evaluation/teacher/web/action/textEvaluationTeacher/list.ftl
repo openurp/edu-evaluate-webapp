@@ -1,7 +1,7 @@
 [#ftl]
 [@b.head/]
 [@b.form name="textEvaluationSearchForm" action="!search" target="contentDiv"]
-    [@b.grid items=lessons var="lesson" sortable="true"]    
+    [@b.grid items=lessons var="lesson" sortable="true"]
         [@b.gridbar title="教学任务列表"]
             bar.addItem("查看文字评教","infoText()","info.png");
         [/@]
@@ -19,7 +19,6 @@
 [/@]
 <script type="text/javaScript">
     var searchForm = document.textEvaluationSearchForm;
-    
 
     function infoText(){
         var id = bg.input.getCheckBoxValues("lesson.id");

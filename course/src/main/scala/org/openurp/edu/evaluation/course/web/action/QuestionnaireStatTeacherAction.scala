@@ -1,3 +1,21 @@
+/*
+ * OpenURP, Agile University Resource Planning Solution.
+ *
+ * Copyright © 2005, The OpenURP Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.commons.collection.Collections
@@ -18,6 +36,7 @@ import org.openurp.edu.evaluation.model.Option
 import org.openurp.edu.evaluation.model.QuestionType
 import org.openurp.edu.course.model.Clazz
 import org.beangle.webmvc.api.view.View
+import org.beangle.webmvc.api.annotation.mapping
 
 class QuestionnaireStatTeacherAction extends RestfulAction[ClazzEvalStat] {
 
@@ -111,9 +130,9 @@ class QuestionnaireStatTeacherAction extends RestfulAction[ClazzEvalStat] {
   /**
    * 教师个人查询自己被评教的详细情况
    */
-  def info(): View = {
-    val id = getLong("teacherStat.id").get
-    val questionnaireStat = entityDao.get(classOf[ClazzEvalStat], id);
+  @mapping(value = "{id}")
+  override def info(id: String): View = {
+    val questionnaireStat = entityDao.get(classOf[ClazzEvalStat], id.toLong)
 
     val teaId = questionnaireStat.teacher.id
     val semesterId = questionnaireStat.semester.id
