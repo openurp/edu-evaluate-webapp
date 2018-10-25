@@ -41,7 +41,7 @@ class OptionGroupAction extends RestfulAction[OptionGroup] {
   }
 
   override def editSetting(entity: OptionGroup): Unit = {
-    var c = 4 - entity.options.size
+    var c = 5 - entity.options.size
     if (c > 0) {
       for (i <- 0 until c) {
         entity.options += new Option()
@@ -58,8 +58,10 @@ class OptionGroupAction extends RestfulAction[OptionGroup] {
       (0 until optionCount) foreach { i =>
         get("option" + i + ".name") foreach { optionName =>
           val option = populateEntity(classOf[Option], "option" + i)
-          option.optionGroup = optionGroup
-          optionGroup.options += option
+          if (!(option.name == "--")) {
+            option.optionGroup = optionGroup
+            optionGroup.options += option
+          }
         }
       }
       if (null == optionGroup.project) {

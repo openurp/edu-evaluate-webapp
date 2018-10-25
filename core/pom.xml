@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.openurp.edu.evaluation</groupId>
@@ -14,29 +14,31 @@
   <properties>
     <bundle.symbolicName>org.openurp.edu.evaluation.core</bundle.symbolicName>
     <bundle.namespace>org.openurp.edu.evaluation</bundle.namespace>
+    <jxls.version>2.4.6</jxls.version>
+    <jxls-poi.version>1.0.15</jxls-poi.version>
   </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.openurp.app</groupId>
-            <artifactId>openurp-app-cas</artifactId>
-            <version>${openurp.app.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openurp.app</groupId>
-            <artifactId>openurp-app-web</artifactId>
-            <version>${openurp.app.version}</version>
-        </dependency>
-      <dependency>
-        <groupId>org.openurp.edu.base</groupId>
-        <artifactId>openurp-edu-base-api</artifactId>
-        <version>${openurp.api.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.openurp.edu.evaluation</groupId>
-        <artifactId>openurp-edu-evaluation-api</artifactId>
-        <version>${openurp.api.version}</version>
-      </dependency>
+  <dependencies>
+    <dependency>
+      <groupId>org.openurp.app</groupId>
+      <artifactId>openurp-app-cas</artifactId>
+      <version>${openurp.app.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openurp.app</groupId>
+      <artifactId>openurp-app-web</artifactId>
+      <version>${openurp.app.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openurp.edu.base</groupId>
+      <artifactId>openurp-edu-base-api</artifactId>
+      <version>${openurp.api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openurp.edu.evaluation</groupId>
+      <artifactId>openurp-edu-evaluation-api</artifactId>
+      <version>${openurp.api.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.beangle.webmvc</groupId>
       <artifactId>beangle-webmvc-entity-plugin_2.12</artifactId>
@@ -50,10 +52,15 @@
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
     </dependency>
-        <dependency>
-      <groupId>net.sf.jxls</groupId>
-      <artifactId>jxls-core</artifactId>
+    <dependency>
+      <groupId>org.jxls</groupId>
+      <artifactId>jxls</artifactId>
       <version>${jxls.version}</version>
     </dependency>
-   </dependencies>
+    <dependency>
+      <groupId>org.jxls</groupId>
+      <artifactId>jxls-poi</artifactId>
+      <version>${jxls-poi.version}</version>
+    </dependency>
+  </dependencies>
 </project>

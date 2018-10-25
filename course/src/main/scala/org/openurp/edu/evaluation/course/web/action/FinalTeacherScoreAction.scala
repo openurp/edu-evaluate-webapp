@@ -29,13 +29,13 @@ import org.openurp.edu.evaluation.department.model.{ DepartEvaluate, Supervisior
 import org.openurp.edu.evaluation.app.lesson.service.Ranker
 import org.openurp.edu.evaluation.course.stat.model.FinalTeacherScore
 
-import net.sf.jxls.transformer.XLSTransformer
 import java.time.LocalDate
 import org.openurp.edu.evaluation.course.result.model.QuestionResult
 import org.openurp.base.model.Department
 import org.openurp.edu.base.code.model.StdType
 import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.code.model.EduSpan
+import org.beangle.data.transfer.excel.ExcelTemplateWriter
 
 class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
 
@@ -74,18 +74,15 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     val beans = new java.util.HashMap[String, Any]
     beans.put("list", list)
     //获得模板路径
-    val path = ClassLoaders.getResourceAsStream("template/finalTeacherScore.xls").get
+    val path = ClassLoaders.getResource("template/finalTeacherScore.xls").get
     //准备输出流
     val response = ActionContext.current.response
     response.setContentType("application/x-excel")
     response.setHeader("Content-Disposition", "attachmentfilename=finalTeacherScore.xls")
     val os = response.getOutputStream()
-    val transformer = new XLSTransformer()
     try {
       //将beans通过模板输入流写到workbook中
-      val workbook = transformer.transformXLS(path, beans)
-      //将workbook中的内容用输出流写出去
-      workbook.write(os)
+      new ExcelTemplateWriter(path, os).write()
     } finally {
       if (os != null) {
         os.close()

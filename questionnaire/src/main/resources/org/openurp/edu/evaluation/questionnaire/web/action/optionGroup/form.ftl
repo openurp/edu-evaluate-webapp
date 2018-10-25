@@ -28,7 +28,7 @@
                         <input class="box" name="optionId" value="${(option.id)?if_exists}" type="checkbox">
                         <input class="optId" type="hidden" name="option${option_index}.id" value="${(option.id)?if_exists}"/>
                     </td>
-                    <td><input class="optName" name="option${option_index}.name" maxlength="20" value="${(option.name?html)!}"/></td>
+                    <td><input class="optName" name="option${option_index}.name" maxlength="20" value="${(option.name?html)!'--'}"/></td>
                     <td><input class="optProportion" name="option${option_index}.proportion" maxlength="10" value="${(option.proportion)?if_exists}"/></td>
                 </tr>
                 [/#list]
