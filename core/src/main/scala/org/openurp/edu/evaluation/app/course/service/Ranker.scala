@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.evaluation.app.lesson.service
+package org.openurp.edu.evaluation.app.course.service
 
 import org.openurp.edu.evaluation.course.stat.model.FinalTeacherScore
 import org.openurp.edu.evaluation.course.stat.model.EvalStat

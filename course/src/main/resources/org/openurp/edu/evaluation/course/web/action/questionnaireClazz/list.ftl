@@ -68,17 +68,17 @@
         </div>
         [@b.row]
             [@b.boxcol/]
-            [@b.col property="lesson.no" title="课程序号" width="8%"/]
-            [@b.col property="lesson.course.code" title="课程代码"/]
-            [@b.col property="lesson.course.name" title="课程名称"/]
-            [@b.col property="lesson.courseType.name" title="课程类别"/]
+            [@b.col property="clazz.crn" title="课程序号" width="8%"/]
+            [@b.col property="clazz.course.code" title="课程代码"/]
+            [@b.col property="clazz.course.name" title="课程名称"/]
+            [@b.col property="clazz.courseType.name" title="课程类别"/]
             [@b.col property="questionnaire.description" title="使用问卷描述"/]
             [@b.col property="evaluateByTeacher" title="评教方式" width="8%"]
                 ${(questionnaireClazz.evaluateByTeacher?string("教师评教","课程评教"))!}
             [/@]
-            [@b.col property="lesson.teachDepart.name" title="开课院系"/]
+            [@b.col property="clazz.teachDepart.name" title="开课院系"/]
             [@b.col title="任课教师"]
-                [#list questionnaireClazz.lesson.teachers?if_exists as teacher]
+                [#list questionnaireClazz.clazz.teachers?if_exists as teacher]
                     ${(teacher.user.name)!}
                 [/#list]
             [/@]

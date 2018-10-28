@@ -45,7 +45,7 @@ class TextEvaluationSearchAction extends RestfulAction[TextEvaluation] {
     textEvaluation.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
     if (state != null)
       textEvaluation.where("textEvaluation.state=:state", state)
-    textEvaluation.where("textEvaluation.lesson.semester=:semester", semester)
+    textEvaluation.where("textEvaluation.clazz.semester=:semester", semester)
     put("textEvaluations", entityDao.search(textEvaluation))
     forward()
   }

@@ -9,9 +9,9 @@
     <td class="index_view">
         [@b.form action="!search" name="courseEvaluateStatIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
        [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
-       [@b.textfield style="width:100px" name="lessonEvalStat.lesson.no" label="课程序号" /]
-       [@b.textfield style="width:100px" name="lessonEvalStat.course.code" label="课程代码" /]
-       [@b.textfield style="width:100px" name="lessonEvalStat.course.name" label="课程名称" /]
+       [@b.textfield style="width:100px" name="clazzEvalStat.clazz.crn" label="课程序号" /]
+       [@b.textfield style="width:100px" name="clazzEvalStat.course.code" label="课程代码" /]
+       [@b.textfield style="width:100px" name="clazzEvalStat.course.name" label="课程名称" /]
     <input type="hidden" name="searchFormFlag" value="beenStat"/>
          [/@]
         </td>

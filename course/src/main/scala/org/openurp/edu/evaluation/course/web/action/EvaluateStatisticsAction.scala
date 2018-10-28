@@ -57,7 +57,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
     if (semesters != null) {
-      builder.where("evaluateResult.lesson.semester in (:ids)", semesters);
+      builder.where("evaluateResult.clazz.semester in (:ids)", semesters);
     }
     builder.select("distinct evaluateResult.questionnaire");
     val list = entityDao.search(builder);
@@ -79,7 +79,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     //    }
     /** 本学期是否评教 */
     val builder = OqlBuilder.from[Questionnaire](classOf[EvaluateResult].getName, "evaluateResult");
-    builder.where("evaluateResult.lesson.semester.id=" + semesterId);
+    builder.where("evaluateResult.clazz.semester.id=" + semesterId);
     builder.where("evaluateResult.questionnaire.id=" + questionnaireId);
     builder.select("distinct questionnaire");
     val list = entityDao.search(builder);
@@ -107,7 +107,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
         classOf[QuestionResult].getName + " questionResult," + classOf[Department].getName + " department");
       query.select("department.id,department.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)");
       query.where("evaluateResult.id=questionResult.result.id and evaluateResult.department.id=department.id");
-      query.where("evaluateResult.lesson.semester.id=" + semesterId);
+      query.where("evaluateResult.clazz.semester.id=" + semesterId);
       if (departmentId != null) {
         query.where("department.id=" + departmentId.toString());
       }
@@ -120,7 +120,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
       val query1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult," + classOf[QuestionResult].getName + " questionResult");
       query1.select("evaluateResult.department.id,questionResult.question.id,sum(questionResult.score)/count(evaluateResult.id)");
       query1.where("evaluateResult.id=questionResult.result.id");
-      query1.where("evaluateResult.lesson.semester.id=" + semesterId);
+      query1.where("evaluateResult.clazz.semester.id=" + semesterId);
       if (departmentId != null) {
         query1.where("evaluateResult.department.id=" + departmentId.toString());
       }
@@ -143,7 +143,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
         + classOf[QuestionResult].getName + " questionResult");
       que.select("sum(questionResult.score)/count(distinct evaluateResult.id)");
       que.where("evaluateResult.id=questionResult.result.id");
-      que.where("evaluateResult.lesson.semester.id=" + semesterId);
+      que.where("evaluateResult.clazz.semester.id=" + semesterId);
       evaResults = entityDao.search(que)(0).toString().toFloat
       put("evaluateResults", evaResults);
       forward()
@@ -151,8 +151,8 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
       this.teacherEvaluate();
       forward("teacherEvaluate");
     } else if (searchTypes == 3) {
-      this.lessonEvaluate();
-      forward("lessonEvaluate");
+      this.clazzEvaluate();
+      forward("clazzEvaluate");
     } else if (searchTypes == 4) {
       this.courseTypeEvaluate(true);
       forward("courseTypeEvaluate");
@@ -185,7 +185,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     put("questionList", questionLists);
     /** 本学期是否评教 */
     val builder = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult");
-    builder.where("evaluateResult.lesson.semester.id=" + semesterId);
+    builder.where("evaluateResult.clazz.semester.id=" + semesterId);
     builder.where("evaluateResult.questionnaire.id=:idd", id);
     val list = entityDao.search(builder);
     if (semesterId != 0) {
@@ -195,12 +195,12 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     /** 教师评教总分 */
     val quer = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " tea");
-    quer.join("evaluateResult.lesson.teachers", "teach");
+    quer.join("evaluateResult.clazz.teachers", "teach");
     quer.select("tea.code,tea.person.name.formatedName,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)");
     quer.where("teach.id = tea.id");
     //    quer.where("tea.teaching is true");
     quer.where("evaluateResult.id=questionResult.result.id ");
-    quer.where("evaluateResult.lesson.semester.id=" + semesterId);
+    quer.where("evaluateResult.clazz.semester.id=" + semesterId);
     quer.where("evaluateResult.questionnaire.id=:ids", id);
     if (departmentId != null) {
       quer.where("tea.state.department.id=" + departmentId.toString());
@@ -225,12 +225,12 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     val evaluateRs = Collections.newMap[String, Float]
     val quer1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " tea");
-    quer1.join("evaluateResult.lesson.teachers", "teach");
+    quer1.join("evaluateResult.clazz.teachers", "teach");
     quer1.select("tea.code,questionResult.question.id,sum(questionResult.score)/count(evaluateResult.id)");
     quer1.where("teach.id = tea.id");
     //    quer1.where("tea.teaching is true");
     quer1.where("evaluateResult.id=questionResult.result.id");
-    quer1.where("evaluateResult.lesson.semester.id=" + semesterId);
+    quer1.where("evaluateResult.clazz.semester.id=" + semesterId);
     quer1.where("evaluateResult.questionnaire.id=:ids", id);
     if (departmentId != null) {
       quer1.where("tea.state.department.id=" + departmentId.toString());
@@ -257,7 +257,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
       + classOf[QuestionResult].getName + " questionResult");
     que.select("sum(questionResult.score)/count(distinct evaluateResult.id)");
     que.where("evaluateResult.id=questionResult.result.id");
-    que.where("evaluateResult.lesson.semester.id=" + semesterId);
+    que.where("evaluateResult.clazz.semester.id=" + semesterId);
     que.where("evaluateResult.questionnaire.id=:ids", id);
     evaResults = entityDao.search(que)(0).toString().toFloat
     put("evaluateResults", evaResults);
@@ -269,10 +269,10 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     val strs = str.split(",");
     val teaId = strs(1).toLong
     val semesterId = strs(0).toInt
-    val lessonId = strs(2).toLong
+    val clazzId = strs(2).toLong
     /** 本学期是否评教 */
     val builder = OqlBuilder.from[Any](classOf[EvaluateResult].getName, "evaluateResult");
-    builder.where("evaluateResult.lesson.semester.id=" + semesterId);
+    builder.where("evaluateResult.clazz.semester.id=" + semesterId);
     builder.select("distinct evaluateResult.questionnaire.id");
     val list = entityDao.search(builder);
     if (list.size == 1) {
@@ -288,19 +288,19 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
       teacher = entityDao.get(classOf[Teacher], teaId);
     }
     put("teacher", teacher);
-    var lesson: Clazz = null;
-    if (lessonId != 0L) {
-      lesson = entityDao.get(classOf[Clazz], lessonId);
+    var clazz: Clazz = null;
+    if (clazzId != 0L) {
+      clazz = entityDao.get(classOf[Clazz], clazzId);
     }
-    put("lesson", lesson);
+    put("clazz", clazz);
     /** 院系平均分 */
     val querdep = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult");
     querdep.select("sum(questionResult.score)/count(distinct evaluateResult.id)");
     querdep.where("evaluateResult.id=questionResult.result.id");
-    querdep.where("evaluateResult.lesson.semester.id=" + semesterId);
-    if (lesson != null) {
-      querdep.where("evaluateResult.lesson.teachDepart.id=:depId", lesson.teachDepart.id);
+    querdep.where("evaluateResult.clazz.semester.id=" + semesterId);
+    if (clazz != null) {
+      querdep.where("evaluateResult.clazz.teachDepart.id=:depId", clazz.teachDepart.id);
     }
     put("depScores", entityDao.search(querdep)(0).toString().toFloat);
     /** 全校平均分 */
@@ -309,21 +309,21 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     /** 课程全校评教排名 */
     val querSch = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult");
-    querSch.select("evaluateResult.lesson.id,sum(questionResult.score)/count(distinct evaluateResult.id)");
+    querSch.select("evaluateResult.clazz.id,sum(questionResult.score)/count(distinct evaluateResult.id)");
     querSch.where("evaluateResult.id=questionResult.result.id");
-    querSch.where("evaluateResult.lesson.semester.id=" + semesterId);
-    querSch.groupBy("evaluateResult.lesson.id");
+    querSch.where("evaluateResult.clazz.semester.id=" + semesterId);
+    querSch.groupBy("evaluateResult.clazz.id");
     querSch.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc");
     val schList = entityDao.search(querSch);
     var schNums = 0;
     schList foreach { ob =>
-      if (ob(0).toString().equals(lessonId.toString())) {
+      if (ob(0).toString().equals(clazzId.toString())) {
         schNums += 1
       }
     }
     //    for (int i = 0; i < schList.size(); i++) {
     //      Object[] ob = (Object[]) schList.get(i);
-    //      if (ob[0].toString().equals(lessonId.toString())) {
+    //      if (ob[0].toString().equals(clazzId.toString())) {
     //        schNums = i + 1;
     //      }
     //    }
@@ -332,24 +332,24 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     /** 课程院系评教排名 */
     val querydep = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult");
-    querydep.select("evaluateResult.lesson.id,sum(questionResult.score)/count(distinct evaluateResult.id)");
+    querydep.select("evaluateResult.clazz.id,sum(questionResult.score)/count(distinct evaluateResult.id)");
     querydep.where("evaluateResult.id=questionResult.result.id");
-    querydep.where("evaluateResult.lesson.semester.id=" + semesterId);
-    if (lesson != null) {
-      querdep.where("evaluateResult.lesson.teachDepart.id=:depId", lesson.teachDepart.id);
+    querydep.where("evaluateResult.clazz.semester.id=" + semesterId);
+    if (clazz != null) {
+      querdep.where("evaluateResult.clazz.teachDepart.id=:depId", clazz.teachDepart.id);
     }
-    querydep.groupBy("evaluateResult.lesson.id");
+    querydep.groupBy("evaluateResult.clazz.id");
     querydep.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc");
     val depList = entityDao.search(querydep);
     var depNums = 0;
     depList foreach { ob =>
-      if (ob(0).toString().equals(lessonId.toString())) {
+      if (ob(0).toString().equals(clazzId.toString())) {
         depNums += 1
       }
     }
     //    for (int i = 0; i < depList.size(); i++) {
     //      Object[] ob = (Object[]) depList.get(i);
-    //      if (ob[0].toString().equals(lessonId.toString())) {
+    //      if (ob[0].toString().equals(clazzId.toString())) {
     //        depNums = i + 1;
     //      }
     //    }
@@ -360,13 +360,13 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
       + classOf[QuestionResult].getName + " questionResult");
     quer.select("sum(questionResult.score)/count(distinct evaluateResult.id)");
     quer.where("evaluateResult.id=questionResult.result.id");
-    quer.where("evaluateResult.lesson.semester.id=" + semesterId);
+    quer.where("evaluateResult.clazz.semester.id=" + semesterId);
 
     if (teaId != 0L) {
       quer.where("evaluateResult.teacher.id=:teaId", teaId);
     }
-    if (lessonId != 0L) {
-      quer.where("evaluateResult.lesson.id=:lessonId", lessonId);
+    if (clazzId != 0L) {
+      quer.where("evaluateResult.clazz.id=:clazzId", clazzId);
     }
     put("teaScore", entityDao.search(quer)(0));
 
@@ -376,12 +376,12 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     quer1
       .select("questionResult.question.content,questionResult.question.id,sum(questionResult.score)/count(evaluateResult.id)");
     quer1.where("evaluateResult.id=questionResult.result.id");
-    quer1.where("evaluateResult.lesson.semester.id=" + semesterId);
+    quer1.where("evaluateResult.clazz.semester.id=" + semesterId);
     if (teaId != 0L) {
       quer1.where("evaluateResult.teacher.id=:teaId", teaId);
     }
-    if (lessonId != 0L) {
-      quer1.where("evaluateResult.lesson.id=:lessonId", lessonId);
+    if (clazzId != 0L) {
+      quer1.where("evaluateResult.clazz.id=:clazzId", clazzId);
     }
     quer1.groupBy("questionResult.question.id,questionResult.question.content");
     // quer1.orderBy("questionResult.question.priority desc");
@@ -391,9 +391,9 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
       + classOf[QuestionResult].getName + " questionResult");
     depQuery.select("questionResult.question.id,sum(questionResult.score)/count(evaluateResult.id)");
     depQuery.where("evaluateResult.id=questionResult.result.id");
-    depQuery.where("evaluateResult.lesson.semester.id=" + semesterId);
-    if (lesson != null) {
-      depQuery.where("evaluateResult.lesson.teachDepart.id=:depsId", lesson.teachDepart.id);
+    depQuery.where("evaluateResult.clazz.semester.id=" + semesterId);
+    if (clazz != null) {
+      depQuery.where("evaluateResult.clazz.teachDepart.id=:depsId", clazz.teachDepart.id);
     }
     depQuery.groupBy("questionResult.question.id");
     depQuery.orderBy("questionResult.question.id");
@@ -403,21 +403,21 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
       + classOf[QuestionResult].getName + " questionResult");
     schQuery.select("questionResult.question.id,sum(questionResult.score)/count(evaluateResult.id)");
     schQuery.where("evaluateResult.id=questionResult.result.id");
-    schQuery.where("evaluateResult.lesson.semester.id=" + semesterId);
+    schQuery.where("evaluateResult.clazz.semester.id=" + semesterId);
     schQuery.groupBy("questionResult.question.id");
     schQuery.orderBy("questionResult.question.id");
     put("schQRList", entityDao.search(schQuery));
     forward()
   }
 
-  def lessonEvaluate() {
+  def clazzEvaluate() {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val departmentId = getInt("department.id").getOrElse(null)
     val questionnaireId = getLong("questionnaire.id");
     /** 得到本学期的唯一问卷 */
     val builder = OqlBuilder.from[Questionnaire](classOf[EvaluateResult].getName, "evaluateResult");
-    builder.where("evaluateResult.lesson.semester.id=" + semesterId);
+    builder.where("evaluateResult.clazz.semester.id=" + semesterId);
     builder.select("distinct questionnaire");
     val list = entityDao.search(builder);
     val questionList = Collections.newBuffer[Question]
@@ -440,29 +440,29 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     /** 教师评教总分 */
     val quer = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher");
-    quer.select("teacher.code,teacher.person.name.formatedName,evaluateResult.lesson.id,evaluateResult.lesson.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id),teacher.state.department.name,teacher.id");
-    quer.join("evaluateResult.lesson.teachers", "tea");
+    quer.select("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id),teacher.state.department.name,teacher.id");
+    quer.join("evaluateResult.clazz.teachers", "tea");
     quer.where("tea.id = teacher.id");
     //    quer.where("teacher.endOn is null");
     quer.where("evaluateResult.id=questionResult.result.id ");
-    quer.where("evaluateResult.lesson.semester.id=" + semesterId);
+    quer.where("evaluateResult.clazz.semester.id=" + semesterId);
     if (departmentId != null) {
       quer.where("teacher.state.department.id=" + departmentId.toString());
     }
-    quer.groupBy("teacher.code,teacher.person.name.formatedName,evaluateResult.lesson.id,evaluateResult.lesson.course.name,teacher.state.department.name,teacher.id");
+    quer.groupBy("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name,teacher.state.department.name,teacher.id");
     quer.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc");
     val liss = entityDao.search(quer);
 
     put("evaluateTeaStasList", entityDao.search(quer));
     val queres = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher");
-    queres.select("teacher.code,teacher.person.name.formatedName,evaluateResult.lesson.id,evaluateResult.lesson.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)");
-    queres.join("evaluateResult.lesson.teachers", "tea");
+    queres.select("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)");
+    queres.join("evaluateResult.clazz.teachers", "tea");
     queres.where("tea.id = teacher.id");
     //    queres.where("teacher.endOn is null");
     queres.where("evaluateResult.id=questionResult.result.id ");
-    queres.where("evaluateResult.lesson.semester.id=" + semesterId);
-    queres.groupBy("teacher.code,teacher.person.name.formatedName,evaluateResult.lesson.id,evaluateResult.lesson.course.name");
+    queres.where("evaluateResult.clazz.semester.id=" + semesterId);
+    queres.groupBy("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name");
     queres.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc");
     val lits = entityDao.search(queres);
     val numMaps = Collections.newMap[String, String]
@@ -481,16 +481,16 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     val evaluateRs = Collections.newMap[String, Float]
     val quer1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher");
-    quer1.select("teacher.code,evaluateResult.lesson.id,questionResult.question.id,sum(questionResult.score)/count(evaluateResult.id)");
-    quer1.join("evaluateResult.lesson.teachers", "tea");
+    quer1.select("teacher.code,evaluateResult.clazz.id,questionResult.question.id,sum(questionResult.score)/count(evaluateResult.id)");
+    quer1.join("evaluateResult.clazz.teachers", "tea");
     quer1.where("tea.id = teacher.id");
     //    quer1.where("teacher.endOn is null");
     quer1.where("evaluateResult.id=questionResult.result.id");
-    quer1.where("evaluateResult.lesson.semester.id=" + semesterId);
+    quer1.where("evaluateResult.clazz.semester.id=" + semesterId);
     if (departmentId != null) {
       quer1.where("teacher.state.department.id=" + departmentId.toString());
     }
-    quer1.groupBy("questionResult.question.id,teacher.code,evaluateResult.lesson.id");
+    quer1.groupBy("questionResult.question.id,teacher.code,evaluateResult.clazz.id");
     quer1.orderBy("teacher.code,questionResult.question.id");
     val lists = entityDao.search(quer1);
     lists foreach { ob =>
@@ -512,7 +512,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
 
   }
 
-  def lessonTeaEvaluate(): View = {
+  def clazzTeaEvaluate(): View = {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val departmentId = getInt("department.id").getOrElse(null)
@@ -526,25 +526,25 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     /** 教师评教总分 */
     val quer = OqlBuilder.from(classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher");
-    quer.select("teacher.code,teacher.person.name.formatedName,evaluateResult.lesson.id,evaluateResult.lesson.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)"
-      + ",evaluateResult.lesson.no,evaluateResult.lesson.teachDepart.name,evaluateResult.lesson.course.code");
+    quer.select("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)"
+      + ",evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code");
     //    quer.where("teacher.endOn is null");
     quer.where("evaluateResult.id=questionResult.result.id and evaluateResult.teacher.code=teacher.code");
-    quer.where("evaluateResult.lesson.semester.id=" + semesterId);
+    quer.where("evaluateResult.clazz.semester.id=" + semesterId);
     if (departmentId != null) {
-      quer.where("evaluateResult.lesson.teachDepart.id=" + departmentId.toString());
+      quer.where("evaluateResult.clazz.teachDepart.id=" + departmentId.toString());
     }
-    quer.groupBy("teacher.code,evaluateResult.lesson.id,teacher.person.name.formatedName,evaluateResult.lesson.course.name,evaluateResult.lesson.no,evaluateResult.lesson.teachDepart.name,evaluateResult.lesson.course.code");
+    quer.groupBy("teacher.code,evaluateResult.clazz.id,teacher.person.name.formatedName,evaluateResult.clazz.course.name,evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code");
     quer.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc");
     put("evaluateTeaStasList", entityDao.search(quer));
     System.out.println(quer);
     val queres = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher");
-    queres.select("teacher.code,teacher.person.name.formatedName,evaluateResult.lesson.id,evaluateResult.lesson.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)");
+    queres.select("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)");
     queres.where("evaluateResult.id=questionResult.result.id and evaluateResult.teacher.code=teacher.code");
     //    queres.where("teacher.endOn is null");
-    queres.where("evaluateResult.lesson.semester.id=" + semesterId);
-    queres.groupBy("teacher.code,evaluateResult.lesson.id,teacher.person.name.formatedName,evaluateResult.lesson.course.name");
+    queres.where("evaluateResult.clazz.semester.id=" + semesterId);
+    queres.groupBy("teacher.code,evaluateResult.clazz.id,teacher.person.name.formatedName,evaluateResult.clazz.course.name");
     queres.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc");
     val lits = entityDao.search(queres);
     val numMaps = Collections.newMap[String, String]
@@ -563,13 +563,13 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     val evaluateRs = Collections.newMap[String, Float]
     val quer1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult");
-    quer1.select("evaluateResult.teacher.code,evaluateResult.lesson.id,questionResult.question.type.id,sum(questionResult.score)/count(questionResult.question.id)");
+    quer1.select("evaluateResult.teacher.code,evaluateResult.clazz.id,questionResult.question.type.id,sum(questionResult.score)/count(questionResult.question.id)");
     quer1.where("evaluateResult.id=questionResult.result.id");
-    quer1.where("evaluateResult.lesson.semester.id=" + semesterId);
+    quer1.where("evaluateResult.clazz.semester.id=" + semesterId);
     if (departmentId != null) {
-      quer1.where("evaluateResult.lesson.teachDepart.id=" + departmentId.toString());
+      quer1.where("evaluateResult.clazz.teachDepart.id=" + departmentId.toString());
     }
-    quer1.groupBy("questionResult.question.type.id,evaluateResult.teacher.code,evaluateResult.lesson.id");
+    quer1.groupBy("questionResult.question.type.id,evaluateResult.teacher.code,evaluateResult.clazz.id");
     quer1.orderBy("evaluateResult.teacher.code,questionResult.question.type.id");
     val lists = entityDao.search(quer1);
     lists foreach { ob =>
@@ -597,7 +597,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     forward()
   }
 
-  def lessonTeaEvaluateExport(): View = {
+  def clazzTeaEvaluateExport(): View = {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val departmentId = getInt("department.id").getOrElse(null)
@@ -611,23 +611,23 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     /** 教师评教总分 */
     val quer = OqlBuilder.from(classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher");
-    quer.select("teacher.code,teacher.person.name.formatedName,evaluateResult.lesson.id,evaluateResult.lesson.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)"
-      + ",evaluateResult.lesson.no,evaluateResult.lesson.teachDepart.name,evaluateResult.lesson.course.code");
+    quer.select("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)"
+      + ",evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code");
     quer.where("evaluateResult.id=questionResult.result.id and evaluateResult.teacher.code=teacher.code");
     //    quer.where("teacher.endOn is null");
-    quer.where("evaluateResult.lesson.semester.id=" + semesterId);
+    quer.where("evaluateResult.clazz.semester.id=" + semesterId);
     if (departmentId != null) {
-      quer.where("evaluateResult.lesson.teachDepart.id=" + departmentId.toString());
+      quer.where("evaluateResult.clazz.teachDepart.id=" + departmentId.toString());
     }
-    quer.groupBy("teacher.code,evaluateResult.lesson.id,teacher.person.name.formatedName,evaluateResult.lesson.course.name,evaluateResult.lesson.no,evaluateResult.lesson.teachDepart.name,evaluateResult.lesson.course.code");
+    quer.groupBy("teacher.code,evaluateResult.clazz.id,teacher.person.name.formatedName,evaluateResult.clazz.course.name,evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code");
     quer.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc");
     put("evaluateTeaStasList", entityDao.search(quer));
     val queres = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult," + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher");
-    queres.select("teacher.code,teacher.person.name.formatedName,evaluateResult.lesson.id,evaluateResult.lesson.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)");
+    queres.select("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)");
     queres.where("evaluateResult.id=questionResult.result.id and evaluateResult.teacher.code=teacher.code");
-    queres.where("evaluateResult.lesson.semester.id=" + semesterId);
+    queres.where("evaluateResult.clazz.semester.id=" + semesterId);
     //    queres.where("teacher.endOn is null");
-    queres.groupBy("teacher.code,evaluateResult.lesson.id,teacher.person.name.formatedName,evaluateResult.lesson.course.name");
+    queres.groupBy("teacher.code,evaluateResult.clazz.id,teacher.person.name.formatedName,evaluateResult.clazz.course.name");
     queres.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc");
     val lits = entityDao.search(queres);
     val numMaps = Collections.newMap[String, String]
@@ -646,13 +646,13 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     val evaluateRs = Collections.newMap[String, Float]
     val quer1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult");
-    quer1.select("evaluateResult.teacher.code,evaluateResult.lesson.id,questionResult.question.type.id,sum(questionResult.score)/count(evaluateResult.id)");
+    quer1.select("evaluateResult.teacher.code,evaluateResult.clazz.id,questionResult.question.type.id,sum(questionResult.score)/count(evaluateResult.id)");
     quer1.where("evaluateResult.id=questionResult.result.id");
-    quer1.where("evaluateResult.lesson.semester.id=" + semesterId);
+    quer1.where("evaluateResult.clazz.semester.id=" + semesterId);
     if (departmentId != null) {
-      quer1.where("evaluateResult.lesson.teachDepart.id=" + departmentId.toString());
+      quer1.where("evaluateResult.clazz.teachDepart.id=" + departmentId.toString());
     }
-    quer1.groupBy("questionResult.question.type.id,evaluateResult.teacher.code,evaluateResult.lesson.id");
+    quer1.groupBy("questionResult.question.type.id,evaluateResult.teacher.code,evaluateResult.clazz.id");
     quer1.orderBy("evaluateResult.teacher.code,questionResult.question.type.id");
     val lists = entityDao.search(quer1);
     lists foreach { ob =>
@@ -689,9 +689,9 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     forward()
   }
 
-  def lessonEvaluateTwo(): View = {
-    this.lessonEvaluate();
-    forward("lessonEvaluate");
+  def clazzEvaluateTwo(): View = {
+    this.clazzEvaluate();
+    forward("clazzEvaluate");
   }
 
   def evaluateTeaResultsExport(): View = {
@@ -723,31 +723,31 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     /** 教师评教总分 */
     val quer = OqlBuilder.from(classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher");
-    quer.select("teacher.code,teacher.person.name.formatedName,evaluateResult.lesson.id,evaluateResult.lesson.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)"
-      + ",evaluateResult.lesson.no,evaluateResult.lesson.teachDepart.name,evaluateResult.lesson.course.code");
-    quer.join("evaluateResult.lesson.teachers", "tea");
+    quer.select("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)"
+      + ",evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code");
+    quer.join("evaluateResult.clazz.teachers", "tea");
     //    quer.where("teacher.endOn is null");
     quer.where("evaluateResult.id=questionResult.result.id and tea.id=teacher.id");
-    quer.where("evaluateResult.lesson.semester.id=" + semesterId);
+    quer.where("evaluateResult.clazz.semester.id=" + semesterId);
     quer.where("evaluateResult.questionnaire.id=" + questionnaireId);
     if (departmentId != null) {
-      quer.where("evaluateResult.lesson.teachDepart.id=" + departmentId.toString());
+      quer.where("evaluateResult.clazz.teachDepart.id=" + departmentId.toString());
     }
-    quer.groupBy("teacher.code,evaluateResult.lesson.id,teacher.person.name.formatedName,evaluateResult.lesson.course.name,evaluateResult.lesson.no,evaluateResult.lesson.teachDepart.name,evaluateResult.lesson.course.code");
+    quer.groupBy("teacher.code,evaluateResult.clazz.id,teacher.person.name.formatedName,evaluateResult.clazz.course.name,evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code");
     quer.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc");
     put("evaluateTeaStasList", entityDao.search(quer));
     val queres = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher");
-    queres.select("teacher.code,teacher.person.name.formatedName,evaluateResult.lesson.id,evaluateResult.lesson.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)");
-    queres.join("evaluateResult.lesson.teachers", "tea");
+    queres.select("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)");
+    queres.join("evaluateResult.clazz.teachers", "tea");
     //    queres.where("teacher.endOn is null");
     queres.where("evaluateResult.id=questionResult.result.id and tea.id=teacher.id");
-    queres.where("evaluateResult.lesson.semester.id=" + semesterId);
+    queres.where("evaluateResult.clazz.semester.id=" + semesterId);
     queres.where("evaluateResult.questionnaire.id=" + questionnaireId);
     if (courseType != false) {
-      queres.where("evaluateResult.lesson.course.courseType.practical=:courseTId", !courseType);
+      queres.where("evaluateResult.clazz.course.courseType.practical=:courseTId", !courseType);
     }
-    queres.groupBy("teacher.code,evaluateResult.lesson.id,teacher.person.name.formatedName,evaluateResult.lesson.course.name");
+    queres.groupBy("teacher.code,evaluateResult.clazz.id,teacher.person.name.formatedName,evaluateResult.clazz.course.name");
     queres.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc");
     val lits = entityDao.search(queres);
     val numMaps = Collections.newMap[String, String]
@@ -766,20 +766,20 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     val evaluateRs = Collections.newMap[String, Float]
     val quer1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher");
-    quer1.select("teacher.code,evaluateResult.lesson.id,questionResult.question.id,sum(questionResult.score)/count(questionResult.question.id)");
-    quer1.join("evaluateResult.lesson.teachers", "tea");
+    quer1.select("teacher.code,evaluateResult.clazz.id,questionResult.question.id,sum(questionResult.score)/count(questionResult.question.id)");
+    quer1.join("evaluateResult.clazz.teachers", "tea");
     quer1.where("tea.id = teacher.id");
     //    quer1.where("teacher.endOn is null");
     quer1.where("evaluateResult.id=questionResult.result.id");
-    quer1.where("evaluateResult.lesson.semester.id=" + semesterId);
+    quer1.where("evaluateResult.clazz.semester.id=" + semesterId);
     quer1.where("evaluateResult.questionnaire.id=" + questionnaireId);
     if (departmentId != null) {
-      quer1.where("evaluateResult.lesson.teachDepart.id=" + departmentId.toString());
+      quer1.where("evaluateResult.clazz.teachDepart.id=" + departmentId.toString());
     }
     if (courseType != false) {
-      quer1.where("evaluateResult.lesson.course.courseType.practical=:courseTId", !courseType);
+      quer1.where("evaluateResult.clazz.course.courseType.practical=:courseTId", !courseType);
     }
-    quer1.groupBy("questionResult.question.id,teacher.code,evaluateResult.lesson.id");
+    quer1.groupBy("questionResult.question.id,teacher.code,evaluateResult.clazz.id");
     quer1.orderBy("teacher.code");
     val lists = entityDao.search(quer1);
     lists foreach { ob =>
@@ -812,7 +812,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     /** 得到本学期的唯一问卷 */
     val builder = OqlBuilder.from[Questionnaire](classOf[EvaluateResult].getName, "evaluateResult");
     builder.select("distinct evaluateResult.questionnaire");
-    builder.where("evaluateResult.lesson.semester.id=" + semesterId);
+    builder.where("evaluateResult.clazz.semester.id=" + semesterId);
     builder.where("evaluateResult.questionnaire.id=" + questionnaireId);
     val list = entityDao.search(builder);
     val questionList = Collections.newBuffer[Question]
@@ -829,7 +829,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     }
     put("questionList", questionList);
     val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult");
-    query.where("evaluateResult.lesson.semester.id=:semesterId", semesterId);
+    query.where("evaluateResult.clazz.semester.id=:semesterId", semesterId);
     if (depId != 0) {
       query.where("evaluateResult.department.id=:depId", depId);
     }
@@ -842,7 +842,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     quer1
       .select("evaluateResult.id,questionResult.question.id,questionResult.score,questionResult.option.name");
     quer1.where("evaluateResult.id=questionResult.result.id");
-    quer1.where("evaluateResult.lesson.semester.id=" + semesterId);
+    quer1.where("evaluateResult.clazz.semester.id=" + semesterId);
     if (depId != 0) {
       quer1.where("evaluateResult.department.id=:depId", depId);
     }
@@ -879,7 +879,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     val depId = getInt("department.id");
     /** 得到本学期的唯一问卷 */
     val builder = OqlBuilder.from[Questionnaire](classOf[EvaluateResult].getName, "evaluateResult");
-    builder.where("evaluateResult.lesson.semester.id=" + semesterId);
+    builder.where("evaluateResult.clazz.semester.id=" + semesterId);
     builder.select("distinct questionnaire");
     val list = entityDao.search(builder);
     val questionList = Collections.newBuffer[Question]
@@ -892,7 +892,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     }
     put("questionList", questionList);
     val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult");
-    query.where("evaluateResult.lesson.semester.id=:semesterId", semesterId);
+    query.where("evaluateResult.clazz.semester.id=:semesterId", semesterId);
     if (depId != null) {
       query.where("evaluateResult.department.id=:depId", depId);
     }
@@ -904,7 +904,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     quer1
       .select("evaluateResult.id,questionResult.question.id,questionResult.score,questionResult.option.name");
     quer1.where("evaluateResult.id=questionResult.result.id");
-    quer1.where("evaluateResult.lesson.semester.id=" + semesterId);
+    quer1.where("evaluateResult.clazz.semester.id=" + semesterId);
     if (depId != null) {
       quer1.where("evaluateResult.department.id=:depId", depId);
     }

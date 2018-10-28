@@ -23,22 +23,22 @@ import org.openurp.edu.base.model.Student
 import org.openurp.edu.course.model.Clazz
 
 class EvaluateSearchAdminclass {
-  var  semester:Semester =_
+  var semester: Semester = _
 
-  var  lesson:Clazz=_
+  var clazz: Clazz = _
 
-  var  student:Student=_
+  var student: Student = _
   /*
    * 学生需要评教的总人次
    */
-  var  countAll:Integer=_
+  var countAll: Integer = _
 
   /*
    * 学生已经评教的人次
    */
-  var  haveFinish:Integer=_
+  var haveFinish: Integer = _
   /*
    * 完成率
    */
-  var  finishRate:Float=_
+  var finishRate: Float = _
 }

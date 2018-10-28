@@ -36,7 +36,7 @@ import org.openurp.edu.base.code.model.CourseType
 import org.openurp.edu.base.code.model.ExamMode
 import org.openurp.edu.base.code.model.ExamMode
 import org.openurp.edu.base.model.Project
-import org.openurp.edu.evaluation.app.lesson.service.StdEvaluateSwitchService
+import org.openurp.edu.evaluation.app.course.service.StdEvaluateSwitchService
 import org.openurp.edu.evaluation.course.model.QuestionnaireClazz
 import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.edu.course.model.Clazz
@@ -52,10 +52,13 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
   var evaluateSwitchService: StdEvaluateSwitchService = _
 
   override def indexSetting(): Unit = {
-    put("semesters", getSemesters())
+    val semesters = getSemesters()
+    put("semesters", semesters)
+    val now = LocalDate.now
+    semesters.find(x => now.isAfter(x.beginOn) && now.isBefore(x.endOn)) foreach { semester =>
+      put("semester", semester)
+    }
     put("departments", findItemsBySchool(classOf[Department]))
-    //    val examModes = entityDao.getAll(classOf[ExamMode])
-    //    put("examModes", examModes)
     put("courseTypes", entityDao.getAll(classOf[CourseType]))
     put("questionnaires", entityDao.getAll(classOf[Questionnaire]))
   }
@@ -80,8 +83,8 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
     // 判断(问卷是否存在)
     questionnaireId match {
       case 0 => //无问卷--教学任务list
-        put("lessons", entityDao.search(getQueryBuilderByClazz()))
-        forward("lessonList")
+        put("clazzs", entityDao.search(getQueryBuilderByClazz()))
+        forward("clazzList")
       case -1 => //有问卷
         put("questionnaireClazzs", entityDao.search(getQueryBuilder()))
         forward("list")
@@ -94,18 +97,18 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
   protected override def getQueryBuilder(): OqlBuilder[QuestionnaireClazz] = {
     val query = OqlBuilder.from(classOf[QuestionnaireClazz], "questionnaireClazz")
     populateConditions(query)
-    //    query.where(QueryHelper.extractConditions(classOf[Clazz], "lesson", null))
+    //    query.where(QueryHelper.extractConditions(classOf[Clazz], "clazz", null))
     //    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id") //.getOrElse(entityDao.search(semesterQuery).head.id)
     semesterId foreach { semesterId =>
-      query.where("questionnaireClazz.lesson.semester.id = :semesterId", semesterId)
+      query.where("questionnaireClazz.clazz.semester.id = :semesterId", semesterId)
     }
-    query.where("questionnaireClazz.lesson.project = :project", currentProject)
+    query.where("questionnaireClazz.clazz.project = :project", currentProject)
     // 隐性条件(问卷类别,起始周期,上课人数)
     val questionnaireId = getLong("questionnaire.id").getOrElse(-1)
     val teacherName = get("teacher").orNull
     if (Strings.isNotBlank(teacherName)) {
-      query.join("questionnaireClazz.lesson.teachers", "teacher")
+      query.join("questionnaireClazz.clazz.teachers", "teacher")
       query.where("teacher.person.name.formatedName like :teacherName", "%" + teacherName + "%")
     }
     if (questionnaireId != -1 && questionnaireId != 0) {
@@ -123,23 +126,23 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
    */
   protected def getQueryBuilderByClazz(): QueryBuilder[Clazz] = {
 
-    val query = OqlBuilder.from(classOf[Clazz], "lesson")
+    val query = OqlBuilder.from(classOf[Clazz], "clazz")
     populateConditions(query)
-    query.where("lesson.project=:project", currentProject)
+    query.where("clazz.project=:project", currentProject)
     populateConditions(query)
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id") //.getOrElse(entityDao.search(semesterQuery).head.id)
     semesterId foreach { semesterId =>
-      query.where("lesson.semester.id = :semesterId", semesterId)
+      query.where("clazz.semester.id = :semesterId", semesterId)
     }
     val teacherName = get("teacher").getOrElse("")
     if (Strings.isNotBlank(teacherName)) {
-      query.join("lesson.teachers", "teacher")
+      query.join("clazz.teachers", "teacher")
       query.where("teacher.person.name.formatedName like :teacherName", "%" + teacherName + "%")
     }
     // 排除(已有问卷)
     query.where("not exists(from " + classOf[QuestionnaireClazz].getName + " questionnaireClazz"
-      + " where questionnaireClazz.lesson = lesson)")
+      + " where questionnaireClazz.clazz = clazz)")
     query.orderBy(get(Order.OrderStr).orNull)
     query.limit(getPageLimit)
     query
@@ -151,25 +154,25 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
    */
   def saveQuestionnaireClazz(): View = {
     val isAll = get("isAll").get
-    var lessons: Seq[Clazz] = Seq()
+    var clazzs: Seq[Clazz] = Seq()
     // 获取(更新对象)
     if ("all".equals(isAll)) {
       val qurey = getQueryBuilderByClazz()
-      lessons = entityDao.search(getQueryBuilderByClazz().limit(null))
+      clazzs = entityDao.search(getQueryBuilderByClazz().limit(null))
     } else {
-      val ids = longIds("lesson")
-      lessons = entityDao.find(classOf[Clazz], ids)
+      val ids = longIds("clazz")
+      clazzs = entityDao.find(classOf[Clazz], ids)
     }
-    println(lessons.size)
+    println(clazzs.size)
     val questionnaireId = longId("questionnaire")
     if (questionnaireId != 0) {
       val isEvaluate = getBoolean("isEvaluate").get
       val questionnaire = entityDao.get(classOf[Questionnaire], questionnaireId)
-      //        for (Clazz lesson : lessons) {
-      lessons foreach { lesson =>
+      //        for (Clazz clazz : clazzs) {
+      clazzs foreach { clazz =>
         val questionnaireClazz = new QuestionnaireClazz()
         questionnaireClazz.questionnaire = questionnaire
-        questionnaireClazz.clazz = lesson
+        questionnaireClazz.clazz = clazz
         questionnaireClazz.evaluateByTeacher = isEvaluate
         entityDao.saveOrUpdate(questionnaireClazz)
       }

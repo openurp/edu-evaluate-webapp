@@ -16,22 +16,28 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.evaluation.app.lesson.model
+package org.openurp.edu.evaluation.app.course.model
 
-import org.beangle.data.orm.MappingModule
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.course.model.Clazz
 
-class DefaultMapping extends MappingModule {
+class EvaluateSearchDepartment {
+  var semester: Semester = _
 
-  def binding(): Unit = {
-    defaultIdGenerator("auto_increment")
-    defaultCache("openurp.edu.evaluation", "read-write")
+  var clazz: Clazz = _
+  /*
+   * 院系需要评教的总人次
+   */
+  var countAll: Long = _
 
-    bind[StdEvaluateSwitch].on(e => declare(
-      e.endAt & e.beginAt & e.opened & e.semester & e.project are notnull))
+  /*
+   * 院系已经评教的人次
+   */
+  var haveFinish: Long = _
 
-    bind[TextEvaluateSwitch].on(e => declare(
-      e.endAt & e.beginAt & e.opened & e.semester & e.project are notnull))
-
-  }
-
+  var stdFinish: Long = _
+  /*
+   * 完成率
+   */
+  var finishRate: String = _
 }

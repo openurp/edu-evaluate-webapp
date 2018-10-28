@@ -1,19 +1,19 @@
 [#ftl]
 [@b.head/]
 [@b.form name="questionnaireClazzSearchForm" action="!search" target="contentDiv"]
-    [@b.grid items=lessons var="lesson" sortable="true"]
+    [@b.grid items=clazzs var="clazz" sortable="true"]
         [@b.gridbar title="课程问卷列表"]
             bar.addItem("添加全部问卷","updateIds('all')","update.png");
             bar.addItem("添加选择问卷","updateIds('select')","update.png");
 
             function updateIds(item){
                 var form = action.getForm()
-                var id = bg.input.getCheckBoxValues("lesson.id");
+                var id = bg.input.getCheckBoxValues("clazz.id");
                 if (item == "all"){
                     if (!confirm("你确定要设置当前条件下的所有教学任务吗?")){
                         return false;
                     }
-                    bg.form.addInput(form, "lesson.ids", "");
+                    bg.form.addInput(form, "clazz.ids", "");
                 } else {
                     if (id == "" || id.length < 1){
                         alert("请选择一些教学任务!");
@@ -22,7 +22,7 @@
                     if (!confirm("确定要设置所选中的这些教学任务吗?")){
                         return false;
                     }
-                    bg.form.addInput(form, "lesson.ids", id);
+                    bg.form.addInput(form, "clazz.ids", id);
                 }
                 var description = $("#questionnaireId>option:selected").attr("description");
                 var evaluateId = $("#isEvaluate").val();
@@ -63,13 +63,13 @@
         </div>
         [@b.row]
             [@b.boxcol/]
-            [@b.col property="no" title="课程序号" width="10%"/]
+            [@b.col property="crn" title="课程序号" width="10%"/]
             [@b.col property="course.name" title="课程名称"/]
             [@b.col property="courseType.name" title="课程类别"/]
             [@b.col property="teachDepart.name" title="开课院系"/]
             [#--[@b.col property="schedule.firstWeek" title="起始周" width="6%"/]--]
             [@b.col title="任课教师"]
-                [#list lesson.teachers?if_exists as teacher]
+                [#list clazz.teachers?if_exists as teacher]
                     ${(teacher.user.name)!}[#if teacher_has_next],[/#if]
                 [/#list]
             [/@]

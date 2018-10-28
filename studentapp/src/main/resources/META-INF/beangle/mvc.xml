@@ -7,11 +7,4 @@
       <interceptor name="web.Interceptor.security"/>
      </interceptors>
   </profile>
-  <profile name="openurp-edu-evaluation-studentapp-index" package="org.openurp.edu.evaluation.student.web.index">
-    <url path="/" suffix=""  style="seo" />
-    <interceptors>
-      <interceptor name="web.Interceptor.hibernate"/>
-      <interceptor name="web.Interceptor.security"/>
-     </interceptors>
-  </profile>
 </mvc>

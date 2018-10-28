@@ -10,7 +10,7 @@
 [/@]
 [@b.form name="evaluateEditForm" title="文字评估" action="!saveTextEvaluate" theme="list"]
     <li>
-        <label class="title">课程名称:</label>${(lesson.course.name)!}
+        <label class="title">课程名称:</label>${(clazz.course.name)!}
     </li>
     <li>
         <label class="title">教师姓名:</label>${(teacher.user.name)!}
@@ -21,15 +21,15 @@
     [#if textEvaluations??]
         [@b.field label="历史意见"]
         <table class="infoTable" style="width:80%;">
-            [#list textEvaluations?if_exists as textEvaluation]
-            <tr><td>${(textEvaluation.content?html)!}</td></tr>
+            [#list textEvaluations?if_exists as e]
+            <tr><td>${(e.content?html)!} ${e.evaluateAt?string('yyyy-MM-dd HH:mm')}</td></tr>
             [/#list]
         </table>
     [/@]
     [/#if]
     [@b.formfoot]
         <input type="hidden" name="semester.id" id="semesterId" value=""/>
-        <input type="hidden" name="lesson.id" value="${(lesson.id)!}">
+        <input type="hidden" name="clazz.id" value="${(clazz.id)!}">
         [@b.submit id="btnSave" value="${b.text('action.save')}" onsubmit="doPost()" /]
         <input type="button" id="btnWait" value="数据提交中,请等待..." onClick="alertWait()" style="display:none" />
         <input type="reset" id="btnReset" value="重置" />

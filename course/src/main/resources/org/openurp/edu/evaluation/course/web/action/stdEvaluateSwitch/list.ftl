@@ -14,7 +14,7 @@
             [@b.col property="beginAt" title="开始时间"]${(stdEvaluateSwitch.beginAt)!}[/@]
             [@b.col property="endAt" title="结束时间"]${(stdEvaluateSwitch.endAt)!}[/@]
             [@b.col title="已设置问卷课程数"]${countMap.get(stdEvaluateSwitch.semester.id)!0}[/@]
-            [@b.col title="未设置问卷课程数"]${lessonCountMap.get(stdEvaluateSwitch.semester.id)!0}[/@]
+            [@b.col title="未设置问卷课程数"]${clazzCountMap.get(stdEvaluateSwitch.semester.id)!0}[/@]
         [/@]
     [/@]
 [/@]

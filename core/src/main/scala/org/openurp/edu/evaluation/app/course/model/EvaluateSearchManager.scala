@@ -16,28 +16,31 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.evaluation.app.lesson.model
+package org.openurp.edu.evaluation.app.course.model
 
+import org.openurp.base.model.Department
 import org.openurp.edu.base.model.Semester
-import org.openurp.edu.course.model.Clazz
 
-class EvaluateSearchDepartment  {
-  var  semester:Semester =_
+class EvaluateSearchManager {
 
-  var  lesson:Clazz =_
+  var  semester:Semester=_
+
+  var  department:Department=_
   /*
-   * 院系需要评教的总人次
+   * 院系总评人次
    */
-  var  countAll:Long =_
-
+  var  countAll:Long=_
+//  总评人数
+  var  stdAll:Long=_
   /*
-   * 院系已经评教的人次
+   * 院系实评人次
    */
-  var  haveFinish:Long =_
-
+  var  haveFinish:Long=_
+//  实评人数
   var stdFinish:Long=_
   /*
    * 完成率
    */
   var  finishRate:String=_
+  var  stdRate:String=_
 }

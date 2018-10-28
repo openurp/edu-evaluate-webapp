@@ -16,31 +16,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.evaluation.course.model
+package org.openurp.edu.evaluation.app.course.model
 
-import org.openurp.base.model.Department
+import org.beangle.data.model.IntId
 import org.openurp.edu.base.model.Semester
+import org.openurp.edu.base.model.Project
+import org.beangle.data.model.pojo.TemporalAt
 
-class EvaluateSearchManager {
+class StdEvaluateSwitch extends IntId with TemporalAt {
 
-  var  semester:Semester=_
+  var semester: Semester = _
+  var opened: Boolean = false
+  var project: Project = _
 
-  var  department:Department=_
-  /*
-   * 院系总评人次
-   */
-  var  countAll:Long=_
-//  总评人数
-  var  stdAll:Long=_
-  /*
-   * 院系实评人次
-   */
-  var  haveFinish:Long=_
-//  实评人数
-  var stdFinish:Long=_
-  /*
-   * 完成率
-   */
-  var  finishRate:String=_
-  var  stdRate:String=_
+  def isOpenedAt(d: java.time.Instant): Boolean = {
+    if (d.isBefore(this.beginAt)) false;
+    if (this.endAt.get.isBefore(d)) false;
+    opened
+  }
 }

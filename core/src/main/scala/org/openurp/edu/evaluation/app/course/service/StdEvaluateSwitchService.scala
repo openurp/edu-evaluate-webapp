@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.evaluation.app.lesson.service
+package org.openurp.edu.evaluation.app.course.service
 
 import org.beangle.data.dao.EntityDao
 import org.beangle.data.dao.OqlBuilder
 import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.model.Project
-import org.openurp.edu.evaluation.app.lesson.model.StdEvaluateSwitch
+import org.openurp.edu.evaluation.app.course.model.StdEvaluateSwitch
 import org.openurp.edu.evaluation.app.department.model.EvaluateSwitch
 import java.time.Instant
 
@@ -49,8 +49,8 @@ class StdEvaluateSwitchService(entityDao: EntityDao) {
   //    val semesteres = getOpenSemesters();
   //    if (semesteres.isEmpty) true;
   //
-  //    val hqlResult = "select evaluateResult.lesson.id"+ " from org.openurp.edu.teach.evaluate.course.model.EvaluateResult evaluateResult" + " where evaluateResult.student =:std and evaluateResult.semester in (:semesteres)";
-  //    val hqlCourse = "select courseTake.lesson.id"+ " from org.openurp.edu.teach.lesson.model.CourseTaker courseTake"+ " where courseTake.std =:std and courseTake.lesson.semester in (:semesteres)"+ " and exists(from org.openurp.edu.teach.evaluate.course.model.QuestionnaireClazz questionnaireClazz"+ " where questionnaireClazz.lesson = courseTake.lesson)";
+  //    val hqlResult = "select evaluateResult.clazz.id"+ " from org.openurp.edu.teach.evaluate.course.model.EvaluateResult evaluateResult" + " where evaluateResult.student =:std and evaluateResult.semester in (:semesteres)";
+  //    val hqlCourse = "select courseTake.clazz.id"+ " from org.openurp.edu.teach.clazz.model.CourseTaker courseTake"+ " where courseTake.std =:std and courseTake.clazz.semester in (:semesteres)"+ " and exists(from org.openurp.edu.teach.evaluate.course.model.QuestionnaireClazz questionnaireClazz"+ " where questionnaireClazz.clazz = courseTake.clazz)";
   //
   //    val queryResult = OqlBuilder.from(hqlResult);
   //    val queryCourse = OqlBuilder.from(hqlCourse);

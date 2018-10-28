@@ -190,9 +190,9 @@ rt
             <#list evaluateRList?if_exists as evaluateR>
             <#assign nums =nums +1>
                 <tr align="center">
-                <td>${(evaluateR.lesson.no)?if_exists}</td>
-                <td>${(evaluateR.lesson.course.code)?if_exists}</td>
-                <td>${(evaluateR.lesson.course.name)?if_exists}</td>
+                <td>${(evaluateR.clazz.crn)?if_exists}</td>
+                <td>${(evaluateR.clazz.course.code)?if_exists}</td>
+                <td>${(evaluateR.clazz.course.name)?if_exists}</td>
                 <td>${(evaluateR.student.code)?if_exists}</td>
                 <td>${(evaluateR.student.person.name)?if_exists}</td>
                 <td>${(evaluateR.student.department.name)?if_exists}</td>

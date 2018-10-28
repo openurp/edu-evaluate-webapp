@@ -195,7 +195,7 @@ class QuestionnaireStatAction extends RestfulAction[ClazzEvalStat] with ServletS
     val que = OqlBuilder.from[Double](classOf[EvaluateResult].getName + " evaluateResult," + classOf[QuestionResult].getName + " questionResult");
     que.select("sum(questionResult.score)/count(distinct evaluateResult.id)");
     que.where("evaluateResult.id=questionResult.result.id");
-    que.where("evaluateResult.lesson.semester.id=" + semesterId);
+    que.where("evaluateResult.clazz.semester.id=" + semesterId);
     val lit = entityDao.search(que);
     var fl = 0d;
     if (lit.size > 0) {
@@ -205,18 +205,18 @@ class QuestionnaireStatAction extends RestfulAction[ClazzEvalStat] with ServletS
     }
     put("evaluateResults", fl);
     val hql = OqlBuilder.from(classOf[ClazzEvalStat], "evaluateR")
-    hql.select("evaluateR.lesson.teachDepart.id,count( evaluateR.teacher.id)")
-    hql.where("evaluateR.lesson.semester.id=" + semesterId)
-    hql.groupBy("evaluateR.lesson.teachDepart.id,evaluateR.lesson.semester.id")
+    hql.select("evaluateR.clazz.teachDepart.id,count( evaluateR.teacher.id)")
+    hql.where("evaluateR.clazz.semester.id=" + semesterId)
+    hql.groupBy("evaluateR.clazz.teachDepart.id,evaluateR.clazz.semester.id")
     put("questionNums", entityDao.search(hql));
     val maps = Collections.newMap[String, Seq[Array[Any]]]
     lis foreach { evaluationCriteriaItem =>
       val query = OqlBuilder.from[Array[Any]](classOf[ClazzEvalStat].getName, "questionnaireStat");
       query.where("questionnaireStat.semester.id=:semesterId", semesterId);
-      query.select("questionnaireStat.lesson.teachDepart.id,count(questionnaireStat.teacher.id)");
+      query.select("questionnaireStat.clazz.teachDepart.id,count(questionnaireStat.teacher.id)");
       query.where("questionnaireStat.score>=" + evaluationCriteriaItem.min
         + " and questionnaireStat.score<" + evaluationCriteriaItem.max);
-      query.groupBy("questionnaireStat.lesson.teachDepart.id");
+      query.groupBy("questionnaireStat.clazz.teachDepart.id");
       maps.put(evaluationCriteriaItem.id.toString(), entityDao.search(query));
 
     }

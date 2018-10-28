@@ -7,7 +7,7 @@
         <td style="width:200px"  class="index_view">
         [@b.form action="!search" name="evaluateResultStatIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
             <input type="hidden" name="semesterIds" value=""/>
-            [@b.textfields style="width:130px" names="questionnaireStat.lesson.no;选课号,questionnaireStat.lesson.course.name;课程名称,questionnaireStat.teacher.user.code;教师工号,questionnaireStat.teacher.name;教师名称"/]
+            [@b.textfields style="width:130px" names="questionnaireStat.clazz.crn;选课号,questionnaireStat.clazz.course.name;课程名称,questionnaireStat.teacher.user.code;教师工号,questionnaireStat.teacher.name;教师名称"/]
             [@b.textfield style="width:80px" name="regainLower" label="回收率" onBlur="clearNoNum(this)"/]
             [@b.select style="width:134px" name="questionnaireStat.depart.id" label="开课院系" items=departments empty="${b.text('filed.choose')}..."/]
             [@b.select style="width:134px" name="questionnaireStat.teacher.teacher.user.department.id" label="教师院系" items=departments empty="${b.text('filed.choose')}..."/]

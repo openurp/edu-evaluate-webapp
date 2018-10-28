@@ -49,7 +49,7 @@ class DepartEvalSearchAction extends RestfulAction[DepartEvalStat] {
     val departEvalStat = OqlBuilder.from(classOf[DepartEvalStat], "departEvalStat")
     populateConditions(departEvalStat)
     departEvalStat.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
-    departEvalStat.where("departEvalStat.lesson.semester=:semester", semester)
+    departEvalStat.where("departEvalStat.clazz.semester=:semester", semester)
     put("departEvalStats", entityDao.search(departEvalStat))
     forward()
   }
@@ -61,7 +61,7 @@ class DepartEvalSearchAction extends RestfulAction[DepartEvalStat] {
     // zongrenci fix
     val query = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName, "result");
     query.where("result.department =:tea", questionnaireStat.department);
-    //    query.where("result.lesson.course=:course", questionnaireStat.course)
+    //    query.where("result.clazz.course=:course", questionnaireStat.course)
     query.select("case when result.statType =1 then count(result.id) end,count(result.id)");
     query.groupBy("result.statType");
     entityDao.search(query) foreach { a =>
@@ -85,11 +85,11 @@ class DepartEvalSearchAction extends RestfulAction[DepartEvalStat] {
       }
     }
     put("options", list);
-    val querys = OqlBuilder.from[Long](classOf[Clazz].getName, "lesson");
-    querys.join("lesson.teachers", "teacher");
+    val querys = OqlBuilder.from[Long](classOf[Clazz].getName, "clazz");
+    querys.join("clazz.teachers", "teacher");
     //    querys.where("teacher=:teach",questionnaireStat.teacher);
-    querys.where("lesson.teachDepart=:depart", questionnaireStat.department);
-    querys.join("lesson.teachclass.courseTakers", "courseTaker");
+    querys.where("clazz.teachDepart=:depart", questionnaireStat.department);
+    querys.join("clazz.teachclass.courseTakers", "courseTaker");
     querys.select("count(courseTaker.id)");
     val numbers = entityDao.search(querys)(0)
     put("numbers", entityDao.search(querys)(0));

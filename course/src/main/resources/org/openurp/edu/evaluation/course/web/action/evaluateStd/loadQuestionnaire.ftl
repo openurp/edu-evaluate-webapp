@@ -15,7 +15,7 @@
     </pre>
     [/#if]
     <li align="right">
-    课程名称:${(lesson.course.name)!}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    课程名称:${(clazz.course.name)!}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     教师姓名:
         [#list teachers?if_exists as teacher]
         ${(teacher.user.name)!}[#if teacher_has_next],[/#if]
@@ -70,7 +70,7 @@
         [/@]
     [@b.formfoot align="center"]
         <input type="hidden" name="semester.id" id="semesterId" value=""/>
-        <input type="hidden" name="lesson.id" value="${(lesson.id)!}">
+        <input type="hidden" name="clazz.id" value="${(clazz.id)!}">
         <input type="hidden" name="teacher.ids" value="[#list teachers?if_exists as teacher]${(teacher.id)!}[#if teacher_has_next],[/#if][/#list]"/>
         [@b.submit id="btnSave" value="${b.text('action.save')}" onsubmit="doPost();" /]
         <input type="button" id="btnWait" value="数据提交中,请等待..." onClick="alertWait()" style="display:none" />

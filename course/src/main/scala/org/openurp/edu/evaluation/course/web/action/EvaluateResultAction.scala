@@ -37,29 +37,12 @@ import org.openurp.edu.course.model.ExamTaker
 
 class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
 
-  //  override def  index() : String = {
-  //    val semester = entityDao.get(classOf[Semester],20141)
-  //    put("semester",semester)
-  //    val project = entityDao.get(classOf[Project],1)
-  //    put("project",project)
-  //    val stdType = entityDao.get(classOf[StdType],5)
-  //    put("stdTypeList", stdType)
-  //    val department = entityDao.get(classOf[Department],20)
-  //    put("departmentList", department);
-  //    forward()
-  //  }
   override protected def indexSetting(): Unit = {
     put("semesters", getSemesters())
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
-
   }
 
-  //  override def  search(): String = {
-  //    val query = getQueryBuilder()
-  //    put("evaluateResults", entityDao.search(query))
-  //    forward()
-  //  }
   override def search(): View = {
     // 页面条件
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
@@ -69,7 +52,7 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
     val evaluateResult = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult")
     populateConditions(evaluateResult)
     evaluateResult.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
-    evaluateResult.where("evaluateResult.lesson.semester=:semester", semester)
+    evaluateResult.where("evaluateResult.clazz.semester=:semester", semester)
     if (statType != null) {
       evaluateResult.where("evaluateResult.statType=:statType", statType)
     }
@@ -82,7 +65,7 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
   //    val department = entityDao.get(classOf[Department],20)
   //    val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult");
   //    populateConditions(query);
-  //    query.where("evaluateResult.lesson.teachDepart in (:teachDeparts)", department)
+  //    query.where("evaluateResult.clazz.teachDepart in (:teachDeparts)", department)
   ////    query.limit(getPageLimit());
   //
   //  }
@@ -166,14 +149,14 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult")
-    query.where("evaluateResult.lesson.semester.id = :semesterId", semesterId)
+    query.where("evaluateResult.clazz.semester.id = :semesterId", semesterId)
     val results = entityDao.search(query)
     try {
       results foreach { result =>
         //      for (EvaluateResult result : results) {
         //        // TODO kang 怎么确定学生有没有一门课的考试资格
         val builder = OqlBuilder.from(classOf[ExamTaker], "examTaker")
-        builder.where("examTaker.lesson=:lesson", result.clazz)
+        builder.where("examTaker.clazz=:clazz", result.clazz)
         builder.where("examTaker.std=:std", result.student)
         val takes = entityDao.search(builder);
         if (takes.size > 0) {

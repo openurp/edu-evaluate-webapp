@@ -46,11 +46,11 @@ class ClazzEvalSearchAction extends RestfulAction[ClazzEvalStat] {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
-    val lessonEvalStat = OqlBuilder.from(classOf[ClazzEvalStat], "lessonEvalStat")
-    populateConditions(lessonEvalStat)
-    lessonEvalStat.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
-    lessonEvalStat.where("lessonEvalStat.lesson.semester=:semester", semester)
-    put("lessonEvalStats", entityDao.search(lessonEvalStat))
+    val clazzEvalStat = OqlBuilder.from(classOf[ClazzEvalStat], "clazzEvalStat")
+    populateConditions(clazzEvalStat)
+    clazzEvalStat.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
+    clazzEvalStat.where("clazzEvalStat.clazz.semester=:semester", semester)
+    put("clazzEvalStats", entityDao.search(clazzEvalStat))
     forward()
   }
 

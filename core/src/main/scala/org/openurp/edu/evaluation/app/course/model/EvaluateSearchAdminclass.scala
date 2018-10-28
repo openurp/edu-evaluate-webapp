@@ -16,21 +16,29 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.evaluation.app.lesson.model
+package org.openurp.edu.evaluation.app.course.model
 
-import org.openurp.edu.base.model.Project
-import org.beangle.data.model.IntId
+import org.openurp.edu.base.model.Student
 import org.openurp.edu.base.model.Semester
-import org.beangle.data.model.pojo.InstantRange
+import org.openurp.edu.course.model.Clazz
 
-class TextEvaluateSwitch extends IntId with InstantRange {
-
+class EvaluateSearchAdminclass {
   var semester: Semester = _
-  var opened: Boolean = false
-  var project: Project =_
-  /** 是否开放(教师查询)*/
-  var openedTeacher:Boolean=_
-  /** 是否开放(学生文字评教)*/
-  var textEvaluateOpened:Boolean=_
 
+  var clazz: Clazz = _
+
+  var student: Student = _
+  /*
+   * 学生需要评教的总人次
+   */
+  var countAll: Integer = _
+
+  /*
+   * 学生已经评教的人次
+   */
+  var haveFinish: Integer = _
+  /*
+   * 完成率
+   */
+  var finishRate: Float = _
 }

@@ -26,7 +26,7 @@ import org.beangle.webmvc.api.view.{ Status, View }
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.model.Teacher
 import org.openurp.edu.evaluation.department.model.{ DepartEvaluate, SupervisiorEvaluate }
-import org.openurp.edu.evaluation.app.lesson.service.Ranker
+import org.openurp.edu.evaluation.app.course.service.Ranker
 import org.openurp.edu.evaluation.course.stat.model.FinalTeacherScore
 
 import java.time.LocalDate
@@ -154,18 +154,18 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
       + classOf[DepartEvaluate].getName + " departEvaluate,"
       + classOf[SupervisiorEvaluate].getName + " supervisiorEvaluate")
 
-    quer.where("questionR.result.lesson.semester.id=:semesterId", semesterId)
+    quer.where("questionR.result.clazz.semester.id=:semesterId", semesterId)
     quer.where("questionR.result.statType is 1")
     quer.select("questionR.result.teacher.id,"
       //        + "sum(questionR.score),case when questionR.result.statType =1 then count(distinct questionR.result.id) end,"
       //        + "count(distinct questionR.result.id),case when questionR.result.statType =1 then sum(questionR.score) end,"
       + "supervisiorEvaluate.totalScore,departEvaluate.totalScore,"
       + "sum(questionR.score)/count(distinct questionR.result.id)");
-    quer.where("questionR.result.lesson.semester.id=departEvaluate.semester.id");
+    quer.where("questionR.result.clazz.semester.id=departEvaluate.semester.id");
     quer.where("questionR.result.teacher.id=departEvaluate.teacher.id");
-    quer.where("questionR.result.lesson.semester.id=supervisiorEvaluate.semester.id");
+    quer.where("questionR.result.clazz.semester.id=supervisiorEvaluate.semester.id");
     quer.where("questionR.result.teacher.id=supervisiorEvaluate.teacher.id");
-    quer.where("questionR.result.lesson.semester.id =:semesterId", semesterId);
+    quer.where("questionR.result.clazz.semester.id =:semesterId", semesterId);
     quer.groupBy("questionR.result.teacher.id,supervisiorEvaluate.totalScore,departEvaluate.totalScore")
     //    val wjStat = entityDao.search(quer)
 

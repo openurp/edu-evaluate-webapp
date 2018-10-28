@@ -1,17 +1,18 @@
 [#ftl]
 [@b.head/]
-[#--[@b.navmenu]
-    [@b.navitem title="问卷评教" href="/evaluateStd"/]
-    [@b.navitem title="文字评教" href="/textEvaluateStudent"/]
-[/@]--]
+
 [#if currentSemester??]
-[#assign title]${currentSemester.schoolYear} ${currentSemester.name} 课程问卷评教[/#assign]
-[@b.toolbar title=title/]
+  [#if semesters?size==1]
+    [#assign title]${currentSemester.schoolYear} ${currentSemester.name} 课程问卷评教[/#assign]
+  [#else]
+    [#assign title]有${semesters?size}个学期需要评教[/#assign]
+  [/#if]
+  [@b.toolbar title=title/]
 <table width="100%">
     <tr [#if semesters?size==1] style="display:none"[/#if]>
         <td class="index_content" >
             [@b.form name="evaluateIndexForm" action="!search" target="contentDiv"]
-             [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
+             学年学期:[@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code"  onchange="changeSemester(this)"/]
             [/@]
         </td>
     </tr>
@@ -22,9 +23,8 @@
     </tr>
 </table>
 <script type="text/javascript">
-    function changeSemester(num){
+    function changeSemester(){
         var evaluateIndexForm = document.evaluateIndexForm;
-        bg.form.addInput(evaluateIndexForm, "semester.id", num);
         bg.form.submit(evaluateIndexForm);
     }
 </script>

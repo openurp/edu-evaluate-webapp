@@ -20,7 +20,7 @@ package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
-import org.openurp.edu.evaluation.app.lesson.model.TextEvaluateSwitch
+import org.openurp.edu.evaluation.app.course.model.TextEvaluateSwitch
 
 class TextEvaluateSwitchAction extends ProjectRestfulAction[TextEvaluateSwitch] {
 

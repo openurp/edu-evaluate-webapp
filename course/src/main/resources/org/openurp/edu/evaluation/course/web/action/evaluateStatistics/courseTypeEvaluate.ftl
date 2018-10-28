@@ -9,7 +9,7 @@
 <script language="javascript">
         var form =document.textbookIndexForm;
         function info(){
-          form.action="evaluateStatistics.action?method=lessonEvaluate&semester.id=${semester.id}";
+          form.action="evaluateStatistics.action?method=clazzEvaluate&semester.id=${semester.id}";
           form.submit();
        }
        function evaluateResultsExport(){

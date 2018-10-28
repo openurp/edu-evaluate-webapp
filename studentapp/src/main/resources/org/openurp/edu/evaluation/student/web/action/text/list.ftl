@@ -12,53 +12,55 @@
                 <th>开课院系</th>
                 <th>教师姓名</th>
                 <th width="6%">是否评教</th>
-                <th width="10%">操作方式</th>
+                <th width="10%">操作</th>
             </tr>
         </thead>
         [#assign k = 0/]
-        [#if lessons??]
+        [#if clazzs??]
         <tbody>
-        [#list lessons?sort_by("no") as lesson]
-        [#if lesson_index % 2 == 0]
-            [#assign lessonClass="griddata-even"/]
+        [#list clazzs?sort_by("crn") as clazz]
+        [#if clazz_index % 2 == 0]
+            [#assign clazzClass="griddata-even"/]
         [#else]
-            [#assign lessonClass="griddata-odd"/]
+            [#assign clazzClass="griddata-odd"/]
         [/#if]
-            [#list lesson.teachers?if_exists as teacher]
+            [#list clazz.teachers?if_exists as teacher]
             [#assign k = k+1/]
-            [#if "1" == evaluateMap[lesson.id?string + "_" + teacher.id?string]?default("0")]
+            [#if "1" == evaluateMap[clazz.id?string + "_" + teacher.id?string]?default("0")]
                 [#assign flag = true/]
             [#else]
                 [#assign flag = false]
             [/#if]
-            <tr class="${lessonClass!}">
-                <td>${(lesson.no)!}</td>
-                <td>${(lesson.course.code)!}</td>
-                <td>${(lesson.course.name)!}</td>
-                <td>${(lesson.teachDepart.name)!}</td>
+            <tr class="${clazzClass!}">
+                <td>${(clazz.crn)!}</td>
+                <td>${(clazz.course.code)!}</td>
+                <td>${(clazz.course.name)!}</td>
+                <td>${(clazz.teachDepart.name)!}</td>
                 <td>${(teacher.user.name)!}</td>
                 <td>[#if flag]已评教[#else]未评教[/#if]</td>
                 <td>
-                    <a href="javascript:doEvaluate('${flag?string("update","evaluate")}','${(lesson.id)!},${(teacher.id)!}')">
+                    <a href="javascript:doEvaluate('${flag?string("update","evaluate")}','${(clazz.id)!},${(teacher.id)!}')">
                     [#if flag]修改结果[#else]进行评估[/#if]
                     </a>
                 </td>
             </tr>
             [/#list]
         [/#list]
+        [#--
         [#if k > 0]
         <tr class="darkColumn">
-            <td colspan="6" height="30px;" align="center">
+            <td colspan="7" height="30px;" align="center">
                 <input type="button" class="buttonStyle" value="查看评教回复及教师公告" onClick="showRemessage();">
             </td>
         </tr>
         [/#if]
+        --]
         </tbody>
         [/#if]
     </table>
-    <input type="hidden" name="lesson.ids" value="[#list lessons?if_exists as lesson]${(lesson.id)!}[#if lesson_has_next],[/#if][/#list]"/>
+    <input type="hidden" name="clazz.ids" value="[#list clazzs?if_exists as clazz]${(clazz.id)!}[#if clazz_has_next],[/#if][/#list]"/>
     [/@]
-    [#if !lessons??]
+    [#if !clazzs??]
     <div class="gridempty" style="height: 112px;">
         <div style="padding-top: 40px;">没有查询结果</div>
     </div>

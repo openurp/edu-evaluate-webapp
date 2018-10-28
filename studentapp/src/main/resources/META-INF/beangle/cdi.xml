@@ -2,9 +2,6 @@
 <cdi>
   <container name="web">
     <module class="org.openurp.edu.evaluation.student.web.DefaultModule" />
-  </container>
-  <container>
-    <module class="org.openurp.edu.evaluation.student.service.DaoModule" />
-    <module class="org.openurp.app.cas.DefaultModule" />
+    <module class="org.openurp.app.web.ProjectModule" />
   </container>
 </cdi>

@@ -3,13 +3,13 @@
 
 [@b.toolbar title='评教统计' ]
     bar.addPrint();
-    bar.addItem("导出","lessonTeaEvaluateExport()");
+    bar.addItem("导出","clazzTeaEvaluateExport()");
     bar.addClose();
 [/@]
 <script language="javascript">
         var form =document.textbookIndexForm;
-        function lessonTeaEvaluateExport(){
-          form.action="evaluateStatistics.action?method=lessonTeaEvaluateExport";
+        function clazzTeaEvaluateExport(){
+          form.action="evaluateStatistics.action?method=clazzTeaEvaluateExport";
           form.submit();
        }
 

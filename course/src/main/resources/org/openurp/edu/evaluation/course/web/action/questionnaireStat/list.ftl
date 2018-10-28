@@ -1,7 +1,7 @@
 [#ftl]
 [@b.head/]
 [@b.form name="questionnaireStatSearchForm" action="!search" target="contentDiv"]
-    [@b.grid items=lessonEvalStats var="questionnaireStat" sortable="true"]
+    [@b.grid items=clazzEvalStats var="questionnaireStat" sortable="true"]
         [@b.gridbar title="院系教师评教详细信息"]
             bar.addItem("更改教师","updateTeacher()");
             //bar.addItem("${b.text('action.delete')}",action.remove());
@@ -9,10 +9,10 @@
         [/@]
         [@b.row]
             [@b.boxcol/]
-            [@b.col property="lesson.no" title="课程序号"/]
-            [@b.col property="lesson.course.name" title="课程名称"/]
-            [@b.col property="lesson.course.code" title="课程代码"/]
-            [@b.col property="lesson.teachDepart.name" title="开课院系"/]
+            [@b.col property="clazz.crn" title="课程序号"/]
+            [@b.col property="clazz.course.name" title="课程名称"/]
+            [@b.col property="clazz.course.code" title="课程代码"/]
+            [@b.col property="clazz.teachDepart.name" title="开课院系"/]
             [@b.col property="teacher.user.name" title="任课教师"/]
             [#if questionnaireStat?exists]
             [#list questionnaireStat.questionTypeStats as questionType]

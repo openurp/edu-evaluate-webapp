@@ -56,11 +56,11 @@ class SupervisiorEvaluateAction extends ProjectRestfulAction[SupervisiorEvaluate
   }
 
   def importTeachers(): View = {
-    val builder = OqlBuilder.from[Array[Any]](classOf[Clazz].getName, "lesson")
-    getInt("supervisiorEvaluate.semester.id") foreach { semesterId => builder.where("lesson.semester.id=:id", semesterId) }
-    builder.join("lesson.teachers", "teacher")
-    builder.select("distinct teacher.id , lesson.teachDepart.id , lesson.semester.id")
-    builder.where("not exists (from " + classOf[SupervisiorEvaluate].getName + " se where se.semester = lesson.semester and se.teacher = teacher and se.department = lesson.teachDepart)")
+    val builder = OqlBuilder.from[Array[Any]](classOf[Clazz].getName, "clazz")
+    getInt("supervisiorEvaluate.semester.id") foreach { semesterId => builder.where("clazz.semester.id=:id", semesterId) }
+    builder.join("clazz.teachers", "teacher")
+    builder.select("distinct teacher.id , clazz.teachDepart.id , clazz.semester.id")
+    builder.where("not exists (from " + classOf[SupervisiorEvaluate].getName + " se where se.semester = clazz.semester and se.teacher = teacher and se.department = clazz.teachDepart)")
     val datas = entityDao.search(builder)
     val supervisiorEvaluates = Collections.newBuffer[SupervisiorEvaluate]
     datas foreach { data =>

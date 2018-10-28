@@ -25,8 +25,8 @@
 var form = document.questionnaireStatSearchForm;
     function doing(){
             var form = document.questionnaireStatSearchForm;
-            var lessonIds = bg.input.getCheckBoxValues("departEvalStat.id");
-                alert(lessonIds);
+            var clazzIds = bg.input.getCheckBoxValues("departEvalStat.id");
+                alert(clazzIds);
     }
 
     function remove(){

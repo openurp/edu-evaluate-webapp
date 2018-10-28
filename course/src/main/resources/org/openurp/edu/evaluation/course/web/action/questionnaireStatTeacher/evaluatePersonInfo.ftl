@@ -7,11 +7,11 @@
     <table class="infoTable" width="90%" align="center">
         <tr>
             <td class="title" style="text-align:center;">课程序号</td>
-            <td style="padding-left:10px;">${(questionnaireStat.lesson.no)!}</td>
+            <td style="padding-left:10px;">${(questionnaireStat.clazz.crn)!}</td>
             <td class="title" style="text-align:center;">课程名称</td>
-            <td style="padding-left:10px;">${(questionnaireStat.lesson.course.name)!}</td>
+            <td style="padding-left:10px;">${(questionnaireStat.clazz.course.name)!}</td>
             <td class="title" style="text-align:center;">开课院系</td>
-            <td style="padding-left:10px;">${(questionnaireStat.lesson.teachDepart.name)!}</td>
+            <td style="padding-left:10px;">${(questionnaireStat.clazz.teachDepart.name)!}</td>
         </tr>
         <tr>
             <td class="title" style="text-align:center;">教师姓名</td>
