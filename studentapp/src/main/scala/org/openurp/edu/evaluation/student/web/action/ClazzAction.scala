@@ -339,6 +339,7 @@ class ClazzAction extends RestfulAction[EvaluateResult] {
           teachers foreach { teacher =>
             val evaluateResult = new EvaluateResult()
             evaluateResult.clazz = clazz
+            evaluateResult.statType = 1
             evaluateResult.department = clazz.teachDepart
             evaluateResult.student = std
             evaluateResult.teacher = teacher

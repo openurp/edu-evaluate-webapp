@@ -9,7 +9,7 @@
         [@b.col width="4%" title="课程序号"]${(evaluateR.clazz.crn)?if_exists}[/@]
         [@b.col width="4%" title="课程代码"]${(evaluateR.clazz.course.code)?if_exists}[/@]
         [@b.col width="8%" title="课程名称"]${(evaluateR.clazz.course.name)?if_exists}[/@]
-        [@b.col width="5%" title="学生学号"]${(evaluateR.student.code)?if_exists}[/@]
+        [@b.col width="5%" title="学生学号"]${(evaluateR.student.user.code)?if_exists}[/@]
         [@b.col width="5%" title="学生姓名"]${(evaluateR.student.person.name.formatedName)?if_exists}[/@]
         [@b.col width="5%" title="学生学院"]${(evaluateR.student.state.department.name)?if_exists}[/@]
         [@b.col width="5%" title="学生班级"]${(evaluateR.student.state.adminclass.name)?if_exists}[/@]

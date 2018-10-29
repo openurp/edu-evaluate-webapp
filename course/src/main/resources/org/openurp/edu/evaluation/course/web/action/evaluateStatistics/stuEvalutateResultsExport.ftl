@@ -193,7 +193,7 @@ rt
                 <td>${(evaluateR.clazz.crn)?if_exists}</td>
                 <td>${(evaluateR.clazz.course.code)?if_exists}</td>
                 <td>${(evaluateR.clazz.course.name)?if_exists}</td>
-                <td>${(evaluateR.student.code)?if_exists}</td>
+                <td>${(evaluateR.student.user.code)?if_exists}</td>
                 <td>${(evaluateR.student.person.name)?if_exists}</td>
                 <td>${(evaluateR.student.department.name)?if_exists}</td>
                 <td>${(evaluateR.student.adminclass.name)?if_exists}</td>

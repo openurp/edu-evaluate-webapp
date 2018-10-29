@@ -13,7 +13,7 @@
             [@b.col property="clazz.crn" title="课程序号" width="7%"/]
             [@b.col property="clazz.course.code" title="课程代码" width="12%"/]
             [@b.col property="clazz.course.name" title="课程名称" width="20%"/]
-            [@b.col property="student.code" title="学生学号" width="13%"/]
+            [@b.col property="student.user.code" title="学生学号" width="13%"/]
             [@b.col property="student.person.name.formatedName" title="学生姓名" width="10%"]
                [@b.a href="!info?id=${evaluateResult.id}"]${(evaluateResult.student.person.name)!}[/@]
             [/@]
@@ -24,7 +24,7 @@
               [#if evaluateResult.statType==1]有效
               [#else]无效
               [/#if]
-              [/@]
+            [/@]
         [/@]
     [/@]
 [/@]
