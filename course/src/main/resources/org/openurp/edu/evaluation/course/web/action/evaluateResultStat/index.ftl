@@ -11,7 +11,7 @@
             [@b.textfield style="width:80px" name="regainLower" label="回收率" onBlur="clearNoNum(this)"/]
             [@b.select style="width:134px" name="questionnaireStat.depart.id" label="开课院系" items=departments empty="${b.text('filed.choose')}..."/]
             [@b.select style="width:134px" name="questionnaireStat.teacher.teacher.user.department.id" label="教师院系" items=departments empty="${b.text('filed.choose')}..."/]
-            [@b.select style="width:134px" name="questionnaireStat.education.id" label="学历层次" items=educations empty="${b.text('filed.choose')}..."/]
+            [@b.select style="width:134px" name="questionnaireStat.education.id" label="培养层次" items=educations empty="${b.text('filed.choose')}..."/]
             [@b.select style="width:134px" name="tutorDepartmentStat.questionnaire.id" label="问卷类型" items=questionnaires option="id,description" empty="${b.text('filed.choose')}..."/]
             [@eams.semesterCalendar style="width:130px" label="学年学期" id="semesterId" name="semester.id" empty="false" value=semester /]
             <tr>
@@ -172,7 +172,7 @@
     var bar=new ToolBar("bar","评估统计结果",null,true,true);
        bar.setMessage('<@getMessage/>');
 
-     var dd = new EduSpanTypeDepart3Select("educationTypeOfCourse","department","major",null,true,true,true,true);
+     var dd = new EducationLevelTypeDepart3Select("educationTypeOfCourse","department","major",null,true,true,true,true);
     dd.init(educationTypeArray,departArray);
     function moveSelectedOptions(srcSelect, destSelect){
         for (var i=0; i<srcSelect.length; i++){

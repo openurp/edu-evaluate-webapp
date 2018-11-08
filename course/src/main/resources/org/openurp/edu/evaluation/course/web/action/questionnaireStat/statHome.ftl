@@ -18,7 +18,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="title" style="text-align:center;" width="10%;">学历层次</td>
+                <td class="title" style="text-align:center;" width="10%;">培养层次</td>
                 <td style="text-align:center;" width="15%;">
                     <select name="educations" id="educations" style="width:160px;height:150px;" multiple size="10" onDblClick="">
                         [#list educations?if_exists as education]
@@ -108,19 +108,19 @@
                             </td>
                             -->
                             <td>
-                                <select name="educationTypes" MULTIPLE size="10" style="width:200px" onDblClick="JavaScript:moveSelectedOption(this.form['educationTypes'], this.form['SelectedEduSpanType'])">
+                                <select name="educationTypes" MULTIPLE size="10" style="width:200px" onDblClick="JavaScript:moveSelectedOption(this.form['educationTypes'], this.form['SelectedEducationLevelType'])">
                                     <#list educationTypes as educationType>
                                         <option value="${educationType.id}">${educationType.name}</option>
                                     </#list>
                                 </select>
                             </td>
                                <td>
-                                <input OnClick="JavaScript:moveSelectedOption(this.form['educationTypes'], this.form['SelectedEduSpanType'])" type="button" value="&gt;">
+                                <input OnClick="JavaScript:moveSelectedOption(this.form['educationTypes'], this.form['SelectedEducationLevelType'])" type="button" value="&gt;">
                                 <br>
-                                <input OnClick="JavaScript:moveSelectedOption(this.form['SelectedEduSpanType'], this.form['educationTypes'])" type="button" value="&lt;">
+                                <input OnClick="JavaScript:moveSelectedOption(this.form['SelectedEducationLevelType'], this.form['educationTypes'])" type="button" value="&lt;">
                             </td>
                             <td>
-                                <select name="SelectedEduSpanType" MULTIPLE size="10" style="width:200px;" onDblClick="JavaScript:moveSelectedOption(this.form['SelectedEduSpanType'], this.form['educationTypes'])"></select>
+                                <select name="SelectedEducationLevelType" MULTIPLE size="10" style="width:200px;" onDblClick="JavaScript:moveSelectedOption(this.form['SelectedEducationLevelType'], this.form['educationTypes'])"></select>
                             </td>
                         </tr>
                      </table>
@@ -172,7 +172,7 @@
 
         function doStatistic(form){
             form.departIdSeq.value=getAllOptionValue(form.Selecteddepartments);
-            form.educationTypeIdSeq.value=getAllOptionValue(form.SelectedEduSpanType);
+            form.educationTypeIdSeq.value=getAllOptionValue(form.SelectedEducationLevelType);
             if(""==form.educationTypeIdSeq.value){
                 alert("请选择学生类别");
                 return;

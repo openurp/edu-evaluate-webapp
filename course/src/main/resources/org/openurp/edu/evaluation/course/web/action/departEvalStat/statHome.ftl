@@ -5,7 +5,7 @@
 [/@]
 [@b.form name="statForm" title="统计评教结果"  action="!stat" theme="list"]
     [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
-    [@b.field label="学历层次"]
+    [@b.field label="培养层次"]
         <table class="infoTable" align="left" style="width:350px;">
             <tr>
                 <td>
@@ -72,7 +72,7 @@
             }
         }
         if(""==eduIds){
-            alert("请选择学历层次");
+            alert("请选择培养层次");
             return false;
         }
         if(""==depIds){

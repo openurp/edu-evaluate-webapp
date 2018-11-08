@@ -31,8 +31,8 @@ import org.springframework.beans.support.PropertyComparator
 import org.beangle.commons.collection.Order
 import org.openurp.edu.base.model.Teacher
 import java.time.LocalDate
-import org.openurp.edu.evaluation.course.result.model.EvaluateResult
-import org.openurp.edu.evaluation.course.result.model.QuestionResult
+import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
+import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
 import org.openurp.edu.course.model.ExamTaker
 
 class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {

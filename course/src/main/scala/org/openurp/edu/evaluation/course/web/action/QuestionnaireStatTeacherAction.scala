@@ -27,10 +27,10 @@ import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.code.model.StdType
 import org.openurp.edu.base.model.Teacher
-import org.openurp.edu.evaluation.course.model.QuestionnaireClazz
-import org.openurp.edu.evaluation.course.result.model.EvaluateResult
-import org.openurp.edu.evaluation.course.result.model.QuestionResult
-import org.openurp.edu.evaluation.course.stat.model.ClazzEvalStat
+import org.openurp.edu.evaluation.clazz.model.QuestionnaireClazz
+import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
+import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
+import org.openurp.edu.evaluation.clazz.stat.model.ClazzEvalStat
 import org.openurp.edu.evaluation.model.EvaluationCriteriaItem
 import org.openurp.edu.evaluation.model.Option
 import org.openurp.edu.evaluation.model.QuestionType

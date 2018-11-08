@@ -37,7 +37,7 @@ import org.openurp.edu.course.model.CourseTaker
 import org.beangle.commons.lang.Strings
 import java.time.LocalDate
 import org.beangle.webmvc.api.view.View
-import org.openurp.edu.evaluation.course.result.model.EvaluateResult
+import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
 import org.openurp.edu.course.model.Clazz
 
 class EvaluateStatusStatAction extends ProjectRestfulAction[EvaluateResult] {

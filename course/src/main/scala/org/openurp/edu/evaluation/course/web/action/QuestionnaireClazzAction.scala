@@ -18,34 +18,19 @@
  */
 package org.openurp.edu.evaluation.course.web.action
 
-import java.sql.Date
-import org.beangle.commons.collection.Order
-import org.beangle.data.dao.OqlBuilder
-import org.beangle.data.dao.QueryBuilder
-import org.beangle.webmvc.api.view.View
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.beangle.webmvc.entity.helper.QueryHelper
-import org.openurp.base.model.Department
-import org.openurp.edu.base.model.Semester
-import org.openurp.edu.base.model.Semester
-import org.openurp.edu.base.model.Semester
-import org.openurp.edu.base.model.Semester
-import org.openurp.edu.base.model.Semester
-import org.openurp.edu.base.model.Semester
-import org.openurp.edu.base.code.model.CourseType
-import org.openurp.edu.base.code.model.ExamMode
-import org.openurp.edu.base.code.model.ExamMode
-import org.openurp.edu.base.model.Project
-import org.openurp.edu.evaluation.app.course.service.StdEvaluateSwitchService
-import org.openurp.edu.evaluation.course.model.QuestionnaireClazz
-import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.edu.course.model.Clazz
-import org.openurp.edu.course.model.Clazz
-import org.openurp.edu.course.model.Clazz
-import org.beangle.commons.lang.Strings
-import org.beangle.webmvc.api.annotation.action
 import java.time.LocalDate
-import org.beangle.commons.collection.Collections
+
+import org.beangle.commons.collection.Order
+import org.beangle.commons.lang.Strings
+import org.beangle.data.dao.{ OqlBuilder, QueryBuilder }
+import org.beangle.webmvc.api.view.View
+import org.openurp.base.model.Department
+import org.openurp.edu.base.code.model.CourseType
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.course.model.Clazz
+import org.openurp.edu.evaluation.app.course.service.StdEvaluateSwitchService
+import org.openurp.edu.evaluation.clazz.model.QuestionnaireClazz
+import org.openurp.edu.evaluation.model.Questionnaire
 
 class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] {
 

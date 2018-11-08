@@ -31,7 +31,7 @@ import org.openurp.edu.base.model.Teacher
 import org.openurp.edu.course.model.Clazz
 import org.openurp.edu.course.model.CourseTaker
 import org.openurp.edu.evaluation.app.course.model.EvaluateSearchDepartment
-import org.openurp.edu.evaluation.course.result.model.EvaluateResult
+import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
 
 class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
 

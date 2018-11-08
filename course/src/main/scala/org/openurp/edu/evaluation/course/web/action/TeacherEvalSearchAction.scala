@@ -28,7 +28,7 @@ import org.beangle.webmvc.api.annotation.param
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.model.Semester
-import org.openurp.edu.evaluation.course.stat.model.TeacherEvalStat
+import org.openurp.edu.evaluation.clazz.stat.model.TeacherEvalStat
 import org.openurp.edu.evaluation.model.Option
 
 class TeacherEvalSearchAction extends RestfulAction[TeacherEvalStat] {

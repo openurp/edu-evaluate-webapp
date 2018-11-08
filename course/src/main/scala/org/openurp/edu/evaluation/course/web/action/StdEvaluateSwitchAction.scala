@@ -20,7 +20,7 @@ package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.evaluation.course.model.QuestionnaireClazz
+import org.openurp.edu.evaluation.clazz.model.QuestionnaireClazz
 import org.openurp.edu.course.model.Clazz
 import org.beangle.webmvc.api.view.View
 import org.openurp.edu.evaluation.app.course.model.StdEvaluateSwitch

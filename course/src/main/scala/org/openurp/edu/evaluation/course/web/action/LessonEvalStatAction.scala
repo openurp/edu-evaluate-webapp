@@ -43,16 +43,16 @@ import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.model.Project
 import java.time.LocalDate
 import java.time.Instant
-import org.openurp.edu.evaluation.course.stat.model.ClazzOptionStat
-import org.openurp.edu.evaluation.course.result.model.QuestionResult
-import org.openurp.edu.evaluation.course.result.model.EvaluateResult
-import org.openurp.edu.evaluation.course.stat.model.OptionStat
-import org.openurp.edu.evaluation.course.stat.model.ClazzQuestionStat
-import org.openurp.edu.evaluation.course.stat.model.ClazzQuestionTypeStat
-import org.openurp.edu.evaluation.course.stat.model.QuestionStat
-import org.openurp.edu.evaluation.course.stat.model.QuestionTypeStat
-import org.openurp.edu.evaluation.course.stat.model.ClazzEvalStat
-import org.openurp.edu.base.code.model.EduSpan
+import org.openurp.edu.evaluation.clazz.stat.model.ClazzOptionStat
+import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
+import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
+import org.openurp.edu.evaluation.clazz.stat.model.OptionStat
+import org.openurp.edu.evaluation.clazz.stat.model.ClazzQuestionStat
+import org.openurp.edu.evaluation.clazz.stat.model.ClazzQuestionTypeStat
+import org.openurp.edu.evaluation.clazz.stat.model.QuestionStat
+import org.openurp.edu.evaluation.clazz.stat.model.QuestionTypeStat
+import org.openurp.edu.evaluation.clazz.stat.model.ClazzEvalStat
+import org.openurp.code.edu.model.EducationLevel
 
 class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
 
@@ -62,7 +62,7 @@ class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
       searchFormFlag = "beenStat"
     }
     put("searchFormFlag", searchFormFlag)
-    //    put("educations", getEduSpans())
+    //    put("educations", getEducationLevels())
     put("departments", findItemsBySchool(classOf[Department]))
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire").where("questionnaire.state =:state", true)
     put("questionnaires", entityDao.search(query))
@@ -305,7 +305,7 @@ class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
     put("stdTypeList", entityDao.getAll(classOf[StdType]))
     put("departmentList", entityDao.getAll(classOf[Department]))
 
-    put("educations", entityDao.getAll(classOf[EduSpan]))
+    put("educations", entityDao.getAll(classOf[EducationLevel]))
     val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:tea", true))
     put("departments", teachingDeparts)
 

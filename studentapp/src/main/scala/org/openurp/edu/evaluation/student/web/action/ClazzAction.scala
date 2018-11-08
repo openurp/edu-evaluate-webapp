@@ -18,26 +18,19 @@
  */
 package org.openurp.edu.evaluation.student.web.action
 
-import java.util.Date
+import java.time.{ Instant, LocalDate }
 
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
+import org.beangle.security.Securities
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.base.model.Semester
-import org.openurp.edu.base.model.Student
-import org.openurp.edu.base.model.Teacher
+import org.openurp.edu.base.model.{ Semester, Student, Teacher }
+import org.openurp.edu.course.model.{ Clazz, CourseTaker }
 import org.openurp.edu.evaluation.app.course.service.StdEvaluateSwitchService
-import org.openurp.edu.evaluation.course.model.QuestionnaireClazz
-import org.openurp.edu.evaluation.course.result.model.EvaluateResult
-import org.openurp.edu.evaluation.course.result.model.QuestionResult
-import org.openurp.edu.evaluation.model.Option
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.course.model.CourseTaker
-import org.openurp.edu.course.model.Clazz
-import java.time.LocalDate
-import java.time.Instant
-import org.beangle.security.Securities
+import org.openurp.edu.evaluation.clazz.model.QuestionnaireClazz
+import org.openurp.edu.evaluation.clazz.result.model.{ EvaluateResult, QuestionResult }
+import org.openurp.edu.evaluation.model.{ Option, Question }
 
 class ClazzAction extends RestfulAction[EvaluateResult] {
 

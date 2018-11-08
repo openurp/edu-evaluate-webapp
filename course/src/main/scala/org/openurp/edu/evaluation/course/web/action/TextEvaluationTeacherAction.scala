@@ -31,8 +31,8 @@ import org.openurp.edu.base.model.Teacher
 import org.openurp.edu.course.model.Clazz
 import org.openurp.edu.course.model.CourseTaker
 import org.openurp.edu.evaluation.app.course.model.TextEvaluateSwitch
-import org.openurp.edu.evaluation.course.model.TeacherRemessage
-import org.openurp.edu.evaluation.course.model.TextEvaluation
+import org.openurp.edu.evaluation.clazz.model.TeacherRemessage
+import org.openurp.edu.evaluation.clazz.model.TextEvaluation
 
 class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
 

@@ -27,13 +27,13 @@ import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.model.{ Student, Teacher }
 import org.openurp.edu.evaluation.app.course.service.{ ClazzFilterStrategyFactory, StdEvaluateSwitchService }
-import org.openurp.edu.evaluation.course.result.model.EvaluateResult
+import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
 import org.beangle.security.Securities
 import org.openurp.edu.course.model.CourseTaker
 import org.openurp.edu.course.model.Clazz
-import org.openurp.edu.evaluation.course.model.QuestionnaireClazz
+import org.openurp.edu.evaluation.clazz.model.QuestionnaireClazz
 import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.course.result.model.QuestionResult
+import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
 import org.openurp.edu.evaluation.model.Option
 
 class EvaluateStdAction extends RestfulAction[EvaluateResult] {

@@ -38,19 +38,19 @@ import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.edu.course.model.Clazz
 import java.time.LocalDate
 import java.time.Instant
-import org.openurp.edu.evaluation.course.result.model.QuestionResult
-import org.openurp.edu.evaluation.course.stat.model.SchoolEvalStat
-import org.openurp.edu.evaluation.course.stat.model.DepartQuestionStat
-import org.openurp.edu.evaluation.course.stat.model.DepartOptionStat
-import org.openurp.edu.evaluation.course.stat.model.SchoolQuestionTypeStat
-import org.openurp.edu.evaluation.course.stat.model.OptionStat
-import org.openurp.edu.evaluation.course.stat.model.DepartEvalStat
-import org.openurp.edu.evaluation.course.stat.model.SchoolOptionStat
-import org.openurp.edu.evaluation.course.stat.model.DepartQuestionTypeStat
-import org.openurp.edu.evaluation.course.stat.model.QuestionStat
-import org.openurp.edu.evaluation.course.stat.model.SchoolQuestionStat
-import org.openurp.edu.evaluation.course.stat.model.QuestionTypeStat
-import org.openurp.edu.base.code.model.EduSpan
+import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
+import org.openurp.edu.evaluation.clazz.stat.model.SchoolEvalStat
+import org.openurp.edu.evaluation.clazz.stat.model.DepartQuestionStat
+import org.openurp.edu.evaluation.clazz.stat.model.DepartOptionStat
+import org.openurp.edu.evaluation.clazz.stat.model.SchoolQuestionTypeStat
+import org.openurp.edu.evaluation.clazz.stat.model.OptionStat
+import org.openurp.edu.evaluation.clazz.stat.model.DepartEvalStat
+import org.openurp.edu.evaluation.clazz.stat.model.SchoolOptionStat
+import org.openurp.edu.evaluation.clazz.stat.model.DepartQuestionTypeStat
+import org.openurp.edu.evaluation.clazz.stat.model.QuestionStat
+import org.openurp.edu.evaluation.clazz.stat.model.SchoolQuestionStat
+import org.openurp.edu.evaluation.clazz.stat.model.QuestionTypeStat
+import org.openurp.code.edu.model.EducationLevel
 
 class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
   override def index(): View = {
@@ -64,7 +64,7 @@ class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
       searchFormFlag = "beenStat"
     }
     put("searchFormFlag", searchFormFlag)
-    //    put("educations", getEduSpans())
+    //    put("educations", getEducationLevels())
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department], "dep").where("dep.teaching =:tea", true)))
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire").where("questionnaire.state =:state", true)
     put("questionnaires", entityDao.search(query))
@@ -98,7 +98,7 @@ class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
     put("stdTypeList", entityDao.getAll(classOf[StdType]))
     put("departmentList", entityDao.getAll(classOf[Department]))
 
-    put("educations", entityDao.getAll(classOf[EduSpan]))
+    put("educations", entityDao.getAll(classOf[EducationLevel]))
     val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:tea", true))
     put("departments", teachingDeparts)
 

@@ -26,17 +26,17 @@ import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.code.model.StdType
-import org.openurp.edu.evaluation.course.result.model.EvaluateResult
-import org.openurp.edu.evaluation.course.result.model.QuestionResult
-import org.openurp.edu.evaluation.course.stat.model.ClazzEvalStat
+import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
+import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
+import org.openurp.edu.evaluation.clazz.stat.model.ClazzEvalStat
 import org.openurp.edu.evaluation.model.EvaluationCriteria
 import org.openurp.edu.evaluation.model.EvaluationCriteriaItem
 import org.openurp.edu.evaluation.model.QuestionType
 import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.edu.base.model.Teacher
 import java.time.LocalDate
-import org.openurp.edu.evaluation.course.stat.model.OptionStat
-import org.openurp.edu.base.code.model.EduSpan
+import org.openurp.edu.evaluation.clazz.stat.model.OptionStat
+import org.openurp.code.edu.model.EducationLevel
 
 class QuestionnaireStatAction extends RestfulAction[ClazzEvalStat] with ServletSupport {
 
@@ -51,7 +51,7 @@ class QuestionnaireStatAction extends RestfulAction[ClazzEvalStat] with ServletS
       searchFormFlag = "beenStat"
     }
     put("searchFormFlag", searchFormFlag)
-    //    put("educations", getEduSpans())
+    //    put("educations", getEducationLevels())
     put("departments", entityDao.getAll(classOf[Department]))
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire").where("questionnaire.state =:state", true)
     put("questionnaires", entityDao.search(query))
@@ -164,7 +164,7 @@ class QuestionnaireStatAction extends RestfulAction[ClazzEvalStat] with ServletS
     put("stdTypeList", entityDao.getAll(classOf[StdType]));
     put("departmentList", entityDao.search(OqlBuilder.from(classOf[Department], "de").where("de.teaching=:tea", true)));
     put("semester", 20141)
-    put("educations", entityDao.getAll(classOf[EduSpan]))
+    put("educations", entityDao.getAll(classOf[EducationLevel]))
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department], "de").where("de.teaching=:tea", true)));
     forward()
   }

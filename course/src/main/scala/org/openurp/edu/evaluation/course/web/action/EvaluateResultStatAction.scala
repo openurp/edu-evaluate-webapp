@@ -19,11 +19,11 @@
 package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.evaluation.course.stat.model.ClazzEvalStat
+import org.openurp.edu.evaluation.clazz.stat.model.ClazzEvalStat
 import org.beangle.data.dao.OqlBuilder
 import org.openurp.base.model.Department
 import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.edu.base.code.model.EduSpan
+import org.openurp.code.edu.model.EducationLevel
 import org.openurp.edu.base.model.Major
 import org.beangle.data.model.Entity
 
@@ -32,14 +32,14 @@ class EvaluateResultStatAction  extends RestfulAction[ClazzEvalStat]{
 //  protected QuestionnairStatService questionnaireStatService;
 //
   override protected def indexSetting(): Unit = {
-    put("educations", entityDao.getAll(classOf[EduSpan]));
+    put("educations", entityDao.getAll(classOf[EducationLevel]));
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department],"dep").where("dep.teaching =:tea",true)))
     put("questionnaires", entityDao.search (OqlBuilder.from(classOf[Questionnaire],"qn").where("qn.state=:st", true)))
   }
 
 //  override protected def editSetting(entity:Entity )= {
 //    put("majors", entityDao.findBy(classOf[Major], "department", entityDao.search(OqlBuilder.from(classOf[Department],"dep").where("dep.teaching =:tea",true))))
-//    put("educations", entityDao.getAll(classOf[EduSpan]));
+//    put("educations", entityDao.getAll(classOf[EducationLevel]));
 //  }
 //
 //
@@ -50,7 +50,7 @@ class EvaluateResultStatAction  extends RestfulAction[ClazzEvalStat]{
 
 //    // FIXME 死方法
 //    // put("questionnaireStats", entityDao.search(buildQuery()));
-//    // put("educations", baseCodeService.getCodes(EduSpan.class));
+//    // put("educations", baseCodeService.getCodes(EducationLevel.class));
 //    // put("departments", getDeparts());
 //    // put("semesters", entityDao.search(OqlBuilder.from("from Semester")));
 //    // put("questionnaires", entityDao.get(Questionnaire.class));

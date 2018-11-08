@@ -22,9 +22,9 @@ import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.edu.evaluation.model.EvaluationCriteria
 import org.beangle.data.dao.OqlBuilder
-import org.openurp.edu.base.code.model.EduSpan
+import org.openurp.code.edu.model.EducationLevel
 import org.openurp.edu.evaluation.model.QuestionType
-import org.openurp.edu.evaluation.course.stat.model.ClazzEvalStat
+import org.openurp.edu.evaluation.clazz.stat.model.ClazzEvalStat
 import org.beangle.commons.collection.Collections
 import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.code.model.StdType

@@ -18,8 +18,8 @@
  */
 package org.openurp.edu.evaluation.app.course.service
 
-import org.openurp.edu.evaluation.course.stat.model.FinalTeacherScore
-import org.openurp.edu.evaluation.course.stat.model.EvalStat
+import org.openurp.edu.evaluation.clazz.stat.model.FinalTeacherScore
+import org.openurp.edu.evaluation.clazz.stat.model.EvalStat
 
 object Ranker {
 

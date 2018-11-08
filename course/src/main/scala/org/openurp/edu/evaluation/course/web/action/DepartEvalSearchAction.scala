@@ -25,9 +25,9 @@ import org.beangle.commons.collection.Order
 import org.openurp.edu.evaluation.model.Option
 import java.time.LocalDate
 import org.beangle.webmvc.api.view.View
-import org.openurp.edu.evaluation.course.result.model.EvaluateResult
-import org.openurp.edu.evaluation.course.result.model.QuestionResult
-import org.openurp.edu.evaluation.course.stat.model.DepartEvalStat
+import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
+import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
+import org.openurp.edu.evaluation.clazz.stat.model.DepartEvalStat
 import org.beangle.data.dao.OqlBuilder
 import org.openurp.edu.course.model.Clazz
 import org.beangle.webmvc.api.annotation.mapping

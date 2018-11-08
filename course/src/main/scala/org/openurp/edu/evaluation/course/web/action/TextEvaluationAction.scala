@@ -24,7 +24,7 @@ import org.beangle.commons.collection.Order
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.openurp.edu.base.model.Project
-import org.openurp.edu.evaluation.course.model.TextEvaluation
+import org.openurp.edu.evaluation.clazz.model.TextEvaluation
 import org.openurp.edu.base.model.Semester
 import org.openurp.base.model.Department
 

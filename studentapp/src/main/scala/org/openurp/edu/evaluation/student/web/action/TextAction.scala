@@ -18,21 +18,19 @@
  */
 package org.openurp.edu.evaluation.student.web.action
 
+import java.time.{ Instant, LocalDate }
+
 import scala.collection.mutable.Buffer
+
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
+import org.beangle.security.Securities
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.base.model.Semester
-import org.openurp.edu.base.model.{ Student, Teacher }
+import org.openurp.edu.base.model.{ Semester, Student, Teacher }
+import org.openurp.edu.course.model.{ Clazz, CourseTaker }
 import org.openurp.edu.evaluation.app.course.model.TextEvaluateSwitch
-import org.openurp.edu.evaluation.course.model.TeacherRemessage
-import org.openurp.edu.evaluation.course.model.TextEvaluation
-import java.time.LocalDate
-import java.time.Instant
-import org.beangle.security.Securities
-import org.openurp.edu.course.model.Clazz
-import org.openurp.edu.course.model.CourseTaker
+import org.openurp.edu.evaluation.clazz.model.{ TeacherRemessage, TextEvaluation }
 
 class TextAction extends RestfulAction[TextEvaluation] {
 
