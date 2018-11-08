@@ -24,4 +24,3 @@
     }
 </script>
 [@b.foot/]
-
