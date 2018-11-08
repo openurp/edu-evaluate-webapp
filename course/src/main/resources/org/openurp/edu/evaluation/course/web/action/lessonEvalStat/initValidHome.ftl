@@ -32,7 +32,7 @@
 [/@]
 <script type="text/javaScript">
     var initValidForm = document.initValidForm;
-    
+
     function doStatistic(){
         if ($("#percent").val() == ""){
             alert("请输入百分比!");
@@ -44,12 +44,6 @@
     }
 </script>
 [@b.foot/]
-
-
-
-
-
-
 
 [#--<#include "/template/head.ftl"/>
 <BODY>
@@ -85,7 +79,7 @@
         var bar = new ToolBar('backBar','统计评教结果',null,true,true);
         bar.setMessage('<@getMessage/>');
         bar.addBack("<@text name="action.back"/>");
-    
+
         function doStatistic(form){
             if(""==form.percent.value){
                 alert("请出入百分比");
@@ -94,7 +88,7 @@
             if(confirm("确认开始初始化吗?")){
                 form["button1"].disabled=true;
                 form.action ="evaluateDetailStat.action?method=setValid";
-                '<font color="red" size="5"><@text name="workload.statisticInfo"/></font>'; 
+                '<font color="red" size="5"><@text name="workload.statisticInfo"/></font>';
                 form.submit();
             }
         }

@@ -7,11 +7,11 @@
     <table class="infoTable" width="90%" align="center">
         <tr>
             <td class="title" style="text-align:center;">课程序号</td>
-            <td style="padding-left:10px;">${(questionnaireStat.lesson.no)!}</td>
+            <td style="padding-left:10px;">${(questionnaireStat.clazz.crn)!}</td>
             <td class="title" style="text-align:center;">课程名称</td>
-            <td style="padding-left:10px;">${(questionnaireStat.lesson.course.name)!}</td>
+            <td style="padding-left:10px;">${(questionnaireStat.clazz.course.name)!}</td>
             <td class="title" style="text-align:center;">开课院系</td>
-            <td style="padding-left:10px;">${(questionnaireStat.lesson.teachDepart.name)!}</td> 
+            <td style="padding-left:10px;">${(questionnaireStat.clazz.teachDepart.name)!}</td>
         </tr>
         <tr>
             <td class="title" style="text-align:center;">教师姓名</td>
@@ -19,15 +19,15 @@
             <td class="title" style="text-align:center;">职称</td>
             <td style="padding-left:10px;">${(questionnaireStat.teacher.title.name)!}</td>
             <td class="title" style="text-align:center;">平均分</td>
-            <td style="padding-left:10px;">${(questionnaireStat.avgScore)!}</td> 
+            <td style="padding-left:10px;">${(questionnaireStat.avgScore)!}</td>
         </tr>
         <tr>
             <td class="title" style="text-align:center;">问卷下发数量</td>
-            <td style="padding-left:10px;">${questionnaireStat.lesson.teachclass.stdCount}</td>
+            <td style="padding-left:10px;">${questionnaireStat.clazz.teachclass.stdCount}</td>
             <td class="title" style="text-align:center;">问卷回收数量</td>
             <td style="padding-left:10px;">${questionnaireStat.totalTickets}</td>
             <td class="title" style="text-align:center;">问卷有效数量</td>
-            <td style="padding-left:10px;">${questionnaireStat.tickets}</td> 
+            <td style="padding-left:10px;">${questionnaireStat.tickets}</td>
         </tr>
     </table>
     [@b.grid items=questionnaireStat.questionStats var="qs" sortable="false"]

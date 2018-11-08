@@ -15,30 +15,30 @@
                 <th width="8%">操作方式</th>
             </tr>
         </thead>
-        [#if questionnaireLessons??]
+        [#if questionnaireClazzs??]
         <tbody>
-        [#list questionnaireLessons?sort_by(["lesson","no"]) as questionnaireLesson]
-        [#if questionnaireLesson_index % 2 == 0]
-            [#assign lessonClass="griddata-even"/]
+        [#list questionnaireClazzs?sort_by(["clazz","crn"]) as questionnaireClazz]
+        [#if questionnaireClazz_index % 2 == 0]
+            [#assign clazzClass="griddata-even"/]
         [#else]
-            [#assign lessonClass="griddata-odd"/]
+            [#assign clazzClass="griddata-odd"/]
         [/#if]
-        [#if questionnaireLesson.evaluateByTeacher]
-            [#list questionnaireLesson.lesson.teachers?if_exists as teacher]
-            [#if "1" == evaluateMap[questionnaireLesson.lesson.id?string + "_" + teacher.id?string]?default("0")]
+        [#if questionnaireClazz.evaluateByTeacher]
+            [#list questionnaireClazz.clazz.teachers?if_exists as teacher]
+            [#if "1" == evaluateMap[questionnaireClazz.clazz.id?string + "_" + teacher.id?string]?default("0")]
                 [#assign flag = true/]
             [#else]
                 [#assign flag = false]
             [/#if]
-            <tr class="${lessonClass!}">
-                <td>${(questionnaireLesson.lesson.no)!}</td>
-                <td>${(questionnaireLesson.lesson.course.code)!}</td>
-                <td>${(questionnaireLesson.lesson.course.name)!}</td>
-                <td>${(questionnaireLesson.lesson.teachDepart.name)!}</td>
+            <tr class="${clazzClass!}">
+                <td>${(questionnaireClazz.clazz.crn)!}</td>
+                <td>${(questionnaireClazz.clazz.course.code)!}</td>
+                <td>${(questionnaireClazz.clazz.course.name)!}</td>
+                <td>${(questionnaireClazz.clazz.teachDepart.name)!}</td>
                 <td>${(teacher.user.name)!}</td>
                 <td>[#if flag]已评教[#else]未评教[/#if]</td>
                 <td>
-                    <a href="javascript:doEvaluate('${flag?string("update","evaluate")}','${(questionnaireLesson.lesson.id)!},${(teacher.id)!}')">
+                    <a href="javascript:doEvaluate('${flag?string("update","evaluate")}','${(questionnaireClazz.clazz.id)!},${(teacher.id)!}')">
                     [#if flag]修改结果[#else]进行评估[/#if]
                     </a>
                 </td>
@@ -46,35 +46,35 @@
             [/#list]
         [#else]
             [#assign flag=true]
-            [#list questionnaireLesson.lesson.teachers as t]
-              [#if !(evaluateMap[questionnaireLesson.lesson.id?string + "_"+ t.id])??]
+            [#list questionnaireClazz.clazz.teachers as t]
+              [#if !(evaluateMap[questionnaireClazz.clazz.id?string + "_"+ t.id])??]
                 [#assign flag=false]
               [/#if]
             [/#list]
-            <tr class="${lessonClass!}">
-                <td>${(questionnaireLesson.lesson.no)!}</td>
-                <td>${(questionnaireLesson.lesson.course.code)!}</td>
-                <td>${(questionnaireLesson.lesson.course.name)!}</td>
-                <td>${(questionnaireLesson.lesson.teachDepart.name)!}</td>
+            <tr class="${clazzClass!}">
+                <td>${(questionnaireClazz.clazz.crn)!}</td>
+                <td>${(questionnaireClazz.clazz.course.code)!}</td>
+                <td>${(questionnaireClazz.clazz.course.name)!}</td>
+                <td>${(questionnaireClazz.clazz.teachDepart.name)!}</td>
                 <td>
-                [#list (questionnaireLesson.lesson.teachers)?if_exists as teacher]
+                [#list (questionnaireClazz.clazz.teachers)?if_exists as teacher]
                     ${(teacher.user.name)!}[#if teacher_has_next],[/#if]
                 [/#list]
                 </td>
                 <td>[#if flag]已评教[#else]未评教[/#if]</td>
                 <td>
-                    <a href="javascript:doEvaluate('${flag?string("update","evaluate")}','${(questionnaireLesson.lesson.id)!}')">
+                    <a href="javascript:doEvaluate('${flag?string("update","evaluate")}','${(questionnaireClazz.clazz.id)!}')">
                     [#if flag]修改结果[#else]进行评估[/#if]
                     </a>
                 </td>
             </tr>
         [/#if]
-        [/#list]    
+        [/#list]
         </tbody>
         [/#if]
     </table>
     [/@]
-    [#if !questionnaireLessons??]
+    [#if !questionnaireClazzs??]
     <div class="gridempty" style="height: 112px;">
         <div style="padding-top: 40px;">没有查询结果</div>
     </div>
@@ -85,7 +85,7 @@
         var evaluateForm = document.evaluateForm;
         bg.form.addInput(evaluateForm, "semester.id", $("input[name='semester.id']").val());
         bg.form.addInput(evaluateForm, "evaluateState", value);
-        bg.form.addInput(evaluateForm, "lessonId" ,id);
+        bg.form.addInput(evaluateForm, "clazzId" ,id);
         bg.form.submit(evaluateForm);
     }
 </script>

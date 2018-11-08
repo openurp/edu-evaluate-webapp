@@ -1,44 +1,44 @@
 .planTable {
-	border: 1px solid #006CB2;
-	border-collapse: collapse;
-	font-size: 10pt;
-	font-style: normal;
-	vertical-align: middle;
-	table-layout:fixed;
+  border: 1px solid #006CB2;
+  border-collapse: collapse;
+  font-size: 10pt;
+  font-style: normal;
+  vertical-align: middle;
+  table-layout:fixed;
 }
 .planTable td {
-	border: 1px solid #006CB2;
-	border-collapse: collapse;
-	overflow: hidden; 
-	word-wrap:break-word;
-	padding:2px 0px;
+  border: 1px solid #006CB2;
+  border-collapse: collapse;
+  overflow: hidden;
+  word-wrap:break-word;
+  padding:2px 0px;
 }
 .planTable thead tr {
-	background-color: #C7DBFF;
-	color: #000000;
-	letter-spacing: 0;
-	text-decoration: none;
+  background-color: #C7DBFF;
+  color: #000000;
+  letter-spacing: 0;
+  text-decoration: none;
 }
 
 /* 小计,总计 */
 .planTable tbody tr td.summary {
-	font-weight : bold;
-	text-align : center;
+  font-weight : bold;
+  text-align : center;
 }
 /* 计划课程的一格一格的学分信息 */
 .planTable tbody tr td.credit_hour {
-	text-align: center;
+  text-align: center;
 }
 /* 课程名称 */
 .planTable tbody tr td.course {
-	text-align: left;
+  text-align: left;
 }
 
 /* 需要rowspan的课程组 */
 .planTable tbody tr td.group {
-	vertical-align: middle;
+  vertical-align: middle;
 }
 
 .treeTable tbody tr td.groupButton {
-	text-align : left;
+  text-align : left;
 }

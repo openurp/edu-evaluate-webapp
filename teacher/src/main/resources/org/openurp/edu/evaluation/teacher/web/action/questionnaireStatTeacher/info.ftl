@@ -18,7 +18,7 @@
 .planTable td {
     border: 1px solid #006CB2;
     border-collapse: collapse;
-    overflow: hidden; 
+    overflow: hidden;
     word-wrap:break-word;
     padding:2px 0px;
 }
@@ -40,11 +40,11 @@
         <td  colspan="" align="right">被评教师：</td>
         <td  colspan="" align="left" >${teacher.user.name!}</td>
         <td  colspan="" align="right">所属院系：</td>
-        <td  colspan="" align="left" >${lesson.teachDepart.name!}</td>
+        <td  colspan="" align="left" >${clazz.teachDepart.name!}</td>
         </tr>
         <tr>
         <td  colspan="" align="right">被评课程：</td>
-        <td  colspan="" align="left" >${lesson.course.name!}</td>
+        <td  colspan="" align="left" >${clazz.course.name!}</td>
         <td  colspan="" align="right">评价学期：</td>
         <td  colspan="" align="left" >${semester.schoolYear!}(${semester.name!})</td>
         </tr>

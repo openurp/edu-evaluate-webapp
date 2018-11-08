@@ -1,31 +1,48 @@
+/*
+ * OpenURP, Agile University Resource Planning Solution.
+ *
+ * Copyright © 2014, The OpenURP Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful.
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat
+import org.openurp.edu.evaluation.clazz.stat.model.ClazzEvalStat
 import org.beangle.data.dao.OqlBuilder
 import org.openurp.base.model.Department
 import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.edu.base.code.model.Education
+import org.openurp.code.edu.model.EducationLevel
 import org.openurp.edu.base.model.Major
 import org.beangle.data.model.Entity
 
-class EvaluateResultStatAction  extends RestfulAction[LessonEvalStat]{
+class EvaluateResultStatAction  extends RestfulAction[ClazzEvalStat]{
 //
 //  protected QuestionnairStatService questionnaireStatService;
 //
   override protected def indexSetting(): Unit = {
-    put("educations", entityDao.getAll(classOf[Education]));
+    put("educations", entityDao.getAll(classOf[EducationLevel]));
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department],"dep").where("dep.teaching =:tea",true)))
     put("questionnaires", entityDao.search (OqlBuilder.from(classOf[Questionnaire],"qn").where("qn.state=:st", true)))
   }
 
-  
 //  override protected def editSetting(entity:Entity )= {
 //    put("majors", entityDao.findBy(classOf[Major], "department", entityDao.search(OqlBuilder.from(classOf[Department],"dep").where("dep.teaching =:tea",true))))
-//    put("educations", entityDao.getAll(classOf[Education]));
+//    put("educations", entityDao.getAll(classOf[EducationLevel]));
 //  }
 //
-//  
+//
 ////  @SuppressWarnings({ "unchecked", "rawtypes" })
 //  override def  search():String= {
 //    put("questionnaireStats", new SinglePage(1, 20, 1, CollectUtils.newArrayList(1)));
@@ -33,7 +50,7 @@ class EvaluateResultStatAction  extends RestfulAction[LessonEvalStat]{
 
 //    // FIXME 死方法
 //    // put("questionnaireStats", entityDao.search(buildQuery()));
-//    // put("educations", baseCodeService.getCodes(Education.class));
+//    // put("educations", baseCodeService.getCodes(EducationLevel.class));
 //    // put("departments", getDeparts());
 //    // put("semesters", entityDao.search(OqlBuilder.from("from Semester")));
 //    // put("questionnaires", entityDao.get(Questionnaire.class));

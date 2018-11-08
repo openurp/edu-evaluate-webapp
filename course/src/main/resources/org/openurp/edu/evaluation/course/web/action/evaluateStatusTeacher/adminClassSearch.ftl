@@ -6,7 +6,7 @@
 [@b.form name="evaluateSearchAdminClassSearchForm" action="!search" target="contentDiv"]
     [@b.grid items=evaluateSearchAdminClassList var="evaluateSearchAdminClass" sortable="true"]
         [@b.row]
-            [@b.col property="student.code" title="学号"/]
+            [@b.col property="student.user.code" title="学号"/]
             [@b.col property="student.person.name.formatedName" title="姓名"]
             [@b.a href="!info?stuIds=${evaluateSearchAdminClass.student.id!}&semester.id=${semester.id!}"]
             ${(evaluateSearchAdminClass.student.person.name.formatedName)?if_exists}

@@ -1,23 +1,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.openurp</groupId>
-		<artifactId>openurp-parent</artifactId>
-		<version>0.2.0</version>
-	</parent>
+  <parent>
+    <groupId>org.openurp</groupId>
+    <artifactId>openurp-parent</artifactId>
+    <version>0.2.24</version>
+  </parent>
   <groupId>org.openurp.edu.evaluation</groupId>
   <artifactId>openurp-edu-evaluation-parent</artifactId>
-	<version>0.0.1</version>
+  <version>0.0.2</version>
   <packaging>pom</packaging>
   <name>OpenURP Edu Evaluation Parent</name>
 
   <properties>
     <bundle.symbolicName>org.openurp.edu.evaluation.parent</bundle.symbolicName>
     <bundle.namespace>org.openurp</bundle.namespace>
-    <openurp.platform.version>0.0.20</openurp.platform.version>
-    <openurp.api.version>0.0.18</openurp.api.version>
-    <jxls.version>1.0.3</jxls.version>
+    <openurp.app.version>0.1.6</openurp.app.version>
+    <openurp.api.version>0.3.1</openurp.api.version>
   </properties>
 
   <modules>

@@ -86,23 +86,23 @@
     <script>
            var bar = new ToolBar('backBar','<@text name="field.questionnaireStatistic.addEvaluateResult"/>',null,true,true);
            bar.setMessage('<@getMessage/>');
-           
+
            function loadCourses() {
             var collegeId = document.evaluateForm['questionnaireStatistic.openPart.id'].value;
             var semesterId = document.evaluateForm.semesterId.value;
             var url = "questionnaireStat.action?method=getCourses&collegeId="+collegeId+"&semesterId="+semesterId;
             window.open(url, '', 'scrollbars=yes,left=0,top=0,width=500,height=550,status=yes');
         }
-        
+
         function setTeachTaskIdAndDescriptions(ids, descriptions) {
                document.evaluateForm['taskId'].value = ids;
                document.evaluateForm['courseName'].value = descriptions.replace(/,/gi, "\n");
             }
-            
+
         function addTargetValue(id, value) {
             var target = document.getElementById(id);
         }
-        
+
         function doAction(form){
             var a_fields = {
              'courseName':{'l':'<@text name="field.select.course"/>', 'r':true, 't':'f_teachTaskId'},
@@ -121,23 +121,23 @@
             form.submit();
              }
         }
-        
+
         function setTeacherIdAndDescriptions(ids, descriptions){
                document.evaluateForm['teacherId'].value = ids;
                document.evaluateForm['teacherName'].value = descriptions.replace(/,/gi, "\n");
         }
-        
+
         function addOption(selectId, data){
             var select = document.getElementById(selectId);
             dwr.util.removeAllOptions(selectId);
             var datas = data.split(",");
             select.add(new Option(datas[1],datas[0]));
         }
-        
+
         function doButtonEstate(inputId,isOpen){
             var input = document.getElementById(inputId);
             input.disabled=isOpen;
-        }    
+        }
     </script>
 </body>
 <#include "/template/foot.ftl"/>

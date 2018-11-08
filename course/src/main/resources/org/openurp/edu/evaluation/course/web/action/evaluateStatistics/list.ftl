@@ -7,10 +7,10 @@
     [/@]
     <b>学校总分加权平均分：${evaluateResults!0}</b>
 <br>
-<script language="javascript"> 
+<script language="javascript">
         var form =document.textbookIndexForm;
         function info(){
-          form.action="evaluateStatistics.action?method=lessonEvaluateTwo&semester.id=${semester.id}&lookType=2";
+          form.action="evaluateStatistics.action?method=clazzEvaluateTwo&semester.id=${semester.id}&lookType=2";
           form.submit();
        }
        function evaluateResultsExport(){

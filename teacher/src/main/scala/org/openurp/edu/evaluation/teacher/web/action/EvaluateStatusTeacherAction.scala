@@ -1,18 +1,37 @@
+/*
+ * OpenURP, Agile University Resource Planning Solution.
+ *
+ * Copyright © 2014, The OpenURP Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful.
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.openurp.edu.evaluation.teacher.web.action
 
 import java.text.DecimalFormat
+import java.time.LocalDate
 
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.model.Semester
-import org.openurp.edu.base.model.Teacher
-import org.openurp.edu.evaluation.app.lesson.model.EvaluateSearchDepartment
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.lesson.model.{ CourseTaker, Lesson }
-import org.openurp.platform.api.security.Securities
-import java.time.LocalDate
+import org.beangle.security.Securities
 import org.beangle.webmvc.api.view.View
+import org.beangle.webmvc.entity.action.RestfulAction
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.base.model.Teacher
+import org.openurp.edu.course.model.Clazz
+import org.openurp.edu.course.model.CourseTaker
+import org.openurp.edu.evaluation.app.course.model.EvaluateSearchDepartment
+import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
 
 class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
 
@@ -44,28 +63,28 @@ class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
     val teacher = getTeacher()
     if (teacher == null) { forward("error.teacher.teaNo.needed") }
     // 得到院系下的所有级教学任务
-    val lessonQuery = OqlBuilder.from(classOf[Lesson], "lesson");
-    lessonQuery.where("lesson.semester.id=:semesterId", semesterId);
+    val clazzQuery = OqlBuilder.from(classOf[Clazz], "clazz");
+    clazzQuery.where("clazz.semester.id=:semesterId", semesterId);
     if (teacher != null) {
-      lessonQuery.join("lesson.teachers", "teacher")
-      lessonQuery.where("teacher =:teacher", teacher);
+      clazzQuery.join("clazz.teachers", "teacher")
+      clazzQuery.where("teacher =:teacher", teacher);
     }
-    val lessonList = entityDao.search(lessonQuery);
+    val clazzList = entityDao.search(clazzQuery);
     val evaluateSearchDepartmentList = Collections.newBuffer[EvaluateSearchDepartment]
-    lessonList foreach { lesson =>
+    clazzList foreach { clazz =>
 
       var countAll: Long = 0L
       var haveFinish: Long = 0L
       val query = OqlBuilder.from[Long](classOf[CourseTaker].getName, "courseTake");
       query.select("select count(*)");
-      query.where("courseTake.lesson =:lesson", lesson);
+      query.where("courseTake.clazz =:clazz", clazz);
       val list = entityDao.search(query);
       // 得到指定学期，院系的学生评教人次总数
       countAll = list(0);
 
       val query1 = OqlBuilder.from[Long](classOf[EvaluateResult].getName, "rs");
       query1.select("select count(*)");
-      query1.where("rs.lesson =:lesson", lesson);
+      query1.where("rs.clazz =:clazz", clazz);
       val list1 = entityDao.search(query1);
       // 得到指定学期，已经评教的学生人次数
       haveFinish = list1(0);
@@ -76,7 +95,7 @@ class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
       }
       val esd = new EvaluateSearchDepartment();
       esd.semester = semester
-      esd.lesson = lesson
+      esd.clazz = clazz
       esd.countAll = countAll
       esd.haveFinish = haveFinish
       esd.finishRate = finishRate
@@ -84,7 +103,7 @@ class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
 
     }
     // Collections.sort(evaluateSearchDepartmentList, new PropertyComparator("adminClass.code"));
-    evaluateSearchDepartmentList.sortWith((x, y) => x.lesson.course.code < y.lesson.course.code)
+    evaluateSearchDepartmentList.sortWith((x, y) => x.clazz.course.code < y.clazz.course.code)
     put("evaluateSearchDepartmentList", evaluateSearchDepartmentList);
     put("semester", semester);
     forward()

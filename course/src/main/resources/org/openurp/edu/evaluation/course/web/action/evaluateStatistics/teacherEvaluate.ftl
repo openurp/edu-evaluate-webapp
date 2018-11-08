@@ -8,7 +8,7 @@
     [/@]
     <b>学校总分加权平均分：${evaluateResults!0}</b>
 <br>
-<script language="javascript"> 
+<script language="javascript">
         var form =document.textbookIndexForm;
         function evaluateTeaResultsExport(){
           form.action="evaluateStatistics.action?method=evaluateTeaResultsExport";

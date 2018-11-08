@@ -43,7 +43,7 @@
            var bar = new ToolBar('backBar','<@text name="field.question.questionContext"/>',null,true,true);
            bar.setMessage('<@getMessage/>');
            bar.addItem("选择问题","doSubmit()");
-    
+
         function doSubmit(){
             var id = getSelectId("questionId");
             if (id == null || id == "") {

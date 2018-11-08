@@ -9,27 +9,27 @@
                 <table class="search-widget" id="viewTables" width="95%">
                     <tr><td><em>信息分类</em></td></tr>
                     <tr>
-                         <td id="infoTd" class="toolbar-item" width="95%" onclick="info(this,'${b.url("questionnaire!search")}')">
+                         <td  id="infoTd" class="toolbar-item" width="95%" onclick="info(this,'${b.url("questionnaire!search")}')">
                          &nbsp;&nbsp;问卷信息
                          </td>
                        </tr>
                     <tr>
-                         <td id="infoTd" class="toolbar-item" width="95%" onclick="info(this,'${b.url("question!search")}')">
+                         <td  class="toolbar-item" width="95%" onclick="info(this,'${b.url("question!search")}')">
                          &nbsp;&nbsp;问题信息
                        </td>
                        </tr>
                     <tr>
-                         <td id="infoTd" class="toolbar-item" width="95%" onclick="info(this,'${b.url("question-type!search")}')" >
+                         <td  class="toolbar-item" width="95%" onclick="info(this,'${b.url("question-type!search")}')" >
                          &nbsp;&nbsp;问题类别
                          </td>
                        </tr>
                     <tr>
-                         <td id="infoTd" class="toolbar-item" width="95%" onclick="info(this,'${b.url("option-group!search")}')" >
+                         <td  class="toolbar-item" width="95%" onclick="info(this,'${b.url("option-group!search")}')" >
                          &nbsp;&nbsp;选项组
                          </td>
                        </tr>
                     <tr>
-                         <td id="infoTd" class="toolbar-item" width="95%" onclick="info(this,'${b.url("evaluation-criteria!search")}')">
+                         <td  class="toolbar-item" width="95%" onclick="info(this,'${b.url("evaluation-criteria!search")}')">
                          &nbsp;&nbsp;评价标准
                          </td>
                        </tr>
@@ -49,8 +49,8 @@
         bg.form.submit("evaluationConfigForm",action);
     }
     jQuery(function(){
-        jQuery("#evaluationConfigForm #infoTd").eq(3).css("fontStyle","italic").css("color","blue").css("backgroundColor","#e9f2f8");
-        jQuery("#evaluationConfigForm #infoTd").hover(
+        jQuery("#evaluationConfigForm #infoTd").css("fontStyle","italic").css("color","blue").css("backgroundColor","#e9f2f8");
+        jQuery("#evaluationConfigForm .toolbar-item").hover(
             function(){
                 jQuery(this).toggleClass("toolbar-item-transfer");
             }

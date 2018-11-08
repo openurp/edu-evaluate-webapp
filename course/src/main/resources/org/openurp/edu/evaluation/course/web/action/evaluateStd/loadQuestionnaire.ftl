@@ -15,7 +15,7 @@
     </pre>
     [/#if]
     <li align="right">
-    课程名称:${(lesson.course.name)!}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    课程名称:${(clazz.course.name)!}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     教师姓名:
         [#list teachers?if_exists as teacher]
         ${(teacher.user.name)!}[#if teacher_has_next],[/#if]
@@ -48,7 +48,7 @@
                     <td>
                     [#if (question.optionGroup.options)??]
                     [#list (question.optionGroup.options)?sort_by("proportion")?reverse as option]
-                        <input type="radio" id="op_${(question.id)}_${option.id}" name="select${(question.id)!}" value="${(option.id)!}" 
+                        <input type="radio" id="op_${(question.id)}_${option.id}" name="select${(question.id)!}" value="${(option.id)!}"
                         [#if questionMap?? && questionMap[(question.id)?string]?default(0)==(option.id)]checked[/#if]/>
                         <label for="op_${(question.id)}_${option.id}">${(option.name)!}&nbsp;</label>
                     [/#list]
@@ -65,12 +65,12 @@
     <td>
     <textarea style="width:100%" rows="4" maxLength=255  name="evaluateResult.remark" id="evaluateResult.remark" >${(evaluateResult.remark?html)?default('')}</textarea>
     </td>
-    </tr>    
+    </tr>
         </table>
         [/@]
     [@b.formfoot align="center"]
         <input type="hidden" name="semester.id" id="semesterId" value=""/>
-        <input type="hidden" name="lesson.id" value="${(lesson.id)!}">
+        <input type="hidden" name="clazz.id" value="${(clazz.id)!}">
         <input type="hidden" name="teacher.ids" value="[#list teachers?if_exists as teacher]${(teacher.id)!}[#if teacher_has_next],[/#if][/#list]"/>
         [@b.submit id="btnSave" value="${b.text('action.save')}" onsubmit="doPost();" /]
         <input type="button" id="btnWait" value="数据提交中,请等待..." onClick="alertWait()" style="display:none" />
@@ -90,9 +90,9 @@
             }
         });
     }
-    
+
     mergeCells();
-    
+
     function doPost(){
         var errors = "";
         var num =0;
@@ -109,7 +109,7 @@
             [#list (question.optionGroup.options)?sort_by("proportion") as option]
             nums +=1;
                 if(${question.optionGroup.options?size} ==nums){
-                    optionV = ${option.id!}; 
+                    optionV = ${option.id!};
                 }
                 if(${option.id!} ==value){
                     optionScore = ${option.proportion!};
@@ -142,14 +142,14 @@
             }
             [/#list]
             --]
-            
+
             if(value == optionV){
             //alert(value+"--"+optionV);
                 num +=1;
             }
-        
+
         [/#list]
-        
+
         if (errors != ""){
             errors = "你第" + errors.substring(0,errors.lastIndexOf(",")) + "题没有选择答案,请全部选择以后再提交!";
             alert(errors);
@@ -161,9 +161,9 @@
             alert(errors);
             return false;
         }
-        
+
         var str = document.getElementById("evaluateResult.remark").value;
-        
+
         if(num >0){
             if(str ==""){
             alert(str);

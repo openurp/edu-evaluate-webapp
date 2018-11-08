@@ -1,15 +1,36 @@
+/*
+ * OpenURP, Agile University Resource Planning Solution.
+ *
+ * Copyright © 2014, The OpenURP Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful.
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.openurp.edu.evaluation.web.helper
 
 import org.beangle.data.model.Entity
-import org.beangle.data.transfer.{ EntityTransfer, ImporterFactory, TransferResult }
-import org.beangle.data.transfer.io.TransferFormat
-import org.beangle.data.transfer.listener.ForeignerListener
+import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.webmvc.api.context.ActionContext
 import org.beangle.webmvc.entity.helper.PopulateHelper
 import javax.servlet.http.Part
-import org.beangle.data.transfer.TransferListener
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.beangle.webmvc.api.view.View
+import org.beangle.data.transfer.importer.listener.ForeignerListener
+import org.beangle.data.transfer.importer.ImporterFactory
+import org.beangle.data.transfer.importer.EntityImporter
+import org.beangle.data.transfer.importer.ImportResult
+import org.beangle.data.transfer.importer.ImportListener
+import org.beangle.data.transfer.Format
 
 trait ImportDataSupport[T <: Entity[_]] {
   self: RestfulAction[T] =>
@@ -20,7 +41,7 @@ trait ImportDataSupport[T <: Entity[_]] {
   /**
    * 构建实体导入者
    */
-  protected def buildEntityImporter(): EntityTransfer = {
+  protected def buildEntityImporter(): EntityImporter = {
     buildEntityImporter(this.entityDao.domain.getEntity(this.entityName).get.clazz, "importFile")
   }
 
@@ -30,7 +51,7 @@ trait ImportDataSupport[T <: Entity[_]] {
    * @param upload
    * @param clazz
    */
-  protected def buildEntityImporter(clazz: Class[_], upload: String = "importFile"): EntityTransfer = {
+  protected def buildEntityImporter(clazz: Class[_], upload: String = "importFile"): EntityImporter = {
     val request = ActionContext.current.request
     val parts = request.getParts
     val partIter = parts.iterator
@@ -46,7 +67,7 @@ trait ImportDataSupport[T <: Entity[_]] {
     //    val fileName = get(upload + "FileName").get;
     val is = filePart.getInputStream
     //    val formatName = Strings.capitalize(Strings.substringAfterLast(fileName, "."));
-    val format = TransferFormat.withName("Xls")
+    val format = Format.withName("Xls")
     val importer = ImporterFactory.getEntityImporter(format, is, clazz, null)
     importer
   }
@@ -55,7 +76,7 @@ trait ImportDataSupport[T <: Entity[_]] {
    * 导入信息
    */
   def importData(): View = {
-    val tr = new TransferResult();
+    val tr = new ImportResult();
     val importer = buildEntityImporter();
     if (null == importer) { return forward("/components/importData/error"); }
     try {
@@ -77,13 +98,13 @@ trait ImportDataSupport[T <: Entity[_]] {
     }
   }
 
-  protected def configImporter(importer: EntityTransfer): Unit = {
+  protected def configImporter(importer: EntityImporter): Unit = {
     importerListeners.foreach { l =>
       importer.addListener(l);
     }
   }
 
-  protected def importerListeners: List[_ <: TransferListener] = {
+  protected def importerListeners: List[_ <: ImportListener] = {
     List(new ForeignerListener(this.entityDao))
   }
 }

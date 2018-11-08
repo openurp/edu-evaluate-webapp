@@ -60,11 +60,11 @@
 <table class="infoTable" align="center">
     <tr>
         <td class="title" style="text-align:center;">学年学期</td>
-        <td style="padding-left:10px;">${(lesson.semester.schoolYear)!}学年${(lesson.semester.name)!}学期</td>
+        <td style="padding-left:10px;">${(clazz.semester.schoolYear)!}学年${(clazz.semester.name)!}学期</td>
         <td class="title" style="text-align:center;">课程序号</td>
-        <td style="padding-left:10px;">${(lesson.no)!}</td>
+        <td style="padding-left:10px;">${(clazz.crn)!}</td>
         <td class="title" style="text-align:center;">课程名称</td>
-        <td style="padding-left:10px;">${(lesson.course.name)!}</td>
+        <td style="padding-left:10px;">${(clazz.course.name)!}</td>
         <td class="title" style="text-align:center;">学生文字评教数</td>
         <td style="padding-left:10px;">${(textEvaluations?size)!"0"}</td>
     </tr>
@@ -79,7 +79,7 @@
         [#if textEvaluations??]
         <tbody>
         [#list textEvaluations as textEvaluation]
-    
+
             [#if i==0 && textEvaluation?exists]
                   [#assign textEvaluationId = textEvaluation.id/]
               [/#if]
@@ -130,7 +130,7 @@
                   [/#list]
                   </td>
               </tr>
-              [#assign i = i+1/]    
+              [#assign i = i+1/]
         [/#list]
         </tbody>
         [/#if]
@@ -161,7 +161,7 @@
             </table>
         [/@]
         [@b.formfoot]
-            <input type="hidden" id="lessonId" name="lessonId" value="${(lesson.id)!}"/>
+            <input type="hidden" id="clazzId" name="clazzId" value="${(clazz.id)!}"/>
             <input type="hidden" id="textEvaluationId" name="textEvaluationId" value="${textEvaluationId!}"/>
             <input type="button" value="提交" onClick="saveInfo();" class="buttonStyle"  id="submitToAction"/>
             <input type="button" value="关闭" onClick="hiddenInfo();" class="buttonStyle" id="closeBack" />
@@ -177,7 +177,7 @@
     [/@]
 </div>
 [@b.form name="actionForm" action="!save" ]
-    <input type="hidden" id="lessonId" name="lessonId" value="${(lesson.id)!}"/>
+    <input type="hidden" id="clazzId" name="clazzId" value="${(clazz.id)!}"/>
 [/@]
 <script type="text/javaScript">
     $("#semesterId").val($("input[name='semester.id']").val());
@@ -185,7 +185,7 @@
     var nowLine;
     var isAnn = false;
     var resultMsgTd;
-    
+
     function showRemsg(line){
         var remsgTd = $("#resultMsgTd" + line);
         var showRemessageDiv = $("#showRemessage" + line);

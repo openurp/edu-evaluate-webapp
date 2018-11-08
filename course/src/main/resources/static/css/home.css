@@ -6,7 +6,6 @@ SCROLLBAR-ARROW-COLOR:#ffffff;/*(掳钮羌头色)*/
 SCROLLBAR-BASE-COLOR:#338bf9; /*(幕色)*/
 SCROLLBAR-DARK-SHADOW-COLOR:#d3e9f7} /*(强影色)*/
 
-
 html,body{ height:100%;}
 
 /**Nav scroll box**/
@@ -14,7 +13,7 @@ ul.menu{
   list-style-type:none;
   margin: 0;
   padding: 0;
-  width: 150px; 
+  width: 150px;
   /*background:#ffffff;*/
 }
 
@@ -24,14 +23,14 @@ ul.menu ul {
   padding: 0;
   width: 148px;
   /*background:#ffffff;*/
-  
+
    border-left:1px #adccea solid;
    border-right:1px #adccea solid;
 }
 
 ul.menu a {
   display: block;
-  text-decoration: none; 
+  text-decoration: none;
 }
 
 ul.menu li {

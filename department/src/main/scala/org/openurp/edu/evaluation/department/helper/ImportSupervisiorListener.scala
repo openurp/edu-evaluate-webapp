@@ -1,21 +1,39 @@
+/*
+ * OpenURP, Agile University Resource Planning Solution.
+ *
+ * Copyright © 2014, The OpenURP Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful.
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.openurp.edu.evaluation.department.helper
 
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.EntityDao
 import org.beangle.data.dao.OqlBuilder
 import org.openurp.edu.base.model.Student
-import org.beangle.data.transfer.TransferResult
 import org.openurp.edu.evaluation.department.model.SupervisiorEvaluate
-import org.openurp.base.model.Semester
+import org.openurp.edu.base.model.Semester
 import org.openurp.edu.evaluation.model.Questionnaire
-import org.beangle.data.transfer.AbstractTransferListener
 import java.time.Instant
+import org.beangle.data.transfer.importer.AbstractImportListener
+import org.beangle.data.transfer.importer.ImportResult
 
 /**
  * @author xinzhou
  */
-class ImportSupervisiorListener(entityDao: EntityDao) extends AbstractTransferListener {
-  override def onItemStart(tr: TransferResult) {
+class ImportSupervisiorListener(entityDao: EntityDao) extends AbstractImportListener {
+  override def onItemStart(tr: ImportResult) {
     val teacherCode = transfer.curData.get("teacher.code").get
     val semesterCode = transfer.curData.get("semester.code").get.toString()
     val departmentCode = transfer.curData.get("department.code").get
@@ -31,7 +49,7 @@ class ImportSupervisiorListener(entityDao: EntityDao) extends AbstractTransferLi
     }
   }
 
-  override def onItemFinish(tr: TransferResult) {
+  override def onItemFinish(tr: ImportResult) {
     val supervisiorEvaluate = tr.transfer.current.asInstanceOf[SupervisiorEvaluate]
     val questionnaire = entityDao.get(classOf[Questionnaire], 322L)
     supervisiorEvaluate.questionnaire = questionnaire

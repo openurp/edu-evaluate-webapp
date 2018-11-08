@@ -7,7 +7,7 @@
         padding-left: 10px;
     }
     #tabnav ul li{
-        margin: 0; 
+        margin: 0;
         padding: 0;
         display: inline;
         list-style-type: none;
@@ -27,7 +27,7 @@
         cursor:pointer;
     }
     #container{
-        width: 95%;    
+        width: 95%;
         height:auto!important;
         height:500px;
         min-height:500px;
@@ -97,21 +97,21 @@
         </thead>
         [#assign k = 0/]
         [#assign z = 0/]
-        [#if lessons??]
+        [#if clazzs??]
         <tbody>
-        [#list lessons as lesson]
+        [#list clazzs as clazz]
             <tr class='${(k % 2 == 0)?string("griddata-odd","griddata-even")}'>
-                <td style='padding-left:${(textEvaluationMap.get(lesson[0].id))?exists?string("15","31")}px;text-align:left;'>
-                    [#if (textEvaluationMap.get(lesson[0].id))?exists]
+                <td style='padding-left:${(textEvaluationMap.get(clazz[0].id))?exists?string("15","31")}px;text-align:left;'>
+                    [#if (textEvaluationMap.get(clazz[0].id))?exists]
                         <a id="myEvaluation${k}" onClick="showElement(this)" style="float:left;cursor:pointer;">+</a>
                     [/#if]
-                    ${(lesson[0].person.name.formatedName)!}
+                    ${(clazz[0].person.name.formatedName)!}
                 </td>
-                <td>${(lesson[1].course.name)!}</td>
-                <td>${(lesson[1].teachDepart.name)!}</td>
+                <td>${(clazz[1].course.name)!}</td>
+                <td>${(clazz[1].teachDepart.name)!}</td>
             </tr>
-            [#if (textEvaluationMap.get(lesson[0].id))?exists]
-                [#list textEvaluationMap.get(lesson[0].id)?sort_by("evaluateAt") as textEvaluation]
+            [#if (textEvaluationMap.get(clazz[0].id))?exists]
+                [#list textEvaluationMap.get(clazz[0].id)?sort_by("evaluateAt") as textEvaluation]
                     [#assign isAnnCount = 0/]
                     [#list textEvaluation.teacherRemessages as remsgBool]
                         [#if !remsgBool.visible]
@@ -152,7 +152,7 @@
                         </tr>
                     [/#if]
                     [#assign z = z + 1/]
-                [/#list]    
+                [/#list]
             [/#if]
             [#assign k = k + 1/]
         [/#list]
@@ -160,7 +160,7 @@
         [/#if]
     </table>
     </div>
-    
+
     <div id="otherRemsgTable" style="display:none;">
     <table class="gridtable" style="width:90%;margin-top:15px;" align="center">
         <thead class="gridhead">
@@ -177,21 +177,21 @@
         </thead>
         [#assign j = 0/]
         [#assign y = 0/]
-        [#if lessons??]
+        [#if clazzs??]
         <tbody>
-        [#list lessons as lesson]
+        [#list clazzs as clazz]
             <tr class='${(j % 2 == 0)?string("griddata-odd","griddata-even")}'>
-                <td style='padding-left:${(otherMap.get(lesson[0].id))?exists?string("15","31")}px;text-align:left;'>
-                    [#if (otherMap.get(lesson[0].id))?exists]
+                <td style='padding-left:${(otherMap.get(clazz[0].id))?exists?string("15","31")}px;text-align:left;'>
+                    [#if (otherMap.get(clazz[0].id))?exists]
                         <a id="otherTextEvaluation${j}" onClick="showOtherElement(this,'${j}')" style="float:left;cursor:pointer;">+</a>
                     [/#if]
-                    ${(lesson[0].person.name.formatedName)!}
+                    ${(clazz[0].person.name.formatedName)!}
                 </td>
-                <td>${(lesson[1].course.name)!}</td>
-                <td>${(lesson[1].teachDepart.name)!}</td>
+                <td>${(clazz[1].course.name)!}</td>
+                <td>${(clazz[1].teachDepart.name)!}</td>
             </tr>
-            [#if (otherMap.get(lesson[0].id))?exists]
-                [#list otherMap.get(lesson[0].id)?sort_by("textEvaluation")?reverse as remessage]
+            [#if (otherMap.get(clazz[0].id))?exists]
+                [#list otherMap.get(clazz[0].id)?sort_by("textEvaluation")?reverse as remessage]
                     [#if !((remessage_index > 0) && (remessage.textEvaluation.id == tempRemsg.textEvaluation.id))]
                     <tr class='${(j % 2 == 0)?string("griddata-odd","griddata-even")}' id='otherTextEvaluationTr${j}' name='otherTextEvaluation${j}SubTr' style="text-align:left;display:none;">
                         <td colspan="3" style="padding-left:30px;">
@@ -228,7 +228,7 @@
         [/#if]
     </table>
     </div>
-    
+
     <div id="annTable" style="display:none">
     <table class="gridtable" style="width:90%;margin-top:15px;" align="center">
         <thead class="gridhead">
@@ -244,23 +244,23 @@
             </tr>
         </thead>
         [#assign i = 0/]
-        [#if lessons??]
+        [#if clazzs??]
         <tbody>
-        [#list lessons as lesson]
+        [#list clazzs as clazz]
             <tr class='${(i % 2 == 0)?string("griddata-odd","griddata-even")}'>
-                <td style='padding-left:${(annMap.get(lesson[0].id))?exists?string("15","31")}px;text-align:left;'>
-                    [#if (annMap.get(lesson[0].id))?exists]
+                <td style='padding-left:${(annMap.get(clazz[0].id))?exists?string("15","31")}px;text-align:left;'>
+                    [#if (annMap.get(clazz[0].id))?exists]
                         <a id="annEvaluationText${i}" onClick="showSubElement(this)" style="float:left;cursor:pointer;">+</a>
                     [/#if]
-                    ${(lesson[0].person.name.formatedName)!}
+                    ${(clazz[0].person.name.formatedName)!}
                 </td>
-                <td>${(lesson[1].course.name)!}</td>
-                <td>${(lesson[1].teachDepart.name)!}</td>
+                <td>${(clazz[1].course.name)!}</td>
+                <td>${(clazz[1].teachDepart.name)!}</td>
             </tr>
-            [#if (annMap.get(lesson[0].id))?exists]
+            [#if (annMap.get(clazz[0].id))?exists]
                 <tr class='${(i % 2 == 0)?string("griddata-odd","griddata-even")}' id='annEvaluationText${i}SubTr' name='annEvaluationText${i}SubTr' style="text-align:left;display:none;">
                     <td colspan="3" style="padding-left:35px;">
-                    [#list annMap.get(lesson[0].id)?sort_by("createdAt") as ann]
+                    [#list annMap.get(clazz[0].id)?sort_by("createdAt") as ann]
                     <div style="line-height:17px;">
                           此公告于 ${ann.createdAt?string("yyyy-MM-dd HH:mm")} 发布：
                           <font color="blue">
@@ -284,7 +284,7 @@
         [/#if]
     </table>
     </div>
-    
+
 </div>
 [/@]
 <div id="infoDiv" style="display:none;">
@@ -307,7 +307,7 @@
             obj.style.color = "#666";
         });
         var tb = $("#" + tbId).get(0);
-        tb.style.borderBottomColor = "#fff";    
+        tb.style.borderBottomColor = "#fff";
         tb.style.background = "#fff";
         tb.style.color = "#000";
         currentTag = tbId;
@@ -339,7 +339,7 @@
             obj.style.background = "#EFF0EA";
         }
     }
-    
+
     function showElement(obj){
         var a = $(obj);
         var tr = $("tr[name='" + a.prop("id") + "SubTr']");

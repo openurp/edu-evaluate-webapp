@@ -1,3 +1,21 @@
+/*
+ * OpenURP, Agile University Resource Planning Solution.
+ *
+ * Copyright © 2014, The OpenURP Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful.
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.openurp.edu.evaluation.course.web.action
 
 import java.time.{ Instant, LocalDate }
@@ -6,21 +24,24 @@ import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.model.Semester
+import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.model.{ Student, Teacher }
-import org.openurp.edu.evaluation.app.lesson.service.{ LessonFilterStrategyFactory, StdEvaluateSwitchService }
-import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
-import org.openurp.edu.evaluation.lesson.result.model.{ EvaluateResult, QuestionResult }
-import org.openurp.edu.evaluation.model.{ Option, Question }
-import org.openurp.edu.lesson.model.{ CourseTaker, Lesson }
-import org.openurp.platform.api.security.Securities
+import org.openurp.edu.evaluation.app.course.service.{ ClazzFilterStrategyFactory, StdEvaluateSwitchService }
+import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
+import org.beangle.security.Securities
+import org.openurp.edu.course.model.CourseTaker
+import org.openurp.edu.course.model.Clazz
+import org.openurp.edu.evaluation.clazz.model.QuestionnaireClazz
+import org.openurp.edu.evaluation.model.Question
+import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
+import org.openurp.edu.evaluation.model.Option
 
 class EvaluateStdAction extends RestfulAction[EvaluateResult] {
 
-  def getResultByStdIdAndLessonId(stdId: Long, lessonId: Long, teacherId: Long): EvaluateResult = {
+  def getResultByStdIdAndClazzId(stdId: Long, clazzId: Long, teacherId: Long): EvaluateResult = {
     val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult")
     query.where("evaluateResult.student.id =:stdId", stdId);
-    query.where("evaluateResult.lesson.id =:lessonId", lessonId);
+    query.where("evaluateResult.clazz.id =:clazzId", clazzId);
     if (0 != teacherId) {
       query.where("evaluateResult.teacher.id =:teacherId", teacherId);
     } else {
@@ -31,31 +52,31 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
     if (result.size > 0) result.head else null.asInstanceOf[EvaluateResult];
   }
 
-  def getLessonIdAndTeacherIdOfResult(student: Student, semester: Semester): collection.Map[String, String] = {
+  def getClazzIdAndTeacherIdOfResult(student: Student, semester: Semester): collection.Map[String, String] = {
     val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult")
-    //    query.select("evaluateResult.lesson.id,evaluateResult.teacher.id")
+    //    query.select("evaluateResult.clazz.id,evaluateResult.teacher.id")
     query.where("evaluateResult.student = :student ", student)
-    query.where("evaluateResult.lesson.semester = :semester", semester)
+    query.where("evaluateResult.clazz.semester = :semester", semester)
     val a = entityDao.search(query)
-    a.map(obj => (obj.lesson.id + "_" + (if (null == obj.teacher) "0" else obj.teacher.id), "1")).toMap
+    a.map(obj => (obj.clazz.id + "_" + (if (null == obj.teacher) "0" else obj.teacher.id), "1")).toMap
   }
 
-  def getStdLessons(student: Student, semester: Semester): Seq[Lesson] = {
+  def getStdClazzs(student: Student, semester: Semester): Seq[Clazz] = {
 
     val query = OqlBuilder.from(classOf[CourseTaker], "courseTaker")
-    query.select("distinct courseTaker.lesson.id ")
+    query.select("distinct courseTaker.clazz.id ")
     query.where("courseTaker.std=:std", student)
     query.where("courseTaker.semester =:semester", semester)
-    val lessonIds = entityDao.search(query)
-    var stdLessons: Seq[Lesson] = Seq()
-    if (!lessonIds.isEmpty) {
-      val entityquery = OqlBuilder.from(classOf[Lesson], "lesson").where("lesson.id in (:lessonIds)", lessonIds)
-      stdLessons = entityDao.search(entityquery)
+    val clazzIds = entityDao.search(query)
+    var stdClazzs: Seq[Clazz] = Seq()
+    if (!clazzIds.isEmpty) {
+      val entityquery = OqlBuilder.from(classOf[Clazz], "clazz").where("clazz.id in (:clazzIds)", clazzIds)
+      stdClazzs = entityDao.search(entityquery)
     }
-    stdLessons
+    stdClazzs
   }
 
-  var lessonFilterStrategyFactory: LessonFilterStrategyFactory = _
+  var clazzFilterStrategyFactory: ClazzFilterStrategyFactory = _
 
   var evaluateSwitchService: StdEvaluateSwitchService = _
 
@@ -73,19 +94,19 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
-    val lessonList = getStdLessons(std, semester)
+    val clazzList = getStdClazzs(std, semester)
     // 获得(课程问卷,根据学生,根据教学任务)
-    var myLessons: Seq[QuestionnaireLesson] = Seq();
-    if (!lessonList.isEmpty) {
-      val query = OqlBuilder.from(classOf[QuestionnaireLesson], "questionnaireLesson")
-      query.where("questionnaireLesson.lesson in (:lessonList)", lessonList)
+    var myClazzs: Seq[QuestionnaireClazz] = Seq();
+    if (!clazzList.isEmpty) {
+      val query = OqlBuilder.from(classOf[QuestionnaireClazz], "questionnaireClazz")
+      query.where("questionnaireClazz.clazz in (:clazzList)", clazzList)
       val myquestionnaires = entityDao.search(query)
-      myLessons = myquestionnaires
+      myClazzs = myquestionnaires
     }
     // 获得(评教结果,根据学生)
-    val evaluateMap = getLessonIdAndTeacherIdOfResult(std, semester);
+    val evaluateMap = getClazzIdAndTeacherIdOfResult(std, semester);
     put("evaluateMap", evaluateMap);
-    put("questionnaireLessons", myLessons);
+    put("questionnaireClazzs", myClazzs);
     forward()
   }
 
@@ -93,17 +114,17 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
    * 跳转(问卷页面)
    */
   def loadQuestionnaire(): View = {
-    val lessonId = get("lessonId").get
+    val clazzId = get("clazzId").get
     val evaluateState = get("evaluateState").get
     val semesterId = getInt("semester.id").get
-    val ids = get("lessonId").get.split(",")
+    val ids = get("clazzId").get.split(",")
     // 获得(教学任务)
-    val lesson = entityDao.get(classOf[Lesson], ids(0).toLong)
-    if (null == lesson) {
+    val clazz = entityDao.get(classOf[Clazz], ids(0).toLong)
+    if (null == clazz) {
       addMessage("找不到该课程!");
       return forward("errors");
     }
-    val evaluateSwitch = evaluateSwitchService.getEvaluateSwitch(lesson.semester, lesson.project)
+    val evaluateSwitch = evaluateSwitchService.getEvaluateSwitch(clazz.semester, clazz.project)
     if (null == evaluateSwitch) {
       addMessage("现在还没有开放课程评教!");
       return forward("errors");
@@ -114,40 +135,40 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
     //    }
     //    OqlBuilder<NotEvaluateStudentBean> que = OqlBuilder.from(NotEvaluateStudentBean.class, "notevaluate");
     //    que.where("notevaluate.std=:std", this.getLoginStudent());
-    //    que.where("notevaluate.semester=:semesterId", lesson.getSemester());
+    //    que.where("notevaluate.semester=:semesterId", clazz.getSemester());
     //    List<NotEvaluateStudentBean> notList = entityDao.search(que);
     //    if (notList.size() > 0) {
     //      addMessage("您并非参评学生，不可评教!");
     //      return forward("errors");
     //    }
     // 获得(课程问卷,根据教学任务)
-    val questionnaireLessons = entityDao.findBy(classOf[QuestionnaireLesson], "lesson.id", List(lesson.id));
-    if (questionnaireLessons.isEmpty) {
+    val questionnaireClazzs = entityDao.findBy(classOf[QuestionnaireClazz], "clazz.id", List(clazz.id));
+    if (questionnaireClazzs.isEmpty) {
       addMessage("缺失评教问卷!");
       return forward("errors");
     }
 
-    val questionnaireLesson = questionnaireLessons.head
-    var questions = questionnaireLesson.questionnaire.questions
+    val questionnaireClazz = questionnaireClazzs.head
+    var questions = questionnaireClazz.questionnaire.questions
     questions.sortWith((x, y) => x.priority < y.priority)
 
     // 获得(教师列表,根据学生教学任务)
     val teachers = Collections.newBuffer[Teacher]
-    if (questionnaireLesson.evaluateByTeacher) {
+    if (questionnaireClazz.evaluateByTeacher) {
       val teacher = entityDao.get(classOf[Teacher], ids(1).toLong)
       teachers += teacher
     } else {
-      teachers ++= lesson.teachers
+      teachers ++= clazz.teachers
     }
 
     // 判断(是否更新)
     if ("update".equals(evaluateState)) {
       var teacherId: Long = 0;
-      if (questionnaireLesson.evaluateByTeacher) {
+      if (questionnaireClazz.evaluateByTeacher) {
         teacherId = ids(1).toLong
       } else { teacherId = teachers.head.id }
       val std = getStudent();
-      val evaluateResult = getResultByStdIdAndLessonId(std.id, lesson.id, teacherId);
+      val evaluateResult = getResultByStdIdAndClazzId(std.id, clazz.id, teacherId);
       if (null == evaluateResult) {
         addMessage("error.dataRealm.insufficient");
         forward("errors");
@@ -158,11 +179,11 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
       put("evaluateResult", evaluateResult);
     }
 
-    put("lesson", lesson);
+    put("clazz", clazz);
     put("teachers", teachers);
     put("questions", questions);
-    //questionnaire = entityDao.get(classOf[Questionnaire], questionnaireLesson.questionnaire.id);
-    put("questionnaire", questionnaireLesson.questionnaire);
+    //questionnaire = entityDao.get(classOf[Questionnaire], questionnaireClazz.questionnaire.id);
+    put("questionnaire", questionnaireClazz.questionnaire);
     put("evaluateState", evaluateState);
     forward()
   }
@@ -179,24 +200,24 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
   override def save(): View = {
     val std = getStudent()
     // 页面参数
-    val lessonId = getLong("lesson.id").get
+    val clazzId = getLong("clazz.id").get
     var teacherId = getLong("teacherId").get
     //    val semesterId = getInt("semester.id").get
     val teacherIds = longIds("teacher")
     // 根据教学任务,获得课程问卷
-    val query = OqlBuilder.from(classOf[QuestionnaireLesson], "questionnaireLesson");
-    query.where("questionnaireLesson.lesson.id =:lessonId", lessonId);
-    val questionnaireLessons = entityDao.search(query);
-    if (questionnaireLessons.isEmpty) {
+    val query = OqlBuilder.from(classOf[QuestionnaireClazz], "questionnaireClazz");
+    query.where("questionnaireClazz.clazz.id =:clazzId", clazzId);
+    val questionnaireClazzs = entityDao.search(query);
+    if (questionnaireClazzs.isEmpty) {
       addMessage("field.evaluate.questionnaire");
       forward("errors");
     }
-    val questionnaireLesson = questionnaireLessons.head
+    val questionnaireClazz = questionnaireClazzs.head
     // 查询(评教结果)
     var evaluateResults: Seq[EvaluateResult] = Seq()
     val queryResult = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult");
-    queryResult.where("evaluateResult.lesson.id =:lessonId", lessonId);
-    //    queryResult.where("evaluateResult.lesson.semester.id =:semesterId",semesterId);
+    queryResult.where("evaluateResult.clazz.id =:clazzId", clazzId);
+    //    queryResult.where("evaluateResult.clazz.semester.id =:semesterId",semesterId);
     queryResult.where("evaluateResult.student =:std", std);
     // 如果教师为空
     if (teacherIds.size == 0) {
@@ -209,7 +230,7 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
       queryResult.where("evaluateResult.teacher.id in(:teacherIds)", teacherIds);
       evaluateResults = entityDao.search(queryResult);
     }
-    //        & (!questionnaireLesson.evaluateByTeacher)） {
+    //        & (!questionnaireClazz.evaluateByTeacher)） {
     //      queryResult.where("evaluateResult.teacher.id in(:teacherIds)", teacherIds);
     //      evaluateResults = entityDao.search(queryResult);
     //    }
@@ -220,19 +241,19 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
     //      evaluateResults = entityDao.search(queryResult);
     //    }
 
-    var lesson: Lesson = null;
+    var clazz: Clazz = null;
     var teacher: Teacher = null;
     var newTeacherIds = Collections.newBuffer[Long]
     try {
       // 更新评教记录
       if (evaluateResults.size > 0) {
         evaluateResults foreach { evaluateResult =>
-          lesson = evaluateResult.lesson
+          clazz = evaluateResult.clazz
           teacher = evaluateResult.teacher
           newTeacherIds += teacher.id
           // 修改(问题选项)
           val questionResults = evaluateResult.questionResults
-          val questions = questionnaireLesson.questionnaire.questions
+          val questions = questionnaireClazz.questionnaire.questions
           // 判断(是否添加问题)
           val oldQuestions = Collections.newBuffer[Question]
           questionResults foreach { questionResult =>
@@ -277,12 +298,12 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
             }
           }
           val evaluateResult = new EvaluateResult()
-          evaluateResult.lesson = lesson
-          evaluateResult.department = lesson.teachDepart
+          evaluateResult.clazz = clazz
+          evaluateResult.department = clazz.teachDepart
           evaluateResult.student = std
           evaluateResult.teacher = entityDao.get(classOf[Teacher], newId)
           evaluateResult.evaluateAt = Instant.now
-          questionnaireLesson.questionnaire.questions foreach { question =>
+          questionnaireClazz.questionnaire.questions foreach { question =>
             val optionId = getLong("select" + question.id).get
             val option = entityDao.get(classOf[Option], optionId);
             val questionResult = new QuestionResult()
@@ -291,7 +312,7 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
             questionResult.result = evaluateResult
             questionResult.option = option
             questionResult.score = question.score * option.proportion.floatValue()
-            evaluateResult.questionnaire = questionnaireLesson.questionnaire
+            evaluateResult.questionnaire = questionnaireClazz.questionnaire
             evaluateResult.questionResults += questionResult
           }
           evaluateResult.remark = get("evaluateResult.remark").getOrElse("")
@@ -299,11 +320,11 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
         }
       } //      新增评教记录
       else {
-        lesson = entityDao.get(classOf[Lesson], lessonId);
+        clazz = entityDao.get(classOf[Clazz], clazzId);
         val teachers = entityDao.find(classOf[Teacher], teacherIds);
 
         // 获得(问卷)
-        val questionnaire = questionnaireLesson.questionnaire
+        val questionnaire = questionnaireClazz.questionnaire
         if (questionnaire == null || questionnaire.questions == null) {
           addMessage("评教问卷有误!");
           forward("errors");
@@ -313,8 +334,8 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
           teacher = teachers.head
           var evaluateTeacher = teacher;
           val evaluateResult = new EvaluateResult()
-          evaluateResult.lesson = lesson
-          evaluateResult.department = lesson.teachDepart
+          evaluateResult.clazz = clazz
+          evaluateResult.department = clazz.teachDepart
           evaluateResult.student = std
           evaluateResult.teacher = evaluateTeacher
           evaluateResult.evaluateAt = Instant.now
@@ -335,11 +356,11 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
           entityDao.saveOrUpdate(evaluateResult)
         }
         //        如果是按照课程评教，且是多个教师
-        if (teachers.size > 1 & (!questionnaireLesson.evaluateByTeacher)) {
+        if (teachers.size > 1 & (!questionnaireClazz.evaluateByTeacher)) {
           teachers foreach { teacher =>
             val evaluateResult = new EvaluateResult()
-            evaluateResult.lesson = lesson
-            evaluateResult.department = lesson.teachDepart
+            evaluateResult.clazz = clazz
+            evaluateResult.department = clazz.teachDepart
             evaluateResult.student = std
             evaluateResult.teacher = teacher
             evaluateResult.evaluateAt = Instant.now
@@ -362,11 +383,11 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
         }
 
       }
-      redirect("search", "&semester.id=" + lesson.semester.id, "info.save.success")
+      redirect("search", "&semester.id=" + clazz.semester.id, "info.save.success")
     } catch {
       case e: Exception =>
         e.printStackTrace();
-        redirect("search", "&semester.id=" + lesson.semester.id, "info.save.failure");
+        redirect("search", "&semester.id=" + clazz.semester.id, "info.save.failure");
     }
   }
 

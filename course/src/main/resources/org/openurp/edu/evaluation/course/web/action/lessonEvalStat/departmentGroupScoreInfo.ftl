@@ -18,7 +18,7 @@
          <#list  questionTypeList as questionType>
              <td>${(questionType.name)!}</td>
          </#list>
-     <td>总评</td>    
+     <td>总评</td>
  </tr>
 
 <#list  questionnaires  as questionnaireStat>
@@ -48,7 +48,6 @@
 <script>
     var bar=new ToolBar("bar","课程大类列表",null,true,true);
        bar.setMessage('<@getMessage/>');
- 
 
 </script>
 <#include "/template/foot.ftl"/>

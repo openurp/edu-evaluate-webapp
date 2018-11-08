@@ -1,3 +1,21 @@
+/*
+ * OpenURP, Agile University Resource Planning Solution.
+ *
+ * Copyright © 2014, The OpenURP Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful.
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.openurp.edu.evaluation.department.web.action
 
 import java.util.Date
@@ -7,25 +25,25 @@ import org.beangle.commons.lang.ClassLoaders
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.{ Stream, View }
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.model.{ Department, Semester }
 import org.openurp.edu.base.model.Teacher
 import org.openurp.edu.evaluation.department.helper.ImportDepartListener
 import org.openurp.edu.evaluation.model.{ Question, QuestionType, Questionnaire }
-import org.openurp.edu.lesson.model.Lesson
-import org.openurp.platform.api.security.Securities
+import org.openurp.edu.course.model.Clazz
 import org.openurp.edu.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.edu.evaluation.department.model.DepartEvaluate
 import org.openurp.edu.evaluation.department.model.DepartQuestion
 import org.openurp.base.model.Department
-import org.openurp.base.model.Semester
+import org.openurp.edu.base.model.Semester
 import org.openurp.edu.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.edu.lesson.model.Lesson
-import org.beangle.data.transfer.TransferListener
+import org.openurp.edu.course.model.Clazz
+import org.beangle.data.transfer.importer.ImportListener
 import java.time.LocalDate
 import java.time.Instant
-import org.beangle.data.transfer.listener.ForeignerListener
+import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.openurp.edu.evaluation.web.helper.ImportDataSupport
+import org.beangle.security.Securities
+import org.beangle.data.transfer.importer.listener.ForeignerListener
 
 /**
  * @author xinzhou
@@ -41,12 +59,12 @@ class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate] with Imp
   }
 
   def importTeachers(): View = {
-    val builder = OqlBuilder.from[Array[Any]](classOf[Lesson].getName, "lesson")
-    getInt("departEvaluation.semester.id") foreach { semesterId => builder.where("lesson.semester.id=:id", semesterId) }
-    builder.join("lesson.teachers", "teacher")
-    builder.select("distinct teacher.id , lesson.teachDepart.id , lesson.semester.id")
-    builder.where("lesson.teachDepart.id=:departId", getTeacher.user.department.id)
-    builder.where("not exists (from " + classOf[DepartEvaluate].getName + " de where de.semester = lesson.semester and de.teacher = teacher and de.department = lesson.teachDepart)")
+    val builder = OqlBuilder.from[Array[Any]](classOf[Clazz].getName, "clazz")
+    getInt("departEvaluation.semester.id") foreach { semesterId => builder.where("clazz.semester.id=:id", semesterId) }
+    builder.join("clazz.teachers", "teacher")
+    builder.select("distinct teacher.id , clazz.teachDepart.id , clazz.semester.id")
+    builder.where("clazz.teachDepart.id=:departId", getTeacher.user.department.id)
+    builder.where("not exists (from " + classOf[DepartEvaluate].getName + " de where de.semester = clazz.semester and de.teacher = teacher and de.department = clazz.teachDepart)")
     val datas = entityDao.search(builder)
     val departEvaluates = Collections.newBuffer[DepartEvaluate]
     datas foreach { data =>
@@ -149,7 +167,7 @@ class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate] with Imp
     Stream(ClassLoaders.getResourceAsStream("departEvaluate.xls").get, "application/vnd.ms-excel", "评教结果.xls")
   }
 
-  protected override def importerListeners: List[_ <: TransferListener] = {
+  protected override def importerListeners: List[_ <: ImportListener] = {
     List(new ForeignerListener(entityDao), new ImportDepartListener(entityDao))
   }
 

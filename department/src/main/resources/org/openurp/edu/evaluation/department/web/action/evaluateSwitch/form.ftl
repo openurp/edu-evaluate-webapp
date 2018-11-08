@@ -6,8 +6,8 @@
       [@b.select name="evaluateSwitch.semester.id" label="学年学期" items=semesters?sort_by("code") value= currentSemester option = "id,code" value =evaluateSwitch.semester empty="..."/]
       [@b.select name="evaluateSwitch.questionnaire.id" label="问卷描述" items=questionnaires option = "id,description" value =evaluateSwitch.questionnaire empty="..."/]
       [@b.select name="evaluateSwitch.opened" label="开关状态" items={'true':'开启','false':'关闭'} value =evaluateSwitch.opened empty="..."/]
-      [@b.startend label="开始结束时间" 
-        name="evaluateSwitch.beginOn,evaluateSwitch.endOn" required="true,true" 
+      [@b.startend label="开始结束时间"
+        name="evaluateSwitch.beginOn,evaluateSwitch.endOn" required="true,true"
         start=evaluateSwitch.beginOn end=evaluateSwitch.endOn format="date"/]
       [@b.formfoot]
         [#if evaluateSwitch.persisted]<input type="hidden" name="evaluateSwitch.id" value="${evaluateSwitch.id!}" />[/#if]

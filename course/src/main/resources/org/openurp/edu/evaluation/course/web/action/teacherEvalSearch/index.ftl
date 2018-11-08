@@ -16,7 +16,7 @@
         </td>
         <td class="index_content">
             [@b.div href="!search?semester.id=${(semester.id)!}" id="contentDiv"/]
-        </td> 
+        </td>
     </tr>
 </table>
 [@b.foot/]

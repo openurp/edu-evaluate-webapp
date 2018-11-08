@@ -15,7 +15,7 @@
             [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
             [@b.textfield style="width:100px" name="teacherEvalStat.teacher.user.code" label="工号" /]
             [@b.textfield style="width:100px" name="teacherEvalStat.teacher.user.name" label="姓名" /]
-            [@b.select style="width:105px" name="teacherEvalStat.teacher.state.department.id" label="部门" items=departments empty="..."/]
+            [@b.select style="width:105px" name="teacherEvalStat.teacher.user.department.id" label="部门" items=departments empty="..."/]
             [#--[@b.select name="teacherEvalStat.questionnaire.id" label="所用问卷" items=[] ]
                 [#list questionnaires as q]
                     <option value="${q.id}">${q.description}</option>
@@ -25,12 +25,12 @@
         </td>
         <td class="index_content">
             [@b.div id="contentDiv" href="!search"/]
-        </td> 
+        </td>
     </tr>
 </table>
 <script type="text/javaScript">
     var form = document.teacherEvaluateStatIndexForm;
-    
+
     function departmentChoiceConfig(){
         bg.form.addInput(form,"semester.id",document.teacherEvaluateStatIndexForm['semester.id'].value);
         bg.form.submit(form, "${b.url('!departmentChoiceConfig')}");
@@ -41,7 +41,7 @@
     function historyCollegeStat(){
         bg.form.submit(form, "${b.url('!historyCollegeStat')}");
     }
-    
+
     function changeSemester(){
         bg.form.addInput(form, "semester.id", $("input[name='semester.id']").val());
         bg.form.submit(form);
@@ -49,7 +49,7 @@
     function collegeGroupItemInfo(){
         bg.form.addInput(form,"semester.id",document.teacherEvaluateStatIndexForm['semester.id'].value);
         bg.form.submit(form, "${b.url('!collegeGroupItemInfo')}");
-    } 
+    }
    function statisticResult(){
         form.target="_blank";
         bg.form.submit(form, "${b.url('!statHome')}","main");
@@ -59,7 +59,6 @@
         bg.form.addInput(form,"semester.id",document.teacherEvaluateStatIndexForm['semester.id'].value);
         bg.form.submit(form, "${b.url('!rankStat')}");
     }
-    
 
 </script>
 [@b.foot/]

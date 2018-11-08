@@ -18,7 +18,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="title" style="text-align:center;" width="10%;">学历层次</td>
+                <td class="title" style="text-align:center;" width="10%;">培养层次</td>
                 <td style="text-align:center;" width="15%;">
                     <select name="educations" id="educations" style="width:160px;height:150px;" multiple size="10" onDblClick="">
                         [#list educations?if_exists as education]
@@ -27,17 +27,17 @@
                     </select>
                 </td>
                 <td class="title" style="text-align:center;width:40px;">
-                    <input OnClick="" type="button" value="&gt;"/> 
+                    <input OnClick="" type="button" value="&gt;"/>
                     <br>
-                    <input OnClick="" type="button" value="&lt;"/> 
+                    <input OnClick="" type="button" value="&lt;"/>
                 </td>
                 <td style="text-align:center;" width="15%;">
                     <select name="educationSelected" id="educationSelected" style="width:160px;height:150px;" multiple size="10" onDblClick="">
                     </select>
                 </td>
-                
+
                 <td width="10%" style="background:#EBEBEB;">&nbsp;</td>
-                
+
                 <td class="title" style="text-align:center;" width="10%;">部门名称</td>
                 <td style="text-align:center;" width="15%;">
                     <select name="departments" id="departments" style="width:160px;height:150px;" multiple size="10" onDblClick="">
@@ -47,9 +47,9 @@
                     </select>
                 </td>
                 <td class="title" style="text-align:center;width:40px;">
-                    <input OnClick="" type="button" value="&gt;"/> 
+                    <input OnClick="" type="button" value="&gt;"/>
                     <br>
-                    <input OnClick="" type="button" value="&lt;"/> 
+                    <input OnClick="" type="button" value="&lt;"/>
                 </td>
                 <td style="text-align:center;" width="15%;">
                     <select name="departmentSelected" id="departmentSelected" style="width:160px;height:150px;" multiple size="10" onDblClick="">
@@ -68,22 +68,12 @@
 [/@]
 <script type="text/javaScript">
     var statForm = document.statForm;
-    
+
     function doStatistic(){
         bg.form.submit(statForm);
     }
 </script>
 [@b.foot/]
-
-
-
-
-
-
-
-
-
-
 
 [#--
 <#include "/template/head.ftl"/>
@@ -118,19 +108,19 @@
                             </td>
                             -->
                             <td>
-                                <select name="educationTypes" MULTIPLE size="10" style="width:200px" onDblClick="JavaScript:moveSelectedOption(this.form['educationTypes'], this.form['SelectedEducationType'])">
+                                <select name="educationTypes" MULTIPLE size="10" style="width:200px" onDblClick="JavaScript:moveSelectedOption(this.form['educationTypes'], this.form['SelectedEducationLevelType'])">
                                     <#list educationTypes as educationType>
                                         <option value="${educationType.id}">${educationType.name}</option>
                                     </#list>
                                 </select>
                             </td>
                                <td>
-                                <input OnClick="JavaScript:moveSelectedOption(this.form['educationTypes'], this.form['SelectedEducationType'])" type="button" value="&gt;"> 
+                                <input OnClick="JavaScript:moveSelectedOption(this.form['educationTypes'], this.form['SelectedEducationLevelType'])" type="button" value="&gt;">
                                 <br>
-                                <input OnClick="JavaScript:moveSelectedOption(this.form['SelectedEducationType'], this.form['educationTypes'])" type="button" value="&lt;"> 
+                                <input OnClick="JavaScript:moveSelectedOption(this.form['SelectedEducationLevelType'], this.form['educationTypes'])" type="button" value="&lt;">
                             </td>
                             <td>
-                                <select name="SelectedEducationType" MULTIPLE size="10" style="width:200px;" onDblClick="JavaScript:moveSelectedOption(this.form['SelectedEducationType'], this.form['educationTypes'])"></select>
+                                <select name="SelectedEducationLevelType" MULTIPLE size="10" style="width:200px;" onDblClick="JavaScript:moveSelectedOption(this.form['SelectedEducationLevelType'], this.form['educationTypes'])"></select>
                             </td>
                         </tr>
                      </table>
@@ -157,9 +147,9 @@
                                 </select>
                               </td>
                               <td>
-                                  <input OnClick="JavaScript:moveSelectedOption(this.form['departments'], this.form['Selecteddepartments'])" type="button" value="&gt;"> 
+                                  <input OnClick="JavaScript:moveSelectedOption(this.form['departments'], this.form['Selecteddepartments'])" type="button" value="&gt;">
                                     <br>
-                                <input OnClick="JavaScript:moveSelectedOption(this.form['Selecteddepartments'], this.form['departments'])" type="button" value="&lt;"> 
+                                <input OnClick="JavaScript:moveSelectedOption(this.form['Selecteddepartments'], this.form['departments'])" type="button" value="&lt;">
                               </td>
                               <td>
                                   <select name="Selecteddepartments" MULTIPLE size="10" style="width:200px;" onDblClick="JavaScript:moveSelectedOption(this.form['Selecteddepartments'], this.form['departments'])">
@@ -182,19 +172,19 @@
 
         function doStatistic(form){
             form.departIdSeq.value=getAllOptionValue(form.Selecteddepartments);
-            form.educationTypeIdSeq.value=getAllOptionValue(form.SelectedEducationType);
+            form.educationTypeIdSeq.value=getAllOptionValue(form.SelectedEducationLevelType);
             if(""==form.educationTypeIdSeq.value){
                 alert("请选择学生类别");
                 return;
             }
             if(""==form.departIdSeq.value){
                 alert("请选择部门");
-                return 
+                return
             }
             if(confirm("<@text name="field.questionnaireStatistic.statisticAffirm"/>")){
                 form["button1"].disabled = true;
                 form.action ="questionnaireStat.action?method=stat";
-                '<font color="red" size="5"><@text name="workload.statisticInfo"/></font>'; 
+                '<font color="red" size="5"><@text name="workload.statisticInfo"/></font>';
                 form.submit();
             }
         }

@@ -1,7 +1,7 @@
 [#ftl]
 [@b.head/]
     <input type="hidden" name="semester.id" value="${Parameters['supervisiorEvaluate.semester.id']!}">
-    [@b.grid items=supervisiorEvaluates var="supervisiorEvaluate" sortable="true"]    
+    [@b.grid items=supervisiorEvaluates var="supervisiorEvaluate" sortable="true"]
         [@b.gridbar title="督导组评教列表"]
           bar.addItem("${b.text("评教")}",action.edit(),"new.png");
           var m=bar.addMenu("导入",action.method("importForm"));

@@ -27,7 +27,7 @@
 [/@]
 <script type="text/javaScript">
     var initValidForm = document.initValidForm;
-    
+
     function doStatistic(){
         if ($("#percent").val() == ""){
             alert("请输入百分比!");

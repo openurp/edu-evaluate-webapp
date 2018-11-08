@@ -5,7 +5,7 @@
 [/@]
 [@b.form name="statForm" title="统计评教结果"  action="!stat" theme="list"]
     [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
-    [@b.field label="学历层次"]
+    [@b.field label="培养层次"]
         <table class="infoTable" align="left" style="width:350px;">
             <tr>
                 <td>
@@ -63,7 +63,7 @@
             eduIds += edu.options[i].value;
             }
         }
-        
+
         for(var j=0; j<dep.options.length;j++){
             if(depIds != ""){
             depIds += ","+dep.options[j].value;
@@ -72,31 +72,31 @@
             }
         }
         if(""==eduIds){
-            alert("请选择学历层次");
+            alert("请选择培养层次");
             return false;
         }
         if(""==depIds){
             alert("请选择部门");
             return false;
         }
-        
+
         bg.form.addInput(form,"departIds",depIds);
         bg.form.addInput(form,"educatIds",eduIds);
         form["btnSave"].disabled = true;
         bg.form.submit(form, "${b.url('!stat')}");
     }
-    
+
     var form = document.statForm;
     function selectRemoveAll(fromSelectName, toSelectName) {
     var fromSelect = form[fromSelectName];
-    
+
     var toSelect = form[toSelectName];
     while (fromSelect.options.length > 0) {
         toSelect.options.add(new Option(fromSelect.options[0].text, fromSelect.options[0].value));
         fromSelect.options[0] = null;
     }
     }
-    
+
     function selectRemoveAnyOne(fromSelectName, toSelectName) {
         var fromSelect = form[fromSelectName];
         var toSelect = form[toSelectName];
@@ -109,7 +109,7 @@
             }
         }
     }
-    
+
     function moveSelectedOption(olds,news){
     var form = document.statForm;
     var selectOld = form[olds];
@@ -121,7 +121,7 @@
                 t.value=selectOld.options[i].value;
                 selectNew.add(t);
                 selectOld.remove(i);
-                
+
             }
         }
     }

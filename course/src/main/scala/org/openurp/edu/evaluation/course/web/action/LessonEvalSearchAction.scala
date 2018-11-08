@@ -1,23 +1,37 @@
+/*
+ * OpenURP, Agile University Resource Planning Solution.
+ *
+ * Copyright © 2014, The OpenURP Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful.
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.openurp.edu.evaluation.course.web.action
 
-import org.beangle.data.dao.OqlBuilder
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.evaluation.lesson.model.QuestionnaireLesson
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.model.Option
-import org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat
+import java.time.LocalDate
+
 import org.beangle.commons.collection.Collections
-import org.openurp.edu.lesson.model.Lesson
-import org.openurp.base.model.Semester
 import org.beangle.commons.collection.Order
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.annotation.mapping
 import org.beangle.webmvc.api.annotation.param
-import java.time.LocalDate
 import org.beangle.webmvc.api.view.View
+import org.beangle.webmvc.entity.action.RestfulAction
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.evaluation.clazz.stat.model.ClazzEvalStat
+import org.openurp.edu.evaluation.model.Option
 
-class LessonEvalSearchAction extends RestfulAction[LessonEvalStat] {
+class ClazzEvalSearchAction extends RestfulAction[ClazzEvalStat] {
 
   override def index(): View = {
     val semesters = entityDao.getAll(classOf[Semester])
@@ -32,17 +46,17 @@ class LessonEvalSearchAction extends RestfulAction[LessonEvalStat] {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
-    val lessonEvalStat = OqlBuilder.from(classOf[LessonEvalStat], "lessonEvalStat")
-    populateConditions(lessonEvalStat)
-    lessonEvalStat.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
-    lessonEvalStat.where("lessonEvalStat.lesson.semester=:semester", semester)
-    put("lessonEvalStats", entityDao.search(lessonEvalStat))
+    val clazzEvalStat = OqlBuilder.from(classOf[ClazzEvalStat], "clazzEvalStat")
+    populateConditions(clazzEvalStat)
+    clazzEvalStat.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
+    clazzEvalStat.where("clazzEvalStat.clazz.semester=:semester", semester)
+    put("clazzEvalStats", entityDao.search(clazzEvalStat))
     forward()
   }
 
   @mapping(value = "{id}")
   override def info(@param("id") id: String): View = {
-    val questionnaireStat = entityDao.get(classOf[LessonEvalStat], java.lang.Long.parseLong(id));
+    val questionnaireStat = entityDao.get(classOf[ClazzEvalStat], java.lang.Long.parseLong(id));
     put("questionnaireStat", questionnaireStat);
 
     val list = Collections.newBuffer[Option]

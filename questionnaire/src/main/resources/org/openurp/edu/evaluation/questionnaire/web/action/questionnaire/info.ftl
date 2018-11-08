@@ -14,7 +14,8 @@ ${(questionnaire.title?html)?default('')}</b>
         <thead class="gridhead">
             <tr>
                 <th width="15%">问题类型</th>
-                <th width="60%">问题内容</th>
+                <th width="10%">问题分数</th>
+                <th width="50%">问题内容</th>
                 <th width="25">选项</th>
             </tr>
         </thead>
@@ -25,6 +26,7 @@ ${(questionnaire.title?html)?default('')}</b>
                     <td rowSpan="${questionTree.get(key)?size}" align="center">
                         ${key.name}
                     </td>
+                    <td align="left">${questionTree.get(key)[0].score}</td>
                     <td align="left">
                         ${index}:${questionTree.get(key)[0].content}
                     </td>
@@ -39,7 +41,7 @@ ${(questionnaire.title?html)?default('')}</b>
                 [#if questionTree.get(key)?size>1]
                     [#list 1..questionTree.get(key)?size-1 as i]
                         [#assign index=index+1]
-                        <tr class="griddata-${(key_index%2==0)?string("even","odd")}"> 
+                        <tr class="griddata-${(key_index%2==0)?string("even","odd")}">
                             <td align="left">
                                 ${index}:${questionTree.get(key)[i].content}(${questionTree.get(key)[i].priority})
                             </td>
@@ -56,17 +58,17 @@ ${(questionnaire.title?html)?default('')}</b>
                 [#assign index=index+1]
             [/#list]
             <tr style="background-color: #c7dbff;">
-                <td colSpan="3">&nbsp;</td>
+                <td colSpan="4">&nbsp;</td>
                </tr>
         </tbody>
     </table>
-    <br>    
+    <br>
     [#--[#if oppositeQuestions?size >0]
     [@b.grid items=oppositeQuestions var="oppositeQuestion"]
     [@b.row]
         [@b.col property="orginQuestion.content" title="原始问题" width="50%"]${(oppositeQuestion.orginQuestion.content?html)!}[/@]
         [@b.col property="oppoQuestion.content" title="对立问题" width="50%"]${(oppositeQuestion.oppoQuestion.content?html)!}[/@]
-        
+
     [/@]
     [/@]
     [/#if]--]

@@ -1,3 +1,21 @@
+/*
+ * OpenURP, Agile University Resource Planning Solution.
+ *
+ * Copyright © 2014, The OpenURP Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful.
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.commons.collection.Collections
@@ -6,25 +24,21 @@ import org.beangle.webmvc.api.action.ServletSupport
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
-import org.openurp.base.model.Semester
-import org.openurp.edu.base.code.model.Education
+import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.code.model.StdType
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.lesson.stat.model.LessonEvalStat
-import org.openurp.edu.evaluation.lesson.stat.model.OptionStat
-import org.openurp.edu.evaluation.lesson.stat.model.QuestionTypeStat
-import org.openurp.edu.evaluation.lesson.stat.model.QuestionTypeStat
-import org.openurp.edu.evaluation.lesson.stat.model.QuestionTypeStat
-import org.openurp.edu.evaluation.lesson.stat.model.QuestionTypeStat
+import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
+import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
+import org.openurp.edu.evaluation.clazz.stat.model.ClazzEvalStat
 import org.openurp.edu.evaluation.model.EvaluationCriteria
 import org.openurp.edu.evaluation.model.EvaluationCriteriaItem
 import org.openurp.edu.evaluation.model.QuestionType
 import org.openurp.edu.evaluation.model.Questionnaire
 import org.openurp.edu.base.model.Teacher
 import java.time.LocalDate
+import org.openurp.edu.evaluation.clazz.stat.model.OptionStat
+import org.openurp.code.edu.model.EducationLevel
 
-class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with ServletSupport {
+class QuestionnaireStatAction extends RestfulAction[ClazzEvalStat] with ServletSupport {
 
   override def index(): View = {
     val stdType = entityDao.get(classOf[StdType], 5)
@@ -37,7 +51,7 @@ class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with Servlet
       searchFormFlag = "beenStat"
     }
     put("searchFormFlag", searchFormFlag)
-    //    put("educations", getEducations())
+    //    put("educations", getEducationLevels())
     put("departments", entityDao.getAll(classOf[Department]))
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire").where("questionnaire.state =:state", true)
     put("questionnaires", entityDao.search(query))
@@ -57,7 +71,7 @@ class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with Servlet
    */
   def modifyTeacher(): View = {
     val quenStatId = longId("questionnaireStat")
-    put("questionnaireStat", entityDao.get(classOf[LessonEvalStat], quenStatId));
+    put("questionnaireStat", entityDao.get(classOf[ClazzEvalStat], quenStatId));
     forward()
   }
 
@@ -86,7 +100,7 @@ class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with Servlet
    * @return
    */
   def saveTeacher(): View = {
-    val questionnaireStat = entityDao.get(classOf[LessonEvalStat], getLong("questionnaireStat.id").get);
+    val questionnaireStat = entityDao.get(classOf[ClazzEvalStat], getLong("questionnaireStat.id").get);
     questionnaireStat.teacher = entityDao.get(classOf[Teacher], getLong("teacher.id").get)
     entityDao.saveOrUpdate(questionnaireStat);
     redirect("search", "info.update.success");
@@ -99,7 +113,7 @@ class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with Servlet
     for (i <- 0 to Ids.length) {
       questionSIds(i) = Ids(i).toLong
     }
-    val query = OqlBuilder.from(classOf[LessonEvalStat], "questionS");
+    val query = OqlBuilder.from(classOf[ClazzEvalStat], "questionS");
     query.where("questionS.id in(:ids)", questionSIds);
     val li = entityDao.search(query);
     try {
@@ -150,7 +164,7 @@ class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with Servlet
     put("stdTypeList", entityDao.getAll(classOf[StdType]));
     put("departmentList", entityDao.search(OqlBuilder.from(classOf[Department], "de").where("de.teaching=:tea", true)));
     put("semester", 20141)
-    put("educations", entityDao.getAll(classOf[Education]))
+    put("educations", entityDao.getAll(classOf[EducationLevel]))
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department], "de").where("de.teaching=:tea", true)));
     forward()
   }
@@ -181,7 +195,7 @@ class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with Servlet
     val que = OqlBuilder.from[Double](classOf[EvaluateResult].getName + " evaluateResult," + classOf[QuestionResult].getName + " questionResult");
     que.select("sum(questionResult.score)/count(distinct evaluateResult.id)");
     que.where("evaluateResult.id=questionResult.result.id");
-    que.where("evaluateResult.lesson.semester.id=" + semesterId);
+    que.where("evaluateResult.clazz.semester.id=" + semesterId);
     val lit = entityDao.search(que);
     var fl = 0d;
     if (lit.size > 0) {
@@ -190,19 +204,19 @@ class QuestionnaireStatAction extends RestfulAction[LessonEvalStat] with Servlet
       }
     }
     put("evaluateResults", fl);
-    val hql = OqlBuilder.from(classOf[LessonEvalStat], "evaluateR")
-    hql.select("evaluateR.lesson.teachDepart.id,count( evaluateR.teacher.id)")
-    hql.where("evaluateR.lesson.semester.id=" + semesterId)
-    hql.groupBy("evaluateR.lesson.teachDepart.id,evaluateR.lesson.semester.id")
+    val hql = OqlBuilder.from(classOf[ClazzEvalStat], "evaluateR")
+    hql.select("evaluateR.clazz.teachDepart.id,count( evaluateR.teacher.id)")
+    hql.where("evaluateR.clazz.semester.id=" + semesterId)
+    hql.groupBy("evaluateR.clazz.teachDepart.id,evaluateR.clazz.semester.id")
     put("questionNums", entityDao.search(hql));
     val maps = Collections.newMap[String, Seq[Array[Any]]]
     lis foreach { evaluationCriteriaItem =>
-      val query = OqlBuilder.from[Array[Any]](classOf[LessonEvalStat].getName, "questionnaireStat");
+      val query = OqlBuilder.from[Array[Any]](classOf[ClazzEvalStat].getName, "questionnaireStat");
       query.where("questionnaireStat.semester.id=:semesterId", semesterId);
-      query.select("questionnaireStat.lesson.teachDepart.id,count(questionnaireStat.teacher.id)");
+      query.select("questionnaireStat.clazz.teachDepart.id,count(questionnaireStat.teacher.id)");
       query.where("questionnaireStat.score>=" + evaluationCriteriaItem.min
         + " and questionnaireStat.score<" + evaluationCriteriaItem.max);
-      query.groupBy("questionnaireStat.lesson.teachDepart.id");
+      query.groupBy("questionnaireStat.clazz.teachDepart.id");
       maps.put(evaluationCriteriaItem.id.toString(), entityDao.search(query));
 
     }

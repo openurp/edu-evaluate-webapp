@@ -3,7 +3,4 @@
   <container name="web">
     <module class="org.openurp.edu.evaluation.teacher.web.action.DefaultModule"/>
   </container>
-  <container>
-    <module class="org.openurp.edu.evaluation.teacher.service.DaoModule"/>
-  </container>
 </cdi>

@@ -7,13 +7,13 @@
             bar.addItem("初始化有效结果","setValidResult()");
             bar.addItem("统计评教结果","statisticResult()");
             bar.addItem("${b.text('action.export')}","exportData()");
-    
+
         [/@]
         [@b.row]
             [@b.boxcol/]
             [@b.col property="semester.name" title="学期"/]
-            [@b.col property="lesson.no" title="选课号"/]
-            [@b.col property="lesson.course.name" title="课程名称"/]
+            [@b.col property="clazz.crn" title="选课号"/]
+            [@b.col property="clazz.course.name" title="课程名称"/]
             [@b.col property="teacher.user.code" title="教师工号"/]
             [@b.col property="teacher.name" title="教师姓名"/]
             [@b.col property="depart.name" title="院系名称"/]
@@ -29,7 +29,7 @@
     var searchForm = document.questionnaireStatSearchForm;
 
     $(".gridempty").html("");
-            
+
     function exportData(){
         alert("有待完善!");
     }

@@ -13,7 +13,7 @@
     [@b.textarea label="备注" check="maxLength(300)" name="questionnaire.remark" value="${(questionnaire.remark?html)?default('')}" style="width:500px" /]
      [@b.datepicker label="生效日期" required="true" name="questionnaire.beginOn" id="_beginOn" format="yyyy-MM-dd" maxDate="#F{$dp.$D(\\'_endOn\\')}" value=(questionnaire.beginOn?string("yyyy-MM-dd"))! maxlength="10" style="width:200px"/]
     [@b.datepicker label="失效日期" name="questionnaire.endOn" id="_endOn" format="yyyy-MM-dd" minDate="#F{$dp.$D(\\'_beginOn\\')}" value=(questionnaire.endOn?string("yyyy-MM-dd"))! maxlength="10" style="width:200px"/]
-    
+
     [@b.field label="问题列表"]
         <table class="gridtable" id="questionnaireTable">
             <thead class="gridhead">
@@ -44,7 +44,7 @@
                     [#if questionTree.get(key)?size>1]
                         [#list 1..questionTree.get(key)?size-1 as i]
                             [#assign keyIndex= keyIndex+1]
-                            <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}"  name="${value[0].questionType.name}"> 
+                            <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}"  name="${value[0].questionType.name}">
                                 <td align="left">
                                     <span>${keyIndex}:</span>${value[i].content}
                                 </td>
@@ -58,11 +58,11 @@
                 [/#list]
             </tbody>
         </table>
-    
+
     [/@]
     [@b.formfoot]
          [#if questionnaire.persisted]
-		  <input type="hidden"  name="questionnaire.id"  value="${questionnaire.id?default('')}" />
+      <input type="hidden"  name="questionnaire.id"  value="${questionnaire.id?default('')}" />
          [/#if]
         [@b.submit value=(questionnaire.id)?exists?string("保存","修改") onsubmit="doValidate"/]&nbsp;
         <input type="button" name="btnReset" value="${b.text("action.reset")}" class="buttonStyle" onClick="doReset()" />
@@ -103,7 +103,7 @@
             [#if questionTree.get(key)?size>1]
                 [#list 1..questionTree.get(key)?size-1 as i]
                     [#assign keyIndex= keyIndex+1]
-                    <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}"  name="${value[0].questionType.name}"> 
+                    <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}"  name="${value[0].questionType.name}">
                         <td align="left">
                             <span>${keyIndex}:</span>${value[i].content}
                         </td>
@@ -158,7 +158,7 @@
                $(obj).html((i+1)+":");
            });
     }
-    
+
     //删除一行
     function removeTr(trId,questionId,typeName){
         var tr = jQuery("#"+trId);
@@ -215,7 +215,7 @@
          }
         return ids;
     }
-    
+
     function addAllquestions(){
         var url="${b.url('!searchQuestion')}?questionSeq="+questionIds.substring(1,questionIds.length);
         window.open(url,'','scrollbars=yes,width=720,height=480,left=200,top=200,status=yes');
@@ -234,13 +234,13 @@
         bg.form.addInput(document.questionnaireForm,"questionnaire.questionIds",questionIds.substring(1,questionIds.length-1));
         return flag;
     }
-    
+
     function doReset(){
         var questionnaireForm = document.questionnaireForm;
         questionnaireForm.reset();
         $("#tbodyId").html($("#tbodyIdReset").html());
         questionIds = questionIdsReset;
     }
-    
+
 </script>
 [@b.foot/]

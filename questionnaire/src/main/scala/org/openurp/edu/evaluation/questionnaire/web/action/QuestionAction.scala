@@ -1,3 +1,21 @@
+/*
+ * OpenURP, Agile University Resource Planning Solution.
+ *
+ * Copyright © 2014, The OpenURP Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful.
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.openurp.edu.evaluation.questionnaire.web.action
 
 import org.beangle.webmvc.entity.action.RestfulAction
@@ -54,13 +72,13 @@ class QuestionAction extends RestfulAction[Question] {
   protected override def saveAndRedirect(entity: Question): View = {
     try {
       val question = entity.asInstanceOf[Question]
-      val projects = entityDao.findBy(classOf[Project], "code", List(get("project").get));
+      val projects = entityDao.findBy(classOf[Project], "code", get("project"));
       question.project = projects.head
       question.updatedAt = Instant.now
       val remark = question.remark.orNull
       val content = question.content
       question.beginOn = LocalDate.parse(get("question.beginOn").get)
-      question.endOn = Some(LocalDate.parse(get("question.endOn").get))
+      question.endOn = get("question.endOn").filter(Strings.isNotEmpty(_)).map(LocalDate.parse(_))
       if (remark != null) {
         question.remark = Some(remark.replaceAll("<", "&#60;").replaceAll(">", "&#62;"))
       }

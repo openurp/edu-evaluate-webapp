@@ -4,10 +4,10 @@
     <tr>
         <td style="width:200px" class="index_view">
         [@b.form action="!search" name="questionnaireStatIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
-            <input type="hidden" name="questionnaireStat.lesson.project.id" value="${(project.id)!}"/>
+            <input type="hidden" name="questionnaireStat.clazz.project.id" value="${(project.id)!}"/>
             [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
-            [@b.textfields style="width:130px" names="questionnaireStat.lesson.no;课程序号,questionnaireStat.lesson.course.code;课程代码,questionnaireStat.lesson.course.name;课程名称,questionnaireStat.teacher.user.code;教师工号,questionnaireStat.teacher.user.name;教师名称"/]
-            [@b.select style="width:134px" name="questionnaireStat.lesson.teachDepart.id" label="开课院系" items=departments empty="..."/]
+            [@b.textfields style="width:130px" names="questionnaireStat.clazz.crn;课程序号,questionnaireStat.clazz.course.code;课程代码,questionnaireStat.clazz.course.name;课程名称,questionnaireStat.teacher.user.code;教师工号,questionnaireStat.teacher.user.name;教师名称"/]
+            [@b.select style="width:134px" name="questionnaireStat.clazz.teachDepart.id" label="开课院系" items=departments empty="..."/]
             [@b.select style="width:134px" name="selectTypeId" label="问题类别" items=questionTypes empty="..."/]
             [@b.select style="width:134px" name="selectMarkId" label="分值类型" items={'A':'优','B':'良','C':'中','D':'差'} empty="..."/]
             [@b.select style="width:134px" name="evaluationCriteriaId" label="对照标准" items=evaluationCriterias empty="..."/]
@@ -15,12 +15,12 @@
         </td>
         <td class="index_content">
             [@b.div id="contentDiv"/]
-        </td> 
+        </td>
     </tr>
 </table>
 <script type="text/javaScript">
     var form = document.questionnaireStatIndexForm;
-    
+
     function changeSemester(){
         bg.form.addInput(form, "questionnaireStat.semester.id", $("input[name='semester.id']").val());
         bg.form.submit(form);
@@ -28,9 +28,8 @@
 </script>
 [@b.foot/]
 
-
 [#--
-<table width="100%"class="frameTable"> 
+<table width="100%"class="frameTable">
     <tr>
     <td width="20%" valign="top" class="frameTable_view">
     <table width="100%" class="searchTable">

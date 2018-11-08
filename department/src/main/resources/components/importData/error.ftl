@@ -40,10 +40,10 @@
                 [@b.col title="提示内容" width="40%"][#if message.message?starts_with("error")]${b.text(message.message)}[#else]${message.message}[/#if][/@]
                 [@b.col title="提示值"][#list message.values as value]${value?default("")}[/#list][/@]
             [#else]
-                
+
             [/#if]
         [/@]
-        
+
     [/@]
 [/#if]
 [@b.foot/]

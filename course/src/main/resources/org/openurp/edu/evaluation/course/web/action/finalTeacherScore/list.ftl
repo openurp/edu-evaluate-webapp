@@ -2,7 +2,7 @@
 [@b.head/]
 [@b.form name="finalTeacherScoreSearchForm" action="!search" target="contentDiv"]    <table id="bar" width="100%"></table>
     <input type="hidden" name="semester.id" value="${semesterId!}">
-    [@b.grid items=finalTeacherScores var="finalTeacherScore" sortable="true"]    
+    [@b.grid items=finalTeacherScores var="finalTeacherScore" sortable="true"]
         [@b.gridbar title="教师评教最终结果"]
         bar.addItem("导出","exportData()");
         [/@]
@@ -12,9 +12,9 @@
             [@b.col  property="teacher.user.code" title="教师工号"/]
             [@b.col  property="teacher.user.name" title="教师姓名"/]
             [@b.col  property="stdScore" title="学生评教"]${finalTeacherScore.stdScore}[/@]
-            [@b.col  property="supviScore" title="督导评教"]${finalTeacherScore.supviScore}[/@]        
-            [@b.col  property="departScore" title="院系评教"]${finalTeacherScore.departScore}[/@]        
-            [@b.col  property="score" title="最后得分"]${finalTeacherScore.score}[/@]     
+            [@b.col  property="supviScore" title="督导评教"]${finalTeacherScore.supviScore}[/@]
+            [@b.col  property="departScore" title="院系评教"]${finalTeacherScore.departScore}[/@]
+            [@b.col  property="score" title="最后得分"]${finalTeacherScore.score}[/@]
             [@b.col property="rank" title="全校排名"/]
             [@b.col property="departRank" title="院系排名"/]
         [/@]

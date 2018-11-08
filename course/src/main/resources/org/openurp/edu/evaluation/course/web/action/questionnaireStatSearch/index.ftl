@@ -4,6 +4,3 @@
 
 [#include "queryConditions.ftl"/]
 [@b.foot/]
-
-
-

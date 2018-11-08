@@ -19,16 +19,16 @@
             [@b.select  name="searchTypes" label="查看类型" items={'1':'学院统计','2':'教师统计','3':'课程教师','4':'理论课程','5':'实践课程','7':'评教结果'} /]
         [/@]
         </td>
-        
+
         <td class="index_content">
             [@b.div  id="contentDiv" href="!search"/]
-        </td> 
+        </td>
     </tr>
     </table>
-    <script language="javascript"> 
-    
+    <script language="javascript">
+
         var form =document.textbookIndexForm;
-        
+
         function evaluateTeaResultsExport(){
           form.action="evaluateStatistics.action?method=evaluateTeaResultsExport";
           form.submit();

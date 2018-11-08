@@ -1,12 +1,5 @@
 <?xml version="1.0"?>
 <mvc>
-  <profile name="openurp-edu-evaluation-index" package="org.openurp.edu.evaluation.web.index">
-    <url path="/" suffix=""  style="seo" />
-    <interceptors>
-      <interceptor name="web.Interceptor.hibernate"/>
-      <interceptor name="web.Interceptor.security"/>
-     </interceptors>
-  </profile>
   <profile name="openurp-edu-evaluation" package="org.openurp.edu.evaluation.*.web.action">
     <url path="/{project}" suffix=""  style="seo" />
     <interceptors>

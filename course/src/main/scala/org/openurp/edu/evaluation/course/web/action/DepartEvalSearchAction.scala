@@ -1,17 +1,36 @@
+/*
+ * OpenURP, Agile University Resource Planning Solution.
+ *
+ * Copyright © 2014, The OpenURP Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful.
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.evaluation.lesson.stat.model.DepartEvalStat
-import org.openurp.base.model.Semester
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.lesson.result.model.EvaluateResult
-import org.beangle.data.dao.OqlBuilder
-import org.openurp.edu.lesson.model.Lesson
+import org.openurp.edu.base.model.Semester
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.collection.Order
 import org.openurp.edu.evaluation.model.Option
 import java.time.LocalDate
 import org.beangle.webmvc.api.view.View
+import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
+import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
+import org.openurp.edu.evaluation.clazz.stat.model.DepartEvalStat
+import org.beangle.data.dao.OqlBuilder
+import org.openurp.edu.course.model.Clazz
+import org.beangle.webmvc.api.annotation.mapping
 
 class DepartEvalSearchAction extends RestfulAction[DepartEvalStat] {
   override def index(): View = {
@@ -30,18 +49,19 @@ class DepartEvalSearchAction extends RestfulAction[DepartEvalStat] {
     val departEvalStat = OqlBuilder.from(classOf[DepartEvalStat], "departEvalStat")
     populateConditions(departEvalStat)
     departEvalStat.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
-    departEvalStat.where("departEvalStat.lesson.semester=:semester", semester)
+    departEvalStat.where("departEvalStat.clazz.semester=:semester", semester)
     put("departEvalStats", entityDao.search(departEvalStat))
     forward()
   }
 
-  def info(): View = {
-    val questionnaireStat = entityDao.get(classOf[DepartEvalStat], getLong("departEvalStat.id").get)
+  @mapping(value = "{id}")
+  override def info(id: String): View = {
+    val questionnaireStat = entityDao.get(classOf[DepartEvalStat], id.toLong)
     put("questionnaireStat", questionnaireStat);
     // zongrenci fix
     val query = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName, "result");
     query.where("result.department =:tea", questionnaireStat.department);
-    //    query.where("result.lesson.course=:course", questionnaireStat.course)
+    //    query.where("result.clazz.course=:course", questionnaireStat.course)
     query.select("case when result.statType =1 then count(result.id) end,count(result.id)");
     query.groupBy("result.statType");
     entityDao.search(query) foreach { a =>
@@ -65,11 +85,11 @@ class DepartEvalSearchAction extends RestfulAction[DepartEvalStat] {
       }
     }
     put("options", list);
-    val querys = OqlBuilder.from[Long](classOf[Lesson].getName, "lesson");
-    querys.join("lesson.teachers", "teacher");
+    val querys = OqlBuilder.from[Long](classOf[Clazz].getName, "clazz");
+    querys.join("clazz.teachers", "teacher");
     //    querys.where("teacher=:teach",questionnaireStat.teacher);
-    querys.where("lesson.teachDepart=:depart", questionnaireStat.department);
-    querys.join("lesson.teachclass.courseTakers", "courseTaker");
+    querys.where("clazz.teachDepart=:depart", questionnaireStat.department);
+    querys.join("clazz.teachclass.courseTakers", "courseTaker");
     querys.select("count(courseTaker.id)");
     val numbers = entityDao.search(querys)(0)
     put("numbers", entityDao.search(querys)(0));

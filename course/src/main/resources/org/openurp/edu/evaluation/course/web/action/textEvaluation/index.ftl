@@ -5,28 +5,21 @@
 [#--[@eams.semesterBar semesterValue=semester name="project.id" semesterName="semester.id" semesterEmpty="false" initCallback="changeSemester()"/]--]
 <table class="indexpanel">
     <tr>
-        <td style="width:200px" class="index_view">
+        <td style="width:180px" class="index_view">
         [@b.form action="!search" name="textEvaluationIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
-            <input type="hidden" name="lesson.project.id" value="${(project.id)!}"/>
-            [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
-            [@b.textfields style="width:130px" names="lesson.no;课程序号,lesson.course.code;课程代码,lesson.course.name;课程名称,teacher.user.name;教师名称"/]
-            [@b.select style="width:134px" name="lesson.teachDepart.id" label="开课院系" items=departments empty="..."/]
-            [@b.select style="width:134px" name="state" label="是否确认" items={'1':'已确认','0':'未确认'}  empty="..."/]
+            <input type="hidden" name="clazz.project.id" value="${(project.id)!}"/>
+            [@b.select name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
+            [@b.textfields names="clazz.crn;课程序号,clazz.course.code;课程代码,clazz.course.name;课程名称,teacher.user.name;教师名称"/]
+            [@b.select name="clazz.teachDepart.id" label="开课院系" items=departments empty="..."/]
+            [@b.select name="state" label="是否确认" items={'1':'已确认','0':'未确认'}  empty="..."/]
         [/@]
         </td>
         <td class="index_content">
             [@b.div id="contentDiv" href="!search"/]
-        </td> 
+        </td>
     </tr>
 </table>
 [@b.foot/]
-
-
-
-
-
-
-
 
 [#--
 <#include "/template/head.ftl"/>
@@ -43,7 +36,7 @@
       <#include "/template/time/semester.ftl"/>
      </tr>
    </table>
-    <table   width="100%"  class="frameTable"> 
+    <table   width="100%"  class="frameTable">
         <tr>
             <td width="20%" class="frameTable_view" valign="top">
                 <#include "searchTable.ftl"/>

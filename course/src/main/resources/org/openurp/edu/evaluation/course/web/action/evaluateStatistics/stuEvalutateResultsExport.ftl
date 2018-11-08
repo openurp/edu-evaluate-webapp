@@ -3,7 +3,7 @@ xmlns:x="urn:schemas-microsoft-com:office:excel"
 xmlns="http://www.w3.org/TR/REC-html40">
 
 <head>
-<meta http-equiv=Content-Type content="application/vnd.ms-excel; charset=UTF-8"> 
+<meta http-equiv=Content-Type content="application/vnd.ms-excel; charset=UTF-8">
 <meta name=ProgId content=Excel.Sheet>
 <meta name=Generator content="Microsoft Excel 11">
 <!--[if gte mso 9]><xml>
@@ -190,10 +190,10 @@ rt
             <#list evaluateRList?if_exists as evaluateR>
             <#assign nums =nums +1>
                 <tr align="center">
-                <td>${(evaluateR.lesson.no)?if_exists}</td>
-                <td>${(evaluateR.lesson.course.code)?if_exists}</td>
-                <td>${(evaluateR.lesson.course.name)?if_exists}</td>
-                <td>${(evaluateR.student.code)?if_exists}</td>
+                <td>${(evaluateR.clazz.crn)?if_exists}</td>
+                <td>${(evaluateR.clazz.course.code)?if_exists}</td>
+                <td>${(evaluateR.clazz.course.name)?if_exists}</td>
+                <td>${(evaluateR.student.user.code)?if_exists}</td>
                 <td>${(evaluateR.student.person.name)?if_exists}</td>
                 <td>${(evaluateR.student.department.name)?if_exists}</td>
                 <td>${(evaluateR.student.adminclass.name)?if_exists}</td>
@@ -223,4 +223,3 @@ rt
 </table>
 </body>
 </html>
-

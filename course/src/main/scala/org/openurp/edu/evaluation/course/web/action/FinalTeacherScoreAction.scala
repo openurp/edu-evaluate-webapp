@@ -1,3 +1,21 @@
+/*
+ * OpenURP, Agile University Resource Planning Solution.
+ *
+ * Copyright © 2014, The OpenURP Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful.
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.openurp.edu.evaluation.course.web.action
 
 import org.beangle.commons.collection.Order
@@ -6,16 +24,18 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.context.ActionContext
 import org.beangle.webmvc.api.view.{ Status, View }
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.model.{ Department, Semester }
-import org.openurp.edu.base.code.model.{ Education, StdType }
 import org.openurp.edu.base.model.Teacher
 import org.openurp.edu.evaluation.department.model.{ DepartEvaluate, SupervisiorEvaluate }
-import org.openurp.edu.evaluation.app.lesson.service.Ranker
-import org.openurp.edu.evaluation.lesson.result.model.QuestionResult
-import org.openurp.edu.evaluation.lesson.stat.model.FinalTeacherScore
+import org.openurp.edu.evaluation.app.course.service.Ranker
+import org.openurp.edu.evaluation.clazz.stat.model.FinalTeacherScore
 
-import net.sf.jxls.transformer.XLSTransformer
 import java.time.LocalDate
+import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
+import org.openurp.base.model.Department
+import org.openurp.edu.base.code.model.StdType
+import org.openurp.edu.base.model.Semester
+import org.openurp.code.edu.model.EducationLevel
+import org.beangle.data.transfer.excel.ExcelTemplateWriter
 
 class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
 
@@ -54,18 +74,15 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     val beans = new java.util.HashMap[String, Any]
     beans.put("list", list)
     //获得模板路径
-    val path = ClassLoaders.getResourceAsStream("template/finalTeacherScore.xls").get
+    val path = ClassLoaders.getResource("template/finalTeacherScore.xls").get
     //准备输出流
     val response = ActionContext.current.response
     response.setContentType("application/x-excel")
     response.setHeader("Content-Disposition", "attachmentfilename=finalTeacherScore.xls")
     val os = response.getOutputStream()
-    val transformer = new XLSTransformer()
     try {
       //将beans通过模板输入流写到workbook中
-      val workbook = transformer.transformXLS(path, beans)
-      //将workbook中的内容用输出流写出去
-      workbook.write(os)
+      new ExcelTemplateWriter(path, os).write()
     } finally {
       if (os != null) {
         os.close()
@@ -112,7 +129,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     put("stdTypeList", entityDao.getAll(classOf[StdType]))
     put("departmentList", entityDao.getAll(classOf[Department]))
 
-    put("educations", entityDao.getAll(classOf[Education]))
+    put("educations", entityDao.getAll(classOf[EducationLevel]))
     val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:tea", true))
     put("departments", teachingDeparts)
 
@@ -137,18 +154,18 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
       + classOf[DepartEvaluate].getName + " departEvaluate,"
       + classOf[SupervisiorEvaluate].getName + " supervisiorEvaluate")
 
-    quer.where("questionR.result.lesson.semester.id=:semesterId", semesterId)
+    quer.where("questionR.result.clazz.semester.id=:semesterId", semesterId)
     quer.where("questionR.result.statType is 1")
     quer.select("questionR.result.teacher.id,"
       //        + "sum(questionR.score),case when questionR.result.statType =1 then count(distinct questionR.result.id) end,"
       //        + "count(distinct questionR.result.id),case when questionR.result.statType =1 then sum(questionR.score) end,"
       + "supervisiorEvaluate.totalScore,departEvaluate.totalScore,"
       + "sum(questionR.score)/count(distinct questionR.result.id)");
-    quer.where("questionR.result.lesson.semester.id=departEvaluate.semester.id");
+    quer.where("questionR.result.clazz.semester.id=departEvaluate.semester.id");
     quer.where("questionR.result.teacher.id=departEvaluate.teacher.id");
-    quer.where("questionR.result.lesson.semester.id=supervisiorEvaluate.semester.id");
+    quer.where("questionR.result.clazz.semester.id=supervisiorEvaluate.semester.id");
     quer.where("questionR.result.teacher.id=supervisiorEvaluate.teacher.id");
-    quer.where("questionR.result.lesson.semester.id =:semesterId", semesterId);
+    quer.where("questionR.result.clazz.semester.id =:semesterId", semesterId);
     quer.groupBy("questionR.result.teacher.id,supervisiorEvaluate.totalScore,departEvaluate.totalScore")
     //    val wjStat = entityDao.search(quer)
 

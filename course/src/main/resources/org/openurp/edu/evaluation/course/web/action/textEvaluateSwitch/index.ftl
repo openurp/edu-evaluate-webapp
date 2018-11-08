@@ -11,10 +11,10 @@
         [@b.select  name="opened" label="开关状态" items={'1':'开放','0':'关闭'} value='1'  style="width:100px"/]
         <input type="hidden" name="orderBy" value="textEvaluateSwitch.id"/>
         [/@]
-        </td> 
+        </td>
         <td class="index_content">
             [@b.div id="contentDiv"  href="!search?&semester.id=${(semester.id)!}" /]
-        </td> 
+        </td>
     </tr>
 </table>
 [@b.foot/]
