@@ -9,7 +9,7 @@
   <groupId>org.openurp.edu.evaluation</groupId>
   <artifactId>openurp-edu-evaluation-questionnaire</artifactId>
   <packaging>jar</packaging>
-  <name>OpenURP Edu-evaluation Questionnaire</name>
+  <name>OpenURP Edu Evaluation Questionnaire</name>
 
   <properties>
     <bundle.symbolicName>org.openurp.edu.evaluation.questionnaire</bundle.symbolicName>

@@ -9,7 +9,7 @@
   <groupId>org.openurp.edu.evaluation</groupId>
   <artifactId>openurp-edu-evaluation-department</artifactId>
   <packaging>jar</packaging>
-  <name>OpenURP Edu-evaluation Department</name>
+  <name>OpenURP Edu Evaluation Department</name>
 
   <properties>
     <bundle.symbolicName>org.openurp.edu.evaluation.department</bundle.symbolicName>

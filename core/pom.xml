@@ -9,7 +9,7 @@
   <groupId>org.openurp.edu.evaluation</groupId>
   <artifactId>openurp-edu-evaluation-core</artifactId>
   <packaging>jar</packaging>
-  <name>OpenURP Edu-evaluation Core</name>
+  <name>OpenURP Edu Evaluation Core</name>
 
   <properties>
     <bundle.symbolicName>org.openurp.edu.evaluation.core</bundle.symbolicName>

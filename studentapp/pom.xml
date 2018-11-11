@@ -9,7 +9,7 @@
   <groupId>org.openurp.edu.evaluation</groupId>
   <artifactId>openurp-edu-evaluation-studentapp</artifactId>
   <packaging>war</packaging>
-  <name>OpenURP Edu evaluation StudentApp</name>
+  <name>OpenURP Edu Evaluation StudentApp</name>
 
   <properties>
     <bundle.symbolicName>org.openurp.edu.evaluation.studentapp</bundle.symbolicName>
