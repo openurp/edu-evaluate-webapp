@@ -4,12 +4,12 @@
   <parent>
     <groupId>org.openurp.edu.evaluation</groupId>
     <artifactId>openurp-edu-evaluation-web-parent</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
   </parent>
   <groupId>org.openurp.edu.evaluation</groupId>
   <artifactId>openurp-edu-evaluation-course</artifactId>
   <packaging>jar</packaging>
-  <name>OpenURP Edu-evaluation Course</name>
+  <name>OpenURP Edu Evaluation Course</name>
 
   <properties>
     <bundle.symbolicName>org.openurp.edu.evaluation.course</bundle.symbolicName>
