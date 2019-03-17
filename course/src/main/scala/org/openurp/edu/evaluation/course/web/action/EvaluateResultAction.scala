@@ -33,7 +33,7 @@ import org.openurp.edu.base.model.Teacher
 import java.time.LocalDate
 import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
 import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
-import org.openurp.edu.course.model.ExamTaker
+import org.openurp.edu.exam.model.ExamTaker
 
 class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
 

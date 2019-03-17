@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.openurp.edu.evaluation</groupId>
     <artifactId>openurp-edu-evaluation-web-parent</artifactId>
-    <version>0.0.5</version>
+    <version>0.0.6</version>
   </parent>
   <groupId>org.openurp.edu.evaluation</groupId>
   <artifactId>openurp-edu-evaluation-course</artifactId>
@@ -22,6 +22,12 @@
       <artifactId>openurp-edu-evaluation-core</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.openurp.edu.exam</groupId>
+      <artifactId>openurp-edu-exam-api</artifactId>
+      <version>${openurp.api.version}</version>
+    </dependency>
+    
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>

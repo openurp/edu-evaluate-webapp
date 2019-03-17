@@ -63,7 +63,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
   /**
    * 导出
    */
-  def export(): View = {
+  override def export(): View = {
     val semesterId = getInt("semester.id").get
     val finalScores = OqlBuilder.from(classOf[FinalTeacherScore], "finalTeacherScore")
     populateConditions(finalScores)
