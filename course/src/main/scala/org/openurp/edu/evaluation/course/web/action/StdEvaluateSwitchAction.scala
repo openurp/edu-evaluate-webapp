@@ -51,7 +51,7 @@ class StdEvaluateSwitchAction extends ProjectRestfulAction[StdEvaluateSwitch] {
     queryClazz.select("clazz.semester.id, count(*)")
     val clazzCountMap = entityDao.search(queryClazz).map(a => (a(0).asInstanceOf[Int], a(1).asInstanceOf[Number])).toMap
     put("clazzCountMap", clazzCountMap)
-    val stdEvaluateSwitchs = getQueryBuilder()
+    val stdEvaluateSwitchs = getQueryBuilder
     semesterId.foreach { semesterId => stdEvaluateSwitchs.where("stdEvaluateSwitch.semester.id=:semesterId", semesterId) }
     stdEvaluateSwitchs.where("stdEvaluateSwitch.project=:project", getProject)
     opened.foreach { opened => stdEvaluateSwitchs.where("stdEvaluateSwitch.opened=:opened", opened) }
