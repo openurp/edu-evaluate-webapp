@@ -14,7 +14,7 @@
         [/@]
         </td>
         <td class="index_content">
-         [@b.div id="contentDiv" href="!search"/]
+         [@b.div id="contentDiv" href="!search?semester.id="+currentSemester.id/]
         </td>
     </tr>
 </table>

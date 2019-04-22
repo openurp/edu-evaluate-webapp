@@ -19,7 +19,6 @@
 package org.openurp.edu.evaluation.course.model
 
 import org.openurp.edu.base.model.Semester
-import org.beangle.data.model.LongId
 import org.openurp.edu.course.model.Clazz
 
 class EvaluateSearchDepartment {

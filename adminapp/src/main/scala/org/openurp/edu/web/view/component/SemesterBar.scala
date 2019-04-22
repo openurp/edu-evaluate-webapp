@@ -16,11 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.web.view.component;
+package org.openurp.edu.web.view.component
 
 import org.beangle.commons.lang.Strings
-import org.beangle.webmvc.view.tag.ClosingUIBean
-import org.beangle.webmvc.view.tag.ComponentContext
+import org.beangle.webmvc.view.tag.{ClosingUIBean, ComponentContext}
 /**
  * @author chaostone
  * @version $beangle 2.4.2 2011-8-14 下午11:32:37$
@@ -52,7 +51,7 @@ class SemesterBar(context: ComponentContext) extends ClosingUIBean(context) {
 
   override def evaluateParams() {
     if (Strings.isEmpty(this.id)) {
-      generateIdIfEmpty();
+      generateIdIfEmpty()
     }
   }
 

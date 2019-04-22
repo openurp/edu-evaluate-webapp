@@ -18,34 +18,25 @@
  */
 package org.openurp.edu.evaluation.questionnaire.web.action
 
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.evaluation.model.Question
-import org.beangle.data.dao.OqlBuilder
+import java.time.{Instant, LocalDate}
+
 import org.beangle.commons.collection.Order
 import org.beangle.commons.lang.Strings
-import org.openurp.edu.evaluation.model.Question
-import java.sql.Timestamp
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.Question
-import java.sql.Date
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.OptionGroup
+import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
-import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.edu.evaluation.questionnaire.service.QuestionTypeService
 import org.openurp.edu.base.model.Project
-import java.time.Instant
-import java.time.LocalDate
+import org.openurp.edu.evaluation.model.{OptionGroup, Question, Questionnaire}
+import org.openurp.edu.evaluation.questionnaire.service.QuestionTypeService
+import org.openurp.edu.boot.web.ProjectSupport
 
 /**
  * 问题维护响应类
  *
  * @author chaostone
  */
-class QuestionAction extends RestfulAction[Question] {
+class QuestionAction extends RestfulAction[Question] with ProjectSupport{
 
   var questionTypeService: QuestionTypeService = _
 
@@ -62,18 +53,17 @@ class QuestionAction extends RestfulAction[Question] {
 
   protected override def editSetting(entity: Question): Unit = {
     val optionGroups = entityDao.getAll(classOf[OptionGroup])
-    put("optionGroups", optionGroups);
+    put("optionGroups", optionGroups)
     val departmentList = entityDao.getAll(classOf[Department])
     val questionTypes = questionTypeService.getQuestionTypes()
-    put("questionTypes", questionTypes);
-    put("departmentList", departmentList);
+    put("questionTypes", questionTypes)
+    put("departmentList", departmentList)
   }
 
   protected override def saveAndRedirect(entity: Question): View = {
     try {
       val question = entity.asInstanceOf[Question]
-      val projects = entityDao.findBy(classOf[Project], "code", get("project"));
-      question.project = projects.head
+      question.project = getProject
       question.updatedAt = Instant.now
       val remark = question.remark.orNull
       val content = question.content
@@ -89,7 +79,7 @@ class QuestionAction extends RestfulAction[Question] {
         }
       } else {
         question.updatedAt = Instant.now
-        val questionOld = entityDao.get(classOf[Question], question.id);
+        val questionOld = entityDao.get(classOf[Question], question.id)
         if (questionOld.state != question.state) {
           if (question.state) {
             question.beginOn = LocalDate.now
@@ -99,26 +89,26 @@ class QuestionAction extends RestfulAction[Question] {
         }
 
       }
-      entityDao.saveOrUpdate(question);
-      return redirect("search", "info.save.success");
+      entityDao.saveOrUpdate(question)
+      return redirect("search", "info.save.success")
     } catch {
       case e: Exception =>
-        logger.info("saveAndForwad failure", e);
-        return redirect("search", "info.save.failure");
+        logger.info("saveAndForwad failure", e)
+        return redirect("search", "info.save.failure")
     }
   }
 
   override def remove(): View = {
-    val questionIds = longId("question");
-    val questions = entityDao.get(classOf[Question], questionIds);
+    val questionIds = longId("question")
+    val questions = entityDao.get(classOf[Question], questionIds)
 
-    val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire");
-    query.join("questionnaire.questions", "question");
-    query.where("question in (:questions)", questions);
-    val questionnaires = entityDao.search(query);
+    val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire")
+    query.join("questionnaire.questions", "question")
+    query.where("question in (:questions)", questions)
+    val questionnaires = entityDao.search(query)
     if (!questionnaires.isEmpty) { redirect("search", "删除失败,选择的数据中已有被评教问卷引用"); }
-    entityDao.remove(questions);
-    redirect("search", "删除成功");
+    entityDao.remove(questions)
+    redirect("search", "删除成功")
   }
 
 }

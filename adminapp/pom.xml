@@ -3,10 +3,9 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.openurp.edu.evaluation</groupId>
-    <artifactId>openurp-edu-evaluation-web-parent</artifactId>
-    <version>0.0.6</version>
+    <artifactId>openurp-edu-evaluation-parent</artifactId>
+    <version>0.0.7</version>
   </parent>
-  <groupId>org.openurp.edu.evaluation</groupId>
   <artifactId>openurp-edu-evaluation-adminapp</artifactId>
   <packaging>war</packaging>
   <name>OpenURP Edu Evaluation AdminApp</name>
@@ -21,11 +20,6 @@
       <groupId>org.openurp.edu.evaluation</groupId>
       <artifactId>openurp-edu-evaluation-core</artifactId>
       <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openurp.app</groupId>
-      <artifactId>openurp-app-boot</artifactId>
-      <version>${openurp.app.version}</version>
     </dependency>
     <dependency>
       <groupId>org.openurp.edu.evaluation</groupId>

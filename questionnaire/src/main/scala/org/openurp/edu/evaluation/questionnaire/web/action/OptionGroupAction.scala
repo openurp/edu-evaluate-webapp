@@ -20,15 +20,13 @@ package org.openurp.edu.evaluation.questionnaire.web.action
 
 import org.beangle.commons.collection.Order
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.evaluation.model.OptionGroup
-import org.openurp.edu.evaluation.model.Option
 import org.beangle.webmvc.api.view.View
-import org.openurp.base.model.Department
-import org.openurp.edu.evaluation.model.Question
+import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.model.Project
+import org.openurp.edu.evaluation.model.{Option, OptionGroup, Question}
+import org.openurp.edu.boot.web.ProjectSupport
 
-class OptionGroupAction extends RestfulAction[OptionGroup] {
+class OptionGroupAction extends RestfulAction[OptionGroup] with ProjectSupport {
 
   override def search(): View = {
     val builder = OqlBuilder.from(classOf[OptionGroup], "optionGroup")
@@ -52,9 +50,9 @@ class OptionGroupAction extends RestfulAction[OptionGroup] {
 
   override def saveAndRedirect(entity: OptionGroup): View = {
     try {
-      val optionGroup = entity.asInstanceOf[OptionGroup];
-      optionGroup.options.clear();
-      val optionCount = getInt("optionCount", 0);
+      val optionGroup = entity.asInstanceOf[OptionGroup]
+      optionGroup.options.clear()
+      val optionCount = getInt("optionCount", 0)
       (0 until optionCount) foreach { i =>
         get("option" + i + ".name") foreach { optionName =>
           val option = populateEntity(classOf[Option], "option" + i)
@@ -65,15 +63,15 @@ class OptionGroupAction extends RestfulAction[OptionGroup] {
         }
       }
       if (null == optionGroup.project) {
-        optionGroup.project = entityDao.findBy(classOf[Project], "code", get("project")).head
+        optionGroup.project = getProject
       }
       optionGroup.name = optionGroup.name.replaceAll("<", "&#60;").replaceAll(">", "&#62;")
-      entityDao.saveOrUpdate(optionGroup);
-      return redirect("search", "info.save.success");
+      entityDao.saveOrUpdate(optionGroup)
+      return redirect("search", "info.save.success")
     } catch {
       case e: Exception =>
-        logger.info("saveAndForwad failure", e);
-        return redirect("search", "info.save.failure");
+        logger.info("saveAndForwad failure", e)
+        return redirect("search", "info.save.failure")
     }
 
   }
@@ -89,14 +87,14 @@ class OptionGroupAction extends RestfulAction[OptionGroup] {
     val optionGroupIds = longIds("optionGroup")
     val query1 = OqlBuilder.from(classOf[OptionGroup], "optionGroup")
     query1.where("optionGroup.id in (:optionGroupIds)", optionGroupIds)
-    val optionGroups = entityDao.search(query1);
+    val optionGroups = entityDao.search(query1)
 
-    val query = OqlBuilder.from(classOf[Question], "question");
-    query.where("question.optionGroup.id in (:optionGroups)", optionGroupIds);
-    val questions = entityDao.search(query);
+    val query = OqlBuilder.from(classOf[Question], "question")
+    query.where("question.optionGroup.id in (:optionGroups)", optionGroupIds)
+    val questions = entityDao.search(query)
     if (!questions.isEmpty) return redirect("search", "删除失败,选择的数据中已有被评教问题引用")
-    else entityDao.remove(optionGroups);
-    return redirect("search", "info.remove.success");
+    else entityDao.remove(optionGroups)
+    return redirect("search", "info.remove.success")
   }
 
 }

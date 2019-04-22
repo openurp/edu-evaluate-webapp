@@ -18,29 +18,23 @@
  */
 package org.openurp.edu.evaluation.course.web.action
 
+import java.time.LocalDate
+
+import org.beangle.commons.collection.Order
 import org.beangle.commons.lang.Numbers
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.annotation.param
 import org.beangle.webmvc.api.view.View
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.model.Department
-import org.openurp.edu.base.model.Semester
-import org.openurp.edu.base.code.model.StdType
-import org.openurp.edu.base.model.Project
-import org.springframework.beans.support.PropertyComparator
-import org.beangle.commons.collection.Order
-import org.openurp.edu.base.model.Teacher
-import java.time.LocalDate
-import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
-import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
+import org.openurp.edu.base.model.{Semester, Teacher}
+import org.openurp.edu.evaluation.clazz.result.model.{EvaluateResult, QuestionResult}
 import org.openurp.edu.exam.model.ExamTaker
 
 class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
 
   override protected def indexSetting(): Unit = {
-    put("semesters", getSemesters())
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    val semesters=getSemesters()
+    put("semesters",semesters )
+    put("currentSemester", semesters.last)
   }
 
   override def search(): View = {
@@ -63,10 +57,10 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
   //  @Override
   // override protected def getQueryBuilder():OqlBuilder[EvaluateResult] ={
   //    val department = entityDao.get(classOf[Department],20)
-  //    val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult");
-  //    populateConditions(query);
+  //    val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult")
+  //    populateConditions(query)
   //    query.where("evaluateResult.clazz.teachDepart in (:teachDeparts)", department)
-  ////    query.limit(getPageLimit());
+  ////    query.limit(getPageLimit())
   //
   //  }
 
@@ -81,18 +75,18 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
     //    if (state) {
     //      state = false
     //    }
-    val results = entityDao.find(classOf[EvaluateResult], ids);
+    val results = entityDao.find(classOf[EvaluateResult], ids)
     results foreach { result =>
       result.statType = state
       //      //FIXME
       //    result.statType = 1
     }
     try {
-      entityDao.saveOrUpdate(results);
-      return redirect("search", "info.action.success");
+      entityDao.saveOrUpdate(results)
+      return redirect("search", "info.action.success")
     } catch {
       case e: Exception =>
-        return redirect("search", "info.save.failure");
+        return redirect("search", "info.save.failure")
     }
   }
 
@@ -101,7 +95,7 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
    */
   def updateTeacher(): View = {
     put("evaluateR", entityDao.get(classOf[EvaluateResult], getLong("evaluateResult").get))
-    // put("departments",entityDao.get(Department.class, "",));
+    // put("departments",entityDao.get(Department.class, "",))
     forward()
   }
 
@@ -109,13 +103,13 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
     try {
       val evaluateR = entityDao.get(classOf[EvaluateResult], getLong("evaluateResult").get)
       evaluateR.teacher = entityDao.get(classOf[Teacher], getLong("teacher.id").get)
-      entityDao.saveOrUpdate(evaluateR);
+      entityDao.saveOrUpdate(evaluateR)
     } catch {
       case e: Exception =>
         // TODO: handle exception
-        return redirect("search", "info.save.failure");
+        return redirect("search", "info.save.failure")
     }
-    return redirect("search", "info.action.success");
+    return redirect("search", "info.action.success")
   }
 
   /**
@@ -158,7 +152,7 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
         val builder = OqlBuilder.from(classOf[ExamTaker], "examTaker")
         builder.where("examTaker.clazz=:clazz", result.clazz)
         builder.where("examTaker.std=:std", result.student)
-        val takes = entityDao.search(builder);
+        val takes = entityDao.search(builder)
         if (takes.size > 0) {
           if ("违纪".equals(takes.head.examStatus.name)) {
             //FIXME
@@ -167,11 +161,11 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
           }
         }
       }
-      saveOrUpdate(results);
+      saveOrUpdate(results)
     } catch {
       case e: Exception =>
-        return redirect("search", "info.action.failure");
+        return redirect("search", "info.action.failure")
     }
-    return redirect("search", "info.action.success");
+    return redirect("search", "info.action.success")
   }
 }

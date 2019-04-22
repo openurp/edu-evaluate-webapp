@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.openurp.edu.evaluation</groupId>
-    <artifactId>openurp-edu-evaluation-web-parent</artifactId>
-    <version>0.0.6</version>
+    <artifactId>openurp-edu-evaluation-parent</artifactId>
+    <version>0.0.7</version>
   </parent>
   <groupId>org.openurp.edu.evaluation</groupId>
   <artifactId>openurp-edu-evaluation-course</artifactId>
@@ -21,6 +21,11 @@
       <groupId>org.openurp.edu.evaluation</groupId>
       <artifactId>openurp-edu-evaluation-core</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openurp.edu</groupId>
+      <artifactId>openurp-edu-boot</artifactId>
+      <version>${openurp.edu.boot.version}</version>
     </dependency>
     <dependency>
       <groupId>org.openurp.edu.exam</groupId>

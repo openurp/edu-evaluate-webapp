@@ -18,21 +18,17 @@
  */
 package org.openurp.edu.evaluation.questionnaire.service
 
-import org.openurp.edu.evaluation.model.Question
-import org.beangle.data.dao.EntityDao
-import org.beangle.data.dao.OqlBuilder
-import org.openurp.edu.evaluation.model.QuestionType
-import java.util.Date
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.Question
 import java.time.LocalDate
+
+import org.beangle.data.dao.{EntityDao, OqlBuilder}
+import org.openurp.edu.evaluation.model.{Question, QuestionType}
 
 class QuestionTypeService(entityDao: EntityDao) {
 
   def getQuestionTypes(): Seq[QuestionType] = {
-    val query = OqlBuilder.from(classOf[QuestionType], "type");
-    query.where("type.state=true");
-    query.where("type.beginOn <= :now and (type.endOn is null or type.endOn >= :now)", LocalDate.now);
+    val query = OqlBuilder.from(classOf[QuestionType], "type")
+    query.where("type.state=true")
+    query.where("type.beginOn <= :now and (type.endOn is null or type.endOn >= :now)", LocalDate.now)
     entityDao.search(query)
   }
 
@@ -42,11 +38,11 @@ class QuestionTypeService(entityDao: EntityDao) {
   }
 
   def getQuestionType(questionTypeId: Long): QuestionType = {
-    entityDao.get(classOf[QuestionType], questionTypeId);
+    entityDao.get(classOf[QuestionType], questionTypeId)
   }
 
   def getQuestionTypesScore(): collection.Map[Long, Number] = {
-    val query = OqlBuilder.from[Array[Any]](classOf[Question].getName, "question");
+    val query = OqlBuilder.from[Array[Any]](classOf[Question].getName, "question")
     query.groupBy("question.questionType.id").select("question.questionType.id,sum(question.score)")
     entityDao.search(query).map(obj => (obj(0).asInstanceOf[Number].longValue, obj(1).asInstanceOf[Number])).toMap
   }

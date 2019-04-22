@@ -23,18 +23,17 @@ import java.time.LocalDate
 import org.beangle.commons.collection.Order
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
-import org.openurp.edu.base.model.Project
-import org.openurp.edu.evaluation.clazz.model.TextEvaluation
-import org.openurp.edu.base.model.Semester
 import org.openurp.base.model.Department
+import org.openurp.edu.base.model.{Project, Semester}
+import org.openurp.edu.evaluation.clazz.model.TextEvaluation
 
 class TextEvaluationAction extends ProjectRestfulAction[TextEvaluation] {
 
   override protected def indexSetting(): Unit = {
-    put("semesters", getSemesters())
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
-    put("departments", findItemsBySchool(classOf[Department]))
+    val semesters = getSemesters()
+    put("semesters", semesters)
+    put("currentSemester", semesters.last)
+    put("departments", findInSchool(classOf[Department]))
   }
 
   override def search(): View = {
@@ -58,10 +57,6 @@ class TextEvaluationAction extends ProjectRestfulAction[TextEvaluation] {
    * @return
    */
   def updateAffirm(): View = {
-    val semesterId = 20141
-    val projectId = 1
-    put("semester", entityDao.get(classOf[Semester], semesterId))
-    put("project", entityDao.get(classOf[Project], projectId))
     val ids = longIds(simpleEntityName)
     val state = getBoolean("state").get
 
@@ -69,7 +64,7 @@ class TextEvaluationAction extends ProjectRestfulAction[TextEvaluation] {
     textEvaluations foreach { textEvaluation =>
       textEvaluation.state = state
     }
-    entityDao.saveOrUpdate(textEvaluations);
+    entityDao.saveOrUpdate(textEvaluations)
     redirect("search", "info.action.success")
   }
 }

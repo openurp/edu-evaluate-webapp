@@ -19,7 +19,7 @@
 package org.openurp.edu.evaluation.student.web
 
 import org.beangle.cdi.bind.BindModule
-import org.openurp.edu.evaluation.student.web.action.{ ClazzAction, TextAction }
+import org.openurp.edu.evaluation.student.web.action.{ClazzAction, TextAction}
 
 class DefaultModule extends BindModule {
 

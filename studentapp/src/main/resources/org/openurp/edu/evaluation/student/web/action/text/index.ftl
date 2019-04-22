@@ -10,6 +10,7 @@
             [/@]
         </td>
     </tr>
+    [#if !(currentSemester??)][#assign currentSemester = semesters?first/][/#if]
     <tr>
        <td class="index_content">
             [@b.div id="contentDiv"  href="!search?&semester.id=${currentSemester.id}" /]

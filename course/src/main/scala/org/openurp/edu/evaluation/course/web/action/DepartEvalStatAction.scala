@@ -18,39 +18,23 @@
  */
 package org.openurp.edu.evaluation.course.web.action
 
-import scala.collection.mutable.Buffer
-import scala.collection.mutable.ListBuffer
+import java.time.{Instant, LocalDate}
 
-import org.beangle.commons.collection.Collections
-import org.beangle.commons.collection.Order
+import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
-import org.openurp.edu.base.model.Semester
-import org.openurp.edu.base.code.model.StdType
-import org.openurp.edu.base.model.Course
-import org.openurp.edu.evaluation.model.Option
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.QuestionType
-import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.edu.course.model.Clazz
-import java.time.LocalDate
-import java.time.Instant
-import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
-import org.openurp.edu.evaluation.clazz.stat.model.SchoolEvalStat
-import org.openurp.edu.evaluation.clazz.stat.model.DepartQuestionStat
-import org.openurp.edu.evaluation.clazz.stat.model.DepartOptionStat
-import org.openurp.edu.evaluation.clazz.stat.model.SchoolQuestionTypeStat
-import org.openurp.edu.evaluation.clazz.stat.model.OptionStat
-import org.openurp.edu.evaluation.clazz.stat.model.DepartEvalStat
-import org.openurp.edu.evaluation.clazz.stat.model.SchoolOptionStat
-import org.openurp.edu.evaluation.clazz.stat.model.DepartQuestionTypeStat
-import org.openurp.edu.evaluation.clazz.stat.model.QuestionStat
-import org.openurp.edu.evaluation.clazz.stat.model.SchoolQuestionStat
-import org.openurp.edu.evaluation.clazz.stat.model.QuestionTypeStat
 import org.openurp.code.edu.model.EducationLevel
+import org.openurp.edu.base.code.model.StdType
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.course.model.Clazz
+import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
+import org.openurp.edu.evaluation.clazz.stat.model._
+import org.openurp.edu.evaluation.model.{Option, Question, QuestionType, Questionnaire}
+
+import scala.collection.mutable.{Buffer, ListBuffer}
 
 class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
   override def index(): View = {

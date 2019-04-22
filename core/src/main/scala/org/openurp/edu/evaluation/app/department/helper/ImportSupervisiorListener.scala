@@ -20,10 +20,8 @@ package org.openurp.edu.evaluation.department.helper
 
 import java.time.Instant
 
-import org.beangle.data.dao.EntityDao
-import org.beangle.data.dao.OqlBuilder
-import org.beangle.data.transfer.importer.AbstractImportListener
-import org.beangle.data.transfer.importer.ImportResult
+import org.beangle.data.dao.{EntityDao, OqlBuilder}
+import org.beangle.data.transfer.importer.{AbstractImportListener, ImportResult}
 import org.openurp.edu.base.model.Semester
 import org.openurp.edu.evaluation.department.model.SupervisiorEvaluate
 import org.openurp.edu.evaluation.model.Questionnaire

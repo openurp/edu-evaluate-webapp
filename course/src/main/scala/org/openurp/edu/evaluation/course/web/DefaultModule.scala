@@ -19,9 +19,8 @@
 package org.openurp.edu.evaluation.course.web
 
 import org.beangle.cdi.bind.BindModule
-import org.openurp.edu.evaluation.app.course.model.{ EvaluateSearchAdminclass, EvaluateSearchDepartment }
 import org.openurp.edu.evaluation.app.course.service.StdEvaluateSwitchService
-import org.openurp.edu.evaluation.course.web.action.{ CourseEvalSearchAction, CourseEvalStatAction, DepartEvalSearchAction, DepartEvalStatAction, EvaluateResultAction, EvaluateStatisticsAction, EvaluateStatusStatAction, EvaluateStatusTeacherAction, FinalTeacherScoreAction, ClazzEvalSearchAction, ClazzEvalStatAction, QuestionnaireClazzAction, QuestionnaireStatAction, QuestionnaireStatSearchAction, QuestionnaireStatTeacherAction, StdEvaluateSwitchAction, TeacherEvalSearchAction, TeacherEvalStatAction, TextEvaluateSwitchAction, TextEvaluationAction, TextEvaluationSearchAction, TextEvaluationTeacherAction }
+import org.openurp.edu.evaluation.course.web.action._
 
 class DefaultModule extends BindModule {
 

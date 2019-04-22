@@ -20,11 +20,9 @@ package org.openurp.edu.evaluation.course.web.action
 
 import java.time.LocalDate
 
-import org.beangle.commons.collection.Collections
-import org.beangle.commons.collection.Order
+import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.webmvc.api.annotation.mapping
-import org.beangle.webmvc.api.annotation.param
+import org.beangle.webmvc.api.annotation.{mapping, param}
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.model.Semester
@@ -66,7 +64,7 @@ class TeacherEvalSearchAction extends RestfulAction[TeacherEvalStat] {
         var tt = 0
         list foreach { oldOption =>
           if (oldOption.id == option.id) {
-            tt += 1;
+            tt += 1
           }
         }
         if (tt == 0) {
@@ -74,7 +72,7 @@ class TeacherEvalSearchAction extends RestfulAction[TeacherEvalStat] {
         }
       }
     }
-    put("options", list);
+    put("options", list)
     forward()
   }
 }

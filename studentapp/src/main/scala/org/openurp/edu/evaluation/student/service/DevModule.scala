@@ -18,9 +18,8 @@
  */
 package org.openurp.edu.evaluation.student.service
 
+import org.beangle.cdi.bind.{BindModule, profile}
 import org.springframework.beans.factory.config.PropertiesFactoryBean
-import org.beangle.cdi.bind.profile
-import org.beangle.cdi.bind.BindModule
 
 @profile("dev")
 object DevModule extends BindModule {

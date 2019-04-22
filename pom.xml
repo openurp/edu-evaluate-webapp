@@ -4,19 +4,20 @@
   <parent>
     <groupId>org.openurp</groupId>
     <artifactId>openurp-parent</artifactId>
-    <version>0.2.28</version>
+    <version>0.2.32</version>
   </parent>
   <groupId>org.openurp.edu.evaluation</groupId>
-  <artifactId>openurp-edu-evaluation-web-parent</artifactId>
-  <version>0.0.6</version>
+  <artifactId>openurp-edu-evaluation-parent</artifactId>
+  <version>0.0.7</version>
   <packaging>pom</packaging>
   <name>OpenURP Edu Evaluation Parent</name>
 
   <properties>
     <bundle.symbolicName>org.openurp.edu.evaluation.parent</bundle.symbolicName>
     <bundle.namespace>org.openurp</bundle.namespace>
-    <openurp.app.version>0.1.12</openurp.app.version>
-    <openurp.api.version>0.8.1</openurp.api.version>
+    <openurp.app.version>0.1.15</openurp.app.version>
+    <openurp.api.version>0.9.4</openurp.api.version>
+    <openurp.edu.boot.version>0.0.4</openurp.edu.boot.version>
   </properties>
 
   <modules>

@@ -18,19 +18,17 @@
  */
 package org.openurp.edu.evaluation.course.web.action
 
+import java.time.LocalDate
+
+import org.beangle.commons.collection.Collections
+import org.beangle.data.dao.OqlBuilder
+import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
-import org.openurp.edu.evaluation.model.EvaluationCriteria
-import org.beangle.data.dao.OqlBuilder
-import org.openurp.code.edu.model.EducationLevel
-import org.openurp.edu.evaluation.model.QuestionType
-import org.openurp.edu.evaluation.clazz.stat.model.ClazzEvalStat
-import org.beangle.commons.collection.Collections
-import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.code.model.StdType
-import org.openurp.edu.evaluation.model.Questionnaire
-import java.time.LocalDate
-import org.beangle.webmvc.api.view.View
+import org.openurp.edu.base.model.Semester
+import org.openurp.edu.evaluation.clazz.stat.model.ClazzEvalStat
+import org.openurp.edu.evaluation.model.{EvaluationCriteria, QuestionType, Questionnaire}
 
 class QuestionnaireStatSearchAction extends RestfulAction[ClazzEvalStat] {
 
@@ -59,10 +57,10 @@ class QuestionnaireStatSearchAction extends RestfulAction[ClazzEvalStat] {
 
   protected def getOptionMap(): collection.Map[String, Float] = {
     val optionNameMap = Collections.newMap[String, Float]
-    optionNameMap.put("A", 90.toFloat);
-    optionNameMap.put("B", 80.toFloat);
-    optionNameMap.put("C", 60.toFloat);
-    optionNameMap.put("D", 0.toFloat);
+    optionNameMap.put("A", 90.toFloat)
+    optionNameMap.put("B", 80.toFloat)
+    optionNameMap.put("C", 60.toFloat)
+    optionNameMap.put("D", 0.toFloat)
     optionNameMap
   }
 
