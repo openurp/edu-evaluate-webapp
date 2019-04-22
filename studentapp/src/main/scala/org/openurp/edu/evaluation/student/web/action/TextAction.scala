@@ -150,7 +150,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
     query.where("courseTake.semester =:semester", semester)
     val clazzIds = entityDao.search(query)
     var stdClazzs: Seq[Clazz] = Seq()
-    if (!clazzIds.isEmpty) {
+    if (clazzIds.nonEmpty) {
       val entityquery = OqlBuilder.from(classOf[Clazz], "clazz").where("clazz.id in (:clazzIds)", clazzIds)
       stdClazzs = entityDao.search(entityquery)
     }
@@ -261,7 +261,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
     val ids = longIds("clazz")
     val teachers = getTeachersByClazzIdSeq(ids)
     val clazzs = getTeacherClazzByClazzIdSeq(ids)
-    val clazz = entityDao.get(classOf[Clazz], ids(0))
+    val clazz = entityDao.get(classOf[Clazz], ids.head)
     val semester = clazz.semester
 
     put("clazzs", clazzs)

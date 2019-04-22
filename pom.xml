@@ -17,7 +17,7 @@
     <bundle.namespace>org.openurp</bundle.namespace>
     <openurp.app.version>0.1.15</openurp.app.version>
     <openurp.api.version>0.9.4</openurp.api.version>
-	<openurp.edu.boot.version>0.0.3</openurp.edu.boot.version>
+    <openurp.edu.boot.version>0.0.4</openurp.edu.boot.version>
   </properties>
 
   <modules>

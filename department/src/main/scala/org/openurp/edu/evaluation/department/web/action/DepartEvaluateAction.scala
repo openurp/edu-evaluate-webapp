@@ -88,15 +88,6 @@ class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate]  {
     query.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
   }
 
-  def getTeacher(): Teacher = {
-    val teachers = entityDao.findBy(classOf[Teacher], "code", List(Securities.user))
-    if (teachers.isEmpty) {
-      throw new RuntimeException("Cannot find teacher with code " + Securities.user)
-    } else {
-      teachers.head
-    }
-  }
-
   override def editSetting(departEvaluate: DepartEvaluate): Unit = {
     val semesterId = intId("departEvaluate.semester")
     put("semester", entityDao.get(classOf[Semester], semesterId))

@@ -33,4 +33,3 @@ abstract class ProjectRestfulAction[T <: Entity[_]] extends RestfulAction[T] wit
   }
 
 }
-

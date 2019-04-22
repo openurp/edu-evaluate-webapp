@@ -33,7 +33,7 @@ import org.openurp.edu.evaluation.clazz.model.QuestionnaireClazz
 import org.openurp.edu.evaluation.clazz.result.model.{EvaluateResult, QuestionResult}
 import org.openurp.edu.evaluation.model.{Option, Question}
 
-class ClazzAction extends RestfulAction[EvaluateResult] with ProjectSupport{
+class ClazzAction extends RestfulAction[EvaluateResult] with ProjectSupport {
 
   var evaluateSwitchService: StdEvaluateSwitchService = _
 
@@ -69,15 +69,17 @@ class ClazzAction extends RestfulAction[EvaluateResult] with ProjectSupport{
   }
 
   override protected def indexSetting(): Unit = {
-    val std = getStudent()
-    if (std == null) { forward("error.std.stdNo.needed") }
+    val std = getStudent
+    if (std == null) {
+      forward("error.std.stdNo.needed")
+    }
     val semesters = evaluateSwitchService.getOpenedSemesters(std.project)
     put("semesters", semesters)
     if (!semesters.isEmpty) put("currentSemester", semesters.head)
   }
 
   override def search(): View = {
-    val std = getStudent()
+    val std = getStudent
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
@@ -98,8 +100,8 @@ class ClazzAction extends RestfulAction[EvaluateResult] with ProjectSupport{
   }
 
   /**
-   * 跳转(问卷页面)
-   */
+    * 跳转(问卷页面)
+    */
   def loadQuestionnaire(): View = {
     val clazzId = get("clazzId").get
     val evaluateState = get("evaluateState").get
@@ -146,8 +148,10 @@ class ClazzAction extends RestfulAction[EvaluateResult] with ProjectSupport{
       var teacherId: Long = 0
       if (questionnaireClazz.evaluateByTeacher) {
         teacherId = ids(1).toLong
-      } else { teacherId = teachers.head.id }
-      val std = getStudent()
+      } else {
+        teacherId = teachers.head.id
+      }
+      val std = getStudent
       val evaluateResult = getResultByStdIdAndClazzId(std.id, clazz.id, teacherId)
       if (null == evaluateResult) {
         addMessage("error.dataRealm.insufficient")
@@ -168,19 +172,8 @@ class ClazzAction extends RestfulAction[EvaluateResult] with ProjectSupport{
     forward()
   }
 
-  def getStudent(): Student = {
-    val stds = entityDao.search(OqlBuilder.from(classOf[Student], "s")
-      .where("s.user.code = :code", Securities.user)
-      .where("s.project=:project",getProject)
-    if (stds.isEmpty) {
-      throw new RuntimeException("Cannot find student with code " + Securities.user)
-    } else {
-      stds.head
-    }
-  }
-
   override def save(): View = {
-    val std = getStudent()
+    val std = getStudent
     // 页面参数
     val clazzId = getLong("clazz.id").get
     var teacherId = getLong("teacherId").get
