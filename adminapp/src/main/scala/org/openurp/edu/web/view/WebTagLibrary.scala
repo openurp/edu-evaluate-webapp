@@ -16,16 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.web.view;
+package org.openurp.edu.web.view
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.beangle.webmvc.view.tag.AbstractTagLibrary;
+import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import org.beangle.webmvc.view.tag.AbstractTagLibrary
 
 class WebTagLibrary extends AbstractTagLibrary {
 
   def getModels(req: HttpServletRequest, res: HttpServletResponse): AnyRef = {
-    new WebModels(buildComponentContext(req), req);
+    new WebModels(buildComponentContext(req), req)
   }
 }

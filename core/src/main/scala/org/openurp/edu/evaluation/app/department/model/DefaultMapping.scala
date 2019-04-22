@@ -18,7 +18,6 @@
  */
 package org.openurp.edu.evaluation.app.department.model
 
-import scala.reflect.runtime.universe
 import org.beangle.data.orm.MappingModule
 
 /**

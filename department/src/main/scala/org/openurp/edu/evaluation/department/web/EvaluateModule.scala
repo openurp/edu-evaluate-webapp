@@ -19,10 +19,7 @@
 package org.openurp.edu.evaluation.department.web
 
 import org.beangle.cdi.bind.BindModule
-import org.openurp.edu.evaluation.department.web.action.DepartEvaluateSearchAction
-import org.openurp.edu.evaluation.department.web.action.DepartEvaluateAction
-import org.openurp.edu.evaluation.department.web.action.SupervisiorEvaluateAction
-import org.openurp.edu.evaluation.department.web.action.EvaluateSwitchAction
+import org.openurp.edu.evaluation.department.web.action.{DepartEvaluateAction, DepartEvaluateSearchAction, EvaluateSwitchAction, SupervisiorEvaluateAction}
 
 class EvaluateModule extends BindModule {
 

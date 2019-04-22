@@ -18,30 +18,23 @@
  */
 package org.openurp.edu.evaluation.course.web.action
 
-import java.time.{ Instant, LocalDate }
+import java.time.{Instant, LocalDate}
 
-import scala.collection.mutable.{ Buffer, ListBuffer }
-
-import org.beangle.commons.collection.{ Collections, Order }
+import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.base.model.{ Course, Teacher }
-import org.openurp.edu.evaluation.model.{ Option, Question, QuestionType, Questionnaire }
-import org.openurp.edu.course.model.Clazz
-import org.openurp.edu.base.model.Semester
-import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
-import org.openurp.edu.evaluation.clazz.stat.model.OptionStat
-import org.openurp.edu.evaluation.clazz.stat.model.QuestionStat
-import org.openurp.edu.evaluation.clazz.stat.model.QuestionTypeStat
-import org.openurp.edu.evaluation.clazz.stat.model.CourseEvalStat
-import org.openurp.edu.evaluation.clazz.stat.model.CourseQuestionStat
-import org.openurp.edu.evaluation.clazz.stat.model.CourseQuestionTypeStat
-import org.openurp.edu.evaluation.clazz.stat.model.CourseOptionStat
 import org.openurp.base.model.Department
-import org.openurp.edu.base.code.model.StdType
 import org.openurp.code.edu.model.EducationLevel
+import org.openurp.edu.base.code.model.StdType
+import org.openurp.edu.base.model.{Course, Semester, Teacher}
+import org.openurp.edu.course.model.Clazz
+import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
+import org.openurp.edu.evaluation.clazz.stat.model._
+import org.openurp.edu.evaluation.model.{Option, Question, QuestionType, Questionnaire}
+
+import scala.collection.mutable.{Buffer, ListBuffer}
 
 class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
 

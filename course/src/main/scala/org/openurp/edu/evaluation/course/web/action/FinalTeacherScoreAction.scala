@@ -18,29 +18,28 @@
  */
 package org.openurp.edu.evaluation.course.web.action
 
+import java.time.LocalDate
+
 import org.beangle.commons.collection.Order
 import org.beangle.commons.lang.ClassLoaders
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.webmvc.api.context.ActionContext
-import org.beangle.webmvc.api.view.{ Status, View }
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.base.model.Teacher
-import org.openurp.edu.evaluation.department.model.{ DepartEvaluate, SupervisiorEvaluate }
-import org.openurp.edu.evaluation.app.course.service.Ranker
-import org.openurp.edu.evaluation.clazz.stat.model.FinalTeacherScore
-
-import java.time.LocalDate
-import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
-import org.openurp.base.model.Department
-import org.openurp.edu.base.code.model.StdType
-import org.openurp.edu.base.model.Semester
-import org.openurp.code.edu.model.EducationLevel
 import org.beangle.data.transfer.excel.ExcelTemplateWriter
+import org.beangle.data.transfer.exporter.ExportContext
+import org.beangle.webmvc.api.context.ActionContext
+import org.beangle.webmvc.api.view.{Status, View}
+import org.openurp.base.model.Department
+import org.openurp.code.edu.model.EducationLevel
+import org.openurp.edu.base.code.model.StdType
+import org.openurp.edu.base.model.{Semester, Teacher}
+import org.openurp.edu.evaluation.app.course.service.Ranker
+import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
+import org.openurp.edu.evaluation.clazz.stat.model.FinalTeacherScore
+import org.openurp.edu.evaluation.department.model.{DepartEvaluate, SupervisiorEvaluate}
 
 class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
 
   override def index(): View = {
-    put("departments", findItemsBySchool(classOf[Department]))
+    put("departments", findInSchool(classOf[Department]))
     put("semesters", getSemesters())
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     put("currentSemester", entityDao.search(semesterQuery).head)
@@ -71,8 +70,8 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     finalScores.where("finalTeacherScore.semester.id=:semesterId", semesterId)
     val list = collection.JavaConverters.asJavaCollection(entityDao.search(finalScores))
     //查出信息并放到map中
-    val beans = new java.util.HashMap[String, Any]
-    beans.put("list", list)
+    val context= new ExportContext
+    context.put("list", list)
     //获得模板路径
     val path = ClassLoaders.getResource("template/finalTeacherScore.xls").get
     //准备输出流
@@ -81,8 +80,9 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     response.setHeader("Content-Disposition", "attachmentfilename=finalTeacherScore.xls")
     val os = response.getOutputStream()
     try {
+
       //将beans通过模板输入流写到workbook中
-      new ExcelTemplateWriter(path, os).write()
+      new ExcelTemplateWriter(path,context, os).write()
     } finally {
       if (os != null) {
         os.close()
@@ -100,15 +100,15 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     rankQuery.where("finalTeacherScore.semester.id=:semesterId", semesterId)
     val evals = entityDao.search(rankQuery)
     Ranker.rOver(evals) { (x, r) =>
-      x.rank = r;
+      x.rank = r
     }
     val departEvalMaps = evals.groupBy(x => x.teacher.user.department)
     departEvalMaps.values foreach { departEvals =>
       Ranker.rOver(departEvals) { (x, r) =>
-        x.departRank = r;
+        x.departRank = r
       }
     }
-    entityDao.saveOrUpdate(evals);
+    entityDao.saveOrUpdate(evals)
     redirect("index", "info.action.success")
   }
 
@@ -160,24 +160,24 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
       //        + "sum(questionR.score),case when questionR.result.statType =1 then count(distinct questionR.result.id) end,"
       //        + "count(distinct questionR.result.id),case when questionR.result.statType =1 then sum(questionR.score) end,"
       + "supervisiorEvaluate.totalScore,departEvaluate.totalScore,"
-      + "sum(questionR.score)/count(distinct questionR.result.id)");
-    quer.where("questionR.result.clazz.semester.id=departEvaluate.semester.id");
-    quer.where("questionR.result.teacher.id=departEvaluate.teacher.id");
-    quer.where("questionR.result.clazz.semester.id=supervisiorEvaluate.semester.id");
-    quer.where("questionR.result.teacher.id=supervisiorEvaluate.teacher.id");
-    quer.where("questionR.result.clazz.semester.id =:semesterId", semesterId);
+      + "sum(questionR.score)/count(distinct questionR.result.id)")
+    quer.where("questionR.result.clazz.semester.id=departEvaluate.semester.id")
+    quer.where("questionR.result.teacher.id=departEvaluate.teacher.id")
+    quer.where("questionR.result.clazz.semester.id=supervisiorEvaluate.semester.id")
+    quer.where("questionR.result.teacher.id=supervisiorEvaluate.teacher.id")
+    quer.where("questionR.result.clazz.semester.id =:semesterId", semesterId)
     quer.groupBy("questionR.result.teacher.id,supervisiorEvaluate.totalScore,departEvaluate.totalScore")
     //    val wjStat = entityDao.search(quer)
 
     //    val que = OqlBuilder.from[Array[Any]](classOf[TeacherEvalStat].getName + " teacherEvalStat,"
     //        + classOf[DepartEvaluate].getName + " departEvaluate,"
-    //        + classOf[SupervisiorEvaluate].getName + " supervisiorEvaluate");
-    //    que.select("teacherEvalStat.teacher.id,teacherEvalStat.score,supervisiorEvaluate.totalScore,departEvaluate.totalScore");
-    //    que.where("teacherEvalStat.semester.id=departEvaluate.semester.id");
-    //    que.where("teacherEvalStat.teacher.id=departEvaluate.teacher.id");
-    //    que.where("teacherEvalStat.semester.id=supervisiorEvaluate.semester.id");
-    //    que.where("teacherEvalStat.teacher.id=supervisiorEvaluate.teacher.id");
-    //    que.where("teacherEvalStat.semester.id =:semesterId", semesterId);
+    //        + classOf[SupervisiorEvaluate].getName + " supervisiorEvaluate")
+    //    que.select("teacherEvalStat.teacher.id,teacherEvalStat.score,supervisiorEvaluate.totalScore,departEvaluate.totalScore")
+    //    que.where("teacherEvalStat.semester.id=departEvaluate.semester.id")
+    //    que.where("teacherEvalStat.teacher.id=departEvaluate.teacher.id")
+    //    que.where("teacherEvalStat.semester.id=supervisiorEvaluate.semester.id")
+    //    que.where("teacherEvalStat.teacher.id=supervisiorEvaluate.teacher.id")
+    //    que.where("teacherEvalStat.semester.id =:semesterId", semesterId)
 
     //    val finalScoreMap = new collection.mutable.HashMap[Long,Buffer[Tuple4[Number,Number,Number,Number]]]
     //    entityDao.search(que) foreach { a =>

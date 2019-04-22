@@ -18,10 +18,9 @@
  */
 package org.openurp.edu.evaluation.app.course.model
 
-import org.openurp.edu.base.model.Project
 import org.beangle.data.model.IntId
-import org.openurp.edu.base.model.Semester
 import org.beangle.data.model.pojo.InstantRange
+import org.openurp.edu.base.model.{Project, Semester}
 
 class TextEvaluateSwitch extends IntId with InstantRange {
 

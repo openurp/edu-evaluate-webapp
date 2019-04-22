@@ -16,19 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.web.view;
+package org.openurp.edu.web.view
 
 import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
-import org.beangle.webmvc.view.tag.AbstractModels
-import org.beangle.webmvc.view.tag.ComponentContext
+import org.beangle.webmvc.view.tag.{AbstractModels, ComponentContext}
 import org.beangle.webmvc.view.tag.freemarker.TagModel
 import org.openurp.edu.web.view.component.SemesterBar
 
 class WebModels(context: ComponentContext, request: HttpServletRequest) extends AbstractModels(context, request) {
 
   def  getSemesterBar() :TagModel = {
-     get(classOf[SemesterBar]);
+     get(classOf[SemesterBar])
   }
 
 }

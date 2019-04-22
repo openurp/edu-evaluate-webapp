@@ -23,19 +23,18 @@ import java.time.{ Instant, LocalDate }
 import scala.collection.mutable.Buffer
 
 import org.beangle.commons.collection.{ Collections, Order }
-import org.beangle.commons.lang.Numbers
+import org.beangle.commons.lang.{ Numbers, Strings }
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.security.Securities
 import org.beangle.webmvc.api.annotation.param
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
+import org.openurp.edu.boot.web.ProjectSupport
 import org.openurp.edu.evaluation.clazz.model.QuestionnaireClazz
 import org.openurp.edu.evaluation.model.{ Question, QuestionType, Questionnaire }
-import org.beangle.commons.lang.Strings
-import org.openurp.edu.base.model.Project
 
-class QuestionnaireAction extends RestfulAction[Questionnaire] {
+class QuestionnaireAction extends RestfulAction[Questionnaire] with ProjectSupport{
 
   override def search(): View = {
     val builder = OqlBuilder.from(classOf[Questionnaire], "questionnaire")
@@ -48,9 +47,9 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] {
   }
 
   override def editSetting(entity: Questionnaire): Unit = {
-    val questionnaire = entity.asInstanceOf[Questionnaire];
+    val questionnaire = entity.asInstanceOf[Questionnaire]
     val departmentList = entityDao.getAll(classOf[Department])
-    put("departments", departmentList);
+    put("departments", departmentList)
     val questionTree = Collections.newMap[QuestionType, Buffer[Question]]
     questionnaire.questions foreach { question =>
       val key = question.questionType
@@ -60,19 +59,19 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] {
       }
       questions += question
       questions.sortWith((x, y) => x.priority < y.priority)
-      questionTree.put(key, questions);
+      questionTree.put(key, questions)
     }
-    put("questions", questionnaire.questions);
-    put("questionTree", questionTree);
+    put("questions", questionnaire.questions)
+    put("questionTree", questionTree)
 
   }
 
   override def info(@param("id") id: String): View = {
     if (id == 0L) {
-      logger.info("查看失败");
-      redirect("search", "请选择一条记录");
+      logger.info("查看失败")
+      redirect("search", "请选择一条记录")
     }
-    val questionnaire = entityDao.get(classOf[Questionnaire], Numbers.toLong(id));
+    val questionnaire = entityDao.get(classOf[Questionnaire], Numbers.toLong(id))
     val questionTree = Collections.newMap[QuestionType, Buffer[Question]]
     questionnaire.questions foreach { question =>
       val key = question.questionType
@@ -82,20 +81,20 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] {
       }
       questions += question
       questions.sortWith((x, y) => x.priority > y.priority)
-      questionTree.put(key, questions);
+      questionTree.put(key, questions)
     }
-    put("questionTree", questionTree);
-    put("questionnaire", questionnaire);
+    put("questionTree", questionTree)
+    put("questionnaire", questionnaire)
     forward()
   }
 
   override def saveAndRedirect(entity: Questionnaire): View = {
-    val questionnaire = entity.asInstanceOf[Questionnaire];
+    val questionnaire = entity.asInstanceOf[Questionnaire]
     questionnaire.beginOn = LocalDate.parse(get("questionnaire.beginOn").get)
     questionnaire.updatedAt = Instant.now
     questionnaire.createBy = Securities.user
     if (null == questionnaire.project) {
-      questionnaire.project = entityDao.findBy(classOf[Project], "code", get("project")).head
+      questionnaire.project = getProject
     }
     questionnaire.endOn = get("questionnaire.endOn").filter(Strings.isNotBlank(_)).map(LocalDate.parse(_))
 
@@ -104,7 +103,7 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] {
         questionnaire.beginOn = LocalDate.now
       }
     } else {
-      val questionnaireOld = entityDao.get(classOf[Questionnaire], questionnaire.id);
+      val questionnaireOld = entityDao.get(classOf[Questionnaire], questionnaire.id)
       if (questionnaireOld.state != questionnaire.state) {
         if (questionnaire.state) {
           questionnaire.beginOn = LocalDate.now
@@ -114,25 +113,25 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] {
       }
 
     }
-    questionnaire.questions.clear();
+    questionnaire.questions.clear()
     questionnaire.questions ++= entityDao.find(classOf[Question], longIds("questionnaire.question"))
 
-    entityDao.saveOrUpdate(questionnaire);
-    redirect("search", "info.save.success");
+    entityDao.saveOrUpdate(questionnaire)
+    redirect("search", "info.save.success")
   }
 
   override def remove(): View = {
-    val questionnaireIds = longIds("questionnaire");
+    val questionnaireIds = longIds("questionnaire")
     val query1 = OqlBuilder.from(classOf[Questionnaire], "questionnaire")
     query1.where("questionnaire.id in (:questionnaireIds)", questionnaireIds)
-    val questionnaires = entityDao.search(query1);
-    val query = OqlBuilder.from(classOf[QuestionnaireClazz], "ql");
-    query.where("ql.questionnaire in (:questionnaires)", questionnaires);
-    val qls = entityDao.search(query);
+    val questionnaires = entityDao.search(query1)
+    val query = OqlBuilder.from(classOf[QuestionnaireClazz], "ql")
+    query.where("ql.questionnaire in (:questionnaires)", questionnaires)
+    val qls = entityDao.search(query)
     if (!qls.isEmpty) { return redirect("search", "删除失败,选择的数据中已有被课程问卷引用"); }
 
-    entityDao.remove(questionnaires);
-    return redirect("search", "删除成功");
+    entityDao.remove(questionnaires)
+    return redirect("search", "删除成功")
   }
 
   def searchQuestion(): View = {
@@ -142,19 +141,19 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] {
     entityQuery.where("question.questionType.state=true")
     entityQuery.where(
       "question.state=true and question.questionType.beginOn <= :now and (question.questionType.endOn is null or question.questionType.endOn >= :now)",
-      LocalDate.now);
+      LocalDate.now)
     if (!get("questionTypeId").isEmpty) {
       val typeId = getLong("questionTypeId").get
       if (typeId != 0L) {
-        entityQuery.where("question.questionType.id=:id", typeId);
+        entityQuery.where("question.questionType.id=:id", typeId)
       }
     }
     if (questionSeq.isEmpty) {
-      entityQuery.where("question.id not in (:questionIds)", questionSeq);
+      entityQuery.where("question.id not in (:questionIds)", questionSeq)
     }
-    put("questionSeqIds", questionSeq);
+    put("questionSeqIds", questionSeq)
     val questions = entityDao.search(entityQuery)
-    put("questions", questions);
+    put("questions", questions)
     forward()
   }
 

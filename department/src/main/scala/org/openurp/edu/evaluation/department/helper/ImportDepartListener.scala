@@ -18,19 +18,14 @@
  */
 package org.openurp.edu.evaluation.department.helper
 
-import java.util.Date
-import org.beangle.data.dao.EntityDao
-import org.beangle.data.dao.OqlBuilder
-import org.openurp.edu.base.model.Semester
-import org.openurp.edu.base.model.Student
-import org.openurp.edu.evaluation.department.model.SupervisiorEvaluate
-import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.edu.base.model.Teacher
-import org.openurp.edu.evaluation.department.model.DepartEvaluate
 import java.time.Instant
-import org.beangle.data.transfer.importer.AbstractImportListener
+
+import org.beangle.data.dao.{EntityDao, OqlBuilder}
+import org.beangle.data.transfer.importer.{AbstractImportListener, ImportResult}
 import org.beangle.security.Securities
-import org.beangle.data.transfer.importer.ImportResult
+import org.openurp.edu.base.model.{Semester, Teacher}
+import org.openurp.edu.evaluation.department.model.DepartEvaluate
+import org.openurp.edu.evaluation.model.Questionnaire
 
 /**
  * @author xinzhou

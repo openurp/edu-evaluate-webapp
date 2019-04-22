@@ -18,20 +18,17 @@
  */
 package org.openurp.edu.evaluation.questionnaire.web.action
 
-import java.util.Date
-import java.sql.Date
+import java.time.{ Instant, LocalDate }
+
 import org.beangle.commons.collection.Order
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.evaluation.model.QuestionType
-import org.openurp.edu.evaluation.model.Question
 import org.openurp.edu.base.model.Project
-import java.time.Instant
-import org.springframework.cglib.core.Local
-import java.time.LocalDate
+import org.openurp.edu.evaluation.model.{ Question, QuestionType }
+import org.openurp.edu.boot.web.ProjectSupport
 
-class QuestionTypeAction extends RestfulAction[QuestionType] {
+class QuestionTypeAction extends RestfulAction[QuestionType] with ProjectSupport {
 
   override def search(): View = {
     val builder = OqlBuilder.from(classOf[QuestionType], "questionType")
@@ -45,11 +42,10 @@ class QuestionTypeAction extends RestfulAction[QuestionType] {
   protected override def saveAndRedirect(entity: QuestionType): View = {
     try {
       val questionType = entity.asInstanceOf[QuestionType]
-      val projects = entityDao.findBy(classOf[Project], "code", List(get("project").get));
-      questionType.project = projects.head
+      questionType.project = getProject
       questionType.updatedAt = Instant.now
 
-      val name = questionType.name;
+      val name = questionType.name
       val enName = questionType.enName.orNull
       val remark = questionType.remark.orNull
       questionType.beginOn = LocalDate.parse(get("questionType.beginOn").get)
@@ -72,7 +68,7 @@ class QuestionTypeAction extends RestfulAction[QuestionType] {
         }
       } else {
         questionType.updatedAt = Instant.now
-        val questionTypeOld = entityDao.get(classOf[QuestionType], questionType.id);
+        val questionTypeOld = entityDao.get(classOf[QuestionType], questionType.id)
         if (questionTypeOld.state != questionType.state) {
           if (questionType.state) {
             questionType.beginOn = LocalDate.now
@@ -81,12 +77,12 @@ class QuestionTypeAction extends RestfulAction[QuestionType] {
           }
         }
       }
-      entityDao.saveOrUpdate(questionType);
-      return redirect("search", "info.save.success");
+      entityDao.saveOrUpdate(questionType)
+      return redirect("search", "info.save.success")
     } catch {
       case e: Exception =>
-        logger.info("saveAndForwad failure", e);
-        return redirect("search", "info.save.failure");
+        logger.info("saveAndForwad failure", e)
+        return redirect("search", "info.save.failure")
     }
   }
 
@@ -94,15 +90,15 @@ class QuestionTypeAction extends RestfulAction[QuestionType] {
     val questionTypeIds = longIds("questionType")
     val query1 = OqlBuilder.from(classOf[QuestionType], "questionType")
     query1.where("questionType.id in (:questionTypeIds)", questionTypeIds)
-    val questionTypes = entityDao.search(query1);
+    val questionTypes = entityDao.search(query1)
 
-    val query = OqlBuilder.from(classOf[Question], "question");
-    query.where("question.questionType in (:questionTypes)", questionTypes);
-    val questions = entityDao.search(query);
+    val query = OqlBuilder.from(classOf[Question], "question")
+    query.where("question.questionType in (:questionTypes)", questionTypes)
+    val questions = entityDao.search(query)
     if (!questions.isEmpty) { return redirect("search", "删除失败,选择的数据中已有被评教问题引用"); }
 
-    entityDao.remove(questionTypes);
-    return redirect("search", "info.remove.success");
+    entityDao.remove(questionTypes)
+    return redirect("search", "info.remove.success")
   }
 
 }

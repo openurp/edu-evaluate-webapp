@@ -18,8 +18,7 @@
  */
 package org.openurp.edu.evaluation.app.course.service
 
-import org.openurp.edu.evaluation.clazz.stat.model.FinalTeacherScore
-import org.openurp.edu.evaluation.clazz.stat.model.EvalStat
+import org.openurp.edu.evaluation.clazz.stat.model.{EvalStat, FinalTeacherScore}
 
 object Ranker {
 
@@ -27,20 +26,20 @@ object Ranker {
     if(stats.isEmpty) return
     val sortedStates = stats.sortBy { x => 0 - x.avgScore }
     val ranks = new collection.mutable.HashMap[B, Int]
-    var rank = 1;
-    var score = sortedStates.head.avgScore;
-    var i = 0;
+    var rank = 1
+    var score = sortedStates.head.avgScore
+    var i = 0
     // 100 100 100 100 100 100 100 99 99 99 98 98 97
     // 1   1   1   1   1   1   1   8  8  8  11 11 12
     sortedStates foreach { x =>
       val rs = java.lang.Float.compare(x.avgScore, score)
-      i += 1;
+      i += 1
       if (rs == 0) {
-        ranks.put(x, rank);
+        ranks.put(x, rank)
       } else {
-        ranks.put(x, i);
+        ranks.put(x, i)
         rank = i
-        score = x.avgScore;
+        score = x.avgScore
       }
     }
     ranks foreach {
@@ -53,20 +52,20 @@ object Ranker {
     val sortedStates = stats.sortBy { x => 0 - x.score }
 
     val ranks = new collection.mutable.HashMap[B, Int]
-    var rank = 1;
-    var score = sortedStates.head.score;
-    var i = 0;
+    var rank = 1
+    var score = sortedStates.head.score
+    var i = 0
     // 100 100 100 100 100 100 100 99 99 99 98 98 97
     //      1   1   1   1   1   1   1  8  8  8   11 11 12
     sortedStates foreach { x =>
       val rs = java.lang.Float.compare(x.score, score)
-      i += 1;
+      i += 1
       if (rs == 0) {
-        ranks.put(x, rank);
+        ranks.put(x, rank)
       } else {
-        ranks.put(x, i);
+        ranks.put(x, i)
         rank = i
-        score = x.score;
+        score = x.score
 
       }
 

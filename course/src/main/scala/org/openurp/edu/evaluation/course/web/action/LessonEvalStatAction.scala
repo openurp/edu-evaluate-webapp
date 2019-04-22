@@ -18,41 +18,22 @@
  */
 package org.openurp.edu.evaluation.course.web.action
 
-import org.beangle.commons.collection.Collections
+import java.time.{Instant, LocalDate}
+
+import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
-import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
-import org.openurp.edu.base.model.Semester
-import org.openurp.edu.base.code.model.StdType
-import org.openurp.edu.evaluation.model.EvaluationCriteria
-import org.openurp.edu.evaluation.model.EvaluationCriteriaItem
-import org.openurp.edu.evaluation.model.Option
-import org.openurp.edu.evaluation.model.Question
-import org.openurp.edu.evaluation.model.QuestionType
-import org.openurp.edu.evaluation.model.Questionnaire
-import org.openurp.edu.course.model.Clazz
-import org.beangle.commons.lang.Strings
-import scala.collection.mutable.Buffer
-import scala.collection.mutable.ListBuffer
-import org.beangle.commons.collection.Order
-import org.openurp.edu.evaluation.app.course.service.Ranker
-import org.openurp.edu.base.model.Teacher
-import org.openurp.edu.base.model.Semester
-import org.openurp.edu.base.model.Semester
-import org.openurp.edu.base.model.Project
-import java.time.LocalDate
-import java.time.Instant
-import org.openurp.edu.evaluation.clazz.stat.model.ClazzOptionStat
-import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
-import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
-import org.openurp.edu.evaluation.clazz.stat.model.OptionStat
-import org.openurp.edu.evaluation.clazz.stat.model.ClazzQuestionStat
-import org.openurp.edu.evaluation.clazz.stat.model.ClazzQuestionTypeStat
-import org.openurp.edu.evaluation.clazz.stat.model.QuestionStat
-import org.openurp.edu.evaluation.clazz.stat.model.QuestionTypeStat
-import org.openurp.edu.evaluation.clazz.stat.model.ClazzEvalStat
 import org.openurp.code.edu.model.EducationLevel
+import org.openurp.edu.base.code.model.StdType
+import org.openurp.edu.base.model.{Project, Semester, Teacher}
+import org.openurp.edu.course.model.Clazz
+import org.openurp.edu.evaluation.app.course.service.Ranker
+import org.openurp.edu.evaluation.clazz.result.model.{EvaluateResult, QuestionResult}
+import org.openurp.edu.evaluation.clazz.stat.model._
+import org.openurp.edu.evaluation.model.{EvaluationCriteriaItem, Option, Question, QuestionType, Questionnaire}
+
+import scala.collection.mutable.{Buffer, ListBuffer}
 
 class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
 
@@ -63,7 +44,7 @@ class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
     }
     put("searchFormFlag", searchFormFlag)
     //    put("educations", getEducationLevels())
-    put("departments", findItemsBySchool(classOf[Department]))
+    put("departments", findInSchool(classOf[Department]))
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire").where("questionnaire.state =:state", true)
     put("questionnaires", entityDao.search(query))
     put("semesters", getSemesters())
@@ -333,22 +314,22 @@ class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
   def rankStat(): View = {
     val semesterId = getInt("semester.id").getOrElse(0)
     val semester = entityDao.get(classOf[Semester], semesterId)
-    val project = this.currentProject;
+    val project = this.getProject
     //    排名
     val rankQuery = OqlBuilder.from(classOf[ClazzEvalStat], "les")
     rankQuery.where("les.clazz.semester.id=:semesterId", semesterId)
     rankQuery.where("les.clazz.project=:project", project)
     val evals = entityDao.search(rankQuery)
     Ranker.over(evals) { (x, r) =>
-      x.rank = r;
+      x.rank = r
     }
     val departEvalMaps = evals.groupBy(x => x.clazz.teachDepart)
     departEvalMaps.values foreach { departEvals =>
       Ranker.over(departEvals) { (x, r) =>
-        x.departRank = r;
+        x.departRank = r
       }
     }
-    entityDao.saveOrUpdate(evals);
+    entityDao.saveOrUpdate(evals)
     redirect("index", "info.action.success")
   }
 
@@ -360,7 +341,7 @@ class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
   def stat(): View = {
     val semesterId = getInt("semester.id").getOrElse(0)
     val semester = entityDao.get(classOf[Semester], semesterId)
-    val project = this.currentProject;
+    val project = this.getProject
     // 删除历史统计数据
     removeStats(project, semesterId)
     // teacher、clazz、question问题得分统计
@@ -482,15 +463,15 @@ class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
     rankQuery.where("les.clazz.project=:project", project)
     val evals = entityDao.search(rankQuery)
     Ranker.over(evals) { (x, r) =>
-      x.rank = r;
+      x.rank = r
     }
     val departEvalMaps = evals.groupBy(x => x.clazz.teachDepart)
     departEvalMaps.values foreach { departEvals =>
       Ranker.over(departEvals) { (x, r) =>
-        x.departRank = r;
+        x.departRank = r
       }
     }
-    entityDao.saveOrUpdate(evals);
+    entityDao.saveOrUpdate(evals)
     redirect("index", "info.action.success")
   }
 

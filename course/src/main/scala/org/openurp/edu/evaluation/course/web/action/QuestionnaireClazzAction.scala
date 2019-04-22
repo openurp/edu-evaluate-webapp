@@ -22,7 +22,7 @@ import java.time.LocalDate
 
 import org.beangle.commons.collection.Order
 import org.beangle.commons.lang.Strings
-import org.beangle.data.dao.{ OqlBuilder, QueryBuilder }
+import org.beangle.data.dao.{OqlBuilder, QueryBuilder}
 import org.beangle.webmvc.api.view.View
 import org.openurp.base.model.Department
 import org.openurp.edu.base.code.model.CourseType
@@ -43,7 +43,7 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
     semesters.find(x => now.isAfter(x.beginOn) && now.isBefore(x.endOn)) foreach { semester =>
       put("semester", semester)
     }
-    put("departments", findItemsBySchool(classOf[Department]))
+    put("departments", findInSchool(classOf[Department]))
     put("courseTypes", entityDao.getAll(classOf[CourseType]))
     put("questionnaires", entityDao.getAll(classOf[Questionnaire]))
   }
@@ -55,7 +55,7 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
     val semester = entityDao.get(classOf[Semester], semesterId)
 
     // 检查时间
-    val evaluateSwitch = evaluateSwitchService.getEvaluateSwitch(semester, currentProject)
+    val evaluateSwitch = evaluateSwitchService.getEvaluateSwitch(semester, getProject)
     if (null != evaluateSwitch) {
       //        && evaluateSwitch.checkOpen(new java.util.Date())) {
       put("isEvaluateSwitch", true)
@@ -88,7 +88,7 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
     semesterId foreach { semesterId =>
       query.where("questionnaireClazz.clazz.semester.id = :semesterId", semesterId)
     }
-    query.where("questionnaireClazz.clazz.project = :project", currentProject)
+    query.where("questionnaireClazz.clazz.project = :project", getProject)
     // 隐性条件(问卷类别,起始周期,上课人数)
     val questionnaireId = getLong("questionnaire.id").getOrElse(-1)
     val teacherName = get("teacher").orNull
@@ -113,7 +113,7 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
 
     val query = OqlBuilder.from(classOf[Clazz], "clazz")
     populateConditions(query)
-    query.where("clazz.project=:project", currentProject)
+    query.where("clazz.project=:project", getProject)
     populateConditions(query)
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id") //.getOrElse(entityDao.search(semesterQuery).head.id)

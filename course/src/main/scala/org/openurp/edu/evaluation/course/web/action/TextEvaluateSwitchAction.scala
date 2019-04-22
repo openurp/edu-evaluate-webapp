@@ -34,7 +34,7 @@ class TextEvaluateSwitchAction extends ProjectRestfulAction[TextEvaluateSwitch] 
     val textEvaluationSwitchs = OqlBuilder.from(classOf[TextEvaluateSwitch], "textEvaluateSwitch")
     semesterId.foreach { semesterId => textEvaluationSwitchs.where("textEvaluateSwitch.semester.id=:semesterId", semesterId) }
     opened.foreach { opened => textEvaluationSwitchs.where("textEvaluateSwitch.opened=:opened", opened) }
-    textEvaluationSwitchs.where("textEvaluateSwitch.project=:project", currentProject)
+    textEvaluationSwitchs.where("textEvaluateSwitch.project=:project", getProject)
     put("textEvaluationSwitchs", entityDao.search(textEvaluationSwitchs))
     forward()
   }

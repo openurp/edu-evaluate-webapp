@@ -26,10 +26,8 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.security.Securities
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.base.model.Semester
-import org.openurp.edu.base.model.Teacher
-import org.openurp.edu.course.model.Clazz
-import org.openurp.edu.course.model.CourseTaker
+import org.openurp.edu.base.model.{Semester, Teacher}
+import org.openurp.edu.course.model.{Clazz, CourseTaker}
 import org.openurp.edu.evaluation.app.course.model.EvaluateSearchDepartment
 import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
 
@@ -59,41 +57,41 @@ class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
   override def search(): View = {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
-    val semester = entityDao.get(classOf[Semester], semesterId);
+    val semester = entityDao.get(classOf[Semester], semesterId)
     val teacher = getTeacher()
     if (teacher == null) { forward("error.teacher.teaNo.needed") }
     // 得到院系下的所有级教学任务
-    val clazzQuery = OqlBuilder.from(classOf[Clazz], "clazz");
-    clazzQuery.where("clazz.semester.id=:semesterId", semesterId);
+    val clazzQuery = OqlBuilder.from(classOf[Clazz], "clazz")
+    clazzQuery.where("clazz.semester.id=:semesterId", semesterId)
     if (teacher != null) {
       clazzQuery.join("clazz.teachers", "teacher")
-      clazzQuery.where("teacher =:teacher", teacher);
+      clazzQuery.where("teacher =:teacher", teacher)
     }
-    val clazzList = entityDao.search(clazzQuery);
+    val clazzList = entityDao.search(clazzQuery)
     val evaluateSearchDepartmentList = Collections.newBuffer[EvaluateSearchDepartment]
     clazzList foreach { clazz =>
 
       var countAll: Long = 0L
       var haveFinish: Long = 0L
-      val query = OqlBuilder.from[Long](classOf[CourseTaker].getName, "courseTake");
-      query.select("select count(*)");
-      query.where("courseTake.clazz =:clazz", clazz);
-      val list = entityDao.search(query);
+      val query = OqlBuilder.from[Long](classOf[CourseTaker].getName, "courseTake")
+      query.select("select count(*)")
+      query.where("courseTake.clazz =:clazz", clazz)
+      val list = entityDao.search(query)
       // 得到指定学期，院系的学生评教人次总数
-      countAll = list(0);
+      countAll = list(0)
 
-      val query1 = OqlBuilder.from[Long](classOf[EvaluateResult].getName, "rs");
-      query1.select("select count(*)");
-      query1.where("rs.clazz =:clazz", clazz);
-      val list1 = entityDao.search(query1);
+      val query1 = OqlBuilder.from[Long](classOf[EvaluateResult].getName, "rs")
+      query1.select("select count(*)")
+      query1.where("rs.clazz =:clazz", clazz)
+      val list1 = entityDao.search(query1)
       // 得到指定学期，已经评教的学生人次数
-      haveFinish = list1(0);
-      var finishRate = "";
+      haveFinish = list1(0)
+      var finishRate = ""
       if (countAll != 0) {
-        val df = new DecimalFormat("0.0");
-        finishRate = df.format((haveFinish * 100 / countAll).toFloat) + "%";
+        val df = new DecimalFormat("0.0")
+        finishRate = df.format((haveFinish * 100 / countAll).toFloat) + "%"
       }
-      val esd = new EvaluateSearchDepartment();
+      val esd = new EvaluateSearchDepartment()
       esd.semester = semester
       esd.clazz = clazz
       esd.countAll = countAll
@@ -102,10 +100,10 @@ class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
       evaluateSearchDepartmentList += esd
 
     }
-    // Collections.sort(evaluateSearchDepartmentList, new PropertyComparator("adminClass.code"));
+    // Collections.sort(evaluateSearchDepartmentList, new PropertyComparator("adminClass.code"))
     evaluateSearchDepartmentList.sortWith((x, y) => x.clazz.course.code < y.clazz.course.code)
-    put("evaluateSearchDepartmentList", evaluateSearchDepartmentList);
-    put("semester", semester);
+    put("evaluateSearchDepartmentList", evaluateSearchDepartmentList)
+    put("semester", semester)
     forward()
   }
 
