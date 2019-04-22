@@ -30,9 +30,9 @@ import org.openurp.edu.evaluation.clazz.model.TextEvaluation
 class TextEvaluationAction extends ProjectRestfulAction[TextEvaluation] {
 
   override protected def indexSetting(): Unit = {
-    put("semesters", getSemesters())
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    val semesters = getSemesters()
+    put("semesters", semesters)
+    put("currentSemester", semesters.last)
     put("departments", findInSchool(classOf[Department]))
   }
 

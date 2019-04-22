@@ -32,9 +32,9 @@ import org.openurp.edu.exam.model.ExamTaker
 class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
 
   override protected def indexSetting(): Unit = {
-    put("semesters", getSemesters())
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    val semesters=getSemesters()
+    put("semesters",semesters )
+    put("currentSemester", semesters.last)
   }
 
   override def search(): View = {

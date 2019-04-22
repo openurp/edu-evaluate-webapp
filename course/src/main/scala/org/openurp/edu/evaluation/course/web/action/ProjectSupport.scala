@@ -29,6 +29,7 @@ abstract class ProjectRestfulAction[T <: Entity[_]] extends RestfulAction[T] wit
   def getSemesters(): Seq[Semester] = {
     val builder = OqlBuilder.from(classOf[Semester], "semester")
     builder.where("semester.calendar.school=:school", getProject.school)
+    builder.orderBy("semester.code")
     entityDao.search(builder)
   }
 

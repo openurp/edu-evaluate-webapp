@@ -266,6 +266,7 @@ class ClazzAction extends RestfulAction[EvaluateResult] with ProjectSupport {
           evaluateResult.clazz = clazz
           evaluateResult.department = clazz.teachDepart
           evaluateResult.student = std
+          evaluateResult.statType = 1
           evaluateResult.teacher = entityDao.get(classOf[Teacher], newId)
           evaluateResult.evaluateAt = Instant.now
           questionnaireClazz.questionnaire.questions foreach { question =>
@@ -304,6 +305,7 @@ class ClazzAction extends RestfulAction[EvaluateResult] with ProjectSupport {
           evaluateResult.department = clazz.teachDepart
           evaluateResult.student = std
           evaluateResult.teacher = evaluateTeacher
+          evaluateResult.statType = 1
           evaluateResult.evaluateAt = Instant.now
           questionnaire.questions foreach { question =>
             val optionId = getLong("select" + question.id).get

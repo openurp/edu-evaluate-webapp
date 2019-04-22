@@ -40,9 +40,9 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
     val semesters = getSemesters()
     put("semesters", semesters)
     val now = LocalDate.now
-    semesters.find(x => now.isAfter(x.beginOn) && now.isBefore(x.endOn)) foreach { semester =>
-      put("semester", semester)
-    }
+    val semester = semesters.find(x => now.isAfter(x.beginOn) && now.isBefore(x.endOn)).getOrElse(semesters.last)
+    print(semester.code)
+    put("semester", semester)
     put("departments", findInSchool(classOf[Department]))
     put("courseTypes", entityDao.getAll(classOf[CourseType]))
     put("questionnaires", entityDao.getAll(classOf[Questionnaire]))
