@@ -39,7 +39,7 @@ class ImportSupervisiorListener(entityDao: EntityDao) extends AbstractImportList
     if (semesters.isEmpty) {
       tr.addFailure("学期数据格式非法", semesterCode)
     } else {
-      val builder = OqlBuilder.from(classOf[SupervisiorEvaluate], "s").where("s.teacher.code=:code and s.semester.code=:scode and s.department.code=:dcode", teacherCode, semesterCode, departmentCode)
+      val builder = OqlBuilder.from(classOf[SupervisiorEvaluate], "s").where("s.teacher.user.code=:code and s.semester.code=:scode and s.department.code=:dcode", teacherCode, semesterCode, departmentCode)
       entityDao.search(builder) foreach { s =>
         this.transfer.current = s
       }

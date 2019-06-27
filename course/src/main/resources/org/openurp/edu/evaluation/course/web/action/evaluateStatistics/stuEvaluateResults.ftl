@@ -30,7 +30,7 @@
         [/@]
         [@b.col width="5%" title="教师学院"]
         [#list evaluateR.clazz.teachers as teacher]
-        ${(teacher.state.department.name)?if_exists}<br>
+        ${(teacher.user.department.name)?if_exists}<br>
         [/#list]
         [/@]
          [#assign numes=0]

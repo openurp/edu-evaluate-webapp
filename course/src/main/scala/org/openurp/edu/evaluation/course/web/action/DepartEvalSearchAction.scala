@@ -88,7 +88,7 @@ class DepartEvalSearchAction extends RestfulAction[DepartEvalStat] {
     querys.join("clazz.teachers", "teacher")
     //    querys.where("teacher=:teach",questionnaireStat.teacher)
     querys.where("clazz.teachDepart=:depart", questionnaireStat.department)
-    querys.join("clazz.teachclass.courseTakers", "courseTaker")
+    querys.join("clazz.enrollment.courseTakers", "courseTaker")
     querys.select("count(courseTaker.id)")
     val numbers = entityDao.search(querys)(0)
     put("numbers", entityDao.search(querys)(0))

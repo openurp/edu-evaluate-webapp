@@ -90,7 +90,7 @@ class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
     val lis = entityDao.search(OqlBuilder.from(classOf[EvaluationCriteriaItem], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L))
     if (lis.size < 1) { redirect("search", "未找到评价标准！") }
     put("criterias", lis)
-    val depId = getInt("department.id")
+    val depId = getInt("department.id").getOrElse(20)
     put("departId", depId)
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department], "dep").where("dep.teaching=true")))
     val evaquery = OqlBuilder.from(classOf[EvaluateResult], "evaluateR")
@@ -98,7 +98,7 @@ class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
     evaquery.where("evaluateR.clazz.teachDepart.id=:depId", depId)
     val semesterIds = entityDao.search(evaquery)
     val qur = OqlBuilder.from(classOf[Semester], "semester")
-    qur.where("semester.beginOn<=:dat", new java.util.Date())
+    qur.where("semester.beginOn<=:dat", LocalDate.now())
     val quetionQuery = OqlBuilder.from(classOf[ClazzEvalStat], "questionnaireS")
     if (semesterIds.size > 0) {
       qur.where("semester.id in(:ids)", semesterIds)
@@ -183,7 +183,7 @@ class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
     evaquery.select("distinct evaluateR.clazz.semester.id")
     val semesterIds = entityDao.search(evaquery)
     val qur = OqlBuilder.from(classOf[Semester], "semester")
-    qur.where("semester.beginOn<=:dat", new java.util.Date())
+    qur.where("semester.beginOn<=:dat", LocalDate.now())
     val quetionQuery = OqlBuilder.from(classOf[ClazzEvalStat], "questionnaireS")
     if (semesterIds.size > 0) {
       qur.where("semester.id in(:ids)", semesterIds)

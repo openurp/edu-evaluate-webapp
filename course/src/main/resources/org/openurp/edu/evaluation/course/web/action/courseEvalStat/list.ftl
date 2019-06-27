@@ -17,12 +17,10 @@
             [@b.boxcol/]
             [@b.col property="course.code" title="课程代码"/]
             [@b.col property="course.name" title="课程名称"/]
-            [@b.col property="teacher.state.department.name" title="开课院系"/]
+            [@b.col property="course.department.name" title="开课院系"/]
             [@b.col property="teacher.user.code" title="教师工号"/]
             [@b.col property="teacher.user.name" title="教师姓名"/]
-            [@b.col property="score" title="教师课程得分"]${courseEvalStat.score}[/@]
-            [@b.col property="rank" title="全校排名"/]
-            [@b.col property="departRank" title="院系排名"/]
+            [@b.col property="totalScore" title="教师课程得分"]${courseEvalStat.totalScore!}[/@]
         [/@]
 
     [/@]
@@ -57,7 +55,9 @@ var form = document.questionnaireStatSearchForm;
                 return false;
         }
         bg.form.addInput(form,"courseEvalStat.id",questionnaireStatIds);
-        bg.form.submit(form,"${b.url('course-eval-search!info')}");
+        var url="${b.url('course-eval-search!info?id=xxxx')}";
+        url = url.replace('xxxx',questionnaireStatIds);
+        bg.form.submit(form,url);
     }
     var searchForm = document.questionnaireStatSearchForm;
 

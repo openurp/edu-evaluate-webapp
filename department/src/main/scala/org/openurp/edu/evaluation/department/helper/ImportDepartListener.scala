@@ -41,7 +41,7 @@ class ImportDepartListener(entityDao: EntityDao) extends AbstractImportListener 
       tr.addFailure("学期数据格式非法", semesterCode)
     } else {
       val builder = OqlBuilder.from(classOf[DepartEvaluate], "de")
-      builder.where("de.teacher.code=:code and de.semester.code=:scode and de.department.id=:id", teacherCode, semesterCode, departmentId)
+      builder.where("de.teacher.user.code=:code and de.semester.code=:scode and de.department.id=:id", teacherCode, semesterCode, departmentId)
       entityDao.search(builder) foreach { s =>
         this.transfer.current = s
       }

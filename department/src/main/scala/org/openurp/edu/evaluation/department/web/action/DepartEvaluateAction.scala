@@ -18,29 +18,29 @@
  */
 package org.openurp.edu.evaluation.department.web.action
 
-import java.time.{Instant, LocalDate}
+import java.time.{ Instant, LocalDate }
 
-import org.beangle.commons.collection.{Collections, Order}
+import org.beangle.commons.collection.{ Collections, Order }
 import org.beangle.commons.lang.ClassLoaders
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.transfer.importer.ImportSetting
 import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.security.Securities
-import org.beangle.webmvc.api.view.{Stream, View}
+import org.beangle.webmvc.api.view.{ Stream, View }
 import org.openurp.base.model.Department
-import org.openurp.edu.base.model.{Semester, Teacher}
+import org.openurp.edu.base.model.{ Semester, Teacher }
 import org.openurp.edu.course.model.Clazz
 import org.openurp.edu.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.edu.evaluation.department.helper.ImportDepartListener
-import org.openurp.edu.evaluation.department.model.{DepartEvaluate, DepartQuestion}
-import org.openurp.edu.evaluation.model.{Question, QuestionType, Questionnaire}
+import org.openurp.edu.evaluation.department.model.{ DepartEvaluate, DepartQuestion }
+import org.openurp.edu.evaluation.model.{ Question, QuestionType, Questionnaire }
 
 import scala.collection.mutable.Buffer
 
 /**
  * @author xinzhou
  */
-class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate]  {
+class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate] {
 
   override def indexSetting(): Unit = {
     put("departments", findInSchool(classOf[Department]))
@@ -73,7 +73,7 @@ class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate]  {
     }
     entityDao.saveOrUpdate(departEvaluates)
     val semesterId = get("departEvaluate.semester.id").orNull
-    redirect("search", s"orderBy=departEvaluate.teacher.code asc&departEvaluate.semester.id=$semesterId", "导入完成")
+    redirect("search", s"orderBy=departEvaluate.teacher.user.code asc&departEvaluate.semester.id=$semesterId", "导入完成")
   }
 
   override protected def getQueryBuilder(): OqlBuilder[DepartEvaluate] = {
@@ -83,9 +83,19 @@ class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate]  {
       case Some(false) => query.where("departEvaluate.totalScore is null")
       case None =>
     }
-    query.where("departEvaluate.department.id=:id", getTeacher.user.department.id)
-    populateConditions(query)
-    query.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
+
+    val builder = OqlBuilder.from(classOf[Teacher], "s")
+      .where("s.user.code=:code", Securities.user)
+      .where("s.project=:project", getProject)
+    val teachers = entityDao.search(builder)
+    if (teachers.isEmpty) {
+      throw new RuntimeException("Cannot find teachers with code " + Securities.user)
+    } else {
+
+      query.where("departEvaluate.department.id=:id", teachers.head.user.department.id)
+      populateConditions(query)
+      query.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
+    }
   }
 
   override def editSetting(departEvaluate: DepartEvaluate): Unit = {
@@ -150,8 +160,8 @@ class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate]  {
     Stream(ClassLoaders.getResourceAsStream("departEvaluate.xls").get, "application/vnd.ms-excel", "评教结果.xls")
   }
 
-  protected override def configImport(setting:ImportSetting) {
-    setting.listeners= List(new ForeignerListener(entityDao), new ImportDepartListener(entityDao))
+  protected override def configImport(setting: ImportSetting) {
+    setting.listeners = List(new ForeignerListener(entityDao), new ImportDepartListener(entityDao))
   }
 
 }

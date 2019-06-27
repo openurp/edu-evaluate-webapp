@@ -19,7 +19,7 @@
             <td class="title" style="text-align:center;">职称</td>
             <td style="padding-left:10px;">${(questionnaireStat.teacher.title.name)!}</td>--]
             <td class="title" style="text-align:center;">总分</td>
-            <td style="padding-left:10px;">${(questionnaireStat.score)!}</td>
+            <td style="padding-left:10px;">${(questionnaireStat.totalScore)!}</td>
         </tr>
         <tr>
             <td class="title" style="text-align:center;">问卷下发数量</td>

@@ -50,22 +50,22 @@ class DefaultModule extends BindModule {
     //  教师最终得分排名统计查询导出
     bind(classOf[FinalTeacherScoreAction])
 
-    //  问卷评教统计--按任务得分统计 包括：排名??，院系任务统计，学校任务历史，学校分项统计*****教务处
+    //  问卷评教统计--按任务得分统计 包括：排名??，院系任务统计，学校任务历史，学校分项统计*****教务处------yes
     bind(classOf[ClazzEvalStatAction])
     //  问卷评教统计查询---按任务得分查询********院系管理员？
     bind(classOf[ClazzEvalSearchAction])
 
-    //  问卷评教统计--按问卷统计每个教师个人总分  包括：排名??，院系统计，学校历史，学校分项统计 ***教务处
+    //  问卷评教统计--按问卷统计每个教师个人总分  包括：排名??，院系统计，学校历史，学校分项统计 ***教务处-----yes
     bind(classOf[TeacherEvalStatAction])
     //  问卷评教统计查询--按问卷统计每个教师个人总分  ***院系管理员
     bind(classOf[TeacherEvalSearchAction])
 
-    //  问卷评教统计--按课程教师统计 包括：排名??，院系任务统计，学校任务历史，学校分项统计*****教务处
+    //  问卷评教统计--按课程教师统计 包括：排名??，院系任务统计，学校任务历史，学校分项统计*****教务处----排名方法有问题，没有平均分算法有问题
     bind(classOf[CourseEvalStatAction])
     //  问卷评教统计查询---按课程教师查询********院系管理员？
     bind(classOf[CourseEvalSearchAction])
 
-    //  问卷评教统计--按开课院系统计 包括：排名??，院系任务统计，学校任务历史，学校分项统计*****教务处
+    //  问卷评教统计--按开课院系统计 包括：排名??，院系任务统计，学校任务历史，学校分项统计*****教务处----yes
     bind(classOf[DepartEvalStatAction])
     //  问卷评教统计查询---按开课院系查询********院系管理员？
     bind(classOf[DepartEvalSearchAction])

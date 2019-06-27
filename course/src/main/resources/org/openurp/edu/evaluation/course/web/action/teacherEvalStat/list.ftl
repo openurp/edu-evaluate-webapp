@@ -10,14 +10,14 @@
         [/@]
         [@b.row]
             [@b.boxcol/]
-            [@b.col property="teacher.user.code" title="教师工号" width="5%"/]
-            [@b.col property="teacher.user.name" title="教师姓名" width="8%"/]
-            [@b.col title="部门" property="teacher.user.department.name" width="25%" /]
-            [@b.col title="问卷类型" property="questionnaire.description" width="15%" /]
-            [@b.col title="教师类型" property="teacher.teacherType.name" width="7%" /]
+            [@b.col property="teacher.user.code" title="教师工号" width="8%"/]
+            [@b.col property="teacher.user.name" title="教师姓名" width="10%"/]
+            [@b.col title="部门" property="teacher.user.department.name" width="20%" /]
+            [@b.col title="问卷类型" property="questionnaire.description" width="12%" /]
+            [@b.col title="教师类型" property="teacher.teacherType.name" width="10%" /]
             [@b.col property="avgScore" title="平均分" width="10%"/]
-            [@b.col property="departRank" title="院系排名" width="10%"/]
             [@b.col property="rank" title="全校排名" width="10%" /]
+            [@b.col property="departRank" title="院系排名" width="10%"/]
         [/@]
     [/@]
 [/@]
@@ -55,7 +55,7 @@
     function exportData(){
         bg.form.addHiddens(form,action.page.paramstr);
         bg.form.addParamsInput(form,action.page.paramstr);
-        bg.form.addInput(form, "keys", "teacher.user.code,teacher.name,teacher.teacher.gender.name,teacher.teacherType.name,teacher.user.department.name,teacher.title.name,teacher.title.level.name,teacher.state.name,teaching,stdEvaluate,depEvaluate,score,departRank,rank");
+        bg.form.addInput(form, "keys", "teacher.user.code,teacher.name,teacher.teacher.gender.name,teacher.teacherType.name,teacher.user.department.name,teacher.title.name,teacher.title.level.name,teacher.user.name,teaching,stdEvaluate,depEvaluate,score,departRank,rank");
         bg.form.addInput(form, "titles", "教师工号,教师姓名,性别,教师类型,部门,职称,职称等级,在职状态,任课,学生评分,部门评分,总分,院系排名,全校排名");
         bg.form.addInput(form, "fileName", "评教汇总统计");
         form.target = "_News";

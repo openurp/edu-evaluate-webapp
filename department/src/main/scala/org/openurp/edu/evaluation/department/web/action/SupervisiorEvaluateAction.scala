@@ -70,7 +70,7 @@ class SupervisiorEvaluateAction extends ProjectRestfulAction[SupervisiorEvaluate
     }
     entityDao.saveOrUpdate(supervisiorEvaluates)
     val semesterId = get("supervisiorEvaluate.semester.id").orNull
-    redirect("search", s"orderBy=supervisiorEvaluate.teacher.code asc&supervisiorEvaluate.semester.id=$semesterId", "导入完成")
+    redirect("search", s"orderBy=supervisiorEvaluate.teacher.user.code asc&supervisiorEvaluate.semester.id=$semesterId", "导入完成")
   }
 
   override protected def getQueryBuilder(): OqlBuilder[SupervisiorEvaluate] = {
