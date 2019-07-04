@@ -105,7 +105,7 @@
                     [#if (textEvaluationMap.get(clazz[0].id))?exists]
                         <a id="myEvaluation${k}" onClick="showElement(this)" style="float:left;cursor:pointer;">+</a>
                     [/#if]
-                    ${(clazz[0].person.name.formatedName)!}
+                    ${(clazz[0].user.name)!}
                 </td>
                 <td>${(clazz[1].course.name)!}</td>
                 <td>${(clazz[1].teachDepart.name)!}</td>
@@ -185,7 +185,7 @@
                     [#if (otherMap.get(clazz[0].id))?exists]
                         <a id="otherTextEvaluation${j}" onClick="showOtherElement(this,'${j}')" style="float:left;cursor:pointer;">+</a>
                     [/#if]
-                    ${(clazz[0].person.name.formatedName)!}
+                    ${(clazz[0].user.name)!}
                 </td>
                 <td>${(clazz[1].course.name)!}</td>
                 <td>${(clazz[1].teachDepart.name)!}</td>
@@ -252,7 +252,7 @@
                     [#if (annMap.get(clazz[0].id))?exists]
                         <a id="annEvaluationText${i}" onClick="showSubElement(this)" style="float:left;cursor:pointer;">+</a>
                     [/#if]
-                    ${(clazz[0].person.name.formatedName)!}
+                    ${(clazz[0].user.name)!}
                 </td>
                 <td>${(clazz[1].course.name)!}</td>
                 <td>${(clazz[1].teachDepart.name)!}</td>

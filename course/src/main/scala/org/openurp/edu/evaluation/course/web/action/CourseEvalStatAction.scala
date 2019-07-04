@@ -71,7 +71,7 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
     courseEvalStat.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
     courseEvalStat.where("courseEvalStat.semester=:semester", semester)
     //    get("evaluateTeacherStat.teacher.user.name") foreach{ n=>
-    //      clazzEvalStat.where("clazzEvalStat.teacher.user.name=:formatedName",n)
+    //      clazzEvalStat.where("clazzEvalStat.teacher.user.name=:name",n)
     //    }
     put("courseEvalStats", entityDao.search(courseEvalStat))
     forward()

@@ -192,7 +192,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     val quer = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " tea")
     quer.join("evaluateResult.clazz.teachers", "teach")
-    quer.select("tea.code,tea.person.name.formatedName,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)")
+    quer.select("tea.code,tea.user.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)")
     quer.where("teach.id = tea.id")
     //    quer.where("tea.teaching is true")
     quer.where("evaluateResult.id=questionResult.result.id ")
@@ -201,7 +201,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     if (departmentId != null) {
       quer.where("tea.state.department.id=" + departmentId.toString())
     }
-    quer.groupBy("tea.code,tea.person.name.formatedName")
+    quer.groupBy("tea.code,tea.user.name")
     quer.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")
     list2 = entityDao.search(quer)
     val numMaps = Collections.newMap[String, String]
