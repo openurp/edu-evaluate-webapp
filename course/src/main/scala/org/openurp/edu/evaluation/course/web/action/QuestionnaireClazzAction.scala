@@ -94,7 +94,7 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
     val teacherName = get("teacher").orNull
     if (Strings.isNotBlank(teacherName)) {
       query.join("questionnaireClazz.clazz.teachers", "teacher")
-      query.where("teacher.person.name.formatedName like :teacherName", "%" + teacherName + "%")
+      query.where("teacher.user.name like :teacherName", "%" + teacherName + "%")
     }
     if (questionnaireId != -1 && questionnaireId != 0) {
       query.where("questionnaireClazz.questionnaire.id =:questionnaireId", questionnaireId)
@@ -123,7 +123,7 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
     val teacherName = get("teacher").getOrElse("")
     if (Strings.isNotBlank(teacherName)) {
       query.join("clazz.teachers", "teacher")
-      query.where("teacher.person.name.formatedName like :teacherName", "%" + teacherName + "%")
+      query.where("teacher.user.name like :teacherName", "%" + teacherName + "%")
     }
     // 排除(已有问卷)
     query.where("not exists(from " + classOf[QuestionnaireClazz].getName + " questionnaireClazz"

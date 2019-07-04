@@ -70,8 +70,8 @@ class CourseEvalStatAction extends RestfulAction[CourseEvalStat] {
     populateConditions(courseEvalStat)
     courseEvalStat.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
     courseEvalStat.where("courseEvalStat.semester=:semester", semester)
-    //    get("evaluateTeacherStat.teacher.person.name.formatedName") foreach{ n=>
-    //      clazzEvalStat.where("clazzEvalStat.teacher.person.name.formatedName=:formatedName",n)
+    //    get("evaluateTeacherStat.teacher.user.name") foreach{ n=>
+    //      clazzEvalStat.where("clazzEvalStat.teacher.user.name=:formatedName",n)
     //    }
     put("courseEvalStats", entityDao.search(courseEvalStat))
     forward()

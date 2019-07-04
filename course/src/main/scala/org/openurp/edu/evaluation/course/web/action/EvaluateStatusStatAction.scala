@@ -85,7 +85,7 @@ class EvaluateStatusStatAction extends ProjectRestfulAction[EvaluateResult] {
     }
     if (Strings.isNotBlank(teacherName)) {
       clazzQuery.join("clazz.teachers", "teacher")
-      clazzQuery.where("teacher.person.name.formatedName like :teacherName", "%" + teacherName + "%")
+      clazzQuery.where("teacher.user.name like :teacherName", "%" + teacherName + "%")
     }
     val clazzList = entityDao.search(clazzQuery)
     val evaluateSearchDepartmentList = Collections.newBuffer[EvaluateSearchDepartment]

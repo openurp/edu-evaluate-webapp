@@ -68,8 +68,8 @@ class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
     populateConditions(departEvalStat)
     departEvalStat.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
     departEvalStat.where("departEvalStat.semester=:semester", semester)
-    //    get("evaluateTeacherStat.teacher.person.name.formatedName") foreach{ n=>
-    //      clazzEvalStat.where("clazzEvalStat.teacher.person.name.formatedName=:formatedName",n)
+    //    get("evaluateTeacherStat.teacher.user.name") foreach{ n=>
+    //      clazzEvalStat.where("clazzEvalStat.teacher.user.name=:formatedName",n)
     //    }
     put("departEvalStats", entityDao.search(departEvalStat))
     forward()
