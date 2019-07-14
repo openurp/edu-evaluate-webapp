@@ -30,7 +30,7 @@ import org.openurp.edu.base.model.Semester
 import org.openurp.edu.evaluation.clazz.stat.model.ClazzEvalStat
 import org.openurp.edu.evaluation.model.{EvaluationCriteria, QuestionType, Questionnaire}
 
-class QuestionnaireStatSearchAction extends RestfulAction[ClazzEvalStat] {
+class QuestionnaireStatSearchAction extends ProjectRestfulAction[ClazzEvalStat] {
 
   override def index(): View = {
     val stdType = entityDao.get(classOf[StdType], 5)
@@ -46,10 +46,7 @@ class QuestionnaireStatSearchAction extends RestfulAction[ClazzEvalStat] {
     put("departments", entityDao.getAll(classOf[Department]))
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire").where("questionnaire.state =:state", true)
     put("questionnaires", entityDao.search(query))
-    val semesters = entityDao.getAll(classOf[Semester])
-    put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    put("currentSemester",getCurrentSemester)
     put("evaluationCriterias", entityDao.getAll(classOf[EvaluationCriteria]))
     put("questionTypes", entityDao.getAll(classOf[QuestionType]))
     forward()

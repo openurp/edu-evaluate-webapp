@@ -9,7 +9,7 @@
     <tr>
         <td class="index_view">
         [@b.form action="!search" name="textbookIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
-            [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
+            [@edu_base.semester  name="semester.id" label="学年学期" value=currentSemester/]
             [@b.select name="department.id" label="院系" items=departmentList empty="..." /]
             [@b.select name="questionnaire.id" label="所用问卷" items=[] ]
                 [#list questionnaires as q]

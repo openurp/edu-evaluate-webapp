@@ -18,43 +18,36 @@
  */
 package org.openurp.edu.evaluation.course.web.action
 
-import java.time.{ Instant, LocalDate }
+import java.time.{Instant, LocalDate}
 
-import org.beangle.commons.collection.{ Collections, Order }
+import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.annotation.mapping
 import org.beangle.webmvc.api.view.View
 import org.openurp.base.model.Department
 import org.openurp.code.edu.model.EducationLevel
 import org.openurp.edu.base.code.model.StdType
-import org.openurp.edu.base.model.{ Project, Semester, Teacher }
+import org.openurp.edu.base.model.{Project, Semester, Teacher}
 import org.openurp.edu.evaluation.app.course.service.Ranker
-import org.openurp.edu.evaluation.clazz.result.model.{ EvaluateResult, QuestionResult }
+import org.openurp.edu.evaluation.clazz.result.model.{EvaluateResult, QuestionResult}
 import org.openurp.edu.evaluation.clazz.stat.model._
-import org.openurp.edu.evaluation.model.{ EvaluationCriteriaItem, Option, Question, QuestionType, Questionnaire }
+import org.openurp.edu.evaluation.model.{EvaluationCriteriaItem, Option, Question, QuestionType, Questionnaire}
 
-import scala.collection.mutable.{ Buffer, ListBuffer }
+import scala.collection.mutable.{Buffer, ListBuffer}
 
 class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
 
   override def index(): View = {
     put("departments", findInSchool(classOf[Department]))
-    val semesters = getSemesters()
-    put("semesters", semesters)
     put("questionnaires", entityDao.getAll(classOf[Questionnaire]))
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    put("currentSemester", getCurrentSemester)
     forward()
   }
 
   override def search(): View = {
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
-    val semester = entityDao.get(classOf[Semester], semesterId)
     val queryBuilder = OqlBuilder.from(classOf[TeacherEvalStat], "teacherEvalStat")
     populateConditions(queryBuilder)
     queryBuilder.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
-    queryBuilder.where("teacherEvalStat.semester =:semester", semester)
     put("teacherEvalStats", entityDao.search(queryBuilder))
     forward()
   }
@@ -218,20 +211,20 @@ class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
       questionS.questionTypeStats = questionTypeStats
       entityDao.saveOrUpdate(questionS)
     }
-//    //排名
-//    val rankQuery = OqlBuilder.from(classOf[TeacherEvalStat], "teacherEvalStat")
-//    rankQuery.where("teacherEvalStat.semester.id=:semesterId", semesterId)
-//    val evals = entityDao.search(rankQuery)
-//    Ranker.over(evals) { (x, r) =>
-//      x.rank = r
-//    }
-//    val departEvalMaps = evals.groupBy(x => x.teacher.user.department)
-//    departEvalMaps.values foreach { departEvals =>
-//      Ranker.over(departEvals) { (x, r) =>
-//        x.departRank = r
-//      }
-//    }
-//    entityDao.saveOrUpdate(evals)
+    //    //排名
+    //    val rankQuery = OqlBuilder.from(classOf[TeacherEvalStat], "teacherEvalStat")
+    //    rankQuery.where("teacherEvalStat.semester.id=:semesterId", semesterId)
+    //    val evals = entityDao.search(rankQuery)
+    //    Ranker.over(evals) { (x, r) =>
+    //      x.rank = r
+    //    }
+    //    val departEvalMaps = evals.groupBy(x => x.teacher.user.department)
+    //    departEvalMaps.values foreach { departEvals =>
+    //      Ranker.over(departEvals) { (x, r) =>
+    //        x.departRank = r
+    //      }
+    //    }
+    //    entityDao.saveOrUpdate(evals)
 
     redirect("index", "info.action.success")
   }

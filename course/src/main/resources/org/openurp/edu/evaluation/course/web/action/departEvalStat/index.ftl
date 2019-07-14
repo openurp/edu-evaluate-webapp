@@ -12,7 +12,7 @@
     <tr>
     <td class="index_view" style="width:180px" >
         [@b.form action="!search?orderBy=departEvalStat.totalScore desc" name="departEvaluateStatIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
-            [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
+            [@edu_base.semester  name="semester.id" label="学年学期" value=currentSemester/]
             [@b.select name="departEvalStat.department.id" label="开课院系" items=departments empty="..."/]
             [@b.select name="departEvalStat.questionnaire.id" label="所用问卷" items=[] ]
                 [#list questionnaires as q]
@@ -22,7 +22,7 @@
         [/@]
         </td>
         <td class="index_content">
-            [@b.div id="contentDiv" href="!search?orderBy=departEvalStat.totalScore desc"/]
+            [@b.div id="contentDiv" href="!search?orderBy=departEvalStat.totalScore desc&semester.id="+currentSemester.id/]
         </td>
     </tr>
 </table>

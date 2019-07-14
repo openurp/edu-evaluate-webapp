@@ -37,12 +37,7 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
   var evaluateSwitchService: StdEvaluateSwitchService = _
 
   override def indexSetting(): Unit = {
-    val semesters = getSemesters()
-    put("semesters", semesters)
-    val now = LocalDate.now
-    val semester = semesters.find(x => now.isAfter(x.beginOn) && now.isBefore(x.endOn)).getOrElse(semesters.last)
-    print(semester.code)
-    put("semester", semester)
+    put("semester", getCurrentSemester)
     put("departments", findInSchool(classOf[Department]))
     put("courseTypes", entityDao.getAll(classOf[CourseType]))
     put("questionnaires", entityDao.getAll(classOf[Questionnaire]))

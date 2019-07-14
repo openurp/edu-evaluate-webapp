@@ -36,7 +36,7 @@ import org.openurp.edu.evaluation.model.{Option, Question, QuestionType, Questio
 
 import scala.collection.mutable.{Buffer, ListBuffer}
 
-class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
+class DepartEvalStatAction extends ProjectRestfulAction[DepartEvalStat] {
   override def index(): View = {
     val stdType = entityDao.get(classOf[StdType], 5)
     put("stdTypeList", stdType)
@@ -48,21 +48,15 @@ class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
       searchFormFlag = "beenStat"
     }
     put("searchFormFlag", searchFormFlag)
-    //    put("educations", getEducationLevels())
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department], "dep").where("dep.teaching =:tea", true)))
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire").where("questionnaire.state =:state", true)
     put("questionnaires", entityDao.search(query))
-    val semesters = entityDao.getAll(classOf[Semester])
-    put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    put("currentSemester", getCurrentSemester)
     forward()
   }
 
   override def search(): View = {
-    // 页面条件
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val semesterId = getInt("semester.id").get
     val semester = entityDao.get(classOf[Semester], semesterId)
     val departEvalStat = OqlBuilder.from(classOf[DepartEvalStat], "departEvalStat")
     populateConditions(departEvalStat)
@@ -86,10 +80,7 @@ class DepartEvalStatAction extends RestfulAction[DepartEvalStat] {
     val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:tea", true))
     put("departments", teachingDeparts)
 
-    val semesters = entityDao.getAll(classOf[Semester])
-    put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    put("currentSemester", this.getCurrentSemester)
     forward()
   }
 

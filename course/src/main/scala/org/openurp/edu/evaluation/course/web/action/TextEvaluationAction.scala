@@ -30,9 +30,7 @@ import org.openurp.edu.evaluation.clazz.model.TextEvaluation
 class TextEvaluationAction extends ProjectRestfulAction[TextEvaluation] {
 
   override protected def indexSetting(): Unit = {
-    val semesters = getSemesters()
-    put("semesters", semesters)
-    put("currentSemester", semesters.last)
+    put("currentSemester", getCurrentSemester)
     put("departments", findInSchool(classOf[Department]))
   }
 

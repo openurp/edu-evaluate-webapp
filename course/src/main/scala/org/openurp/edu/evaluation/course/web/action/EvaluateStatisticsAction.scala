@@ -32,7 +32,7 @@ import org.openurp.edu.evaluation.clazz.result.model.{EvaluateResult, QuestionRe
 import org.openurp.edu.evaluation.clazz.stat.model.ClazzEvalStat
 import org.openurp.edu.evaluation.model.{Question, QuestionType, Questionnaire}
 
-class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with ServletSupport {
+class EvaluateStatisticsAction extends ProjectRestfulAction[ClazzEvalStat] with ServletSupport {
 
   var list1: Seq[Array[Any]] = Seq()
   var list2: Seq[Array[Any]] = Seq()
@@ -46,18 +46,9 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
   var questis: Questionnaire = _
   //
   override def index(): View = {
-    /** 本学期是否评教 */
-    val builder = OqlBuilder.from[Questionnaire](classOf[EvaluateResult].getName, "evaluateResult")
-    val semesters = entityDao.getAll(classOf[Semester])
-    put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
-    if (semesters != null) {
-      builder.where("evaluateResult.clazz.semester in (:ids)", semesters)
-    }
-    builder.select("distinct evaluateResult.questionnaire")
+    val builder = OqlBuilder.from(classOf[Questionnaire], "questionnaire")
+    put("currentSemester",this.getCurrentSemester)
     val list = entityDao.search(builder)
-    //    Collections.sort(list, new PropertyComparator("id"))
     put("questionnaires", list)
     val departs = entityDao.search(OqlBuilder.from(classOf[Department], "dep").where("dep.teaching =:tea", true))
     put("departmentList", departs)
@@ -66,8 +57,8 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
 
   /** 学院与教师评教结果统计 */
   override def search(): View = {
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    println(getInt("semester.id"))
+    val semesterId = getInt("semester.id").get
     val departmentId = getInt("department.id").getOrElse(null)
     var questionnaireId = getLong("questionnaire.id").get
     //    if (getLong("questionnaire.id").get != 0L  ) {

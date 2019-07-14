@@ -7,8 +7,8 @@
 <table class="indexpanel">
     <tr>
     <td class="index_view">
-        [@b.form action="!search" name="courseEvaluateStatIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
-       [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
+       [@b.form action="!search" name="courseEvaluateStatIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
+       [@edu_base.semester name="semester.id" label="学年学期" value=currentSemester /]
        [@b.textfield style="width:100px" name="clazzEvalStat.clazz.crn" label="课程序号" /]
        [@b.textfield style="width:100px" name="clazzEvalStat.course.code" label="课程代码" /]
        [@b.textfield style="width:100px" name="clazzEvalStat.course.name" label="课程名称" /]

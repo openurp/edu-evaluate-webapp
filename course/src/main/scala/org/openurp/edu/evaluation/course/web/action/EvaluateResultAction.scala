@@ -32,9 +32,7 @@ import org.openurp.edu.exam.model.ExamTaker
 class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
 
   override protected def indexSetting(): Unit = {
-    val semesters=getSemesters()
-    put("semesters",semesters )
-    put("currentSemester", semesters.last)
+    put("currentSemester", getCurrentSemester)
   }
 
   override def search(): View = {

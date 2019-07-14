@@ -29,25 +29,17 @@ import org.openurp.edu.base.model.Semester
 import org.openurp.edu.evaluation.clazz.stat.model.ClazzEvalStat
 import org.openurp.edu.evaluation.model.Option
 
-class ClazzEvalSearchAction extends RestfulAction[ClazzEvalStat] {
+class ClazzEvalSearchAction extends ProjectRestfulAction[ClazzEvalStat] {
 
   override def index(): View = {
-    val semesters = entityDao.getAll(classOf[Semester])
-    put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    put("currentSemester", getCurrentSemester)
     forward()
   }
 
   override def search(): View = {
-    // 页面条件
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
-    val semester = entityDao.get(classOf[Semester], semesterId)
     val clazzEvalStat = OqlBuilder.from(classOf[ClazzEvalStat], "clazzEvalStat")
     populateConditions(clazzEvalStat)
     clazzEvalStat.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
-    clazzEvalStat.where("clazzEvalStat.clazz.semester=:semester", semester)
     put("clazzEvalStats", entityDao.search(clazzEvalStat))
     forward()
   }

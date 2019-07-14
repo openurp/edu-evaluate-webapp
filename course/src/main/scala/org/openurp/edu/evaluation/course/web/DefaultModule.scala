@@ -21,6 +21,7 @@ package org.openurp.edu.evaluation.course.web
 import org.beangle.cdi.bind.BindModule
 import org.openurp.edu.evaluation.app.course.service.StdEvaluateSwitchService
 import org.openurp.edu.evaluation.course.web.action._
+import org.openurp.edu.base.service.impl.SemesterServiceImpl
 
 class DefaultModule extends BindModule {
 
@@ -78,5 +79,7 @@ class DefaultModule extends BindModule {
     bind(classOf[QuestionnaireStatAction])
     //  查看任务问卷评教各问题类别结果及总分
     bind(classOf[QuestionnaireStatSearchAction])
+    
+    bind(classOf[SemesterServiceImpl])
   }
 }

@@ -34,11 +34,7 @@ import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
 class EvaluateStatusStatAction extends ProjectRestfulAction[EvaluateResult] {
 
   override def index(): View = {
-    //    put("stdTypeList", entityDao.getAll(classOf[StdType]))
-    //    put("departmentList", entityDao.search(OqlBuilder.from(classOf[Department],"dep").where("dep.teaching =:tea",true)))
-    put("semesters", getSemesters())
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    put("currentSemester",getCurrentSemester)
     put("departments", findInSchool(classOf[Department]))
     forward()
   }

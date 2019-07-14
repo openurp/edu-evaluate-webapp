@@ -40,9 +40,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
 
   override def index(): View = {
     put("departments", findInSchool(classOf[Department]))
-    put("semesters", getSemesters())
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    put("currentSemester", getCurrentSemester)
     forward()
   }
 
@@ -125,7 +123,6 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
    * 跳转(统计首页面)
    */
   def statHome(): View = {
-
     put("stdTypeList", entityDao.getAll(classOf[StdType]))
     put("departmentList", entityDao.getAll(classOf[Department]))
 
@@ -133,10 +130,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:tea", true))
     put("departments", teachingDeparts)
 
-    val semesters = entityDao.getAll(classOf[Semester])
-    put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    put("currentSemester",getCurrentSemester)
     forward()
   }
 

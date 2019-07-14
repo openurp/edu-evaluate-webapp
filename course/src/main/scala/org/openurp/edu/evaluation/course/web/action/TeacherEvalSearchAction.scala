@@ -29,13 +29,10 @@ import org.openurp.edu.base.model.Semester
 import org.openurp.edu.evaluation.clazz.stat.model.TeacherEvalStat
 import org.openurp.edu.evaluation.model.Option
 
-class TeacherEvalSearchAction extends RestfulAction[TeacherEvalStat] {
+class TeacherEvalSearchAction extends ProjectRestfulAction[TeacherEvalStat] {
 
   override def index(): View = {
-    val semesters = entityDao.getAll(classOf[Semester])
-    put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    put("currentSemester", getCurrentSemester)
     forward()
   }
 
