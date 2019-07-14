@@ -33,7 +33,7 @@
     [@b.grid items=questionResults var="questionResult" sortable="false"]
         [@b.row]
             [@b.col title="问题内容" width="30%"]${(questionResult[1])!}[/@]
-            [#list options as option]
+            [#list options?sort_by("proportion")?reverse as option]
             [@b.col title="${option.name!}"]
             [#assign numb =0 /]
                 [#list questionRs as questionR]
