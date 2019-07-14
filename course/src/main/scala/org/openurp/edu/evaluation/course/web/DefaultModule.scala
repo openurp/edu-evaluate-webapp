@@ -79,7 +79,7 @@ class DefaultModule extends BindModule {
     bind(classOf[QuestionnaireStatAction])
     //  查看任务问卷评教各问题类别结果及总分
     bind(classOf[QuestionnaireStatSearchAction])
-    
+
     bind(classOf[SemesterServiceImpl])
   }
 }

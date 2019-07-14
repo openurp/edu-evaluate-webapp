@@ -33,8 +33,6 @@ import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
 
 class EvaluateStatusTeacherAction extends ProjectRestfulAction[EvaluateResult] {
 
-
-
   override def index(): View = {
     put("currentSemester",this.getCurrentSemester)
     forward()
