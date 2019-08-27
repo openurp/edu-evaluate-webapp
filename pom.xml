@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.openurp</groupId>
     <artifactId>openurp-parent</artifactId>
-    <version>0.3.3</version>
+    <version>0.3.5</version>
   </parent>
   <groupId>org.openurp.edu.evaluation</groupId>
   <artifactId>openurp-edu-evaluation-parent</artifactId>
@@ -15,7 +15,7 @@
   <properties>
     <bundle.symbolicName>org.openurp.edu.evaluation.parent</bundle.symbolicName>
     <bundle.namespace>org.openurp</bundle.namespace>
-    <openurp.app.version>0.1.21</openurp.app.version>
+    <openurp.app.version>0.1.22</openurp.app.version>
     <openurp.api.version>0.11.0</openurp.api.version>
     <openurp.edu.boot.version>0.0.6</openurp.edu.boot.version>
     <openurp.edu.base.version>0.0.27</openurp.edu.base.version>
