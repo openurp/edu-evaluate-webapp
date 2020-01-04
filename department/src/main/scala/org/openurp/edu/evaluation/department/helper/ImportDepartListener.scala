@@ -31,7 +31,7 @@ import org.openurp.edu.evaluation.model.Questionnaire
  * @author xinzhou
  */
 class ImportDepartListener(entityDao: EntityDao) extends AbstractImportListener {
-  override def onItemStart(tr: ImportResult) {
+  override def onItemStart(tr: ImportResult): Unit = {
     val teacherCode = transfer.curData.get("teacher.code").get
     val semesterCode = transfer.curData.get("semester.code").get.toString()
     val departmentId = getTeacher().user.department.id
@@ -48,7 +48,7 @@ class ImportDepartListener(entityDao: EntityDao) extends AbstractImportListener 
     }
   }
 
-  override def onItemFinish(tr: ImportResult) {
+  override def onItemFinish(tr: ImportResult): Unit = {
     val departEvaluate = tr.transfer.current.asInstanceOf[DepartEvaluate]
     val questionnaire = entityDao.get(classOf[Questionnaire], 322L)
     departEvaluate.questionnaire = questionnaire

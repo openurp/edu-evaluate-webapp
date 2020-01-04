@@ -72,7 +72,7 @@ class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
   /**
    * 清除统计数据
    */
-  private def removeStats(project: Project, semesterId: Int) {
+  private def removeStats(project: Project, semesterId: Int) :Unit={
     val query = OqlBuilder.from(classOf[ClazzEvalStat], "les")
     query.where("les.clazz.semester.id=:semesterId", semesterId)
     query.where("les.clazz.project=:project", project)

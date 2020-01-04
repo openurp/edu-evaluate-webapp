@@ -24,7 +24,6 @@ import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.action.ServletSupport
 import org.beangle.webmvc.api.view.View
-import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.code.edu.model.EducationLevel
 import org.openurp.edu.base.code.model.StdType
@@ -50,7 +49,7 @@ class QuestionnaireStatAction extends ProjectRestfulAction[ClazzEvalStat] with S
     put("departments", entityDao.getAll(classOf[Department]))
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire").where("questionnaire.state =:state", true)
     put("questionnaires", entityDao.search(query))
-    put("currentSemester",this.getCurrentSemester)
+    put("currentSemester", this.getCurrentSemester)
     put("evaluationCriterias", entityDao.getAll(classOf[EvaluationCriteria]))
     put("questionTypes", entityDao.getAll(classOf[QuestionType]))
     forward()
@@ -69,10 +68,8 @@ class QuestionnaireStatAction extends ProjectRestfulAction[ClazzEvalStat] with S
 
   /**
    * 查询 (获得教师)
-   *
-   * @throws IOException
    */
-  def searchTeacher() {
+  def searchTeacher(): Unit = {
     // throws IOException {
     val code = get("teacherCode").get
     val teachers = entityDao.search(OqlBuilder.from(classOf[Teacher], "sf").where("sf.code=:code", code))
@@ -80,7 +77,7 @@ class QuestionnaireStatAction extends ProjectRestfulAction[ClazzEvalStat] with S
       val teacher = teachers(0)
       response.setCharacterEncoding("utf-8")
       response.getWriter().print(
-        teacher.id + "_" + teacher.user.name + "_" + teacher.user.department.name)
+        teacher.id.toString + "_" + teacher.user.name + "_" + teacher.user.department.name)
     } else {
       response.getWriter().print("")
     }
@@ -180,7 +177,9 @@ class QuestionnaireStatAction extends ProjectRestfulAction[ClazzEvalStat] with S
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val lis = entityDao.search(OqlBuilder.from(classOf[EvaluationCriteriaItem], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L))
-    if (lis.size < 1) { redirect("search", "未找到评价标准！"); }
+    if (lis.size < 1) {
+      redirect("search", "未找到评价标准！");
+    }
     put("criterias", lis)
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department], "dep").where("dep.teaching=:tea", true)))
     put("semester", entityDao.get(classOf[Semester], semesterId))

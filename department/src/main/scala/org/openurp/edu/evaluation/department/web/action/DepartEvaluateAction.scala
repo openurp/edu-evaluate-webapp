@@ -18,22 +18,22 @@
  */
 package org.openurp.edu.evaluation.department.web.action
 
-import java.time.{ Instant, LocalDate }
+import java.time.{Instant, LocalDate}
 
-import org.beangle.commons.collection.{ Collections, Order }
+import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.commons.lang.ClassLoaders
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.transfer.importer.ImportSetting
 import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.security.Securities
-import org.beangle.webmvc.api.view.{ Stream, View }
+import org.beangle.webmvc.api.view.{Stream, View}
 import org.openurp.base.model.Department
-import org.openurp.edu.base.model.{ Semester, Teacher }
+import org.openurp.edu.base.model.{Semester, Teacher}
 import org.openurp.edu.course.model.Clazz
 import org.openurp.edu.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.edu.evaluation.department.helper.ImportDepartListener
-import org.openurp.edu.evaluation.department.model.{ DepartEvaluate, DepartQuestion }
-import org.openurp.edu.evaluation.model.{ Question, QuestionType, Questionnaire }
+import org.openurp.edu.evaluation.department.model.{DepartEvaluate, DepartQuestion}
+import org.openurp.edu.evaluation.model.{Question, QuestionType, Questionnaire}
 
 import scala.collection.mutable.Buffer
 
@@ -143,12 +143,12 @@ class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate] {
     }
     questionnaire.questions foreach { question =>
       resultMap.get(question) match {
-        case Some(qr) => qr.score = getFloat(question.id + "_score").get
+        case Some(qr) => qr.score = getFloat(s"${question.id}_score").get
         case None =>
           val qr = new DepartQuestion
           qr.question = question
           qr.result = departEvaluate
-          qr.score = getFloat(question.id + "_score").get
+          qr.score = getFloat(s"${question.id}_score").get
           departEvaluate.questionResults += qr
       }
     }
@@ -160,7 +160,7 @@ class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate] {
     Stream(ClassLoaders.getResourceAsStream("departEvaluate.xls").get, "application/vnd.ms-excel", "评教结果.xls")
   }
 
-  protected override def configImport(setting: ImportSetting) {
+  protected override def configImport(setting: ImportSetting): Unit = {
     setting.listeners = List(new ForeignerListener(entityDao), new ImportDepartListener(entityDao))
   }
 

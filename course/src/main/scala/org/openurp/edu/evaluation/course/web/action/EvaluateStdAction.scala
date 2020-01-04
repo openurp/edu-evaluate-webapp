@@ -58,7 +58,7 @@ class EvaluateStdAction extends ProjectRestfulAction[EvaluateResult] {
     query.where("evaluateResult.student = :student ", student)
     query.where("evaluateResult.clazz.semester = :semester", semester)
     val a = entityDao.search(query)
-    a.map(obj => (obj.clazz.id + "_" + (if (null == obj.teacher) "0" else obj.teacher.id), "1")).toMap
+    a.map(obj => (obj.clazz.id.toString + "_" + (if (null == obj.teacher) "0" else obj.teacher.id.toString), "1")).toMap
   }
 
   def getStdClazzs(student: Student, semester: Semester): Seq[Clazz] = {

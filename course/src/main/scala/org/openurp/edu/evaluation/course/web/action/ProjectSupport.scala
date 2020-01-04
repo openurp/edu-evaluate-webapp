@@ -24,17 +24,13 @@ import org.beangle.data.model.Entity
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.model.Semester
 import org.openurp.edu.base.service.SemesterService
-import org.openurp.edu.boot.web.ProjectSupport
+import org.openurp.edu.base.web.ProjectSupport
 import org.beangle.data.dao.OqlBuilder
 import org.openurp.edu.base.model.Project
 
 abstract class ProjectRestfulAction[T <: Entity[_]] extends RestfulAction[T] with ProjectSupport {
 
   var semesterService: SemesterService = _
-
-  def getCurrentSemester: Semester = {
-    get(this.getProject, LocalDate.now)
-  }
 
   def get(project: Project, date: LocalDate): Semester = {
     val builder = OqlBuilder.from(classOf[Semester], "semester")

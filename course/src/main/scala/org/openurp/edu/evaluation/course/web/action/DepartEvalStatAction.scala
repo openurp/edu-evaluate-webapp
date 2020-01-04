@@ -24,7 +24,6 @@ import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
-import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.code.edu.model.EducationLevel
 import org.openurp.edu.base.code.model.StdType
@@ -102,11 +101,12 @@ class DepartEvalStatAction extends ProjectRestfulAction[DepartEvalStat] {
   /**
    * 清除统计数据
    */
-  def remove(educationTypeIds: Seq[Int], departmentIds: Seq[Int], semesterId: Int) {
+  def remove(educationTypeIds: Seq[Int], departmentIds: Seq[Int], semesterId: Int): Unit = {
     val query = OqlBuilder.from(classOf[DepartEvalStat], "questionS")
     query.where("questionS.semester.id=:semesterId", semesterId)
     entityDao.remove(entityDao.search(query))
   }
+
   /**
    * 统计(任务评教结果)
    *
@@ -290,6 +290,7 @@ class DepartEvalStatAction extends ProjectRestfulAction[DepartEvalStat] {
     entityDao.remove(entityDao.search(query))
     redirect("search", "info.remove.success")
   }
+
   /**
    * 统计(全校评教结果)
    *

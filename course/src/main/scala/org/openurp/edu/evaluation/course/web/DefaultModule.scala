@@ -19,13 +19,13 @@
 package org.openurp.edu.evaluation.course.web
 
 import org.beangle.cdi.bind.BindModule
+import org.openurp.edu.base.service.impl.SemesterServiceImpl
 import org.openurp.edu.evaluation.app.course.service.StdEvaluateSwitchService
 import org.openurp.edu.evaluation.course.web.action._
-import org.openurp.edu.base.service.impl.SemesterServiceImpl
 
 class DefaultModule extends BindModule {
 
-  override def binding() {
+  override def binding(): Unit = {
 
     //******教务处菜单
     //               评教设置->课程问卷 --- 为课程设置问卷和评教方式（教师/课程）
@@ -38,9 +38,9 @@ class DefaultModule extends BindModule {
 
     //  评教管理->问卷有效性--------------查看全部学生评教问卷并设置有效或无效
     bind(classOf[EvaluateResultAction])
-    //               评教管理->文字有效性 --------------确认学生文字评教（只有已确认的文字评教才能查看到回复）
+    // 评教管理->文字有效性 --------------确认学生文字评教（只有已确认的文字评教才能查看到回复）
     bind(classOf[TextEvaluationAction])
-    //               评教管理->?? --------------查看全部文字评教（确认和未确认）
+    // 评教管理->?? --------------查看全部文字评教（确认和未确认）
     bind(classOf[TextEvaluationSearchAction])
 
     // ------------------------问卷回收率即时统计与查询---------------------

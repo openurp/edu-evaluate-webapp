@@ -24,7 +24,6 @@ import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.action.ServletSupport
 import org.beangle.webmvc.api.view.View
-import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.edu.base.model.{Semester, Teacher}
 import org.openurp.edu.course.model.Clazz
@@ -44,10 +43,11 @@ class EvaluateStatisticsAction extends ProjectRestfulAction[ClazzEvalStat] with 
   var evaResults: Float = _
   var semest: Semester = _
   var questis: Questionnaire = _
+
   //
   override def index(): View = {
     val builder = OqlBuilder.from(classOf[Questionnaire], "questionnaire")
-    put("currentSemester",this.getCurrentSemester)
+    put("currentSemester", this.getCurrentSemester)
     val list = entityDao.search(builder)
     put("questionnaires", list)
     val departs = entityDao.search(OqlBuilder.from(classOf[Department], "dep").where("dep.teaching =:tea", true))
@@ -290,6 +290,7 @@ class EvaluateStatisticsAction extends ProjectRestfulAction[ClazzEvalStat] with 
       querdep.where("evaluateResult.clazz.teachDepart.id=:depId", clazz.teachDepart.id)
     }
     put("depScores", entityDao.search(querdep)(0).toString().toFloat)
+
     /** 全校平均分 */
     put("evaResults", evaResults)
 
@@ -397,7 +398,7 @@ class EvaluateStatisticsAction extends ProjectRestfulAction[ClazzEvalStat] with 
     forward()
   }
 
-  def clazzEvaluate() {
+  def clazzEvaluate(): Unit = {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val departmentId = getInt("department.id").getOrElse(null)

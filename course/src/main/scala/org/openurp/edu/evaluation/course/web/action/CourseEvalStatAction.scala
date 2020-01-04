@@ -18,23 +18,23 @@
  */
 package org.openurp.edu.evaluation.course.web.action
 
-import java.time.{ Instant, LocalDate }
+import java.time.{Instant, LocalDate}
 
-import scala.collection.mutable.{ Buffer, ListBuffer }
-
-import org.beangle.commons.collection.{ Collections, Order }
+import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.openurp.base.model.Department
 import org.openurp.code.edu.model.EducationLevel
 import org.openurp.edu.base.code.model.StdType
-import org.openurp.edu.base.model.{ Course, Semester, Teacher }
+import org.openurp.edu.base.model.{Course, Semester, Teacher}
 import org.openurp.edu.course.model.Clazz
 import org.openurp.edu.evaluation.app.course.service.Ranker
 import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
 import org.openurp.edu.evaluation.clazz.stat.model._
-import org.openurp.edu.evaluation.model.{ Option, Question, QuestionType, Questionnaire }
+import org.openurp.edu.evaluation.model.{Option, Question, QuestionType, Questionnaire}
+
+import scala.collection.mutable.{Buffer, ListBuffer}
 
 class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
 
@@ -112,11 +112,12 @@ class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
   /**
    * 清除统计数据
    */
-  def remove(educationTypeIds: Seq[Int], departmentIds: Seq[Int], semesterId: Int) {
+  def remove(educationTypeIds: Seq[Int], departmentIds: Seq[Int], semesterId: Int): Unit = {
     val query = OqlBuilder.from(classOf[CourseEvalStat], "questionS")
     query.where("questionS.semester.id=:semesterId", semesterId)
     entityDao.remove(entityDao.search(query))
   }
+
   /**
    * 统计(任务评教结果)
    *

@@ -30,7 +30,7 @@ import org.openurp.edu.evaluation.model.Questionnaire
  * @author xinzhou
  */
 class ImportSupervisiorListener(entityDao: EntityDao) extends AbstractImportListener {
-  override def onItemStart(tr: ImportResult) {
+  override def onItemStart(tr: ImportResult): Unit = {
     val teacherCode = transfer.curData.get("teacher.code").get
     val semesterCode = transfer.curData.get("semester.code").get.toString()
     val departmentCode = transfer.curData.get("department.code").get
@@ -46,7 +46,7 @@ class ImportSupervisiorListener(entityDao: EntityDao) extends AbstractImportList
     }
   }
 
-  override def onItemFinish(tr: ImportResult) {
+  override def onItemFinish(tr: ImportResult): Unit = {
     val supervisiorEvaluate = tr.transfer.current.asInstanceOf[SupervisiorEvaluate]
     val questionnaire = entityDao.get(classOf[Questionnaire], 322L)
     supervisiorEvaluate.questionnaire = questionnaire

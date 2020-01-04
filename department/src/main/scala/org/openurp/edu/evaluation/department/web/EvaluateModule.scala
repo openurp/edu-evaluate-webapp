@@ -23,7 +23,7 @@ import org.openurp.edu.evaluation.department.web.action.{DepartEvaluateAction, D
 
 class EvaluateModule extends BindModule {
 
-  override def binding() {
+  override def binding(): Unit = {
     bind(classOf[EvaluateSwitchAction])
     bind(classOf[DepartEvaluateAction])
     bind(classOf[SupervisiorEvaluateAction])

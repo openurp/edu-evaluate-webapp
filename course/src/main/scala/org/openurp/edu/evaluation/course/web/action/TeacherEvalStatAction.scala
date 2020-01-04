@@ -64,7 +64,7 @@ class TeacherEvalStatAction extends ProjectRestfulAction[TeacherEvalStat] {
   /**
    * 清除统计数据
    */
-  def remove(project: Project, semester: Semester) {
+  def remove(project: Project, semester: Semester): Unit = {
     val query = OqlBuilder.from(classOf[TeacherEvalStat], "questionS")
     query.where("questionS.semester =:semester", semester)
     query.where("questionS.teacher.project =:project", project)

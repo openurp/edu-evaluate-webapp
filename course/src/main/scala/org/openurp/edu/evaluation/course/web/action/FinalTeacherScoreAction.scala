@@ -66,7 +66,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     populateConditions(finalScores)
     finalScores.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
     finalScores.where("finalTeacherScore.semester.id=:semesterId", semesterId)
-    val list = collection.JavaConverters.asJavaCollection(entityDao.search(finalScores))
+    val list = scala.jdk.javaapi.CollectionConverters.asJava(entityDao.search(finalScores))
     //查出信息并放到map中
     val context= new ExportContext
     context.put("list", list)
@@ -78,7 +78,6 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     response.setHeader("Content-Disposition", "attachmentfilename=finalTeacherScore.xls")
     val os = response.getOutputStream()
     try {
-
       //将beans通过模板输入流写到workbook中
       new ExcelTemplateWriter(path,context, os).write()
     } finally {
@@ -113,7 +112,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
   /**
    * 清除统计数据
    */
-  def remove(semesterId: Int) {
+  def remove(semesterId: Int): Unit = {
     val query = OqlBuilder.from(classOf[FinalTeacherScore], "finalScore")
     query.where("finalScore.semester.id=:semesterId", semesterId)
     entityDao.remove(entityDao.search(query))

@@ -20,10 +20,13 @@ package org.openurp.edu.evaluation.app.course.service
 
 import org.openurp.edu.evaluation.clazz.stat.model.{EvalStat, FinalTeacherScore}
 
+import scala.math.Ordering.Float
+
 object Ranker {
 
   def over[B <: EvalStat](stats: scala.Seq[B])(f: (B, Int) => Unit): Unit = {
     if(stats.isEmpty) return
+    implicit  val sort=Float.TotalOrdering
     val sortedStates = stats.sortBy { x => 0 - x.avgScore }
     val ranks = new collection.mutable.HashMap[B, Int]
     var rank = 1
@@ -49,6 +52,7 @@ object Ranker {
   }
 
   def rOver[B <: FinalTeacherScore](stats: scala.Seq[B])(f: (B, Int) => Unit): Unit = {
+    implicit val sort = Float.TotalOrdering
     val sortedStates = stats.sortBy { x => 0 - x.score }
 
     val ranks = new collection.mutable.HashMap[B, Int]
