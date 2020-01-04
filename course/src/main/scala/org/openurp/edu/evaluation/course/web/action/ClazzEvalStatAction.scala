@@ -43,20 +43,15 @@ class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
       searchFormFlag = "beenStat"
     }
     put("searchFormFlag", searchFormFlag)
-    //    put("educations", getEducationLevels())
     put("departments", findInSchool(classOf[Department]))
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire").where("questionnaire.state =:state", true)
     put("questionnaires", entityDao.search(query))
-    put("semesters", getSemesters())
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    put("currentSemester", getCurrentSemester)
     forward()
   }
 
   override def search(): View = {
-    // 页面条件
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val semesterId = getInt("semester.id").get
     val semester = entityDao.get(classOf[Semester], semesterId)
     val clazzEvalStat = OqlBuilder.from(classOf[ClazzEvalStat], "clazzEvalStat")
     populateConditions(clazzEvalStat)
@@ -77,7 +72,7 @@ class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
   /**
    * 清除统计数据
    */
-  private def removeStats(project: Project, semesterId: Int) {
+  private def removeStats(project: Project, semesterId: Int) :Unit={
     val query = OqlBuilder.from(classOf[ClazzEvalStat], "les")
     query.where("les.clazz.semester.id=:semesterId", semesterId)
     query.where("les.clazz.project=:project", project)
@@ -90,7 +85,7 @@ class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
     val lis = entityDao.search(OqlBuilder.from(classOf[EvaluationCriteriaItem], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L))
     if (lis.size < 1) { redirect("search", "未找到评价标准！") }
     put("criterias", lis)
-    val depId = getInt("department.id")
+    val depId = getInt("department.id").getOrElse(20)
     put("departId", depId)
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department], "dep").where("dep.teaching=true")))
     val evaquery = OqlBuilder.from(classOf[EvaluateResult], "evaluateR")
@@ -98,7 +93,7 @@ class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
     evaquery.where("evaluateR.clazz.teachDepart.id=:depId", depId)
     val semesterIds = entityDao.search(evaquery)
     val qur = OqlBuilder.from(classOf[Semester], "semester")
-    qur.where("semester.beginOn<=:dat", new java.util.Date())
+    qur.where("semester.beginOn<=:dat", LocalDate.now())
     val quetionQuery = OqlBuilder.from(classOf[ClazzEvalStat], "questionnaireS")
     if (semesterIds.size > 0) {
       qur.where("semester.id in(:ids)", semesterIds)
@@ -183,7 +178,7 @@ class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
     evaquery.select("distinct evaluateR.clazz.semester.id")
     val semesterIds = entityDao.search(evaquery)
     val qur = OqlBuilder.from(classOf[Semester], "semester")
-    qur.where("semester.beginOn<=:dat", new java.util.Date())
+    qur.where("semester.beginOn<=:dat", LocalDate.now())
     val quetionQuery = OqlBuilder.from(classOf[ClazzEvalStat], "questionnaireS")
     if (semesterIds.size > 0) {
       qur.where("semester.id in(:ids)", semesterIds)
@@ -290,10 +285,7 @@ class ClazzEvalStatAction extends ProjectRestfulAction[ClazzEvalStat] {
     val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:tea", true))
     put("departments", teachingDeparts)
 
-    val semesters = getSemesters()
-    put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    put("currentSemester",getCurrentSemester)
     forward()
   }
 

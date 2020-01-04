@@ -26,7 +26,7 @@ import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.model.Project
 import org.openurp.edu.evaluation.model.{ Question, QuestionType }
-import org.openurp.edu.boot.web.ProjectSupport
+import org.openurp.edu.base.web.ProjectSupport
 
 class QuestionTypeAction extends RestfulAction[QuestionType] with ProjectSupport {
 

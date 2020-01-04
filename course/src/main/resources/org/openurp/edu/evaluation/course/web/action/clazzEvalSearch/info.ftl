@@ -23,7 +23,7 @@
         </tr>
         <tr>
             <td class="title" style="text-align:center;">问卷下发数量</td>
-            <td style="padding-left:10px;">${questionnaireStat.clazz.teachclass.stdCount}</td>
+            <td style="padding-left:10px;">${(questionnaireStat.clazz.enrollment.actual)!}</td>
             <td class="title" style="text-align:center;">问卷回收数量</td>
             <td style="padding-left:10px;">${questionnaireStat.totalTickets}</td>
             <td class="title" style="text-align:center;">问卷有效数量</td>
@@ -33,11 +33,12 @@
     [@b.grid items=questionnaireStat.questionStats var="qs" sortable="false"]
         [@b.row]
             [@b.col title="问题内容" width="30%"]${qs.question.content}[/@]
-            [#list options as option]
+            [#list options?sort_by("proportion")?reverse as option]
             [@b.col title="${option.name!}"]
                 [#list qs.optionStats as os]
                     [#if os.option==option]
                       ${os.amount}[#break/]
+                    [#else]0
                     [/#if]
                 [/#list]
                 [/@]

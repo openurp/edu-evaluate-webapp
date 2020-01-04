@@ -24,7 +24,7 @@ import org.openurp.edu.evaluation.questionnaire.web.action._
 
 class DefaultModule extends BindModule {
 
-  override def binding() {
+  override def binding(): Unit = {
 
     //*******教务处  评教设置——>问卷设置
     bind(classOf[EvaluationConfigAction])

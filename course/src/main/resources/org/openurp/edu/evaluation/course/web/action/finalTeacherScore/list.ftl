@@ -24,7 +24,7 @@
  var form = document.finalTeacherScoreSearchForm;
  function exportData(){
       bg.form.addInput(form,"semester.id",document.finalTeacherScoreSearchForm['semester.id'].value);
-      bg.form.addInput(form,"keys","teacher.user.code,teacher.name,teacher.state.department.name,semester.code,stdScore,supviScore,departScore,score,rank");
+      bg.form.addInput(form,"keys","teacher.user.code,teacher.name,teacher.user.department.name,semester.code,stdScore,supviScore,departScore,score,rank");
       bg.form.addInput(form,"titles","教师工号,教师姓名,教师所属院系，学年学期,学生评教,督导评教,院系评教,最后得分,全校排名");
       bg.form.addInput(form,"fileName","finalTeacherScore");
       bg.form.submit(form, "${b.url('!export')}", '_blank');

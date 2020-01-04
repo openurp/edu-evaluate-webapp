@@ -25,7 +25,7 @@ import org.openurp.edu.evaluation.app.course.model.TextEvaluateSwitch
 class TextEvaluateSwitchAction extends ProjectRestfulAction[TextEvaluateSwitch] {
 
   protected override def indexSetting(): Unit = {
-    put("semesters", getSemesters())
+    put("currentSemester", getCurrentSemester)
   }
 
   override def search(): View = {
@@ -37,10 +37,6 @@ class TextEvaluateSwitchAction extends ProjectRestfulAction[TextEvaluateSwitch] 
     textEvaluationSwitchs.where("textEvaluateSwitch.project=:project", getProject)
     put("textEvaluationSwitchs", entityDao.search(textEvaluationSwitchs))
     forward()
-  }
-
-  override def editSetting(entity: TextEvaluateSwitch) {
-    put("semesters", getSemesters())
   }
 
   override def saveAndRedirect(evaluateSwitch: TextEvaluateSwitch): View = {

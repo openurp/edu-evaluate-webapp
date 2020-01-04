@@ -22,7 +22,7 @@ import org.beangle.cdi.bind.BindModule
 
 class DefaultModule extends BindModule {
 
-  override def binding() {
+  override def binding(): Unit = {
     // *****教师菜单  评教查询->文字评教
     //  教师个人查看自己的评教回收率
     bind(classOf[EvaluateStatusTeacherAction])

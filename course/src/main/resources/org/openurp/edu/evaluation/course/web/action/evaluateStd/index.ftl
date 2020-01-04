@@ -6,12 +6,11 @@
 [/@]--]
 [@b.toolbar title="课程问卷评教" /]
 
-[#--[@eams.semesterBar semesterValue=semester name="project.id" semesterName="semester.id" semesterEmpty="false" initCallback="changeSemester(this.value)"/]--]
 <table class="indexpanel">
     <tr>
         <td class="index_content">
             [@b.form name="evaluateIndexForm" action="!search" target="contentDiv" theme="search"]
-             [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
+            [@edu_base.semester  name="semester.id" label="学年学期" value=currentSemester/]
             [/@]
         </td>
        <td class="index_content">

@@ -2,13 +2,12 @@
 [@b.head/]
 [@b.toolbar title='管理文字评教' id='textEvaluationBar' /]
 
-[#--[@eams.semesterBar semesterValue=semester name="project.id" semesterName="semester.id" semesterEmpty="false" initCallback="changeSemester()"/]--]
 <table class="indexpanel">
     <tr>
         <td style="width:180px" class="index_view">
         [@b.form action="!search" name="textEvaluationIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
             <input type="hidden" name="clazz.project.id" value="${(project.id)!}"/>
-            [@b.select name="semester.id" label="学年学期" items=semesters value=currentSemester option = "id,code" empty="..."/]
+            [@edu_base.semester  name="semester.id" label="学年学期" value=currentSemester/]
             [@b.textfields names="clazz.crn;课程序号,clazz.course.code;课程代码,clazz.course.name;课程名称,teacher.user.name;教师名称"/]
             [@b.select name="clazz.teachDepart.id" label="开课院系" items=departments empty="..."/]
             [@b.select name="state" label="是否确认" items={'1':'已确认','0':'未确认'}  empty="..."/]

@@ -23,7 +23,7 @@ import org.openurp.edu.evaluation.app.course.service.StdEvaluateSwitchService
 
 class DefaultModule extends  BindModule {
 
-  override def binding() {
+  override def binding(): Unit = {
     bind(classOf[StdEvaluateSwitchService])
   }
 

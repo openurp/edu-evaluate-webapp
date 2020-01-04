@@ -24,7 +24,6 @@ import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.action.ServletSupport
 import org.beangle.webmvc.api.view.View
-import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.edu.base.model.{Semester, Teacher}
 import org.openurp.edu.course.model.Clazz
@@ -32,7 +31,7 @@ import org.openurp.edu.evaluation.clazz.result.model.{EvaluateResult, QuestionRe
 import org.openurp.edu.evaluation.clazz.stat.model.ClazzEvalStat
 import org.openurp.edu.evaluation.model.{Question, QuestionType, Questionnaire}
 
-class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with ServletSupport {
+class EvaluateStatisticsAction extends ProjectRestfulAction[ClazzEvalStat] with ServletSupport {
 
   var list1: Seq[Array[Any]] = Seq()
   var list2: Seq[Array[Any]] = Seq()
@@ -44,20 +43,12 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
   var evaResults: Float = _
   var semest: Semester = _
   var questis: Questionnaire = _
+
   //
   override def index(): View = {
-    /** 本学期是否评教 */
-    val builder = OqlBuilder.from[Questionnaire](classOf[EvaluateResult].getName, "evaluateResult")
-    val semesters = entityDao.getAll(classOf[Semester])
-    put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
-    if (semesters != null) {
-      builder.where("evaluateResult.clazz.semester in (:ids)", semesters)
-    }
-    builder.select("distinct evaluateResult.questionnaire")
+    val builder = OqlBuilder.from(classOf[Questionnaire], "questionnaire")
+    put("currentSemester", this.getCurrentSemester)
     val list = entityDao.search(builder)
-    //    Collections.sort(list, new PropertyComparator("id"))
     put("questionnaires", list)
     val departs = entityDao.search(OqlBuilder.from(classOf[Department], "dep").where("dep.teaching =:tea", true))
     put("departmentList", departs)
@@ -66,8 +57,8 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
 
   /** 学院与教师评教结果统计 */
   override def search(): View = {
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    println(getInt("semester.id"))
+    val semesterId = getInt("semester.id").get
     val departmentId = getInt("department.id").getOrElse(null)
     var questionnaireId = getLong("questionnaire.id").get
     //    if (getLong("questionnaire.id").get != 0L  ) {
@@ -192,7 +183,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     val quer = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " tea")
     quer.join("evaluateResult.clazz.teachers", "teach")
-    quer.select("tea.code,tea.person.name.formatedName,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)")
+    quer.select("tea.code,tea.user.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)")
     quer.where("teach.id = tea.id")
     //    quer.where("tea.teaching is true")
     quer.where("evaluateResult.id=questionResult.result.id ")
@@ -201,7 +192,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     if (departmentId != null) {
       quer.where("tea.state.department.id=" + departmentId.toString())
     }
-    quer.groupBy("tea.code,tea.person.name.formatedName")
+    quer.groupBy("tea.code,tea.user.name")
     quer.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")
     list2 = entityDao.search(quer)
     val numMaps = Collections.newMap[String, String]
@@ -299,6 +290,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
       querdep.where("evaluateResult.clazz.teachDepart.id=:depId", clazz.teachDepart.id)
     }
     put("depScores", entityDao.search(querdep)(0).toString().toFloat)
+
     /** 全校平均分 */
     put("evaResults", evaResults)
 
@@ -406,7 +398,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     forward()
   }
 
-  def clazzEvaluate() {
+  def clazzEvaluate(): Unit = {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val departmentId = getInt("department.id").getOrElse(null)
@@ -436,7 +428,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     /** 教师评教总分 */
     val quer = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
-    quer.select("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id),teacher.state.department.name,teacher.id")
+    quer.select("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id),teacher.state.department.name,teacher.id")
     quer.join("evaluateResult.clazz.teachers", "tea")
     quer.where("tea.id = teacher.id")
     //    quer.where("teacher.endOn is null")
@@ -445,20 +437,20 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     if (departmentId != null) {
       quer.where("teacher.state.department.id=" + departmentId.toString())
     }
-    quer.groupBy("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name,teacher.state.department.name,teacher.id")
+    quer.groupBy("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,teacher.state.department.name,teacher.id")
     quer.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")
     val liss = entityDao.search(quer)
 
     put("evaluateTeaStasList", entityDao.search(quer))
     val queres = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
-    queres.select("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)")
+    queres.select("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)")
     queres.join("evaluateResult.clazz.teachers", "tea")
     queres.where("tea.id = teacher.id")
     //    queres.where("teacher.endOn is null")
     queres.where("evaluateResult.id=questionResult.result.id ")
     queres.where("evaluateResult.clazz.semester.id=" + semesterId)
-    queres.groupBy("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name")
+    queres.groupBy("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name")
     queres.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")
     val lits = entityDao.search(queres)
     val numMaps = Collections.newMap[String, String]
@@ -477,7 +469,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     val evaluateRs = Collections.newMap[String, Float]
     val quer1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
-    quer1.select("teacher.code,evaluateResult.clazz.id,questionResult.question.id,sum(questionResult.score)/count(evaluateResult.id)")
+    quer1.select("teacher.user.code,evaluateResult.clazz.id,questionResult.question.id,sum(questionResult.score)/count(evaluateResult.id)")
     quer1.join("evaluateResult.clazz.teachers", "tea")
     quer1.where("tea.id = teacher.id")
     //    quer1.where("teacher.endOn is null")
@@ -486,8 +478,8 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     if (departmentId != null) {
       quer1.where("teacher.state.department.id=" + departmentId.toString())
     }
-    quer1.groupBy("questionResult.question.id,teacher.code,evaluateResult.clazz.id")
-    quer1.orderBy("teacher.code,questionResult.question.id")
+    quer1.groupBy("questionResult.question.id,teacher.user.code,evaluateResult.clazz.id")
+    quer1.orderBy("teacher.user.code,questionResult.question.id")
     val lists = entityDao.search(quer1)
     lists foreach { ob =>
       if (ob.length > 0) {
@@ -522,25 +514,25 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     /** 教师评教总分 */
     val quer = OqlBuilder.from(classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
-    quer.select("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)"
+    quer.select("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)"
       + ",evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code")
     //    quer.where("teacher.endOn is null")
-    quer.where("evaluateResult.id=questionResult.result.id and evaluateResult.teacher.code=teacher.code")
+    quer.where("evaluateResult.id=questionResult.result.id and evaluateResult.teacher.user.code=teacher.user.code")
     quer.where("evaluateResult.clazz.semester.id=" + semesterId)
     if (departmentId != null) {
       quer.where("evaluateResult.clazz.teachDepart.id=" + departmentId.toString())
     }
-    quer.groupBy("teacher.code,evaluateResult.clazz.id,teacher.person.name.formatedName,evaluateResult.clazz.course.name,evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code")
+    quer.groupBy("teacher.user.code,evaluateResult.clazz.id,teacher.user.name,evaluateResult.clazz.course.name,evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code")
     quer.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")
     put("evaluateTeaStasList", entityDao.search(quer))
     System.out.println(quer)
     val queres = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
-    queres.select("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)")
-    queres.where("evaluateResult.id=questionResult.result.id and evaluateResult.teacher.code=teacher.code")
+    queres.select("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)")
+    queres.where("evaluateResult.id=questionResult.result.id and evaluateResult.teacher.user.code=teacher.user.code")
     //    queres.where("teacher.endOn is null")
     queres.where("evaluateResult.clazz.semester.id=" + semesterId)
-    queres.groupBy("teacher.code,evaluateResult.clazz.id,teacher.person.name.formatedName,evaluateResult.clazz.course.name")
+    queres.groupBy("teacher.user.code,evaluateResult.clazz.id,teacher.user.name,evaluateResult.clazz.course.name")
     queres.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")
     val lits = entityDao.search(queres)
     val numMaps = Collections.newMap[String, String]
@@ -559,14 +551,14 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     val evaluateRs = Collections.newMap[String, Float]
     val quer1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult")
-    quer1.select("evaluateResult.teacher.code,evaluateResult.clazz.id,questionResult.question.type.id,sum(questionResult.score)/count(questionResult.question.id)")
+    quer1.select("evaluateResult.teacher.user.code,evaluateResult.clazz.id,questionResult.question.type.id,sum(questionResult.score)/count(questionResult.question.id)")
     quer1.where("evaluateResult.id=questionResult.result.id")
     quer1.where("evaluateResult.clazz.semester.id=" + semesterId)
     if (departmentId != null) {
       quer1.where("evaluateResult.clazz.teachDepart.id=" + departmentId.toString())
     }
-    quer1.groupBy("questionResult.question.type.id,evaluateResult.teacher.code,evaluateResult.clazz.id")
-    quer1.orderBy("evaluateResult.teacher.code,questionResult.question.type.id")
+    quer1.groupBy("questionResult.question.type.id,evaluateResult.teacher.user.code,evaluateResult.clazz.id")
+    quer1.orderBy("evaluateResult.teacher.user.code,questionResult.question.type.id")
     val lists = entityDao.search(quer1)
     lists foreach { ob =>
       if (ob.length > 0) {
@@ -607,23 +599,23 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     /** 教师评教总分 */
     val quer = OqlBuilder.from(classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
-    quer.select("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)"
+    quer.select("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)"
       + ",evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code")
-    quer.where("evaluateResult.id=questionResult.result.id and evaluateResult.teacher.code=teacher.code")
+    quer.where("evaluateResult.id=questionResult.result.id and evaluateResult.teacher.user.code=teacher.user.code")
     //    quer.where("teacher.endOn is null")
     quer.where("evaluateResult.clazz.semester.id=" + semesterId)
     if (departmentId != null) {
       quer.where("evaluateResult.clazz.teachDepart.id=" + departmentId.toString())
     }
-    quer.groupBy("teacher.code,evaluateResult.clazz.id,teacher.person.name.formatedName,evaluateResult.clazz.course.name,evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code")
+    quer.groupBy("teacher.user.code,evaluateResult.clazz.id,teacher.user.name,evaluateResult.clazz.course.name,evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code")
     quer.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")
     put("evaluateTeaStasList", entityDao.search(quer))
     val queres = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult," + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
-    queres.select("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)")
-    queres.where("evaluateResult.id=questionResult.result.id and evaluateResult.teacher.code=teacher.code")
+    queres.select("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)")
+    queres.where("evaluateResult.id=questionResult.result.id and evaluateResult.teacher.user.code=teacher.user.code")
     queres.where("evaluateResult.clazz.semester.id=" + semesterId)
     //    queres.where("teacher.endOn is null")
-    queres.groupBy("teacher.code,evaluateResult.clazz.id,teacher.person.name.formatedName,evaluateResult.clazz.course.name")
+    queres.groupBy("teacher.user.code,evaluateResult.clazz.id,teacher.user.name,evaluateResult.clazz.course.name")
     queres.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")
     val lits = entityDao.search(queres)
     val numMaps = Collections.newMap[String, String]
@@ -642,14 +634,14 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     val evaluateRs = Collections.newMap[String, Float]
     val quer1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult")
-    quer1.select("evaluateResult.teacher.code,evaluateResult.clazz.id,questionResult.question.type.id,sum(questionResult.score)/count(evaluateResult.id)")
+    quer1.select("evaluateResult.teacher.user.code,evaluateResult.clazz.id,questionResult.question.type.id,sum(questionResult.score)/count(evaluateResult.id)")
     quer1.where("evaluateResult.id=questionResult.result.id")
     quer1.where("evaluateResult.clazz.semester.id=" + semesterId)
     if (departmentId != null) {
       quer1.where("evaluateResult.clazz.teachDepart.id=" + departmentId.toString())
     }
-    quer1.groupBy("questionResult.question.type.id,evaluateResult.teacher.code,evaluateResult.clazz.id")
-    quer1.orderBy("evaluateResult.teacher.code,questionResult.question.type.id")
+    quer1.groupBy("questionResult.question.type.id,evaluateResult.teacher.user.code,evaluateResult.clazz.id")
+    quer1.orderBy("evaluateResult.teacher.user.code,questionResult.question.type.id")
     val lists = entityDao.search(quer1)
     lists foreach { ob =>
       if (ob.length > 0) {
@@ -719,7 +711,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     /** 教师评教总分 */
     val quer = OqlBuilder.from(classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
-    quer.select("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)"
+    quer.select("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)"
       + ",evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code")
     quer.join("evaluateResult.clazz.teachers", "tea")
     //    quer.where("teacher.endOn is null")
@@ -729,12 +721,12 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     if (departmentId != null) {
       quer.where("evaluateResult.clazz.teachDepart.id=" + departmentId.toString())
     }
-    quer.groupBy("teacher.code,evaluateResult.clazz.id,teacher.person.name.formatedName,evaluateResult.clazz.course.name,evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code")
+    quer.groupBy("teacher.user.code,evaluateResult.clazz.id,teacher.user.name,evaluateResult.clazz.course.name,evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code")
     quer.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")
     put("evaluateTeaStasList", entityDao.search(quer))
     val queres = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
-    queres.select("teacher.code,teacher.person.name.formatedName,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)")
+    queres.select("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)")
     queres.join("evaluateResult.clazz.teachers", "tea")
     //    queres.where("teacher.endOn is null")
     queres.where("evaluateResult.id=questionResult.result.id and tea.id=teacher.id")
@@ -743,7 +735,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     if (courseType != false) {
       queres.where("evaluateResult.clazz.course.courseType.practical=:courseTId", !courseType)
     }
-    queres.groupBy("teacher.code,evaluateResult.clazz.id,teacher.person.name.formatedName,evaluateResult.clazz.course.name")
+    queres.groupBy("teacher.user.code,evaluateResult.clazz.id,teacher.user.name,evaluateResult.clazz.course.name")
     queres.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")
     val lits = entityDao.search(queres)
     val numMaps = Collections.newMap[String, String]
@@ -762,7 +754,7 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     val evaluateRs = Collections.newMap[String, Float]
     val quer1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
-    quer1.select("teacher.code,evaluateResult.clazz.id,questionResult.question.id,sum(questionResult.score)/count(questionResult.question.id)")
+    quer1.select("teacher.user.code,evaluateResult.clazz.id,questionResult.question.id,sum(questionResult.score)/count(questionResult.question.id)")
     quer1.join("evaluateResult.clazz.teachers", "tea")
     quer1.where("tea.id = teacher.id")
     //    quer1.where("teacher.endOn is null")
@@ -775,8 +767,8 @@ class EvaluateStatisticsAction extends RestfulAction[ClazzEvalStat] with Servlet
     if (courseType != false) {
       quer1.where("evaluateResult.clazz.course.courseType.practical=:courseTId", !courseType)
     }
-    quer1.groupBy("questionResult.question.id,teacher.code,evaluateResult.clazz.id")
-    quer1.orderBy("teacher.code")
+    quer1.groupBy("questionResult.question.id,teacher.user.code,evaluateResult.clazz.id")
+    quer1.orderBy("teacher.user.code")
     val lists = entityDao.search(quer1)
     lists foreach { ob =>
       if (ob.length > 0) {

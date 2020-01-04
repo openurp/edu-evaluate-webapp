@@ -32,7 +32,11 @@ import org.openurp.edu.evaluation.clazz.model.QuestionnaireClazz
 import org.openurp.edu.evaluation.clazz.result.model.{EvaluateResult, QuestionResult}
 import org.openurp.edu.evaluation.model.{Option, Question}
 
-class EvaluateStdAction extends RestfulAction[EvaluateResult] {
+class EvaluateStdAction extends ProjectRestfulAction[EvaluateResult] {
+
+  var clazzFilterStrategyFactory: ClazzFilterStrategyFactory = _
+
+  var evaluateSwitchService: StdEvaluateSwitchService = _
 
   def getResultByStdIdAndClazzId(stdId: Long, clazzId: Long, teacherId: Long): EvaluateResult = {
     val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult")
@@ -54,7 +58,7 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
     query.where("evaluateResult.student = :student ", student)
     query.where("evaluateResult.clazz.semester = :semester", semester)
     val a = entityDao.search(query)
-    a.map(obj => (obj.clazz.id + "_" + (if (null == obj.teacher) "0" else obj.teacher.id), "1")).toMap
+    a.map(obj => (obj.clazz.id.toString + "_" + (if (null == obj.teacher) "0" else obj.teacher.id.toString), "1")).toMap
   }
 
   def getStdClazzs(student: Student, semester: Semester): Seq[Clazz] = {
@@ -72,23 +76,14 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
     stdClazzs
   }
 
-  var clazzFilterStrategyFactory: ClazzFilterStrategyFactory = _
-
-  var evaluateSwitchService: StdEvaluateSwitchService = _
-
   override protected def indexSetting(): Unit = {
-    val std = getStudent()
-    if (std == null) { forward("error.std.stdNo.needed") }
-    val semesters = entityDao.getAll(classOf[Semester])
-    put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    val std = getStudent
+    put("currentSemester", this.getCurrentSemester)
   }
 
   override def search(): View = {
-    val std = getStudent()
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val std = getStudent
+    val semesterId = getInt("semester.id").get
     val semester = entityDao.get(classOf[Semester], semesterId)
     val clazzList = getStdClazzs(std, semester)
     // 获得(课程问卷,根据学生,根据教学任务)
@@ -163,7 +158,7 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
       if (questionnaireClazz.evaluateByTeacher) {
         teacherId = ids(1).toLong
       } else { teacherId = teachers.head.id }
-      val std = getStudent()
+      val std = getStudent
       val evaluateResult = getResultByStdIdAndClazzId(std.id, clazz.id, teacherId)
       if (null == evaluateResult) {
         addMessage("error.dataRealm.insufficient")
@@ -184,17 +179,8 @@ class EvaluateStdAction extends RestfulAction[EvaluateResult] {
     forward()
   }
 
-  def getStudent(): Student = {
-    val stds = entityDao.search(OqlBuilder.from(classOf[Student], "s").where("s.code=:code", Securities.user))
-    if (stds.isEmpty) {
-      throw new RuntimeException("Cannot find student with code " + Securities.user)
-    } else {
-      stds.head
-    }
-  }
-
   override def save(): View = {
-    val std = getStudent()
+    val std = getStudent
     // 页面参数
     val clazzId = getLong("clazz.id").get
     var teacherId = getLong("teacherId").get

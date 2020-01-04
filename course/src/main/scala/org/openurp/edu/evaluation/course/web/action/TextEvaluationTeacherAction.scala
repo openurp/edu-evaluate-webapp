@@ -29,28 +29,16 @@ import org.openurp.edu.course.model.{Clazz, CourseTaker}
 import org.openurp.edu.evaluation.app.course.model.TextEvaluateSwitch
 import org.openurp.edu.evaluation.clazz.model.{TeacherRemessage, TextEvaluation}
 
-class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
+class TextEvaluationTeacherAction extends ProjectRestfulAction[TextEvaluation] {
 
-  def getTeacher(): Teacher = {
-    val teachers = entityDao.search(OqlBuilder.from(classOf[Teacher], "s").where("s.code=:code", Securities.user))
-    if (teachers.isEmpty) {
-      throw new RuntimeException("Cannot find teacher with code " + Securities.user)
-    } else {
-      teachers.head
-    }
-  }
   override protected def indexSetting(): Unit = {
-    val semesters = entityDao.getAll(classOf[Semester])
-    put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    put("currentSemester", this.getCurrentSemester)
   }
 
   override def search(): View = {
-    val teacher = getTeacher()
+    val teacher = getTeacher
     if (teacher == null) { forward("error.teacher.teaNo.needed") }
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val semesterId = getInt("semester.id").get
     val semester = entityDao.get(classOf[Semester], semesterId)
     if (teacher == null) {
       addMessage("对不起,您没有权限!")
@@ -60,7 +48,6 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
     query.join("left", "clazz.teachers", "teacher")
     query.where("clazz.project.id=:projectId", 1)
     query.where("clazz.semester =:semester", semester)
-    //    populateConditions(query)
     query.where("teacher=:teacher", teacher)
     query.orderBy("clazz.semester.id").limit(getPageLimit)
     val results = entityDao.search(query)
@@ -70,7 +57,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
   }
 
   def searchTextEvaluation(): View = {
-    val teacher = getTeacher()
+    val teacher = getTeacher
     if (teacher == null) { forward("error.teacher.teaNo.needed") }
     val clazzId = getLong("clazz.id").get
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
@@ -117,7 +104,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
   }
 
   def saveEvaluateRemessageToStd(): View = {
-    val teacher = getTeacher()
+    val teacher = getTeacher
     if (teacher == null) { forward("error.teacher.teaNo.needed") }
     // 页面条件
     val clazzId = getLong("clazzId").get
@@ -153,7 +140,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
   }
 
   def saveEvaluateRemessageToClass(): View = {
-    val teacher = getTeacher()
+    val teacher = getTeacher
     if (teacher == null) { forward("error.teacher.teaNo.needed") }
     // 页面条件
     val clazzId = getLong("clazzId").get
@@ -220,7 +207,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] {
   }
 
   def listAnn(): View = {
-    val teacher = getTeacher()
+    val teacher = getTeacher
     if (teacher == null) { forward("error.teacher.teaNo.needed") }
     val clazzId = getLong("clazzId").get
     val semesterId = entityDao.get(classOf[Clazz], clazzId).semester.id

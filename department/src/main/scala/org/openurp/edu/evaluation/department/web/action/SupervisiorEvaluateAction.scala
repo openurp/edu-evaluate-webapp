@@ -70,7 +70,7 @@ class SupervisiorEvaluateAction extends ProjectRestfulAction[SupervisiorEvaluate
     }
     entityDao.saveOrUpdate(supervisiorEvaluates)
     val semesterId = get("supervisiorEvaluate.semester.id").orNull
-    redirect("search", s"orderBy=supervisiorEvaluate.teacher.code asc&supervisiorEvaluate.semester.id=$semesterId", "导入完成")
+    redirect("search", s"orderBy=supervisiorEvaluate.teacher.user.code asc&supervisiorEvaluate.semester.id=$semesterId", "导入完成")
   }
 
   override protected def getQueryBuilder(): OqlBuilder[SupervisiorEvaluate] = {
@@ -129,12 +129,12 @@ class SupervisiorEvaluateAction extends ProjectRestfulAction[SupervisiorEvaluate
     }
     questionnaire.questions foreach { question =>
       resultMap.get(question) match {
-        case Some(qr) => qr.score = getFloat(question.id + "_score").get
+        case Some(qr) => qr.score = getFloat(s"${question.id}_score").get
         case None =>
           val qr = new SupervisiorQuestion
           qr.question = question
           qr.result = supervisiorEvaluate
-          qr.score = getFloat(question.id + "_score").get
+          qr.score = getFloat(s"${question.id}_score").get
           supervisiorEvaluate.questionResults += qr
       }
     }
@@ -146,7 +146,7 @@ class SupervisiorEvaluateAction extends ProjectRestfulAction[SupervisiorEvaluate
     Stream(ClassLoaders.getResourceAsStream("supervisiorEvaluate.xls").get, "application/vnd.ms-excel", "评教结果.xls")
   }
 
-  protected override def configImport(setting:ImportSetting) {
-    setting.listeners= List(new ForeignerListener(entityDao), new ImportSupervisiorListener(entityDao))
+  protected override def configImport(setting: ImportSetting): Unit = {
+    setting.listeners = List(new ForeignerListener(entityDao), new ImportSupervisiorListener(entityDao))
   }
 }

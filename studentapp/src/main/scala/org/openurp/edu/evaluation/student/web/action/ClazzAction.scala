@@ -26,7 +26,7 @@ import org.beangle.security.Securities
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.model.{Semester, Student, Teacher}
-import org.openurp.edu.boot.web.ProjectSupport
+import org.openurp.edu.base.web.ProjectSupport
 import org.openurp.edu.course.model.{Clazz, CourseTaker}
 import org.openurp.edu.evaluation.app.course.service.StdEvaluateSwitchService
 import org.openurp.edu.evaluation.clazz.model.QuestionnaireClazz
@@ -57,7 +57,7 @@ class ClazzAction extends RestfulAction[EvaluateResult] with ProjectSupport {
     query.where("evaluateResult.student = :student ", student)
     query.where("evaluateResult.clazz.semester = :semester", semester)
     val a = entityDao.search(query)
-    a.map(obj => (obj.clazz.id + "_" + (if (null == obj.teacher) "0" else obj.teacher.id), "1")).toMap
+    a.map(obj => (obj.clazz.id.toString + "_" + (if (null == obj.teacher) "0" else obj.teacher.id.toString), "1")).toMap
   }
 
   def getStdClazzs(student: Student, semester: Semester): Seq[Clazz] = {

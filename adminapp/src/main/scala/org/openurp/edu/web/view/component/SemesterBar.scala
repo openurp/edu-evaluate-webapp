@@ -49,7 +49,7 @@ class SemesterBar(context: ComponentContext) extends ClosingUIBean(context) {
 
   var semesterValue: Object = _
 
-  override def evaluateParams() {
+  override def evaluateParams(): Unit = {
     if (Strings.isEmpty(this.id)) {
       generateIdIfEmpty()
     }

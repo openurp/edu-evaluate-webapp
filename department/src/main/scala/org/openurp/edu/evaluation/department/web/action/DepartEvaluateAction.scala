@@ -40,7 +40,7 @@ import scala.collection.mutable.Buffer
 /**
  * @author xinzhou
  */
-class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate]  {
+class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate] {
 
   override def indexSetting(): Unit = {
     put("departments", findInSchool(classOf[Department]))
@@ -73,7 +73,7 @@ class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate]  {
     }
     entityDao.saveOrUpdate(departEvaluates)
     val semesterId = get("departEvaluate.semester.id").orNull
-    redirect("search", s"orderBy=departEvaluate.teacher.code asc&departEvaluate.semester.id=$semesterId", "导入完成")
+    redirect("search", s"orderBy=departEvaluate.teacher.user.code asc&departEvaluate.semester.id=$semesterId", "导入完成")
   }
 
   override protected def getQueryBuilder(): OqlBuilder[DepartEvaluate] = {
@@ -83,9 +83,19 @@ class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate]  {
       case Some(false) => query.where("departEvaluate.totalScore is null")
       case None =>
     }
-    query.where("departEvaluate.department.id=:id", getTeacher.user.department.id)
-    populateConditions(query)
-    query.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
+
+    val builder = OqlBuilder.from(classOf[Teacher], "s")
+      .where("s.user.code=:code", Securities.user)
+      .where("s.project=:project", getProject)
+    val teachers = entityDao.search(builder)
+    if (teachers.isEmpty) {
+      throw new RuntimeException("Cannot find teachers with code " + Securities.user)
+    } else {
+
+      query.where("departEvaluate.department.id=:id", teachers.head.user.department.id)
+      populateConditions(query)
+      query.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
+    }
   }
 
   override def editSetting(departEvaluate: DepartEvaluate): Unit = {
@@ -133,12 +143,12 @@ class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate]  {
     }
     questionnaire.questions foreach { question =>
       resultMap.get(question) match {
-        case Some(qr) => qr.score = getFloat(question.id + "_score").get
+        case Some(qr) => qr.score = getFloat(s"${question.id}_score").get
         case None =>
           val qr = new DepartQuestion
           qr.question = question
           qr.result = departEvaluate
-          qr.score = getFloat(question.id + "_score").get
+          qr.score = getFloat(s"${question.id}_score").get
           departEvaluate.questionResults += qr
       }
     }
@@ -150,8 +160,8 @@ class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate]  {
     Stream(ClassLoaders.getResourceAsStream("departEvaluate.xls").get, "application/vnd.ms-excel", "评教结果.xls")
   }
 
-  protected override def configImport(setting:ImportSetting) {
-    setting.listeners= List(new ForeignerListener(entityDao), new ImportDepartListener(entityDao))
+  protected override def configImport(setting: ImportSetting): Unit = {
+    setting.listeners = List(new ForeignerListener(entityDao), new ImportDepartListener(entityDao))
   }
 
 }

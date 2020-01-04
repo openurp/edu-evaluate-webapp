@@ -14,7 +14,7 @@
             [@b.col property="clazz.course.code" title="课程代码" width="12%"/]
             [@b.col property="clazz.course.name" title="课程名称" width="20%"/]
             [@b.col property="student.user.code" title="学生学号" width="13%"/]
-            [@b.col property="student.person.name.formatedName" title="学生姓名" width="10%"]
+            [@b.col property="student.user.name" title="学生姓名" width="10%"]
                [@b.a href="!info?id=${evaluateResult.id}"]${(evaluateResult.student.person.name)!}[/@]
             [/@]
             [@b.col property="teacher.user.name" title="教师姓名" width="10%"/]

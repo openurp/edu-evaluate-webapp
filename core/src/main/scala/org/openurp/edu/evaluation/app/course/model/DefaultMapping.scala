@@ -26,11 +26,13 @@ class DefaultMapping extends MappingModule {
     defaultIdGenerator("auto_increment")
     defaultCache("openurp.edu.evaluation", "read-write")
 
-    bind[StdEvaluateSwitch].on(e => declare(
-      e.endAt & e.beginAt & e.opened & e.semester & e.project are notnull))
+    bind[StdEvaluateSwitch]. declare { e =>
+      e.endAt & e.beginAt & e.opened & e.semester & e.project are notnull
+    }
 
-    bind[TextEvaluateSwitch].on(e => declare(
-      e.endAt & e.beginAt & e.opened & e.semester & e.project are notnull))
+    bind[TextEvaluateSwitch].declare { e =>
+      e.endAt & e.beginAt & e.opened & e.semester & e.project are notnull
+    }
 
   }
 

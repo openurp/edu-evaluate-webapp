@@ -40,9 +40,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
 
   override def index(): View = {
     put("departments", findInSchool(classOf[Department]))
-    put("semesters", getSemesters())
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    put("currentSemester", getCurrentSemester)
     forward()
   }
 
@@ -68,7 +66,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     populateConditions(finalScores)
     finalScores.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
     finalScores.where("finalTeacherScore.semester.id=:semesterId", semesterId)
-    val list = collection.JavaConverters.asJavaCollection(entityDao.search(finalScores))
+    val list = scala.jdk.javaapi.CollectionConverters.asJava(entityDao.search(finalScores))
     //查出信息并放到map中
     val context= new ExportContext
     context.put("list", list)
@@ -80,7 +78,6 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     response.setHeader("Content-Disposition", "attachmentfilename=finalTeacherScore.xls")
     val os = response.getOutputStream()
     try {
-
       //将beans通过模板输入流写到workbook中
       new ExcelTemplateWriter(path,context, os).write()
     } finally {
@@ -115,7 +112,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
   /**
    * 清除统计数据
    */
-  def remove(semesterId: Int) {
+  def remove(semesterId: Int): Unit = {
     val query = OqlBuilder.from(classOf[FinalTeacherScore], "finalScore")
     query.where("finalScore.semester.id=:semesterId", semesterId)
     entityDao.remove(entityDao.search(query))
@@ -125,7 +122,6 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
    * 跳转(统计首页面)
    */
   def statHome(): View = {
-
     put("stdTypeList", entityDao.getAll(classOf[StdType]))
     put("departmentList", entityDao.getAll(classOf[Department]))
 
@@ -133,10 +129,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:tea", true))
     put("departments", teachingDeparts)
 
-    val semesters = entityDao.getAll(classOf[Semester])
-    put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    put("currentSemester",getCurrentSemester)
     forward()
   }
 

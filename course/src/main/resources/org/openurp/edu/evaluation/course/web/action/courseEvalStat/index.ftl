@@ -9,11 +9,11 @@
 [/@]
 <table class="indexpanel">
     <tr>
-    <td class="index_view">
-        [@b.form action="!search" name="courseEvaluateStatIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
-            [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
-            [@b.textfields style="width:130px" names="courseEvalStat.course.code;课程代码,courseEvalStat.course.name;课程名称,courseEvalStat.teacher.user.code;教师工号,courseEvalStat.teacher.user.name;教师姓名"/]
-            [@b.select style="width:134px" name="courseEvalStat.teacher.state.department.id" label="教师所属院系" items=departments empty="..."/]
+    <td class="index_view" style="width:180px" >
+        [@b.form action="!search?orderBy=courseEvalStat.totalScore desc" name="courseEvaluateStatIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
+            [@edu_base.semester name="courseEvalStat.semester.id" label="学年学期" value=currentSemester /]
+            [@b.textfields names="courseEvalStat.course.code;课程代码,courseEvalStat.course.name;课程名称,courseEvalStat.teacher.user.code;教师工号,courseEvalStat.teacher.user.name;教师姓名"/]
+            [@b.select name="courseEvalStat.teacher.user.department.id" label="教师院系" items=departments empty="..."/]
             [@b.select name="courseEvalStat.questionnaire.id" label="所用问卷" items=[] ]
                 [#list questionnaires as q]
                     <option value="${q.id}">${q.description}</option>
@@ -22,7 +22,7 @@
         [/@]
         </td>
         <td class="index_content">
-            [@b.div id="contentDiv" href="!search"/]
+            [@b.div id="contentDiv" href="!search?orderBy=courseEvalStat.totalScore desc&courseEvalStat.semester.id="+currentSemester.id/]
         </td>
     </tr>
 </table>

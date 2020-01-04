@@ -19,12 +19,13 @@
 package org.openurp.edu.evaluation.course.web
 
 import org.beangle.cdi.bind.BindModule
+import org.openurp.edu.base.service.impl.SemesterServiceImpl
 import org.openurp.edu.evaluation.app.course.service.StdEvaluateSwitchService
 import org.openurp.edu.evaluation.course.web.action._
 
 class DefaultModule extends BindModule {
 
-  override def binding() {
+  override def binding(): Unit = {
 
     //******教务处菜单
     //               评教设置->课程问卷 --- 为课程设置问卷和评教方式（教师/课程）
@@ -37,9 +38,9 @@ class DefaultModule extends BindModule {
 
     //  评教管理->问卷有效性--------------查看全部学生评教问卷并设置有效或无效
     bind(classOf[EvaluateResultAction])
-    //               评教管理->文字有效性 --------------确认学生文字评教（只有已确认的文字评教才能查看到回复）
+    // 评教管理->文字有效性 --------------确认学生文字评教（只有已确认的文字评教才能查看到回复）
     bind(classOf[TextEvaluationAction])
-    //               评教管理->?? --------------查看全部文字评教（确认和未确认）
+    // 评教管理->?? --------------查看全部文字评教（确认和未确认）
     bind(classOf[TextEvaluationSearchAction])
 
     // ------------------------问卷回收率即时统计与查询---------------------
@@ -50,22 +51,22 @@ class DefaultModule extends BindModule {
     //  教师最终得分排名统计查询导出
     bind(classOf[FinalTeacherScoreAction])
 
-    //  问卷评教统计--按任务得分统计 包括：排名??，院系任务统计，学校任务历史，学校分项统计*****教务处
+    //  问卷评教统计--按任务得分统计 包括：排名??，院系任务统计，学校任务历史，学校分项统计*****教务处------yes
     bind(classOf[ClazzEvalStatAction])
     //  问卷评教统计查询---按任务得分查询********院系管理员？
     bind(classOf[ClazzEvalSearchAction])
 
-    //  问卷评教统计--按问卷统计每个教师个人总分  包括：排名??，院系统计，学校历史，学校分项统计 ***教务处
+    //  问卷评教统计--按问卷统计每个教师个人总分  包括：排名??，院系统计，学校历史，学校分项统计 ***教务处-----yes
     bind(classOf[TeacherEvalStatAction])
     //  问卷评教统计查询--按问卷统计每个教师个人总分  ***院系管理员
     bind(classOf[TeacherEvalSearchAction])
 
-    //  问卷评教统计--按课程教师统计 包括：排名??，院系任务统计，学校任务历史，学校分项统计*****教务处
+    //  问卷评教统计--按课程教师统计 包括：排名??，院系任务统计，学校任务历史，学校分项统计*****教务处----排名方法有问题，没有平均分算法有问题
     bind(classOf[CourseEvalStatAction])
     //  问卷评教统计查询---按课程教师查询********院系管理员？
     bind(classOf[CourseEvalSearchAction])
 
-    //  问卷评教统计--按开课院系统计 包括：排名??，院系任务统计，学校任务历史，学校分项统计*****教务处
+    //  问卷评教统计--按开课院系统计 包括：排名??，院系任务统计，学校任务历史，学校分项统计*****教务处----yes
     bind(classOf[DepartEvalStatAction])
     //  问卷评教统计查询---按开课院系查询********院系管理员？
     bind(classOf[DepartEvalSearchAction])
@@ -78,5 +79,7 @@ class DefaultModule extends BindModule {
     bind(classOf[QuestionnaireStatAction])
     //  查看任务问卷评教各问题类别结果及总分
     bind(classOf[QuestionnaireStatSearchAction])
+
+    bind(classOf[SemesterServiceImpl])
   }
 }

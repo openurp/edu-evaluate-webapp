@@ -28,9 +28,9 @@ class DefaultMapping extends MappingModule {
   def binding(): Unit = {
     defaultIdGenerator("auto_increment")
 
-    bind[EvaluateSwitch].on(e => declare(
-      e.endOn & e.beginOn & e.opened & e.semester & e.questionnaire are notnull))
-
+    bind[EvaluateSwitch].declare { e =>
+      e.endOn & e.beginOn & e.opened & e.semester & e.questionnaire are notnull
+    }
   }
 
 }

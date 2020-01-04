@@ -27,13 +27,10 @@ import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.model.Semester
 import org.openurp.edu.evaluation.clazz.model.TextEvaluation
 
-class TextEvaluationSearchAction extends RestfulAction[TextEvaluation] {
+class TextEvaluationSearchAction extends ProjectRestfulAction[TextEvaluation] {
 
   override protected def indexSetting(): Unit = {
-    val semesters = entityDao.getAll(classOf[Semester])
-    put("semesters", semesters)
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    put("currentSemester", this.getCurrentSemester)
   }
 
   override def search(): View = {

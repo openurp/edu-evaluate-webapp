@@ -4,7 +4,7 @@
     [@b.grid items=departEvalStats var="departEvalStat" sortable="true"]
         [@b.gridbar title="院系教师评教详细信息"]
             var detailMenu = bar.addMenu("查看详情", "info()");
-            detailMenu.addItem("教师历史评教", "evaluateTeachHistory()", "info.png");
+            //detailMenu.addItem("教师历史评教", "evaluateTeachHistory()", "info.png");
             //detailMenu.addItem("查看大类统计", "doing()", "info.png");
             //detailMenu.addItem("详细选项统计", "teachQuestionDetailStat()", "info.png");
             //detailMenu.addItem("学院分项汇总", "doing()", "info.png");
@@ -16,7 +16,7 @@
         [@b.row]
             [@b.boxcol/]
             [@b.col property="department.name" title="开课院系"/]
-            [@b.col property="score" title="院系得分"]${departEvalStat.score}[/@]
+            [@b.col property="totalScore" title="院系得分"]${departEvalStat.totalScore}[/@]
         [/@]
 
     [/@]
@@ -51,7 +51,9 @@ var form = document.questionnaireStatSearchForm;
                 return false;
         }
         bg.form.addInput(form,"departEvalStat.id",questionnaireStatIds);
-        bg.form.submit(form,"${b.url('depart-eval-search!info')}");
+        var url="${b.url('depart-eval-search!info?id=xxxx')}";
+        url = url.replace('xxxx',questionnaireStatIds);
+        bg.form.submit(form,url);
     }
     var searchForm = document.questionnaireStatSearchForm;
 

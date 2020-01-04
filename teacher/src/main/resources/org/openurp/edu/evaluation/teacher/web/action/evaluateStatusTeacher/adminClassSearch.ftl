@@ -7,9 +7,9 @@
     [@b.grid items=evaluateSearchAdminClassList var="evaluateSearchAdminClass" sortable="true"]
         [@b.row]
             [@b.col property="student.user.code" title="学号"/]
-            [@b.col property="student.person.name.formatedName" title="姓名"]
+            [@b.col property="student.user.name" title="姓名"]
             [@b.a href="!info?stuIds=${evaluateSearchAdminClass.student.id!}&semester.id=${semester.id!}"]
-            ${(evaluateSearchAdminClass.student.person.name.formatedName)?if_exists}
+            ${(evaluateSearchAdminClass.student.user.name)?if_exists}
             [/@][/@]
             [@b.col property="haveFinish" title="已评课次"/]
             [@b.col property="countAll" title="总课次"/]

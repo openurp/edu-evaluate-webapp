@@ -18,19 +18,40 @@
  */
 package org.openurp.edu.evaluation.course.web.action
 
-import org.beangle.data.dao.OqlBuilder
+import java.time.LocalDate
+
 import org.beangle.data.model.Entity
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.model.Semester
-import org.openurp.edu.boot.web.ProjectSupport
+import org.openurp.edu.base.service.SemesterService
+import org.openurp.edu.base.web.ProjectSupport
+import org.beangle.data.dao.OqlBuilder
+import org.openurp.edu.base.model.Project
 
 abstract class ProjectRestfulAction[T <: Entity[_]] extends RestfulAction[T] with ProjectSupport {
 
-  def getSemesters(): Seq[Semester] = {
-    val builder = OqlBuilder.from(classOf[Semester], "semester")
-    builder.where("semester.calendar.school=:school", getProject.school)
-    builder.orderBy("semester.code")
-    entityDao.search(builder)
-  }
+  var semesterService: SemesterService = _
 
+  def get(project: Project, date: LocalDate): Semester = {
+    val builder = OqlBuilder.from(classOf[Semester], "semester")
+      .where("semester.calendar in(:calendars)", project.calendars)
+    builder.where(":date between semester.beginOn and  semester.endOn", LocalDate.now)
+    builder.cacheable()
+    val rs = entityDao.search(builder)
+    if (rs.isEmpty) {
+      val builder2 = OqlBuilder.from(classOf[Semester], "semester")
+        .where("semester.calendar in(:calendars)", project.calendars)
+      builder2.orderBy("abs(semester.beginOn - current_date() + semester.endOn - current_date())")
+      builder2.cacheable()
+      builder2.limit(1, 1)
+      val rs2 = entityDao.search(builder2)
+      if (rs2.nonEmpty) {
+        rs2.head
+      } else {
+        null
+      }
+    } else {
+      rs.head
+    }
+  }
 }

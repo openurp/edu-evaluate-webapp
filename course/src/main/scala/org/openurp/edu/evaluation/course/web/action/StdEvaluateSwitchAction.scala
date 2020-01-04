@@ -28,7 +28,7 @@ import org.openurp.edu.evaluation.clazz.model.QuestionnaireClazz
 class StdEvaluateSwitchAction extends ProjectRestfulAction[StdEvaluateSwitch] {
 
   protected override def indexSetting(): Unit = {
-    put("semesters", getSemesters())
+    put("currentSemester", getCurrentSemester)
   }
 
   override def search(): View = {

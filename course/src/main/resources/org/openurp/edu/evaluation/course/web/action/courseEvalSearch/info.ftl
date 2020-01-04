@@ -19,7 +19,7 @@
         [#--<td class="title" style="text-align:center;">职称</td>
             <td style="padding-left:10px;">${(questionnaireStat.teacher.title.name)!}</td>--]
             <td class="title" style="text-align:center;">总分</td>
-            <td style="padding-left:10px;">${(questionnaireStat.score)!}</td>
+            <td style="padding-left:10px;">${(questionnaireStat.totalScore)!}</td>
         </tr>
         <tr>
             <td class="title" style="text-align:center;">问卷下发数量</td>
@@ -33,7 +33,7 @@
     [@b.grid items=questionResults var="questionResult" sortable="false"]
         [@b.row]
             [@b.col title="问题内容" width="30%"]${(questionResult[1])!}[/@]
-            [#list options as option]
+            [#list options?sort_by("proportion")?reverse as option]
             [@b.col title="${option.name!}"]
             [#assign numb =0 /]
                 [#list questionRs as questionR]
