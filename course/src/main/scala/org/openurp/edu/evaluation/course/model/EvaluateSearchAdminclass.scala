@@ -19,7 +19,7 @@
 package org.openurp.edu.evaluation.course.model
 
 import org.openurp.edu.base.model.{Semester, Student}
-import org.openurp.edu.course.model.Clazz
+import org.openurp.edu.clazz.model.Clazz
 
 class EvaluateSearchAdminclass {
   var semester: Semester = _

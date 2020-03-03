@@ -28,7 +28,7 @@ import org.openurp.base.model.Department
 import org.openurp.code.edu.model.EducationLevel
 import org.openurp.edu.base.code.model.StdType
 import org.openurp.edu.base.model.Semester
-import org.openurp.edu.course.model.Clazz
+import org.openurp.edu.clazz.model.Clazz
 import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
 import org.openurp.edu.evaluation.clazz.stat.model._
 import org.openurp.edu.evaluation.model.{Option, Question, QuestionType, Questionnaire}

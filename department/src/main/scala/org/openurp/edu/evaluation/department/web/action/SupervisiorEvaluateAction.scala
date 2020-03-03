@@ -28,7 +28,7 @@ import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.webmvc.api.view.{Stream, View}
 import org.openurp.base.model.Department
 import org.openurp.edu.base.model.{Semester, Teacher}
-import org.openurp.edu.course.model.Clazz
+import org.openurp.edu.clazz.model.Clazz
 import org.openurp.edu.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.edu.evaluation.department.helper.ImportSupervisiorListener
 import org.openurp.edu.evaluation.department.model.{SupervisiorEvaluate, SupervisiorQuestion}

@@ -27,7 +27,7 @@ import org.beangle.webmvc.api.view.View
 import org.openurp.base.model.Department
 import org.openurp.edu.base.code.model.CourseType
 import org.openurp.edu.base.model.Semester
-import org.openurp.edu.course.model.Clazz
+import org.openurp.edu.clazz.model.Clazz
 import org.openurp.edu.evaluation.app.course.service.StdEvaluateSwitchService
 import org.openurp.edu.evaluation.clazz.model.QuestionnaireClazz
 import org.openurp.edu.evaluation.model.Questionnaire
