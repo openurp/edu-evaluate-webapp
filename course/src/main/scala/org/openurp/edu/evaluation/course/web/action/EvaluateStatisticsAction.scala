@@ -26,7 +26,7 @@ import org.beangle.webmvc.api.action.ServletSupport
 import org.beangle.webmvc.api.view.View
 import org.openurp.base.model.Department
 import org.openurp.edu.base.model.{Semester, Teacher}
-import org.openurp.edu.course.model.Clazz
+import org.openurp.edu.clazz.model.Clazz
 import org.openurp.edu.evaluation.clazz.result.model.{EvaluateResult, QuestionResult}
 import org.openurp.edu.evaluation.clazz.stat.model.ClazzEvalStat
 import org.openurp.edu.evaluation.model.{Question, QuestionType, Questionnaire}

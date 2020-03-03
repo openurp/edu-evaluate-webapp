@@ -21,7 +21,7 @@ package org.openurp.edu.evaluation.course.web.action
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.openurp.edu.base.model.{Project, Semester}
-import org.openurp.edu.course.model.Clazz
+import org.openurp.edu.clazz.model.Clazz
 import org.openurp.edu.evaluation.app.course.model.StdEvaluateSwitch
 import org.openurp.edu.evaluation.clazz.model.QuestionnaireClazz
 

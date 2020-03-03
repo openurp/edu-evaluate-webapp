@@ -27,7 +27,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.openurp.base.model.Department
 import org.openurp.edu.base.model.Semester
-import org.openurp.edu.course.model.{Clazz, CourseTaker}
+import org.openurp.edu.clazz.model.{Clazz, CourseTaker}
 import org.openurp.edu.evaluation.app.course.model.{EvaluateSearchDepartment, EvaluateSearchManager}
 import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
 

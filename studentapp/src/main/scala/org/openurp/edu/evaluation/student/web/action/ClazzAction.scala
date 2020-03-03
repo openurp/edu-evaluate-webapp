@@ -27,7 +27,7 @@ import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.model.{Semester, Student, Teacher}
 import org.openurp.edu.base.web.ProjectSupport
-import org.openurp.edu.course.model.{Clazz, CourseTaker}
+import org.openurp.edu.clazz.model.{Clazz, CourseTaker}
 import org.openurp.edu.evaluation.app.course.service.StdEvaluateSwitchService
 import org.openurp.edu.evaluation.clazz.model.QuestionnaireClazz
 import org.openurp.edu.evaluation.clazz.result.model.{EvaluateResult, QuestionResult}
