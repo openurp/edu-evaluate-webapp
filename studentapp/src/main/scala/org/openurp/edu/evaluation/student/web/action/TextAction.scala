@@ -29,19 +29,11 @@ import org.openurp.edu.base.model.{Semester, Student, Teacher}
 import org.openurp.edu.clazz.model.{Clazz, CourseTaker}
 import org.openurp.edu.evaluation.app.course.model.TextEvaluateSwitch
 import org.openurp.edu.evaluation.clazz.model.{TeacherRemessage, TextEvaluation}
+import org.openurp.edu.web.ProjectSupport
 
 import scala.collection.mutable.Buffer
 
-class TextAction extends RestfulAction[TextEvaluation] {
-
-  def getStudent(): Student = {
-    val stds = entityDao.search(OqlBuilder.from(classOf[Student], "s").where("s.user.code=:code", Securities.user))
-    if (stds.isEmpty) {
-      throw new RuntimeException("Cannot find student with code " + Securities.user)
-    } else {
-      stds.head
-    }
-  }
+class TextAction extends RestfulAction[TextEvaluation] with ProjectSupport {
 
   def getOtherMap(std: Student, semester: Semester, teachers: Seq[Teacher]): collection.Map[Long, Buffer[TeacherRemessage]] = {
     val query = OqlBuilder.from(classOf[TeacherRemessage], "teacherRemessage")
@@ -69,7 +61,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
     val query = OqlBuilder.from(classOf[TextEvaluation], "textEvaluation")
     query.where("textEvaluation.student =:std", std)
     query.where("textEvaluation.clazz.semester =:semester", semester)
-    query.where("textEvaluation.state = true")
+    query.where("textEvaluation.audited = true")
     val textEvaluateMap = Collections.newMap[Long, Buffer[TextEvaluation]]
     val results = entityDao.search(query)
     results foreach { textEvaluation =>
@@ -103,6 +95,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
     }
     annMap
   }
+
   def getTeachersByClazzIdSeq(clazzIdSeq: List[Long]): Seq[Teacher] = {
     val query = OqlBuilder.from[Teacher](classOf[Clazz].getName + " clazz")
     query.join("clazz.teachers", "teacher")
@@ -133,6 +126,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
       iterator.next()
     else new TextEvaluateSwitch()
   }
+
   def getClazzIdAndTeacherIdOfResult(student: Student, semester: Semester): collection.Map[String, String] = {
     val query = OqlBuilder.from(classOf[TextEvaluation], "textEvaluation")
     //    query.select("textEvaluation.clazz.id,textEvaluation.teacher.id")
@@ -158,8 +152,10 @@ class TextAction extends RestfulAction[TextEvaluation] {
   }
 
   override protected def indexSetting(): Unit = {
-    val std = getStudent()
-    if (std == null) { forward("error.std.stdNo.needed") }
+    val std = getStudent(getProject)
+    if (std == null) {
+      forward("error.std.stdNo.needed")
+    }
     val semesters = entityDao.getAll(classOf[Semester])
     put("semesters", semesters)
     if (semesters.nonEmpty) {
@@ -171,8 +167,10 @@ class TextAction extends RestfulAction[TextEvaluation] {
   }
 
   override def search(): View = {
-    val std = getStudent()
-    if (std == null) { forward("error.std.stdNo.needed") }
+    val std = getStudent(getProject)
+    if (std == null) {
+      forward("error.std.stdNo.needed")
+    }
     // 页面条件
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
@@ -220,7 +218,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
     }
     // 判断(是否更新)
     if ("update".equals(evaluateState)) {
-      val std = getStudent()
+      val std = getStudent(getProject)
       val textEvaluations = getTextEvaluationList(std, clazz, teacher)
       put("textEvaluations", textEvaluations)
     }
@@ -231,7 +229,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
   }
 
   def saveTextEvaluate(): View = {
-    val std = getStudent()
+    val std = getStudent(getProject)
     val ClazzId = longId("clazz")
     val teacherId = getLong("teacherId")
     val clazz = entityDao.get(classOf[Clazz], ClazzId)
@@ -244,7 +242,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
         textEvaluation.student = std
         textEvaluation.clazz = clazz
         textEvaluation.teacher = teacher
-        textEvaluation.content = textOpinion
+        textEvaluation.contents = textOpinion
         textEvaluation.evaluateByTeacher = evaluateByTeacher
         textEvaluation.evaluateAt = Instant.now
         entityDao.saveOrUpdate(textEvaluation)
@@ -257,7 +255,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
   }
 
   def remsgList(): View = {
-    val std = getStudent()
+    val std = getStudent(getProject)
     val ids = longIds("clazz")
     val teachers = getTeachersByClazzIdSeq(ids)
     val clazzs = getTeacherClazzByClazzIdSeq(ids)

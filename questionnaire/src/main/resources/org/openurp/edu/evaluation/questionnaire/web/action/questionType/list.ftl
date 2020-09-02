@@ -1,6 +1,5 @@
 [#ftl]
 [@b.head/]
-[@b.toolbar title="问题类别列表" /]
 [@b.grid items=questionTypes var="questionType"]
     [@b.gridbar]
         bar.addItem("${b.text('action.add')}",action.add());
@@ -11,7 +10,7 @@
         [@b.boxcol/]
         [@b.col property="name" title="名称"/]
         [@b.col property="priority" title="优先级"/]
-        [@b.col property="state" title="是否可用"]${questionType.state?string("有效","无效")}[/@]
+        [@b.col property="beginOn" title="有效期" width="12%"]${questionType.beginOn?string("yyyy-MM-dd")}~${(questionType.endOn?string("yyyy-MM-dd"))!}[/@]
     [/@]
 [/@]
 [@b.foot/]

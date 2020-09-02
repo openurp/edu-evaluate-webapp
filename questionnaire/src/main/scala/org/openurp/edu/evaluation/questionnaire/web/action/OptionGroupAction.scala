@@ -24,7 +24,7 @@ import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.model.Project
 import org.openurp.edu.evaluation.model.{Option, OptionGroup, Question}
-import org.openurp.edu.base.web.ProjectSupport
+import org.openurp.edu.web.ProjectSupport
 
 class OptionGroupAction extends RestfulAction[OptionGroup] with ProjectSupport {
 

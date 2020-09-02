@@ -1,7 +1,5 @@
 [#ftl]
 [@b.head/]
-[@b.toolbar title="评价标准列表" /]
-
 [@b.grid items=evalutionCriterias var="evaluationCriteria" sortable="false"]
     [@b.gridbar]
       bar.addItem("${b.text("action.new")}",action.add());

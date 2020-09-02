@@ -26,7 +26,7 @@ import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.model.Project
 import org.openurp.edu.evaluation.model.{ Question, QuestionType }
-import org.openurp.edu.base.web.ProjectSupport
+import org.openurp.edu.web.ProjectSupport
 
 class QuestionTypeAction extends RestfulAction[QuestionType] with ProjectSupport {
 
@@ -62,21 +62,7 @@ class QuestionTypeAction extends RestfulAction[QuestionType] with ProjectSupport
         questionType.enName = Some(enName.replaceAll("<", "&#60;").replaceAll(">", "&#62;"))
       }
       questionType.name = name.replaceAll("<", "&#60;").replaceAll(">", "&#62;")
-      if (!questionType.persisted) {
-        if (questionType.state) {
-          questionType.beginOn = LocalDate.now
-        }
-      } else {
-        questionType.updatedAt = Instant.now
-        val questionTypeOld = entityDao.get(classOf[QuestionType], questionType.id)
-        if (questionTypeOld.state != questionType.state) {
-          if (questionType.state) {
-            questionType.beginOn = LocalDate.now
-          } else {
-            questionType.endOn = Some(LocalDate.now)
-          }
-        }
-      }
+      questionType.updatedAt = Instant.now
       entityDao.saveOrUpdate(questionType)
       return redirect("search", "info.save.success")
     } catch {

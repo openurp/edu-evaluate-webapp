@@ -23,17 +23,18 @@ import java.time.LocalDate
 import org.beangle.commons.collection.Order
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
+import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.edu.base.model.Semester
 import org.openurp.edu.evaluation.department.model.DepartEvaluate
+import org.openurp.edu.web.ProjectSupport
 
-class DepartEvaluateSearchAction extends ProjectRestfulAction[DepartEvaluate] {
+class DepartEvaluateSearchAction extends RestfulAction[DepartEvaluate] with ProjectSupport {
 
   override def indexSetting(): Unit = {
     put("departments", findInSchool(classOf[Department]))
-    put("semesters", getSemesters())
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    put("semesters", entityDao.getAll(classOf[Semester]))
+    put("currentSemester", getCurrentSemester)
   }
 
   override def search(): View = {

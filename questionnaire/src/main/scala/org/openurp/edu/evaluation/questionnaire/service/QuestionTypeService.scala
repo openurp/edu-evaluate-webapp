@@ -27,7 +27,6 @@ class QuestionTypeService(entityDao: EntityDao) {
 
   def getQuestionTypes(): Seq[QuestionType] = {
     val query = OqlBuilder.from(classOf[QuestionType], "type")
-    query.where("type.state=true")
     query.where("type.beginOn <= :now and (type.endOn is null or type.endOn >= :now)", LocalDate.now)
     entityDao.search(query)
   }

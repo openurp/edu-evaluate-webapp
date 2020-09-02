@@ -21,20 +21,21 @@ package org.openurp.edu.evaluation.department.web.action
 import java.time.LocalDate
 
 import org.beangle.data.dao.OqlBuilder
+import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.model.Semester
 import org.openurp.edu.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.edu.evaluation.model.Questionnaire
+import org.openurp.edu.web.ProjectSupport
 
 /**
  * @author xinzhou
  */
-class EvaluateSwitchAction extends ProjectRestfulAction[EvaluateSwitch] {
+class EvaluateSwitchAction extends  RestfulAction[EvaluateSwitch] with ProjectSupport {
 
   override def indexSetting(): Unit = {
-    put("semesters", getSemesters())
+    put("semesters",  entityDao.getAll(classOf[Semester]))
     put("questionnaires", entityDao.getAll(classOf[Questionnaire]))
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
+    put("currentSemester",getCurrentSemester)
   }
 
   override def editSetting(entity: EvaluateSwitch): Unit = {

@@ -23,7 +23,7 @@ import java.time.Instant
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.data.transfer.importer.{AbstractImportListener, ImportResult}
 import org.beangle.security.Securities
-import org.openurp.edu.base.model.{Semester, Teacher}
+import org.openurp.edu.base.model.{Project, Semester, Teacher}
 import org.openurp.edu.evaluation.department.model.DepartEvaluate
 import org.openurp.edu.evaluation.model.Questionnaire
 
@@ -57,12 +57,9 @@ class ImportDepartListener(entityDao: EntityDao) extends AbstractImportListener 
     entityDao.saveOrUpdate(departEvaluate)
   }
 
-  def getTeacher(): Teacher = {
-    val teachers = entityDao.findBy(classOf[Teacher], "code", List(Securities.user))
-    if (teachers.isEmpty) {
-      throw new RuntimeException("Cannot find teacher with code " + Securities.user)
-    } else {
-      teachers.head
-    }
+  protected def getTeacher():Teacher={
+    val builder = OqlBuilder.from(classOf[Teacher], "t")
+    builder.where("t.user.code=:code",Securities.user)
+    entityDao.search(builder).head
   }
 }

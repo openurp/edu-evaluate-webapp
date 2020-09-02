@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.openurp.edu.evaluation</groupId>
     <artifactId>openurp-edu-evaluation-parent</artifactId>
-    <version>0.0.13</version>
+    <version>0.0.14</version>
   </parent>
   <artifactId>openurp-edu-evaluation-adminapp</artifactId>
   <packaging>war</packaging>
@@ -17,13 +17,18 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.openurp.edu</groupId>
+      <artifactId>openurp-edu-boot</artifactId>
+      <version>${openurp.edu.web.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.openurp.edu.evaluation</groupId>
       <artifactId>openurp-edu-evaluation-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.openurp.edu.evaluation</groupId>
-      <artifactId>openurp-edu-evaluation-course</artifactId>
+      <artifactId>openurp-edu-evaluation-clazz</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

@@ -4,27 +4,26 @@
   <parent>
     <groupId>org.openurp</groupId>
     <artifactId>openurp-parent</artifactId>
-    <version>0.3.22</version>
+    <version>0.3.28</version>
   </parent>
   <groupId>org.openurp.edu.evaluation</groupId>
   <artifactId>openurp-edu-evaluation-parent</artifactId>
-  <version>0.0.13</version>
+  <version>0.0.14</version>
   <packaging>pom</packaging>
   <name>OpenURP Edu Evaluation Parent</name>
 
   <properties>
     <bundle.symbolicName>org.openurp.edu.evaluation.parent</bundle.symbolicName>
     <bundle.namespace>org.openurp</bundle.namespace>
-    <openurp.app.version>0.1.33</openurp.app.version>
-    <openurp.api.version>0.13.1</openurp.api.version>
-    <openurp.edu.web.version>0.0.36</openurp.edu.web.version>
+    <openurp.api.version>0.16.1</openurp.api.version>
+    <openurp.edu.web.version>0.1.3</openurp.edu.web.version>
   </properties>
 
   <modules>
     <module>core</module>
-    <module>course</module>
-    <module>department</module>
     <module>questionnaire</module>
+    <module>clazz</module>
+    <module>department</module>
     <module>teacher</module>
     <module>adminapp</module>
     <module>studentapp</module>
