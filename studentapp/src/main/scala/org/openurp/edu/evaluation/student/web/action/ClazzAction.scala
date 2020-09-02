@@ -69,7 +69,7 @@ class ClazzAction extends RestfulAction[EvaluateResult] with ProjectSupport {
   }
 
   override protected def indexSetting(): Unit = {
-    val std = getStudent
+    val std = getStudent(getProject)
     if (std == null) {
       forward("error.std.stdNo.needed")
     }
@@ -79,7 +79,7 @@ class ClazzAction extends RestfulAction[EvaluateResult] with ProjectSupport {
   }
 
   override def search(): View = {
-    val std = getStudent
+    val std = getStudent(getProject)
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
@@ -151,7 +151,7 @@ class ClazzAction extends RestfulAction[EvaluateResult] with ProjectSupport {
       } else {
         teacherId = teachers.head.id
       }
-      val std = getStudent
+      val std = getStudent(getProject)
       val evaluateResult = getResultByStdIdAndClazzId(std.id, clazz.id, teacherId)
       if (null == evaluateResult) {
         addMessage("error.dataRealm.insufficient")
@@ -173,7 +173,7 @@ class ClazzAction extends RestfulAction[EvaluateResult] with ProjectSupport {
   }
 
   override def save(): View = {
-    val std = getStudent
+    val std = getStudent(getProject)
     // 页面参数
     val clazzId = getLong("clazz.id").get
     var teacherId = getLong("teacherId").get
@@ -356,15 +356,6 @@ class ClazzAction extends RestfulAction[EvaluateResult] with ProjectSupport {
       case e: Exception =>
         e.printStackTrace()
         redirect("search", "&semester.id=" + clazz.semester.id, "info.save.failure")
-    }
-  }
-
- private def getStudent(): Student = {
-    val stds = entityDao.search(OqlBuilder.from(classOf[Student], "s").where("s.user.code=:code", Securities.user))
-    if (stds.isEmpty) {
-      throw new RuntimeException("Cannot find student with code " + Securities.user)
-    } else {
-      stds.head
     }
   }
 

@@ -30,17 +30,9 @@ import org.openurp.edu.base.model.{Semester, Teacher}
 import org.openurp.edu.clazz.model.{Clazz, CourseTaker}
 import org.openurp.edu.evaluation.app.course.model.EvaluateSearchDepartment
 import org.openurp.edu.evaluation.clazz.result.model.EvaluateResult
+import org.openurp.edu.web.ProjectSupport
 
-class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
-
-  def getTeacher(): Teacher = {
-    val teachers = entityDao.search(OqlBuilder.from(classOf[Teacher], "s").where("s.code=:code", Securities.user))
-    if (teachers.isEmpty) {
-      throw new RuntimeException("Cannot find teachers with code " + Securities.user)
-    } else {
-      teachers.head
-    }
-  }
+class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] with ProjectSupport {
 
   override def index(): View = {
     val semesters = entityDao.getAll(classOf[Semester])
@@ -58,7 +50,7 @@ class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
-    val teacher = getTeacher()
+    val teacher = getTeacher(getProject)
     if (teacher == null) { forward("error.teacher.teaNo.needed") }
     // 得到院系下的所有级教学任务
     val clazzQuery = OqlBuilder.from(classOf[Clazz], "clazz")
@@ -70,7 +62,6 @@ class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] {
     val clazzList = entityDao.search(clazzQuery)
     val evaluateSearchDepartmentList = Collections.newBuffer[EvaluateSearchDepartment]
     clazzList foreach { clazz =>
-
       var countAll: Long = 0L
       var haveFinish: Long = 0L
       val query = OqlBuilder.from[Long](classOf[CourseTaker].getName, "courseTake")

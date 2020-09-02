@@ -27,6 +27,7 @@ import org.beangle.data.transfer.importer.ImportSetting
 import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.security.Securities
 import org.beangle.webmvc.api.view.{Stream, View}
+import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.edu.base.model.{Semester, Teacher}
 import org.openurp.edu.clazz.model.Clazz
@@ -34,20 +35,19 @@ import org.openurp.edu.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.edu.evaluation.department.helper.ImportDepartListener
 import org.openurp.edu.evaluation.department.model.{DepartEvaluate, DepartQuestion}
 import org.openurp.edu.evaluation.model.{Question, QuestionType, Questionnaire}
+import org.openurp.edu.web.ProjectSupport
 
 import scala.collection.mutable.Buffer
 
 /**
  * @author xinzhou
  */
-class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate] {
+class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ProjectSupport{
 
   override def indexSetting(): Unit = {
     put("departments", findInSchool(classOf[Department]))
-    put("semesters", getSemesters())
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    put("currentSemester", entityDao.search(semesterQuery).head)
-
+    put("semesters", entityDao.getAll(classOf[Semester]))
+    put("currentSemester",getCurrentSemester)
   }
 
   def importTeachers(): View = {

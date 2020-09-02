@@ -6,7 +6,6 @@
     <artifactId>openurp-edu-evaluation-parent</artifactId>
     <version>0.0.14-SNAPSHOT</version>
   </parent>
-  <groupId>org.openurp.edu.evaluation</groupId>
   <artifactId>openurp-edu-evaluation-clazz</artifactId>
   <packaging>jar</packaging>
   <name>OpenURP Edu Evaluation Clazz</name>
@@ -32,7 +31,7 @@
       <artifactId>openurp-edu-exam-api</artifactId>
       <version>${openurp.api.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
