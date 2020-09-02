@@ -21,10 +21,5 @@
       <artifactId>openurp-edu-evaluation-core</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.openurp.edu</groupId>
-      <artifactId>openurp-edu-boot</artifactId>
-      <version>${openurp.edu.web.version}</version>
-    </dependency>
   </dependencies>
 </project>

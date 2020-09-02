@@ -2,22 +2,19 @@
 [@b.head/]
 [@b.toolbar title='评教结果' id='textEvaluationTeacherBar' /]
 
-[#--[@eams.semesterBar semesterValue=semester name="project.id" semesterName="semester.id" semesterEmpty="false" initCallback="changeSemester()"/]--]
-<table class="indexpanel">
-    <tr>
-        <td style="width:200px" class="index_view">
+<div class="search-container">
+  <div class="search-panel">
         [@b.form action="!search" name="textEvaluationTeacherIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
             <input type="hidden" name="clazz.project.id" value="${(project.id)!}"/>
             [@b.select  name="semester.id" label="学年学期" items=semesters?sort_by("code") value=currentSemester option = "id,code" empty="..."/]
             [@b.textfields style="width:130px" names="clazz.crn;课程序号,clazz.course.name;课程名称"/]
 
         [/@]
-        </td>
-        <td class="index_content">
+  </div>
+  <div class="search-list">
             [@b.div id="contentDiv"  href="!search"/]
-        </td>
-    </tr>
-</table>
+  </div>
+</div>
 <script type="text/javaScript">
     var form = document.textEvaluationTeacherIndexForm;
 

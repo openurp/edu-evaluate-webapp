@@ -8,7 +8,6 @@
 [@b.form name="questionnaireForm" title="" action=sa theme="list" ]
     [@b.textfield label="问卷描述" required="true" check="maxLength(80)" name="questionnaire.description" value="${(questionnaire.description?html)?default('')}" /]
     [@b.select label="问卷部门" required="true" name="questionnaire.depart.id" value=(questionnaire.depart.id)! empty="..." items=departments?if_exists/]
-    [@b.radios label="问卷状态" required="true" name="questionnaire.state" titles="1:有效,0:无效" value="${(questionnaire.state?string('1','0'))?default('1')}"/]
     [@b.textarea label="问卷表头" check="maxLength(300)" name="questionnaire.title" value="${(questionnaire.title?html)?default('')}" style="width:500px"/]
     [@b.textarea label="备注" check="maxLength(300)" name="questionnaire.remark" value="${(questionnaire.remark?html)?default('')}" style="width:500px" /]
      [@b.datepicker label="生效日期" required="true" name="questionnaire.beginOn" id="_beginOn" format="yyyy-MM-dd" maxDate="#F{$dp.$D(\\'_endOn\\')}" value=(questionnaire.beginOn?string("yyyy-MM-dd"))! maxlength="10" style="width:200px"/]

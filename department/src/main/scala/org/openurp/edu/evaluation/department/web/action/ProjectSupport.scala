@@ -22,7 +22,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.model.Entity
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.model.Semester
-import org.openurp.edu.base.web.ProjectSupport
+import org.openurp.edu.web.ProjectSupport
 
 abstract class ProjectRestfulAction[T <: Entity[_]] extends RestfulAction[T] with ProjectSupport {
 

@@ -55,7 +55,7 @@ class DepartEvaluateAction extends ProjectRestfulAction[DepartEvaluate] {
     getInt("departEvaluation.semester.id") foreach { semesterId => builder.where("clazz.semester.id=:id", semesterId) }
     builder.join("clazz.teachers", "teacher")
     builder.select("distinct teacher.id , clazz.teachDepart.id , clazz.semester.id")
-    builder.where("clazz.teachDepart.id=:departId", getTeacher.user.department.id)
+//    builder.where("clazz.teachDepart.id=:departId", getTeacher.user.department.id)
     builder.where("not exists (from " + classOf[DepartEvaluate].getName + " de where de.semester = clazz.semester and de.teacher = teacher and de.department = clazz.teachDepart)")
     val datas = entityDao.search(builder)
     val departEvaluates = Collections.newBuffer[DepartEvaluate]

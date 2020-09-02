@@ -1,7 +1,5 @@
 [#ftl]
 [@b.head/]
-[@b.toolbar title="选项组列表" /]
-
 [@b.grid items=optionGroups var="optionGroup" sortable="false"]
     [@b.gridbar]
         bar.addItem("${b.text('action.add')}",action.add());

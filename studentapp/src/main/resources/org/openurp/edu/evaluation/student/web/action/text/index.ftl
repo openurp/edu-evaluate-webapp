@@ -11,12 +11,11 @@
         </td>
     </tr>
     [#if !(currentSemester??)][#assign currentSemester = semesters?first/][/#if]
-    <tr>
-       <td class="index_content">
+  </table>
+  <div class="search-list">
             [@b.div id="contentDiv"  href="!search?&semester.id=${currentSemester.id}" /]
-        </td>
-    </tr>
-</table>
+  </div>
+</div>
 
 <script type="text/javascript">
     function changeSemester(num){

@@ -29,7 +29,7 @@ import org.openurp.base.model.Department
 import org.openurp.edu.base.model.Project
 import org.openurp.edu.evaluation.model.{OptionGroup, Question, Questionnaire}
 import org.openurp.edu.evaluation.questionnaire.service.QuestionTypeService
-import org.openurp.edu.base.web.ProjectSupport
+import org.openurp.edu.web.ProjectSupport
 
 /**
  * 问题维护响应类
@@ -43,8 +43,7 @@ class QuestionAction extends RestfulAction[Question] with ProjectSupport{
   override def search(): View = {
     val builder = OqlBuilder.from(classOf[Question], "question")
     populateConditions(builder)
-    builder.orderBy(get(Order.OrderStr).getOrElse("question.state desc")).limit(getPageLimit)
-    builder.where("question.state=true")
+    builder.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
     val questions = entityDao.search(builder)
 
     put("questions", questions)
@@ -66,29 +65,14 @@ class QuestionAction extends RestfulAction[Question] with ProjectSupport{
       question.project = getProject
       question.updatedAt = Instant.now
       val remark = question.remark.orNull
-      val content = question.content
+      val content = question.contents
       question.beginOn = LocalDate.parse(get("question.beginOn").get)
       question.endOn = get("question.endOn").filter(Strings.isNotEmpty(_)).map(LocalDate.parse(_))
       if (remark != null) {
         question.remark = Some(remark.replaceAll("<", "&#60;").replaceAll(">", "&#62;"))
       }
-      question.content = content.replaceAll("<", "&#60;").replaceAll(">", "&#62;")
-      if (!question.persisted) {
-        if (question.state) {
-          question.beginOn = LocalDate.now
-        }
-      } else {
-        question.updatedAt = Instant.now
-        val questionOld = entityDao.get(classOf[Question], question.id)
-        if (questionOld.state != question.state) {
-          if (question.state) {
-            question.beginOn = LocalDate.now
-          } else {
-            question.endOn = Some(LocalDate.now)
-          }
-        }
-
-      }
+      question.contents = content.replaceAll("<", "&#60;").replaceAll(">", "&#62;")
+      question.updatedAt = Instant.now
       entityDao.saveOrUpdate(question)
       return redirect("search", "info.save.success")
     } catch {

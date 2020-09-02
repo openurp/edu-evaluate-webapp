@@ -30,7 +30,7 @@ import org.beangle.webmvc.api.annotation.param
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
-import org.openurp.edu.base.web.ProjectSupport
+import org.openurp.edu.web.ProjectSupport
 import org.openurp.edu.evaluation.clazz.model.QuestionnaireClazz
 import org.openurp.edu.evaluation.model.{ Question, QuestionType, Questionnaire }
 
@@ -97,22 +97,6 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] with ProjectSuppo
       questionnaire.project = getProject
     }
     questionnaire.endOn = get("questionnaire.endOn").filter(Strings.isNotBlank(_)).map(LocalDate.parse(_))
-
-    if (!questionnaire.persisted) {
-      if (questionnaire.state) {
-        questionnaire.beginOn = LocalDate.now
-      }
-    } else {
-      val questionnaireOld = entityDao.get(classOf[Questionnaire], questionnaire.id)
-      if (questionnaireOld.state != questionnaire.state) {
-        if (questionnaire.state) {
-          questionnaire.beginOn = LocalDate.now
-        } else {
-          questionnaire.endOn = Some(LocalDate.now)
-        }
-      }
-
-    }
     questionnaire.questions.clear()
     questionnaire.questions ++= entityDao.find(classOf[Question], longIds("questionnaire.question"))
 
@@ -138,9 +122,8 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] with ProjectSuppo
     val questionSeq = get("questionSeq")
 
     val entityQuery = OqlBuilder.from(classOf[Question], "question")
-    entityQuery.where("question.questionType.state=true")
     entityQuery.where(
-      "question.state=true and question.questionType.beginOn <= :now and (question.questionType.endOn is null or question.questionType.endOn >= :now)",
+      "question.questionType.beginOn <= :now and (question.questionType.endOn is null or question.questionType.endOn >= :now)",
       LocalDate.now)
     if (!get("questionTypeId").isEmpty) {
       val typeId = getLong("questionTypeId").get

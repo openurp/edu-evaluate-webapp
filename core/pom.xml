@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.openurp.edu.evaluation</groupId>
@@ -19,14 +19,13 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.openurp.app</groupId>
-      <artifactId>openurp-app-cas</artifactId>
-      <version>${openurp.app.version}</version>
+      <groupId>org.beangle.ems</groupId>
+      <artifactId>beangle-ems-app_2.13</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.openurp.app</groupId>
-      <artifactId>openurp-app-web</artifactId>
-      <version>${openurp.app.version}</version>
+      <groupId>org.openurp.edu</groupId>
+      <artifactId>openurp-edu-web</artifactId>
+      <version>${openurp.edu.web.version}</version>
     </dependency>
     <dependency>
       <groupId>org.openurp.edu.base</groupId>

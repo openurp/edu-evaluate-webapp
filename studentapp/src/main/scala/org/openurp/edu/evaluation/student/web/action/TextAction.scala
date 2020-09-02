@@ -34,7 +34,7 @@ import scala.collection.mutable.Buffer
 
 class TextAction extends RestfulAction[TextEvaluation] {
 
-  def getStudent(): Student = {
+  private def getStudent(): Student = {
     val stds = entityDao.search(OqlBuilder.from(classOf[Student], "s").where("s.user.code=:code", Securities.user))
     if (stds.isEmpty) {
       throw new RuntimeException("Cannot find student with code " + Securities.user)
@@ -69,7 +69,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
     val query = OqlBuilder.from(classOf[TextEvaluation], "textEvaluation")
     query.where("textEvaluation.student =:std", std)
     query.where("textEvaluation.clazz.semester =:semester", semester)
-    query.where("textEvaluation.state = true")
+    query.where("textEvaluation.audited = true")
     val textEvaluateMap = Collections.newMap[Long, Buffer[TextEvaluation]]
     val results = entityDao.search(query)
     results foreach { textEvaluation =>
@@ -244,7 +244,7 @@ class TextAction extends RestfulAction[TextEvaluation] {
         textEvaluation.student = std
         textEvaluation.clazz = clazz
         textEvaluation.teacher = teacher
-        textEvaluation.content = textOpinion
+        textEvaluation.contents = textOpinion
         textEvaluation.evaluateByTeacher = evaluateByTeacher
         textEvaluation.evaluateAt = Instant.now
         entityDao.saveOrUpdate(textEvaluation)

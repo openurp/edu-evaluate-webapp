@@ -26,7 +26,7 @@ import org.beangle.security.Securities
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.model.{Semester, Student, Teacher}
-import org.openurp.edu.base.web.ProjectSupport
+import org.openurp.edu.web.ProjectSupport
 import org.openurp.edu.clazz.model.{Clazz, CourseTaker}
 import org.openurp.edu.evaluation.app.course.service.StdEvaluateSwitchService
 import org.openurp.edu.evaluation.clazz.model.QuestionnaireClazz
@@ -356,6 +356,15 @@ class ClazzAction extends RestfulAction[EvaluateResult] with ProjectSupport {
       case e: Exception =>
         e.printStackTrace()
         redirect("search", "&semester.id=" + clazz.semester.id, "info.save.failure")
+    }
+  }
+
+ private def getStudent(): Student = {
+    val stds = entityDao.search(OqlBuilder.from(classOf[Student], "s").where("s.user.code=:code", Securities.user))
+    if (stds.isEmpty) {
+      throw new RuntimeException("Cannot find student with code " + Securities.user)
+    } else {
+      stds.head
     }
   }
 

@@ -54,7 +54,7 @@ class QuestionnaireStatTeacherAction extends RestfulAction[ClazzEvalStat] {
     }
     val questionnaireStatTeachers = entityDao.search(entityQuery)
     put("questionnaireStatTeachers", questionnaireStatTeachers)
-    val questionTypeList = entityDao.search(OqlBuilder.from(classOf[QuestionType], "qt").where("qt.state=:state", true))
+    val questionTypeList = entityDao.search(OqlBuilder.from(classOf[QuestionType], "qt"))
     put("questionTypeList", questionTypeList)
     put("criteria", entityDao.search(OqlBuilder.from(classOf[EvaluationCriteriaItem], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L)))
     forward()
@@ -115,7 +115,7 @@ class QuestionnaireStatTeacherAction extends RestfulAction[ClazzEvalStat] {
     quer.where("questionR.result.teacher=:teaId", questionnaireStat.teacher)
     quer.where("questionR.result.clazz=:less", questionnaireStat.clazz)
     quer.select("questionR.question.id,questionR.question.content,sum(questionR.score)/count(questionR.id)")
-    quer.groupBy("questionR.question.id,questionR.question.content")
+    quer.groupBy("questionR.question.id,questionR.question.contents")
     put("questionResults", entityDao.search(quer))
     forward()
   }
@@ -239,7 +239,7 @@ class QuestionnaireStatTeacherAction extends RestfulAction[ClazzEvalStat] {
     if (clazzId != 0L) {
       quer1.where("evaluateResult.clazz.id=:clazzId", clazzId)
     }
-    quer1.groupBy("questionResult.question.id,questionResult.question.content")
+    quer1.groupBy("questionResult.question.id,questionResult.question.contents")
     put("questionRList", entityDao.search(quer1))
     /** 院系各项得分 */
     val depQuery = OqlBuilder.from(classOf[EvaluateResult].getName + " evaluateResult,"
