@@ -67,15 +67,15 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
         put("clazzs", entityDao.search(getQueryBuilderByClazz()))
         forward("clazzList")
       case -1 => //有问卷
-        put("questionnaireClazzs", entityDao.search(getQueryBuilder()))
+        put("questionnaireClazzs", entityDao.search(getQueryBuilder))
         forward("list")
       case _ => //问卷Id
-        put("questionnaireClazzs", entityDao.search(getQueryBuilder()))
+        put("questionnaireClazzs", entityDao.search(getQueryBuilder))
         forward("list")
     }
   }
 
-  protected override def getQueryBuilder(): OqlBuilder[QuestionnaireClazz] = {
+  protected override def getQueryBuilder: OqlBuilder[QuestionnaireClazz] = {
     val query = OqlBuilder.from(classOf[QuestionnaireClazz], "questionnaireClazz")
     populateConditions(query)
     //    query.where(QueryHelper.extractConditions(classOf[Clazz], "clazz", null))

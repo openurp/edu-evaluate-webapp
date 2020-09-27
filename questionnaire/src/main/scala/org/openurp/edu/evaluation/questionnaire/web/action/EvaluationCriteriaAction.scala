@@ -76,7 +76,7 @@ class EvaluationCriteriaAction extends RestfulAction[EvaluationCriteria] {
     }
   }
 
-  protected override def getQueryBuilder(): OqlBuilder[EvaluationCriteria] = {
+  protected override def getQueryBuilder: OqlBuilder[EvaluationCriteria] = {
 
     val builder: OqlBuilder[EvaluationCriteria] = OqlBuilder.from(entityName, simpleEntityName)
     populateConditions(builder)
