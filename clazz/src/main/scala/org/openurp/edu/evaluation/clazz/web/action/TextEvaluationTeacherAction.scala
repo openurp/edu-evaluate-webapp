@@ -21,7 +21,6 @@ package org.openurp.edu.evaluation.clazz.web.action
 import java.time.{Instant, LocalDate}
 
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.security.Securities
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.model.{Semester, Student, Teacher}
@@ -37,8 +36,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] with Pro
   }
 
   override def search(): View = {
-    val teacher = getTeacher(getProject)
-    if (teacher == null) { forward("error.teacher.teaNo.needed") }
+    val teacher = getUser(classOf[Teacher])
     val semesterId = getInt("semester.id").get
     val semester = entityDao.get(classOf[Semester], semesterId)
     if (teacher == null) {
@@ -58,8 +56,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] with Pro
   }
 
   def searchTextEvaluation(): View = {
-    val teacher =  getTeacher(getProject)
-    if (teacher == null) { forward("error.teacher.teaNo.needed") }
+    val teacher = getUser(classOf[Teacher])
     val clazzId = getLong("clazz.id").get
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val currentSemester = entityDao.search(semesterQuery).head
@@ -105,8 +102,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] with Pro
   }
 
   def saveEvaluateRemessageToStd(): View = {
-    val teacher =  getTeacher(getProject)
-    if (teacher == null) { forward("error.teacher.teaNo.needed") }
+    val teacher = getUser(classOf[Teacher])
     // 页面条件
     val clazzId = getLong("clazzId").get
     val clazz = entityDao.get(classOf[Clazz], clazzId)
@@ -141,8 +137,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] with Pro
   }
 
   def saveEvaluateRemessageToClass(): View = {
-    val teacher = getTeacher(getProject)
-    if (teacher == null) { forward("error.teacher.teaNo.needed") }
+    val teacher = getUser(classOf[Teacher])
     // 页面条件
     val clazzId = getLong("clazzId").get
     val clazz = entityDao.get(classOf[Clazz], clazzId)
@@ -152,9 +147,6 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] with Pro
     val textEvaluationId = getLong("textEvaluationId").get
     val isAnn = getBoolean("isAnn").get
     val reMessage = get("reMessage").get
-    if (teacher == null) {
-      redirect("searchTextEvaluation", "&clazz.id=" + clazzId + "&semesterId=" + semesterId, "保存失败,你没有权限!")
-    }
     // 查询(班级)
     //    val hql = "select courseTake"+ " from org.openurp.edu.teach.clazz.model.Clazz clazz"+ " join clazz.teachers teacher join clazz.teachclass.courseTakers courseTake"+ " where teacher =:teacher and clazz.semester.id =:semesterId and clazz.teachclass.name in (:classNames)"
     val query = OqlBuilder.from[CourseTaker](classOf[Clazz].getName, "clazz")
@@ -208,8 +200,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] with Pro
   }
 
   def listAnn(): View = {
-    val teacher = getTeacher(getProject)
-    if (teacher == null) { forward("error.teacher.teaNo.needed") }
+    val teacher = getUser(classOf[Teacher])
     val clazzId = getLong("clazzId").get
     val semesterId = entityDao.get(classOf[Clazz], clazzId).semester.id
     val query = OqlBuilder.from(classOf[TeacherRemessage], "teacherRemessage")

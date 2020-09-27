@@ -152,10 +152,6 @@ class TextAction extends RestfulAction[TextEvaluation] with ProjectSupport {
   }
 
   override protected def indexSetting(): Unit = {
-    val std = getStudent(getProject)
-    if (std == null) {
-      forward("error.std.stdNo.needed")
-    }
     val semesters = entityDao.getAll(classOf[Semester])
     put("semesters", semesters)
     if (semesters.nonEmpty) {
@@ -167,10 +163,7 @@ class TextAction extends RestfulAction[TextEvaluation] with ProjectSupport {
   }
 
   override def search(): View = {
-    val std = getStudent(getProject)
-    if (std == null) {
-      forward("error.std.stdNo.needed")
-    }
+    val std = getUser(classOf[Student])
     // 页面条件
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
@@ -218,7 +211,7 @@ class TextAction extends RestfulAction[TextEvaluation] with ProjectSupport {
     }
     // 判断(是否更新)
     if ("update".equals(evaluateState)) {
-      val std = getStudent(getProject)
+      val std = getUser(classOf[Student])
       val textEvaluations = getTextEvaluationList(std, clazz, teacher)
       put("textEvaluations", textEvaluations)
     }
@@ -229,7 +222,7 @@ class TextAction extends RestfulAction[TextEvaluation] with ProjectSupport {
   }
 
   def saveTextEvaluate(): View = {
-    val std = getStudent(getProject)
+    val std = getUser(classOf[Student])
     val ClazzId = longId("clazz")
     val teacherId = getLong("teacherId")
     val clazz = entityDao.get(classOf[Clazz], ClazzId)
@@ -255,7 +248,7 @@ class TextAction extends RestfulAction[TextEvaluation] with ProjectSupport {
   }
 
   def remsgList(): View = {
-    val std = getStudent(getProject)
+    val std = getUser(classOf[Student])
     val ids = longIds("clazz")
     val teachers = getTeachersByClazzIdSeq(ids)
     val clazzs = getTeacherClazzByClazzIdSeq(ids)

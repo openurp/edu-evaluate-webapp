@@ -77,12 +77,13 @@ class EvaluateStdAction extends ProjectRestfulAction[EvaluateResult] {
   }
 
   override protected def indexSetting(): Unit = {
-    val std = getStudent(getProject)
+    val std = getUser(classOf[Student])
+    put("std", std)
     put("currentSemester", this.getCurrentSemester)
   }
 
   override def search(): View = {
-    val std = getStudent(getProject)
+    val std = getUser(classOf[Student])
     val semesterId = getInt("semester.id").get
     val semester = entityDao.get(classOf[Semester], semesterId)
     val clazzList = getStdClazzs(std, semester)
@@ -157,8 +158,10 @@ class EvaluateStdAction extends ProjectRestfulAction[EvaluateResult] {
       var teacherId: Long = 0
       if (questionnaireClazz.evaluateByTeacher) {
         teacherId = ids(1).toLong
-      } else { teacherId = teachers.head.id }
-      val std = getStudent(getProject)
+      } else {
+        teacherId = teachers.head.id
+      }
+      val std = getUser(classOf[Student])
       val evaluateResult = getResultByStdIdAndClazzId(std.id, clazz.id, teacherId)
       if (null == evaluateResult) {
         addMessage("error.dataRealm.insufficient")
@@ -180,8 +183,7 @@ class EvaluateStdAction extends ProjectRestfulAction[EvaluateResult] {
   }
 
   override def save(): View = {
-    val std = getStudent(getProject)
-    // 页面参数
+    val std = getUser(classOf[Student])
     val clazzId = getLong("clazz.id").get
     var teacherId = getLong("teacherId").get
     //    val semesterId = getInt("semester.id").get
@@ -228,7 +230,7 @@ class EvaluateStdAction extends ProjectRestfulAction[EvaluateResult] {
     var newTeacherIds = Collections.newBuffer[Long]
     try {
       // 更新评教记录
-      if (evaluateResults.size > 0) {
+      if (evaluateResults.nonEmpty) {
         evaluateResults foreach { evaluateResult =>
           clazz = evaluateResult.clazz
           teacher = evaluateResult.teacher

@@ -50,8 +50,7 @@ class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] with Pro
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
-    val teacher = getTeacher(getProject)
-    if (teacher == null) { forward("error.teacher.teaNo.needed") }
+    val teacher = getUser(classOf[Teacher])
     // 得到院系下的所有级教学任务
     val clazzQuery = OqlBuilder.from(classOf[Clazz], "clazz")
     clazzQuery.where("clazz.semester.id=:semesterId", semesterId)

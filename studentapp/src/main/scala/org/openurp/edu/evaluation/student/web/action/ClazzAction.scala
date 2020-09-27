@@ -69,17 +69,14 @@ class ClazzAction extends RestfulAction[EvaluateResult] with ProjectSupport {
   }
 
   override protected def indexSetting(): Unit = {
-    val std = getStudent(getProject)
-    if (std == null) {
-      forward("error.std.stdNo.needed")
-    }
+    val std = getUser(classOf[Student])
     val semesters = evaluateSwitchService.getOpenedSemesters(std.project)
     put("semesters", semesters)
     if (!semesters.isEmpty) put("currentSemester", semesters.head)
   }
 
   override def search(): View = {
-    val std = getStudent(getProject)
+    val std = getUser(classOf[Student])
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
@@ -151,7 +148,7 @@ class ClazzAction extends RestfulAction[EvaluateResult] with ProjectSupport {
       } else {
         teacherId = teachers.head.id
       }
-      val std = getStudent(getProject)
+      val std = getUser(classOf[Student])
       val evaluateResult = getResultByStdIdAndClazzId(std.id, clazz.id, teacherId)
       if (null == evaluateResult) {
         addMessage("error.dataRealm.insufficient")
@@ -173,8 +170,7 @@ class ClazzAction extends RestfulAction[EvaluateResult] with ProjectSupport {
   }
 
   override def save(): View = {
-    val std = getStudent(getProject)
-    // 页面参数
+    val std = getUser(classOf[Student])
     val clazzId = getLong("clazz.id").get
     var teacherId = getLong("teacherId").get
     //    val semesterId = getInt("semester.id").get

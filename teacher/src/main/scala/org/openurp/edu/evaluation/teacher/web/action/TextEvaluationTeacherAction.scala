@@ -40,8 +40,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] with Pro
   }
 
   override def search(): View = {
-    val teacher = getTeacher(getProject)
-    if (teacher == null) { forward("error.teacher.teaNo.needed") }
+    val teacher = getUser(classOf[Teacher])
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
@@ -63,8 +62,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] with Pro
   }
 
   def searchTextEvaluation(): View = {
-    val teacher = getTeacher(getProject)
-    if (teacher == null) { forward("error.teacher.teaNo.needed") }
+    val teacher = getUser(classOf[Teacher])
     val clazzId = getLong("clazz.id").get
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val currentSemester = entityDao.search(semesterQuery).head
@@ -110,8 +108,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] with Pro
   }
 
   def saveEvaluateRemessageToStd(): View = {
-    val teacher = getTeacher(getProject)
-    if (teacher == null) { forward("error.teacher.teaNo.needed") }
+    val teacher = getUser(classOf[Teacher])
     // 页面条件
     val clazzId = getLong("clazzId").get
     val clazz = entityDao.get(classOf[Clazz], clazzId)
@@ -146,8 +143,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] with Pro
   }
 
   def saveEvaluateRemessageToClass(): View = {
-    val teacher = getTeacher(getProject)
-    if (teacher == null) { forward("error.teacher.teaNo.needed") }
+    val teacher = getUser(classOf[Teacher])
     // 页面条件
     val clazzId = getLong("clazzId").get
     val clazz = entityDao.get(classOf[Clazz], clazzId)
@@ -157,9 +153,6 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] with Pro
     val textEvaluationId = getLong("textEvaluationId").get
     val isAnn = getBoolean("isAnn").get
     val reMessage = get("reMessage").get
-    if (teacher == null) {
-      redirect("searchTextEvaluation", "&clazz.id=" + clazzId + "&semesterId=" + semesterId, "保存失败,你没有权限!")
-    }
     // 查询(班级)
     val query = OqlBuilder.from[CourseTaker](classOf[Clazz].getName, "clazz")
     query.join("left", "clazz.teachers", "teacher")
@@ -189,11 +182,11 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] with Pro
     teacherRemessage.remessage = reMessage
     try {
       entityDao.saveOrUpdate(teacherRemessage)
-      return redirect("searchTextEvaluation", "&clazz.id=" + clazzId + "&semesterId=" + semesterId, "info.save.success")
+      redirect("searchTextEvaluation", "&clazz.id=" + clazzId + "&semesterId=" + semesterId, "info.save.success")
     } catch {
       case e: Exception =>
         e.printStackTrace()
-        return redirect("searchTextEvaluation", "&clazz.id=" + clazzId + "&semesterId=" + semesterId, "info.save.failure")
+        redirect("searchTextEvaluation", "&clazz.id=" + clazzId + "&semesterId=" + semesterId, "info.save.failure")
     }
   }
 
@@ -209,8 +202,7 @@ class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] with Pro
   }
 
   def listAnn(): View = {
-    val teacher = getTeacher(getProject)
-    if (teacher == null) { forward("error.teacher.teaNo.needed") }
+    val teacher = getUser(classOf[Teacher])
     val clazzId = getLong("clazzId").get
     val semesterId = entityDao.get(classOf[Clazz], clazzId).semester.id
     val query = OqlBuilder.from(classOf[TeacherRemessage], "teacherRemessage")
