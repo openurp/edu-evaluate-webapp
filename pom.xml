@@ -8,7 +8,7 @@
   </parent>
   <groupId>org.openurp.edu.evaluation</groupId>
   <artifactId>openurp-edu-evaluation-parent</artifactId>
-  <version>0.0.15-SNAPSHOT</version>
+  <version>0.0.15</version>
   <packaging>pom</packaging>
   <name>OpenURP Edu Evaluation Parent</name>
 
@@ -16,7 +16,7 @@
     <bundle.symbolicName>org.openurp.edu.evaluation.parent</bundle.symbolicName>
     <bundle.namespace>org.openurp</bundle.namespace>
     <openurp.api.version>0.18.0</openurp.api.version>
-    <openurp.edu.web.version>0.1.7-SNAPSHOT</openurp.edu.web.version>
+    <openurp.edu.web.version>0.1.7</openurp.edu.web.version>
   </properties>
 
   <modules>
