@@ -19,7 +19,7 @@
 package org.openurp.edu.evaluation.clazz.web
 
 import org.beangle.cdi.bind.BindModule
-import org.openurp.edu.base.service.impl.SemesterServiceImpl
+import org.openurp.base.edu.service.impl.SemesterServiceImpl
 import org.openurp.edu.evaluation.app.course.service.StdEvaluateSwitchService
 import org.openurp.edu.evaluation.clazz.web.action._
 

@@ -20,7 +20,7 @@ package org.openurp.edu.evaluation.app.course.model
 
 import org.beangle.data.model.IntId
 import org.beangle.data.model.pojo.TemporalAt
-import org.openurp.edu.base.model.{Project, Semester}
+import org.openurp.base.edu.model.{Project, Semester}
 
 class StdEvaluateSwitch extends IntId with TemporalAt {
 

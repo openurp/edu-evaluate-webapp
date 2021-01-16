@@ -21,7 +21,7 @@ package org.openurp.edu.evaluation.app.course.service
 import java.time.Instant
 
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
-import org.openurp.edu.base.model.{Project, Semester}
+import org.openurp.base.edu.model.{Project, Semester}
 import org.openurp.edu.evaluation.app.course.model.StdEvaluateSwitch
 
 class StdEvaluateSwitchService(entityDao: EntityDao) {

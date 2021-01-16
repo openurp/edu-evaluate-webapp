@@ -25,9 +25,9 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
-import org.openurp.edu.base.model.Semester
+import org.openurp.base.edu.model.Semester
 import org.openurp.edu.evaluation.department.model.DepartEvaluate
-import org.openurp.edu.web.ProjectSupport
+import org.openurp.boot.edu.helper.ProjectSupport
 
 class DepartEvaluateSearchAction extends RestfulAction[DepartEvaluate] with ProjectSupport {
 

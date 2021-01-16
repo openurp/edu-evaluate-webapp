@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.openurp.edu.evaluation</groupId>
     <artifactId>openurp-edu-evaluation-parent</artifactId>
-    <version>0.0.15</version>
+    <version>0.0.16</version>
   </parent>
   <artifactId>openurp-edu-evaluation-core</artifactId>
   <packaging>jar</packaging>
@@ -24,18 +24,13 @@
     </dependency>
     <dependency>
       <groupId>org.openurp.edu</groupId>
-      <artifactId>openurp-edu-web</artifactId>
-      <version>${openurp.edu.web.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openurp.edu.base</groupId>
-      <artifactId>openurp-edu-base-api</artifactId>
+      <artifactId>openurp-edu-api</artifactId>
       <version>${openurp.api.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.openurp.edu.evaluation</groupId>
-      <artifactId>openurp-edu-evaluation-api</artifactId>
-      <version>${openurp.api.version}</version>
+      <groupId>org.openurp.boot</groupId>
+      <artifactId>openurp-boot-web</artifactId>
+      <version>${openurp.boot.version}</version>
     </dependency>
     <dependency>
       <groupId>org.beangle.webmvc</groupId>
@@ -44,7 +39,6 @@
     <dependency>
       <groupId>org.beangle.data</groupId>
       <artifactId>beangle-data-transfer_2.13</artifactId>
-      <version>${beangle.data.version}</version>
     </dependency>
     <dependency>
       <groupId>jakarta.servlet</groupId>

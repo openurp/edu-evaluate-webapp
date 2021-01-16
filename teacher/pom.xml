@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.openurp.edu.evaluation</groupId>
     <artifactId>openurp-edu-evaluation-parent</artifactId>
-    <version>0.0.15</version>
+    <version>0.0.16</version>
   </parent>
   <artifactId>openurp-edu-evaluation-teacher</artifactId>
   <packaging>jar</packaging>
@@ -20,11 +20,6 @@
       <groupId>org.openurp.edu.evaluation</groupId>
       <artifactId>openurp-edu-evaluation-core</artifactId>
       <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openurp.edu</groupId>
-      <artifactId>openurp-edu-web</artifactId>
-      <version>${openurp.edu.web.version}</version>
     </dependency>
     <dependency>
       <groupId>jakarta.servlet</groupId>

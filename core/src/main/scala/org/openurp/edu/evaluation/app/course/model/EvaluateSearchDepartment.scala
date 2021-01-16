@@ -18,7 +18,7 @@
  */
 package org.openurp.edu.evaluation.app.course.model
 
-import org.openurp.edu.base.model.Semester
+import org.openurp.base.edu.model.Semester
 import org.openurp.edu.clazz.model.Clazz
 
 class EvaluateSearchDepartment {

@@ -24,7 +24,7 @@ import org.beangle.commons.collection.Order
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.openurp.base.model.Department
-import org.openurp.edu.base.model.{Project, Semester}
+import org.openurp.base.edu.model.{Project, Semester}
 import org.openurp.edu.evaluation.clazz.model.TextEvaluation
 
 class TextEvaluationAction extends ProjectRestfulAction[TextEvaluation] {

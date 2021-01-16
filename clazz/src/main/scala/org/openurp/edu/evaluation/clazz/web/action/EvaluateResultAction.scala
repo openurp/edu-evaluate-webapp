@@ -25,7 +25,7 @@ import org.beangle.commons.lang.Numbers
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.annotation.param
 import org.beangle.webmvc.api.view.View
-import org.openurp.edu.base.model.{Semester, Teacher}
+import org.openurp.base.edu.model.{Semester, Teacher}
 import org.openurp.edu.evaluation.clazz.result.model.{EvaluateResult, QuestionResult}
 import org.openurp.edu.exam.model.ExamTaker
 

@@ -18,7 +18,7 @@
  */
 package org.openurp.edu.evaluation.department.web.action
 
-import java.time.{Instant, LocalDate}
+import java.time.Instant
 
 import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.commons.lang.ClassLoaders
@@ -27,14 +27,14 @@ import org.beangle.data.transfer.importer.ImportSetting
 import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.webmvc.api.view.{Stream, View}
 import org.beangle.webmvc.entity.action.RestfulAction
+import org.openurp.base.edu.model.{Semester, Teacher}
 import org.openurp.base.model.Department
-import org.openurp.edu.base.model.{Semester, Teacher}
+import org.openurp.boot.edu.helper.ProjectSupport
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.edu.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.edu.evaluation.department.helper.ImportSupervisiorListener
 import org.openurp.edu.evaluation.department.model.{SupervisiorEvaluate, SupervisiorQuestion}
 import org.openurp.edu.evaluation.model.{Question, QuestionType, Questionnaire}
-import org.openurp.edu.web.ProjectSupport
 
 import scala.collection.mutable.Buffer
 
@@ -96,7 +96,7 @@ class SupervisiorEvaluateAction extends RestfulAction[SupervisiorEvaluate] with 
     val evaluateSwitches = entityDao.search(esbuilder)
     put("evaluateSwitches", evaluateSwitches)
 
-    if (!evaluateSwitches.isEmpty) {
+    if (evaluateSwitches.nonEmpty) {
       val questionnaire = evaluateSwitches.head.questionnaire
       put("questionnaire", questionnaire)
 

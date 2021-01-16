@@ -26,10 +26,10 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
-import org.openurp.edu.base.model.Project
+import org.openurp.base.edu.model.Project
 import org.openurp.edu.evaluation.model.{OptionGroup, Question, Questionnaire}
 import org.openurp.edu.evaluation.questionnaire.service.QuestionTypeService
-import org.openurp.edu.web.ProjectSupport
+import org.openurp.boot.edu.helper.ProjectSupport
 
 /**
  * 问题维护响应类

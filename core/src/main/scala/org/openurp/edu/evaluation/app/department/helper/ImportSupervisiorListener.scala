@@ -16,24 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.evaluation.department.helper
+package org.openurp.edu.evaluation.app.department.helper
 
 import java.time.Instant
 
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
-import org.beangle.data.transfer.importer.{AbstractImportListener, ImportResult}
-import org.openurp.edu.base.model.Semester
+import org.beangle.data.transfer.importer.{ImportListener, ImportResult}
+import org.openurp.base.edu.model.Semester
 import org.openurp.edu.evaluation.department.model.SupervisiorEvaluate
 import org.openurp.edu.evaluation.model.Questionnaire
 
 /**
  * @author xinzhou
  */
-class ImportSupervisiorListener(entityDao: EntityDao) extends AbstractImportListener {
+class ImportSupervisiorListener(entityDao: EntityDao) extends ImportListener {
   override def onItemStart(tr: ImportResult): Unit = {
-    val teacherCode = transfer.curData.get("teacher.code").get
-    val semesterCode = transfer.curData.get("semester.code").get.toString()
-    val departmentCode = transfer.curData.get("department.code").get
+    val teacherCode = transfer.curData("teacher.code")
+    val semesterCode = transfer.curData("semester.code").toString
+    val departmentCode = transfer.curData("department.code")
     val semesterBuilder = OqlBuilder.from(classOf[Semester], "s").where("s.code=:code ", semesterCode)
     val semesters = entityDao.search(semesterBuilder)
     if (semesters.isEmpty) {
