@@ -19,7 +19,7 @@
 package org.openurp.edu.evaluation.clazz.model
 
 import org.openurp.base.model.Department
-import org.openurp.edu.base.model.Semester
+import org.openurp.base.edu.model.Semester
 
 class EvaluateSearchManager {
 

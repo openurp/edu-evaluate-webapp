@@ -18,15 +18,14 @@
  */
 package org.openurp.edu.evaluation.questionnaire.web.action
 
-import java.time.{ Instant, LocalDate }
+import java.time.{Instant, LocalDate}
 
 import org.beangle.commons.collection.Order
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.base.model.Project
-import org.openurp.edu.evaluation.model.{ Question, QuestionType }
-import org.openurp.edu.web.ProjectSupport
+import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.edu.evaluation.model.{Question, QuestionType}
 
 class QuestionTypeAction extends RestfulAction[QuestionType] with ProjectSupport {
 
@@ -64,11 +63,11 @@ class QuestionTypeAction extends RestfulAction[QuestionType] with ProjectSupport
       questionType.name = name.replaceAll("<", "&#60;").replaceAll(">", "&#62;")
       questionType.updatedAt = Instant.now
       entityDao.saveOrUpdate(questionType)
-      return redirect("search", "info.save.success")
+      redirect("search", "info.save.success")
     } catch {
       case e: Exception =>
         logger.info("saveAndForwad failure", e)
-        return redirect("search", "info.save.failure")
+        redirect("search", "info.save.failure")
     }
   }
 
@@ -81,10 +80,10 @@ class QuestionTypeAction extends RestfulAction[QuestionType] with ProjectSupport
     val query = OqlBuilder.from(classOf[Question], "question")
     query.where("question.questionType in (:questionTypes)", questionTypes)
     val questions = entityDao.search(query)
-    if (!questions.isEmpty) { return redirect("search", "删除失败,选择的数据中已有被评教问题引用"); }
+    if (questions.nonEmpty) { return redirect("search", "删除失败,选择的数据中已有被评教问题引用"); }
 
     entityDao.remove(questionTypes)
-    return redirect("search", "info.remove.success")
+    redirect("search", "info.remove.success")
   }
 
 }

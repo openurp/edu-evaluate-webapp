@@ -23,15 +23,9 @@
     </dependency>
     <dependency>
       <groupId>org.openurp.edu</groupId>
-      <artifactId>openurp-edu-web</artifactId>
-      <version>${openurp.edu.web.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openurp.edu.exam</groupId>
-      <artifactId>openurp-edu-exam-api</artifactId>
+      <artifactId>openurp-edu-api</artifactId>
       <version>${openurp.api.version}</version>
     </dependency>
-
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>

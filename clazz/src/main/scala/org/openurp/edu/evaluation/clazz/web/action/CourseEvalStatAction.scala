@@ -26,8 +26,8 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.openurp.base.model.Department
 import org.openurp.code.edu.model.EducationLevel
-import org.openurp.edu.base.code.model.StdType
-import org.openurp.edu.base.model.{Course, Semester, Teacher}
+import org.openurp.base.edu.code.model.StdType
+import org.openurp.base.edu.model.{Course, Semester, Teacher}
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.edu.evaluation.app.course.service.Ranker
 import org.openurp.edu.evaluation.clazz.result.model.QuestionResult

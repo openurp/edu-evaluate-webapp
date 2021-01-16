@@ -25,8 +25,8 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.security.Securities
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.base.model.{Semester, Student, Teacher}
-import org.openurp.edu.web.ProjectSupport
+import org.openurp.base.edu.model.{Semester, Student, Teacher}
+import org.openurp.boot.edu.helper.ProjectSupport
 import org.openurp.edu.clazz.model.{Clazz, CourseTaker}
 import org.openurp.edu.evaluation.app.course.service.StdEvaluateSwitchService
 import org.openurp.edu.evaluation.clazz.model.QuestionnaireClazz

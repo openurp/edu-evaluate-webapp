@@ -25,8 +25,8 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
-import org.openurp.edu.base.code.model.StdType
-import org.openurp.edu.base.model.Semester
+import org.openurp.base.edu.code.model.StdType
+import org.openurp.base.edu.model.Semester
 import org.openurp.edu.evaluation.clazz.stat.model.ClazzEvalStat
 import org.openurp.edu.evaluation.model.{EvaluationCriteria, QuestionType, Questionnaire}
 

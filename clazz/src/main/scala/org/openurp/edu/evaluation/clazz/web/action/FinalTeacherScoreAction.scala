@@ -29,8 +29,8 @@ import org.beangle.webmvc.api.context.ActionContext
 import org.beangle.webmvc.api.view.{Status, View}
 import org.openurp.base.model.Department
 import org.openurp.code.edu.model.EducationLevel
-import org.openurp.edu.base.code.model.StdType
-import org.openurp.edu.base.model.{Semester, Teacher}
+import org.openurp.base.edu.code.model.StdType
+import org.openurp.base.edu.model.{Semester, Teacher}
 import org.openurp.edu.evaluation.app.course.service.Ranker
 import org.openurp.edu.evaluation.clazz.result.model.QuestionResult
 import org.openurp.edu.evaluation.clazz.stat.model.FinalTeacherScore
