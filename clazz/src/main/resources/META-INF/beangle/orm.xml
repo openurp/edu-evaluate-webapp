@@ -2,6 +2,6 @@
 <orm>
   <mapping class="org.openurp.edu.evaluation.clazz.model.DefaultMapping" />
   <naming>
-    <profile package = "org.openurp.edu.evaluation" pluralize="true" schema="edu_evaluation"/>
+    <profile package = "org.openurp.edu.evaluation" pluralize="true" schema="edu"/>
   </naming>
 </orm>
