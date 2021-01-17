@@ -4,7 +4,7 @@
     bar.addBack();
 [/@]
 [@b.form name="statForm" title="统计评教结果"  action="!stat" theme="list"]
-    [@edu.semester  name="semester.id" label="学年学期" value=currentSemester/]
+    [@urp_base.semester  name="semester.id" label="学年学期" value=currentSemester/]
     <tr align="center">
         <input type="hidden" name="departIds" value=""/>
         <input type="hidden" name="educationIds" value=""/>

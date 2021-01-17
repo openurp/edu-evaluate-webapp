@@ -7,7 +7,7 @@
 <div class="search-container">
   <div class="search-panel">
        [@b.form action="!search" name="courseEvaluateStatIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
-       [@edu.semester name="semester.id" label="学年学期" value=currentSemester /]
+       [@urp_base.semester name="semester.id" label="学年学期" value=currentSemester /]
        [@b.textfield style="width:100px" name="clazzEvalStat.clazz.crn" label="课程序号" /]
        [@b.textfield style="width:100px" name="clazzEvalStat.course.code" label="课程代码" /]
        [@b.textfield style="width:100px" name="clazzEvalStat.course.name" label="课程名称" /]

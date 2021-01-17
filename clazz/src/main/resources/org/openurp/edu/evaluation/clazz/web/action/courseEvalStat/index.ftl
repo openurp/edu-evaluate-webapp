@@ -10,7 +10,7 @@
 <div class="search-container">
   <div class="search-panel">
         [@b.form action="!search?orderBy=courseEvalStat.totalScore desc" name="courseEvaluateStatIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
-            [@edu.semester name="courseEvalStat.semester.id" label="学年学期" value=currentSemester /]
+            [@urp_base.semester name="courseEvalStat.semester.id" label="学年学期" value=currentSemester /]
             [@b.textfields names="courseEvalStat.course.code;课程代码,courseEvalStat.course.name;课程名称,courseEvalStat.teacher.user.code;教师工号,courseEvalStat.teacher.user.name;教师姓名"/]
             [@b.select name="courseEvalStat.teacher.user.department.id" label="教师院系" items=departments empty="..."/]
             [@b.select name="courseEvalStat.questionnaire.id" label="所用问卷" items=[] ]

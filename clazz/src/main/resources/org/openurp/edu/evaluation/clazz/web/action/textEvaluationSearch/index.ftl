@@ -6,7 +6,7 @@
   <div class="search-panel">
         [@b.form action="!search" name="textEvaluationIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
             <input type="hidden" name="textEvaluation.clazz.project.id" value="${(project.id)!}"/>
-            [@edu.semester  name="semester.id" label="学年学期" value=currentSemester/]
+            [@urp_base.semester  name="semester.id" label="学年学期" value=currentSemester/]
             [@b.textfields style="width:130px" names="textEvaluation.clazz.crn;课程序号,textEvaluation.clazz.course.code;课程代码,textEvaluation.clazz.course.name;课程名称,textEvaluation.teacher.user.code;教师工号,textEvaluation.teacher.user.name;教师姓名"/]
             [@b.select style="width:134px" name="textEvaluation.clazz.teachDepart.id" label="开课院系" items=departments empty="..."/]
             [@b.select style="width:134px" name="textEvaluation.audited" label="是否确认" items={'1':'已确认','0':'未确认'} empty="..."/]

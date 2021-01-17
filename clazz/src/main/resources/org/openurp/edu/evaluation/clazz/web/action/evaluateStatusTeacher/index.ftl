@@ -5,7 +5,7 @@
 <div class="search-container">
   <div class="search-panel">
             [@b.form name="evaluateSearchIndexForm" action="!search" target="contentDiv" theme="search"]
-            [@edu.semester  name="semester.id" label="学年学期" value=currentSemester/]
+            [@urp_base.semester  name="semester.id" label="学年学期" value=currentSemester/]
             [/@]
   </div>
   <div class="search-list">
