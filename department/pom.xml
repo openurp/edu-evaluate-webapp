@@ -2,24 +2,24 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.openurp.edu.evaluation</groupId>
-    <artifactId>openurp-edu-evaluation-parent</artifactId>
+    <groupId>org.openurp.qos.evaluation</groupId>
+    <artifactId>openurp-qos-evaluation-parent</artifactId>
     <version>0.0.19-SNAPSHOT</version>
   </parent>
-  <groupId>org.openurp.edu.evaluation</groupId>
-  <artifactId>openurp-edu-evaluation-department</artifactId>
+  <groupId>org.openurp.qos.evaluation</groupId>
+  <artifactId>openurp-qos-evaluation-department</artifactId>
   <packaging>jar</packaging>
-  <name>OpenURP Edu Evaluation Department</name>
+  <name>OpenURP QoS Evaluation Department</name>
 
   <properties>
-    <bundle.symbolicName>org.openurp.edu.evaluation.department</bundle.symbolicName>
-    <bundle.namespace>org.openurp.edu.evaluation</bundle.namespace>
+    <bundle.symbolicName>org.openurp.qos.evaluation.department</bundle.symbolicName>
+    <bundle.namespace>org.openurp.qos.evaluation</bundle.namespace>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>org.openurp.edu.evaluation</groupId>
-      <artifactId>openurp-edu-evaluation-core</artifactId>
+      <groupId>org.openurp.qos.evaluation</groupId>
+      <artifactId>openurp-qos-evaluation-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

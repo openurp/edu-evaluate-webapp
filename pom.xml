@@ -6,18 +6,18 @@
     <artifactId>openurp-parent</artifactId>
     <version>0.4.8</version>
   </parent>
-  <groupId>org.openurp.edu.evaluation</groupId>
-  <artifactId>openurp-edu-evaluation-parent</artifactId>
+  <groupId>org.openurp.qos.evaluation</groupId>
+  <artifactId>openurp-qos-evaluation-parent</artifactId>
   <version>0.0.19-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>OpenURP Edu Evaluation Parent</name>
+  <name>OpenURP QoS Evaluation Parent</name>
 
   <properties>
-    <bundle.symbolicName>org.openurp.edu.evaluation.parent</bundle.symbolicName>
+    <bundle.symbolicName>org.openurp.qos.evaluation.parent</bundle.symbolicName>
     <bundle.namespace>org.openurp</bundle.namespace>
-    <openurp.api.version>0.20.4</openurp.api.version>
-    <openurp.boot.version>0.0.2</openurp.boot.version>
-    <openurp.base.version>0.1.12</openurp.base.version>
+    <openurp.api.version>0.21.0</openurp.api.version>
+    <openurp.boot.version>0.0.3-SNAPSHOT</openurp.boot.version>
+    <openurp.base.version>0.1.13-SNAPSHOT</openurp.base.version>
   </properties>
 
   <modules>

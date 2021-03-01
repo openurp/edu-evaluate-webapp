@@ -2,17 +2,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.openurp.edu.evaluation</groupId>
-    <artifactId>openurp-edu-evaluation-parent</artifactId>
+    <groupId>org.openurp.qos.evaluation</groupId>
+    <artifactId>openurp-qos-evaluation-parent</artifactId>
     <version>0.0.19-SNAPSHOT</version>
   </parent>
-  <artifactId>openurp-edu-evaluation-core</artifactId>
+  <artifactId>openurp-qos-evaluation-core</artifactId>
   <packaging>jar</packaging>
-  <name>OpenURP Edu Evaluation Core</name>
+  <name>OpenURP QoS Evaluation Core</name>
 
   <properties>
-    <bundle.symbolicName>org.openurp.edu.evaluation.core</bundle.symbolicName>
-    <bundle.namespace>org.openurp.edu.evaluation</bundle.namespace>
+    <bundle.symbolicName>org.openurp.qos.evaluation.core</bundle.symbolicName>
+    <bundle.namespace>org.openurp.qos.evaluation</bundle.namespace>
     <jxls.version>2.4.6</jxls.version>
     <jxls-poi.version>1.0.15</jxls-poi.version>
   </properties>
@@ -25,6 +25,11 @@
     <dependency>
       <groupId>org.openurp.edu</groupId>
       <artifactId>openurp-edu-api</artifactId>
+      <version>${openurp.api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openurp.qos</groupId>
+        <artifactId>openurp-qos-api</artifactId>
       <version>${openurp.api.version}</version>
     </dependency>
     <dependency>
