@@ -16,8 +16,8 @@
     <bundle.symbolicName>org.openurp.qos.evaluation.parent</bundle.symbolicName>
     <bundle.namespace>org.openurp</bundle.namespace>
     <openurp.api.version>0.21.0</openurp.api.version>
-    <openurp.boot.version>0.0.3-SNAPSHOT</openurp.boot.version>
-    <openurp.base.version>0.1.13-SNAPSHOT</openurp.base.version>
+    <openurp.boot.version>0.0.3</openurp.boot.version>
+    <openurp.base.version>0.1.13</openurp.base.version>
   </properties>
 
   <modules>
