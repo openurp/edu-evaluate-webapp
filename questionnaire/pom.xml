@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.openurp.qos.evaluation</groupId>
     <artifactId>openurp-qos-evaluation-parent</artifactId>
-    <version>0.0.19</version>
+    <version>0.0.20-SNAPSHOT</version>
   </parent>
   <groupId>org.openurp.qos.evaluation</groupId>
   <artifactId>openurp-qos-evaluation-questionnaire</artifactId>
