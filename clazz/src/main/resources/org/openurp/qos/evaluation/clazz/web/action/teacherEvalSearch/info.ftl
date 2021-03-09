@@ -32,7 +32,7 @@
     </table>
     [@b.grid items=teacherEvalStat.questionStats var="qs" sortable="false"]
         [@b.row]
-            [@b.col title="问题内容" width="30%"]${qs.question.content}[/@]
+            [@b.col title="问题内容" width="30%"]${qs.question.contents}[/@]
             [#list options?sort_by("proportion")?reverse as option]
             [@b.col title="${option.name!}"]
                 [#list qs.optionStats as os]

@@ -98,7 +98,7 @@ class DepartEvalSearchAction extends ProjectRestfulAction[DepartEvalStat] {
     val quer = OqlBuilder.from(classOf[QuestionResult], "questionR")
     //    quer.where("questionR.result.teacher=:teaId", questionnaireStat.teacher)
     quer.where("questionR.result.department=:depart", questionnaireStat.department)
-    quer.select("questionR.question.id,questionR.question.content,sum(questionR.score)/count(questionR.id)*100")
+    quer.select("questionR.question.id,questionR.question.contents,sum(questionR.score)/count(questionR.id)*100")
     quer.groupBy("questionR.question.id,questionR.question.contents")
     put("questionResults", entityDao.search(quer))
     forward()

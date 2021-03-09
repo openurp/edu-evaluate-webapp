@@ -45,7 +45,7 @@
                     }
                 bg.form.addInput(form,"textEvaluationIds","");
             }
-            bg.form.addInput(form, "keys", "clazz.crn,clazz.course.name,teacher.user.name,evaluateByTeacher,content,semester.schoolYear,semester.name,state");
+            bg.form.addInput(form, "keys", "clazz.crn,clazz.course.name,teacher.user.name,evaluateByTeacher,contents,semester.schoolYear,semester.name,state");
             bg.form.addInput(form, "titles", "课程序号,课程名称,教师名称,是否课程评教,评教内容,学年度,学期,是否确认");
             bg.form.addInput(form, "fileName", "学生意见表");
             [#--bg.form.submit(form,"${b.url('!export')}","_self");--]

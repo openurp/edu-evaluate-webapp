@@ -28,7 +28,7 @@ ${(questionnaire.title?html)?default('')}</b>
                     </td>
                     <td align="left">${questionTree.get(key)[0].score}</td>
                     <td align="left">
-                        ${index}:${questionTree.get(key)[0].content}
+                        ${index}:${questionTree.get(key)[0].contents}
                     </td>
                     <td align="center">
                         [#if (questionTree.get(key)[0].optionGroup.options)?exists]
@@ -43,7 +43,7 @@ ${(questionnaire.title?html)?default('')}</b>
                         [#assign index=index+1]
                         <tr class="griddata-${(key_index%2==0)?string("even","odd")}">
                             <td align="left">
-                                ${index}:${questionTree.get(key)[i].content}(${questionTree.get(key)[i].priority})
+                                ${index}:${questionTree.get(key)[i].contents}(${questionTree.get(key)[i].priority})
                             </td>
                             <td align="center">
                                 [#if (questionTree.get(key)[i].optionGroup.options)?exists]

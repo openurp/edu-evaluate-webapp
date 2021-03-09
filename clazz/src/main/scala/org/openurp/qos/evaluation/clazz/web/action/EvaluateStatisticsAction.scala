@@ -362,7 +362,7 @@ class EvaluateStatisticsAction extends ProjectRestfulAction[ClazzEvalStat] with 
     val quer1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
       + classOf[QuestionResult].getName + " questionResult")
     quer1
-      .select("questionResult.question.content,questionResult.question.id,sum(questionResult.score)/count(evaluateResult.id)")
+      .select("questionResult.question.contents,questionResult.question.id,sum(questionResult.score)/count(evaluateResult.id)")
     quer1.where("evaluateResult.id=questionResult.result.id")
     quer1.where("evaluateResult.clazz.semester.id=" + semesterId)
     if (teaId != 0L) {

@@ -43,7 +43,7 @@
                         ${key.name}
                     </td>
                     <td align="left">
-                        ${questions[0].content}
+                        ${questions[0].contents}
                     </td>
                     <td align="left">
                         ${questions[0].score}
@@ -63,7 +63,7 @@
                         [#assign index=index+1]
                         <tr class="griddata-${(key_index%2==0)?string("even","odd")}">
                             <td align="left">
-                                ${questions[i].content}
+                                ${questions[i].contents}
                             </td>
                             <td align="left">
                                 ${questions[i].score}

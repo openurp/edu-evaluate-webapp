@@ -31,7 +31,7 @@
                             ${key.name}
                         </td>
                         <td align="left">
-                            <span>${keyIndex}:</span>${value[0].content}
+                            <span>${keyIndex}:</span>${value[0].contents}
                         </td>
                         <td align="center">
                             <a href="#" onclick="removeTr('question${keyIndex}','${value[0].id}','${key.name}')">删除</a>
@@ -45,7 +45,7 @@
                             [#assign keyIndex= keyIndex+1]
                             <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}"  name="${value[0].questionType.name}">
                                 <td align="left">
-                                    <span>${keyIndex}:</span>${value[i].content}
+                                    <span>${keyIndex}:</span>${value[i].contents}
                                 </td>
                                 <td align="center">
                                     <a href="#" onclick="removeTr('question${keyIndex}','${value[i].id}','${value[i].questionType.name}')">删除</a>
@@ -90,7 +90,7 @@
                     ${value[0].questionType.name}
                 </td>
                 <td align="left">
-                    <span>${keyIndex}:</span>${value[0].content}
+                    <span>${keyIndex}:</span>${value[0].contents}
                 </td>
                 <td align="center">
                     <a href="#" onclick="removeTr('question${keyIndex}','${value[0].id}','${value[0].questionType.name}')">${b.text('action.delete')}</a>
@@ -104,7 +104,7 @@
                     [#assign keyIndex= keyIndex+1]
                     <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}"  name="${value[0].questionType.name}">
                         <td align="left">
-                            <span>${keyIndex}:</span>${value[i].content}
+                            <span>${keyIndex}:</span>${value[i].contents}
                         </td>
                         <td align="center">
                             <a href="#" onclick="removeTr('question${keyIndex}','${value[i].id}','${value[i].questionType.name}')">${b.text('action.delete')}</a>
