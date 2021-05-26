@@ -23,7 +23,7 @@ import java.time.LocalDate
 import org.beangle.data.model.Entity
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.edu.model.Semester
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 import org.beangle.data.dao.OqlBuilder
 import org.openurp.base.edu.model.Project
 import org.openurp.base.edu.service.SemesterService

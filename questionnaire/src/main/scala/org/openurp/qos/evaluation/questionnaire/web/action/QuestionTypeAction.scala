@@ -19,13 +19,12 @@
 package org.openurp.qos.evaluation.questionnaire.web.action
 
 import java.time.{Instant, LocalDate}
-
 import org.beangle.commons.collection.Order
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.boot.edu.helper.ProjectSupport
 import org.openurp.qos.evaluation.model.{Question, QuestionType}
+import org.openurp.starter.edu.helper.ProjectSupport
 
 class QuestionTypeAction extends RestfulAction[QuestionType] with ProjectSupport {
 

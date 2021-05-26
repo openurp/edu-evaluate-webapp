@@ -29,7 +29,7 @@ import org.openurp.base.model.Department
 import org.openurp.base.edu.model.Project
 import org.openurp.qos.evaluation.model.{OptionGroup, Question, Questionnaire}
 import org.openurp.qos.evaluation.questionnaire.service.QuestionTypeService
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 
 /**
  * 问题维护响应类

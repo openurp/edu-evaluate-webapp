@@ -25,7 +25,7 @@ import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.edu.model.Semester
 import org.openurp.qos.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.qos.evaluation.model.Questionnaire
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 
 /**
  * @author xinzhou

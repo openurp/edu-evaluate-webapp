@@ -29,7 +29,7 @@ import org.beangle.webmvc.api.view.{Stream, View}
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.edu.model.{Semester, Teacher}
 import org.openurp.base.model.Department
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.qos.evaluation.department.helper.ImportSupervisiorListener

@@ -30,7 +30,7 @@ import org.beangle.webmvc.api.annotation.param
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.model.Department
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.qos.evaluation.clazz.model.QuestionnaireClazz
 import org.openurp.qos.evaluation.model.{ Question, QuestionType, Questionnaire }
 

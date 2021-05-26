@@ -28,7 +28,7 @@ import org.openurp.base.edu.model.{Semester, Student, Teacher}
 import org.openurp.edu.clazz.model.{Clazz, CourseTaker}
 import org.openurp.qos.evaluation.app.course.model.TextEvaluateSwitch
 import org.openurp.qos.evaluation.clazz.model.{TeacherRemessage, TextEvaluation}
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 
 class TextEvaluationTeacherAction extends RestfulAction[TextEvaluation] with ProjectSupport {
 

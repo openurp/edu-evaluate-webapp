@@ -35,7 +35,7 @@ import org.openurp.qos.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.qos.evaluation.department.helper.ImportDepartListener
 import org.openurp.qos.evaluation.department.model.{DepartEvaluate, DepartQuestion}
 import org.openurp.qos.evaluation.model.{Question, QuestionType, Questionnaire}
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 
 import scala.collection.mutable.Buffer
 

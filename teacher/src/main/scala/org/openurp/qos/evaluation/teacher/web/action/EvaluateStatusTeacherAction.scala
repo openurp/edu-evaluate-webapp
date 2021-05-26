@@ -30,7 +30,7 @@ import org.openurp.base.edu.model.{Semester, Teacher}
 import org.openurp.edu.clazz.model.{Clazz, CourseTaker}
 import org.openurp.qos.evaluation.app.course.model.EvaluateSearchDepartment
 import org.openurp.qos.evaluation.clazz.result.model.EvaluateResult
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 
 class EvaluateStatusTeacherAction extends RestfulAction[EvaluateResult] with ProjectSupport {
 
