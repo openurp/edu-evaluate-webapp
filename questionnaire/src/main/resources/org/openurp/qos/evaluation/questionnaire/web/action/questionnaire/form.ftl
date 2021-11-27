@@ -26,7 +26,7 @@
                 [#assign keyIndex=1]
                 [#list questionTree?keys?sort_by("priority")?reverse as key]
                 [#assign value=questionTree.get(key)/]
-                    <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}" name="${value[0].questionType.name}">
+                    <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}" name="${value[0].indicator.name}">
                         <td rowSpan="${questionTree.get(key)?size}" align="center">
                             ${key.name}
                         </td>
@@ -37,18 +37,18 @@
                             <a href="#" onclick="removeTr('question${keyIndex}','${value[0].id}','${key.name}')">删除</a>
                         </td>
                         <td rowSpan="${questionTree.get(key)?size}" align="center">
-                            <a href="#" onclick="addTr('${(value[0].questionType.id)?if_exists}')">添加</a>
+                            <a href="#" onclick="addTr('${(value[0].indicator.id)?if_exists}')">添加</a>
                         </td>
                     </tr>
                     [#if questionTree.get(key)?size>1]
                         [#list 1..questionTree.get(key)?size-1 as i]
                             [#assign keyIndex= keyIndex+1]
-                            <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}"  name="${value[0].questionType.name}">
+                            <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}"  name="${value[0].indicator.name}">
                                 <td align="left">
                                     <span>${keyIndex}:</span>${value[i].contents}
                                 </td>
                                 <td align="center">
-                                    <a href="#" onclick="removeTr('question${keyIndex}','${value[i].id}','${value[i].questionType.name}')">删除</a>
+                                    <a href="#" onclick="removeTr('question${keyIndex}','${value[i].id}','${value[i].indicator.name}')">删除</a>
                                 </td>
                             </tr>
                         [/#list]
@@ -85,29 +85,29 @@
         [#assign keyIndex=1]
         [#list questionTree?keys?sort_by("priority")?reverse as key]
          [#assign value=questionTree.get(key)/]
-            <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}" name="${value[0].questionType.name}">
+            <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}" name="${value[0].indicator.name}">
                 <td rowSpan="${value?size}" align="center">
-                    ${value[0].questionType.name}
+                    ${value[0].indicator.name}
                 </td>
                 <td align="left">
                     <span>${keyIndex}:</span>${value[0].contents}
                 </td>
                 <td align="center">
-                    <a href="#" onclick="removeTr('question${keyIndex}','${value[0].id}','${value[0].questionType.name}')">${b.text('action.delete')}</a>
+                    <a href="#" onclick="removeTr('question${keyIndex}','${value[0].id}','${value[0].indicator.name}')">${b.text('action.delete')}</a>
                 </td>
                 <td rowSpan="${value?size}" align="center">
-                    <a href="#" onclick="addTr('${(value[0].questionType.id)?if_exists}')">添加</a>
+                    <a href="#" onclick="addTr('${(value[0].indicator.id)?if_exists}')">添加</a>
                 </td>
             </tr>
             [#if questionTree.get(key)?size>1]
                 [#list 1..questionTree.get(key)?size-1 as i]
                     [#assign keyIndex= keyIndex+1]
-                    <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}"  name="${value[0].questionType.name}">
+                    <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}"  name="${value[0].indicator.name}">
                         <td align="left">
                             <span>${keyIndex}:</span>${value[i].contents}
                         </td>
                         <td align="center">
-                            <a href="#" onclick="removeTr('question${keyIndex}','${value[i].id}','${value[i].questionType.name}')">${b.text('action.delete')}</a>
+                            <a href="#" onclick="removeTr('question${keyIndex}','${value[i].id}','${value[i].indicator.name}')">${b.text('action.delete')}</a>
                         </td>
                     </tr>
                 [/#list]
@@ -202,8 +202,8 @@
            });
     }
     //添加一行
-    function addTr(questionTypeId){
-         var url="${b.url('!searchQuestion')}?questionTypeId="+questionTypeId+"&questionSeq="+questionIds.substring(1,questionIds.length);
+    function addTr(indicatorId){
+         var url="${b.url('!searchQuestion')}?indicatorId="+indicatorId+"&questionSeq="+questionIds.substring(1,questionIds.length);
          window.open(url,'','scrollbars=auto,width=720,height=480,left=200,top=200,status=no');
     }
     //ids是串 id是单个id

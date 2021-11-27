@@ -6,8 +6,8 @@
 [@b.grid items=questions var="question" sortable="false"]
     [@b.row]
         [@b.boxcol/]
-        [@b.col property="questionType.name" title="问题类型"/]
-        [@b.col property="content" title="问题内容"/]
+        [@b.col property="indicator.name" title="问题类型"/]
+        [@b.col property="contents" title="问题内容"/]
         [@b.col property="depart.name" title="创建部门"/]
         [@b.col property="score" title="问题分值"]${question.score?default(0)?string("###0.0")}[/@]
     [/@]
@@ -17,9 +17,9 @@
     [#list questions?if_exists as question]
         questionArray[${question_index}]=new Array();
         questionArray[${question_index}][0]='${question.id!}';
-        questionArray[${question_index}][1]="${(question.questionType.name?html)!}";
+        questionArray[${question_index}][1]="${(question.indicator.name?html)!}";
         questionArray[${question_index}][2]="${(question.content?html?js_string)!}";
-        questionArray[${question_index}][3]='${question.questionType.id!}';
+        questionArray[${question_index}][3]='${question.indicator.id!}';
     [/#list]
 
     function addContexts(){

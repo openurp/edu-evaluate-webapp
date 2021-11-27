@@ -17,11 +17,11 @@
     }
 </script>
     [@b.form name="questionForm" title="问题信息管理" action="!save" theme="list" ]
-        [#if questionTypes?size == 0]
+        [#if indicators?size == 0]
             <h2>没有可以使用的问题类别，请先前往问题类别菜单进行维护</h2>
         [#else]
            [@b.textarea label="内容(勿包含回车等符号)" required="true" check="maxLength(200)" name="question.contents" value="${(question.content?html)!}" style="width:500px" maxlength="200"/]
-           [@b.select label="问题类别" required="true" name="question.questionType.id" value=(question.questionType.id)?if_exists items=questionTypes?sort_by('name')/]
+           [@b.select label="问题类别" required="true" name="question.indicator.id" value=(question.indicator.id)?if_exists items=indicators?sort_by('name')/]
            [@b.textfield label="分值" required="true" check="assert(checkNum(), '问题分值必须为非负浮点数');" name="question.score" value="${(question.score)?default('')}" maxlength="4" /]
            [@b.select label="选项组" required="true" name="question.optionGroup.id" value=(question.optionGroup.id)! empty="..." items=optionGroups?if_exists style="width:205px" /]
            [@b.textfield label="问题优先级" required="true" check="match('integer', '问题优先级必须为非负整数')" name="question.priority" value="${question.priority?default('1')}" comment="<font color='red'>越高显示越靠前</font>" maxlength="5" /]

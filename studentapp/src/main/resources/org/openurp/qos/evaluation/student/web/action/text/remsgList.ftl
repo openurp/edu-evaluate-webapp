@@ -118,16 +118,16 @@
                             [#assign isAnnCount = isAnnCount +1/]
                         [/#if]
                     [/#list]
-                    [#assign myTextEvaluationFlag = ((textEvaluation.teacherRemessages)?size > 0) && ((textEvaluation.teacherRemessages)?size > isAnnCount)/]
+                    [#assign myFeedbackFlag = ((textEvaluation.teacherRemessages)?size > 0) && ((textEvaluation.teacherRemessages)?size > isAnnCount)/]
                     <tr class='${(k % 2 == 0)?string("griddata-odd","griddata-even")}' id='myEvaluation${k}SubTr' name='myEvaluation${k}SubTr' style="text-align:left;display:none;">
-                        <td colspan="3" [#if myTextEvaluationFlag]style="padding-left:30px;"[#else]style="padding-left:46px;"[/#if]>
-                            [#if myTextEvaluationFlag]
+                        <td colspan="3" [#if myFeedbackFlag]style="padding-left:30px;"[#else]style="padding-left:46px;"[/#if]>
+                            [#if myFeedbackFlag]
                                 <a id="myEvaluationText${z}" onClick="showSubElement(this)" style="float:left;cursor:pointer;">+</a>
                             [/#if]
                             您于 ${(textEvaluation.evaluateAt?string("yyyy-MM-dd HH:mm"))!} 评教：<font color="blue"><strong>${(textEvaluation.content)!}</strong></font>
                         </td>
                     </tr>
-                    [#if myTextEvaluationFlag]
+                    [#if myFeedbackFlag]
                         <tr class='${(k % 2 == 0)?string("griddata-odd","griddata-even")}' id='myEvaluationText${z}SubTr' name='myEvaluationText${z}SubTr' style="text-align:left;display:none;">
                             <td colspan="3" style="padding-left:58px;">
                             [#list textEvaluation.teacherRemessages?sort_by("createdAt") as remsg]
@@ -183,7 +183,7 @@
             <tr class='${(j % 2 == 0)?string("griddata-odd","griddata-even")}'>
                 <td style='padding-left:${(otherMap.get(clazz[0].id))?exists?string("15","31")}px;text-align:left;'>
                     [#if (otherMap.get(clazz[0].id))?exists]
-                        <a id="otherTextEvaluation${j}" onClick="showOtherElement(this,'${j}')" style="float:left;cursor:pointer;">+</a>
+                        <a id="otherFeedback${j}" onClick="showOtherElement(this,'${j}')" style="float:left;cursor:pointer;">+</a>
                     [/#if]
                     ${(clazz[0].user.name)!}
                 </td>
@@ -193,7 +193,7 @@
             [#if (otherMap.get(clazz[0].id))?exists]
                 [#list otherMap.get(clazz[0].id)?sort_by("textEvaluation")?reverse as remessage]
                     [#if !((remessage_index > 0) && (remessage.textEvaluation.id == tempRemsg.textEvaluation.id))]
-                    <tr class='${(j % 2 == 0)?string("griddata-odd","griddata-even")}' id='otherTextEvaluationTr${j}' name='otherTextEvaluation${j}SubTr' style="text-align:left;display:none;">
+                    <tr class='${(j % 2 == 0)?string("griddata-odd","griddata-even")}' id='otherFeedbackTr${j}' name='otherFeedback${j}SubTr' style="text-align:left;display:none;">
                         <td colspan="3" style="padding-left:30px;">
                             <a id="otherEvaluation${y}" onClick="showOtherSubElement(this)" style="float:left;cursor:pointer;">+</a>
                             ***于 ${(remessage.textEvaluation.evaluateAt?string("yyyy-MM-dd HH:mm"))!} 评教：<font color="blue"><strong>${(remessage.textEvaluation.content)!}</strong></font>
@@ -201,7 +201,7 @@
                     </tr>
                     [#assign y = y + 1/]
                     [/#if]
-                    <tr class='${(j % 2 == 0)?string("griddata-odd","griddata-even")}' id='otherTextEvaluationSubTr${j}' name="otherEvaluation${y-1}SubTr" style="text-align:left;display:none;">
+                    <tr class='${(j % 2 == 0)?string("griddata-odd","griddata-even")}' id='otherFeedbackSubTr${j}' name="otherEvaluation${y-1}SubTr" style="text-align:left;display:none;">
                         <td colspan="3" style="padding-left:50px;">
                         <div style="line-height:17px;">
                               ${remessage.createdAt?string("yyyy-MM-dd HH:mm")} 回复：
@@ -377,10 +377,10 @@
         } else {
             var trs = tr.parent().find("tr");
             trs.each(function(){
-                if ($(this).prop("id") == "otherTextEvaluationTr" + line || $(this).prop("id") == "otherTextEvaluationSubTr" + line){
+                if ($(this).prop("id") == "otherFeedbackTr" + line || $(this).prop("id") == "otherFeedbackSubTr" + line){
                     $(this).hide("fast");
                 }
-                if ($(this).prop("id") == "otherTextEvaluationTr" + line){
+                if ($(this).prop("id") == "otherFeedbackTr" + line){
                     var childA = $(this).find("a");
                     childA.html("+");
                 }

@@ -1,37 +1,36 @@
 /*
- * OpenURP, Agile University Resource Planning Solution.
- *
- * Copyright © 2014, The OpenURP Software.
+ * Copyright (C) 2005, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful.
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.openurp.qos.evaluation.teacher.web.action
 
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.webmvc.api.view.View
-import org.beangle.webmvc.entity.action.RestfulAction
+import org.beangle.web.action.view.View
+import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.base.edu.code.model.StdType
 import org.openurp.base.edu.model.{Semester, Teacher}
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.clazz.model.QuestionnaireClazz
-import org.openurp.qos.evaluation.clazz.result.model.{EvaluateResult, QuestionResult}
-import org.openurp.qos.evaluation.clazz.stat.model.ClazzEvalStat
-import org.openurp.qos.evaluation.model.{EvaluationCriteriaItem, Option, QuestionType}
+import org.openurp.qos.evaluation.clazz.model.{EvaluateResult, QuestionResult}
+import org.openurp.qos.evaluation.clazz.model.CourseEvalStat
+import org.openurp.qos.evaluation.model.{AssessGrade, Indicator, Option}
 
-class QuestionnaireStatTeacherAction extends RestfulAction[ClazzEvalStat] {
+class QuestionnaireStatTeacherAction extends RestfulAction[CourseEvalStat] {
 
   override def index(): View = {
     put("stdTypeList", entityDao.getAll(classOf[StdType]))
@@ -42,7 +41,7 @@ class QuestionnaireStatTeacherAction extends RestfulAction[ClazzEvalStat] {
   }
 
   override def search(): View = {
-    val entityQuery = OqlBuilder.from(classOf[ClazzEvalStat], "questionnaireStat")
+    val entityQuery = OqlBuilder.from(classOf[CourseEvalStat], "questionnaireStat")
     populateConditions(entityQuery)
     val teacher = entityDao.get(classOf[Teacher], 8589L)
     entityQuery.join("questionnaireStat.clazz.teachers", "teacher")
@@ -54,9 +53,9 @@ class QuestionnaireStatTeacherAction extends RestfulAction[ClazzEvalStat] {
     }
     val questionnaireStatTeachers = entityDao.search(entityQuery)
     put("questionnaireStatTeachers", questionnaireStatTeachers)
-    val questionTypeList = entityDao.search(OqlBuilder.from(classOf[QuestionType], "qt"))
-    put("questionTypeList", questionTypeList)
-    put("criteria", entityDao.search(OqlBuilder.from(classOf[EvaluationCriteriaItem], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L)))
+    val indicatorList = entityDao.search(OqlBuilder.from(classOf[Indicator], "qt"))
+    put("indicatorList", indicatorList)
+    put("criteria", entityDao.search(OqlBuilder.from(classOf[AssessGrade], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L)))
     forward()
   }
 
@@ -64,11 +63,11 @@ class QuestionnaireStatTeacherAction extends RestfulAction[ClazzEvalStat] {
    * 教师个人查询自己被评教的详细情况
    */
   def evaluatePersonInfo(): View = {
-    val questionnaireStat = entityDao.get(classOf[ClazzEvalStat], getLong("teacherStatId").get)
+    val questionnaireStat = entityDao.get(classOf[CourseEvalStat], getLong("teacherStatId").get)
     put("questionnaireStat", questionnaireStat)
     val query = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName, "result")
     query.where("result.teacher=:teaId", questionnaireStat.teacher)
-    query.where("result.clazz=:less", questionnaireStat.clazz)
+    query.where("result.clazz.semester=:semester and result.clazz.crn=:crn", questionnaireStat.semester, questionnaireStat.crn)
     query.select("case when result.statType =1 then count(result.id) end,count(result.id)")
     query.groupBy("result.statType")
     entityDao.search(query) foreach { a =>
@@ -76,7 +75,7 @@ class QuestionnaireStatTeacherAction extends RestfulAction[ClazzEvalStat] {
       put("number2", a(1))
     }
     val list = Collections.newBuffer[Option]
-    val questions = questionnaireStat.questionnaire.questions
+    val questions = questionnaireStat.questionStats.map(_.question)
     questions foreach { question =>
 
       val options = question.optionGroup.options
@@ -101,19 +100,19 @@ class QuestionnaireStatTeacherAction extends RestfulAction[ClazzEvalStat] {
     val querys = OqlBuilder.from[Integer](classOf[QuestionnaireClazz].getName, "questionnaireL")
     querys.join("questionnaireL.clazz.teachers", "teacher")
     querys.where("teacher=:teach", questionnaireStat.teacher)
-    querys.where("questionnaireL.clazz=:lesso", questionnaireStat.clazz)
+    querys.where("questionnaireL.result.clazz.semester=:semester and questionnaireL.result.clazz.crn=:crn", questionnaireStat.semester, questionnaireStat.crn)
     querys.join("questionnaireL.clazz.teachclass.courseTakers", "courseTaker")
     querys.select("count(courseTake.id)")
     put("numbers", entityDao.search(querys)(0))
     val que = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR")
     que.where("questionR.result.teacher=:teaId", questionnaireStat.teacher)
-    que.where("questionR.result.clazz=:less", questionnaireStat.clazz)
+    que.where("questionR.result.clazz.semester=:semester and questionR.result.clazz.crn=:crn", questionnaireStat.semester, questionnaireStat.crn)
     que.select("questionR.question.id,questionR.option.id,count(*)")
     que.groupBy("questionR.question.id,questionR.option.id")
     put("questionRs", entityDao.search(que))
     val quer = OqlBuilder.from[Array[Any]](classOf[QuestionResult].getName, "questionR")
     quer.where("questionR.result.teacher=:teaId", questionnaireStat.teacher)
-    quer.where("questionR.result.clazz=:less", questionnaireStat.clazz)
+    quer.where("questionR.result.clazz.semester=:semester and questionR.result.clazz.crn=:crn", questionnaireStat.semester, questionnaireStat.crn)
     quer.select("questionR.question.id,questionR.question.contents,sum(questionR.score)/count(questionR.id)")
     quer.groupBy("questionR.question.id,questionR.question.contents")
     put("questionResults", entityDao.search(quer))
@@ -125,11 +124,10 @@ class QuestionnaireStatTeacherAction extends RestfulAction[ClazzEvalStat] {
    */
   def info(): View = {
     val id = getLong("teacherStat.id").get
-    val questionnaireStat = entityDao.get(classOf[ClazzEvalStat], id)
+    val questionnaireStat = entityDao.get(classOf[CourseEvalStat], id)
 
     val teaId = questionnaireStat.teacher.id
     val semesterId = questionnaireStat.semester.id
-    val clazzId = questionnaireStat.clazz.id
     /** 本学期是否评教 */
     val builder = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult")
     builder.where("evaluateResult.clazz.semester.id=" + semesterId)
@@ -149,10 +147,12 @@ class QuestionnaireStatTeacherAction extends RestfulAction[ClazzEvalStat] {
       teacher = entityDao.get(classOf[Teacher], teaId)
     }
     put("teacher", teacher)
-    var clazz: Clazz = null
-    if (clazzId != 0L) {
-      clazz = entityDao.get(classOf[Clazz], clazzId)
-    }
+
+    val query = OqlBuilder.from(classOf[Clazz], "c").where("c.semester=:semester", questionnaireStat.semester)
+    query.where("c.crn=:crn", questionnaireStat.crn)
+    query.where("c.project=:project", questionnaireStat.project)
+    val clazz = entityDao.search(query).head
+    val clazzId = clazz.id
     put("clazz", clazz)
     /** 院系平均分 */
     val querdep = OqlBuilder.from[Float](classOf[EvaluateResult].getName + " evaluateResult," +
@@ -262,7 +262,7 @@ class QuestionnaireStatTeacherAction extends RestfulAction[ClazzEvalStat] {
     schQuery.groupBy("questionResult.question.id")
     schQuery.orderBy("questionResult.question.id")
     put("schQRList", entityDao.search(schQuery))
-    return forward()
+    forward()
   }
 
 }

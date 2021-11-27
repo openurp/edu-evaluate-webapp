@@ -1,34 +1,33 @@
 /*
- * OpenURP, Agile University Resource Planning Solution.
- *
- * Copyright © 2014, The OpenURP Software.
+ * Copyright (C) 2005, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful.
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.openurp.qos.evaluation.questionnaire.web.action
 
 import org.beangle.commons.collection.Order
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.webmvc.api.view.View
-import org.beangle.webmvc.entity.action.RestfulAction
+import org.beangle.web.action.view.View
+import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Department
-import org.openurp.qos.evaluation.model.{EvaluationCriteria, EvaluationCriteriaItem}
+import org.openurp.qos.evaluation.model.{AssessCriteria, AssessGrade}
 
-class EvaluationCriteriaAction extends RestfulAction[EvaluationCriteria] {
+class AssessCriteriaAction extends RestfulAction[AssessCriteria] {
 
   override def search(): View = {
-    val builder = OqlBuilder.from(classOf[EvaluationCriteria], "criteria")
+    val builder = OqlBuilder.from(classOf[AssessCriteria], "criteria")
     populateConditions(builder)
     builder.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
     val evalutionCriterias = entityDao.search(builder)
@@ -36,22 +35,22 @@ class EvaluationCriteriaAction extends RestfulAction[EvaluationCriteria] {
     forward()
   }
 
-  override def editSetting(entity: EvaluationCriteria): Unit = {
+  override def editSetting(entity: AssessCriteria): Unit = {
     val departmentList = entityDao.getAll(classOf[Department])
     put("departmentList", departmentList)
     super.editSetting(entity)
   }
 
-  protected override def saveAndRedirect(entity: EvaluationCriteria): View = {
+  protected override def saveAndRedirect(entity: AssessCriteria): View = {
     try {
-      val evalutionCriteria = entity.asInstanceOf[EvaluationCriteria]
-      evalutionCriteria.criteriaItems.clear()
+      val evalutionCriteria = entity.asInstanceOf[AssessCriteria]
+      evalutionCriteria.grades.clear()
       val criteriaCount = getInt("criteriaItemCount", 0)
       (0 until criteriaCount) foreach { i =>
         get("criteriaItem" + i + ".name") foreach { criteriaItemName =>
-          val item = populateEntity(classOf[EvaluationCriteriaItem], "criteriaItem" + i)
+          val item = populateEntity(classOf[AssessGrade], "criteriaItem" + i)
           item.criteria = evalutionCriteria
-          evalutionCriteria.criteriaItems += item
+          evalutionCriteria.grades += item
         }
       }
       evalutionCriteria.name = (evalutionCriteria.name.replaceAll("<", "&#60;").replaceAll(">", "&#62;"))
@@ -76,9 +75,9 @@ class EvaluationCriteriaAction extends RestfulAction[EvaluationCriteria] {
     }
   }
 
-  protected override def getQueryBuilder: OqlBuilder[EvaluationCriteria] = {
+  protected override def getQueryBuilder: OqlBuilder[AssessCriteria] = {
 
-    val builder: OqlBuilder[EvaluationCriteria] = OqlBuilder.from(entityName, simpleEntityName)
+    val builder: OqlBuilder[AssessCriteria] = OqlBuilder.from(entityName, simpleEntityName)
     populateConditions(builder)
     builder.where("evalutionCriteria.depart.id in (:departIds)", get("evalutionCriteria.depart.id"))
     builder.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)

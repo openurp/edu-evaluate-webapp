@@ -41,7 +41,7 @@
                 [#assign questionClass = "griddata-odd"/]
             [/#if]
                 <tr class="${questionClass!}">
-                    <td>${(question.questionType.name)!}</td>
+                    <td>${(question.indicator.name)!}</td>
                     <td style="text-align:left;padding-left:5px;">${(question_index+1)!}:${(question.content)!}
                    [#-- [#if (question.addition)?exists][#if question.addition]<font color="red">(附加题)</font>[/#if][/#if]--]
                     </td>

@@ -7,4 +7,10 @@
       <interceptor name="web.Interceptor.security"/>
      </interceptors>
   </profile>
+  <static>
+    <bundle name="urp" version="default"/>
+    <bundle name="echarts" version="4.5.0">
+      <module name="echarts" js="dist/echarts.js"/>
+    </bundle>
+  </static>
 </mvc>

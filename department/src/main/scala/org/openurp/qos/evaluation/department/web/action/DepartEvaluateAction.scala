@@ -1,21 +1,20 @@
 /*
- * OpenURP, Agile University Resource Planning Solution.
- *
- * Copyright © 2014, The OpenURP Software.
+ * Copyright (C) 2005, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful.
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.openurp.qos.evaluation.department.web.action
 
 import java.time.{Instant, LocalDate}
@@ -26,15 +25,15 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.transfer.importer.ImportSetting
 import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.security.Securities
-import org.beangle.webmvc.api.view.{Stream, View}
-import org.beangle.webmvc.entity.action.RestfulAction
+import org.beangle.web.action.view.{Stream, View}
+import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.base.edu.model.{Semester, Teacher}
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.qos.evaluation.department.helper.ImportDepartListener
 import org.openurp.qos.evaluation.department.model.{DepartEvaluate, DepartQuestion}
-import org.openurp.qos.evaluation.model.{Question, QuestionType, Questionnaire}
+import org.openurp.qos.evaluation.model.{Question, Indicator, Questionnaire}
 import org.openurp.starter.edu.helper.ProjectSupport
 
 import scala.collection.mutable.Buffer
@@ -76,7 +75,7 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ProjectSup
     redirect("search", s"orderBy=departEvaluate.teacher.user.code asc&departEvaluate.semester.id=$semesterId", "导入完成")
   }
 
-  override protected def getQueryBuilder(): OqlBuilder[DepartEvaluate] = {
+  override protected def getQueryBuilder: OqlBuilder[DepartEvaluate] = {
     val query = OqlBuilder.from(classOf[DepartEvaluate], "departEvaluate")
     getBoolean("passed") match {
       case Some(true) => query.where("departEvaluate.totalScore is not null")
@@ -113,9 +112,9 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ProjectSup
       val questionnaire = evaluateSwitches.head.questionnaire
       put("questionnaire", questionnaire)
 
-      val questionTree = Collections.newMap[QuestionType, Buffer[Question]]
+      val questionTree = Collections.newMap[Indicator, Buffer[Question]]
       questionnaire.questions foreach { question =>
-        val key = question.questionType
+        val key = question.indicator
         var questions: Buffer[Question] = questionTree.get(key).orNull
         if (null == questions) {
           questions = Collections.newBuffer

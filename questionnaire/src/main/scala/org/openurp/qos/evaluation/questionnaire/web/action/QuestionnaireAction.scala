@@ -1,21 +1,20 @@
 /*
- * OpenURP, Agile University Resource Planning Solution.
- *
- * Copyright © 2014, The OpenURP Software.
+ * Copyright (C) 2005, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful.
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.openurp.qos.evaluation.questionnaire.web.action
 
 import java.time.{ Instant, LocalDate }
@@ -26,13 +25,13 @@ import org.beangle.commons.collection.{ Collections, Order }
 import org.beangle.commons.lang.{ Numbers, Strings }
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.security.Securities
-import org.beangle.webmvc.api.annotation.param
-import org.beangle.webmvc.api.view.View
-import org.beangle.webmvc.entity.action.RestfulAction
+import org.beangle.web.action.annotation.param
+import org.beangle.web.action.view.View
+import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.qos.evaluation.clazz.model.QuestionnaireClazz
-import org.openurp.qos.evaluation.model.{ Question, QuestionType, Questionnaire }
+import org.openurp.qos.evaluation.model.{ Question, Indicator, Questionnaire }
 
 class QuestionnaireAction extends RestfulAction[Questionnaire] with ProjectSupport{
 
@@ -50,9 +49,9 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] with ProjectSuppo
     val questionnaire = entity.asInstanceOf[Questionnaire]
     val departmentList = entityDao.getAll(classOf[Department])
     put("departments", departmentList)
-    val questionTree = Collections.newMap[QuestionType, Buffer[Question]]
+    val questionTree = Collections.newMap[Indicator, Buffer[Question]]
     questionnaire.questions foreach { question =>
-      val key = question.questionType
+      val key = question.indicator
       var questions: Buffer[Question] = questionTree.get(key).orNull
       if (null == questions) {
         questions = Collections.newBuffer
@@ -67,14 +66,14 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] with ProjectSuppo
   }
 
   override def info(@param("id") id: String): View = {
-    if (id == 0L) {
+    if (Strings.isBlank(id)) {
       logger.info("查看失败")
       redirect("search", "请选择一条记录")
     }
     val questionnaire = entityDao.get(classOf[Questionnaire], Numbers.toLong(id))
-    val questionTree = Collections.newMap[QuestionType, Buffer[Question]]
+    val questionTree = Collections.newMap[Indicator, Buffer[Question]]
     questionnaire.questions foreach { question =>
-      val key = question.questionType
+      val key = question.indicator
       var questions: Buffer[Question] = questionTree.get(key).orNull
       if (null == questions) {
         questions = Collections.newBuffer
@@ -92,7 +91,6 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] with ProjectSuppo
     val questionnaire = entity.asInstanceOf[Questionnaire]
     questionnaire.beginOn = LocalDate.parse(get("questionnaire.beginOn").get)
     questionnaire.updatedAt = Instant.now
-    questionnaire.createBy = Securities.user
     if (null == questionnaire.project) {
       questionnaire.project = getProject
     }
@@ -123,12 +121,12 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] with ProjectSuppo
 
     val entityQuery = OqlBuilder.from(classOf[Question], "question")
     entityQuery.where(
-      "question.questionType.beginOn <= :now and (question.questionType.endOn is null or question.questionType.endOn >= :now)",
+      "question.indicator.beginOn <= :now and (question.indicator.endOn is null or question.indicator.endOn >= :now)",
       LocalDate.now)
-    if (!get("questionTypeId").isEmpty) {
-      val typeId = getLong("questionTypeId").get
+    if (!get("indicatorId").isEmpty) {
+      val typeId = getLong("indicatorId").get
       if (typeId != 0L) {
-        entityQuery.where("question.questionType.id=:id", typeId)
+        entityQuery.where("question.indicator.id=:id", typeId)
       }
     }
     if (questionSeq.isEmpty) {
