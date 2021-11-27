@@ -31,37 +31,20 @@ class CourseAction extends EntityAction[CourseEvalStat] with ProjectSupport {
   def index(): View = {
     val me = getTeacher()
     put("project", me.projects.head)
-    val semester = getId("semester") match {
-      case Some(sid) => entityDao.get(classOf[Semester], sid.toInt)
-      case None =>
-        val query = OqlBuilder.from[Semester](classOf[CourseEvalStat].getName, "stat")
-        query.where("stat.teacher=:me", me)
-        query.select("stat.semester")
-        query.where("stat.publishStatus>=1")
-        query.orderBy("stat.semester.beginOn desc")
-        val semesters = entityDao.search(query)
-        if (semesters.isEmpty) {
-          getCurrentSemester
-        } else {
-          semesters.head
-        }
-    }
-    put("currentSemester", semester)
+
     val query = OqlBuilder.from(classOf[CourseEvalStat], "stat")
-    query.where("stat.semester=:semester", semester)
     query.where("stat.teacher=:me", me)
     query.where("stat.publishStatus>=1")
     query.orderBy("stat.crn")
     val stats = entityDao.search(query)
-    put("stats", stats)
+    put("stats", stats.groupBy(_.semester))
 
     val fbQuery = OqlBuilder.from[Array[Any]](classOf[FinalComment].getName, "fb")
-    fbQuery.where("fb.semester=:semester", semester)
     fbQuery.where("fb.teacher=:teacher", me)
-    fbQuery.select("fb.crn,count(*)")
-    fbQuery.groupBy("fb.crn")
+    fbQuery.select("fb.semester.id,fb.crn,count(*)")
+    fbQuery.groupBy("fb.semester.id,fb.crn")
     val feedbackCounts = entityDao.search(fbQuery)
-    put("feedbackCounts", feedbackCounts.map(x => x(0) -> x(1)).toMap)
+    put("feedbackCounts", feedbackCounts.map(x => x(0).toString + "_" + x(1).toString -> x(2)).toMap)
     forward()
   }
 
@@ -73,7 +56,7 @@ class CourseAction extends EntityAction[CourseEvalStat] with ProjectSupport {
     val query = OqlBuilder.from(classOf[FinalComment], "fb")
     query.where("fb.semester=:semester", stat.semester)
     query.where("fb.teacher=:teacher", me)
-    stat.crn foreach{ crn=>
+    stat.crn foreach { crn =>
       query.where("fb.crn=:crn", crn)
     }
     val comments = entityDao.search(query)
@@ -85,6 +68,7 @@ class CourseAction extends EntityAction[CourseEvalStat] with ProjectSupport {
   @mapping("info/{id}")
   def info(@param("id") id: Long): View = {
     val stat = entityDao.get(classOf[CourseEvalStat], id)
+    put("stat", stat)
     val me = getTeacher()
     if (stat.teacher != me || stat.publishStatus < 1) {
       Status.NotFound
@@ -93,16 +77,18 @@ class CourseAction extends EntityAction[CourseEvalStat] with ProjectSupport {
       query.where("stat.category=:category", stat.category)
       query.where("stat.semester=:semester", stat.semester)
       val categoryStats = entityDao.search(query)
-      put("categoryStat", categoryStats.head)
+      if (categoryStats.nonEmpty) {
+        put("categoryStat", categoryStats.head)
 
-      val query2 = OqlBuilder.from(classOf[DepartEvalStat], "stat")
-      query2.where("stat.department=:department", stat.teachDepart)
-      query2.where("stat.semester=:semester", stat.semester)
-      val departStats = entityDao.search(query2)
-      put("departmentStat", departStats.head)
-
-      put("stat", stat)
-      forward()
+        val query2 = OqlBuilder.from(classOf[DepartEvalStat], "stat")
+        query2.where("stat.department=:department", stat.teachDepart)
+        query2.where("stat.semester=:semester", stat.semester)
+        val departStats = entityDao.search(query2)
+        put("departmentStat", departStats.head)
+        forward("report")
+      } else {
+        forward()
+      }
     }
   }
 

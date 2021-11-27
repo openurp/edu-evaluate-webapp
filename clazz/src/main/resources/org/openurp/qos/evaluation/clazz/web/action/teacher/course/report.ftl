@@ -77,7 +77,7 @@
                 [@echarts id="chart_"+indicatorDetail.id  height="360" xrotate=0  xname='分数区间' yname='同类课程数量'  names=scoreRanges values=cnts alertIdx=alertIdx/]
             </div>
             <div class="fenxi">
-                分析：您在${indicatorDetail.indicator.name}方面得分为：<b>${indicatorDetail.score?string("#.###")}</b>
+                分析：您在${indicatorDetail.indicator.name}方面
                 <span style="color: transparent;">空白</span>排名为：<b>${indicatorDetail.categoryRank}/${categoryStat.courseCount}</b>
                 <div class="fenxijieguo">
                 [#if indicatorDetail.grade.name?contains('A')][#--10~19 属于A级--]
@@ -98,7 +98,7 @@
             <div class="fenxi">
                 根据上述六项指标，<br>
                 您在同类课程中的综合评价档次为<b>【${stat.grade.name}】</b><br>
-                课程在开课院系的排名：<b>${stat.departRank} / ${departEvalStat.courseCount}</b><br>
+                课程在开课院系的排名：<b>${stat.departRank} / ${departmentStat.courseCount}</b><br>
                 课程在所属${categoryStat.category.name}中的排名：<b>${stat.categoryRank}  / ${categoryStat.courseCount}</b><br>
                 与各档平均水平得分的对比如下，供参考。
             </div>
