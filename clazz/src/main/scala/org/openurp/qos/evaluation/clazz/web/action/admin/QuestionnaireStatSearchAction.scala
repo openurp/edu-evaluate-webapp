@@ -47,7 +47,7 @@ class QuestionnaireStatSearchAction extends ProjectRestfulAction[CourseEvalStat]
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire")
     put("questionnaires", entityDao.search(query))
     put("currentSemester",getCurrentSemester)
-    put("evaluationCriterias", entityDao.getAll(classOf[AssessCriteria]))
+    put("assessCriterias", entityDao.getAll(classOf[AssessCriteria]))
     put("indicators", entityDao.getAll(classOf[Indicator]))
     forward()
   }

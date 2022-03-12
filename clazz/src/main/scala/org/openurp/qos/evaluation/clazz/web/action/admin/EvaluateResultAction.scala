@@ -53,16 +53,6 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
     forward()
   }
 
-  //  @Override
-  // override protected def getQueryBuilder():OqlBuilder[EvaluateResult] ={
-  //    val department = entityDao.get(classOf[Department],20)
-  //    val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult")
-  //    populateConditions(query)
-  //    query.where("evaluateResult.clazz.teachDepart in (:teachDeparts)", department)
-  ////    query.limit(getPageLimit())
-  //
-  //  }
-
   /**
    * 修改(评教结果,是否有效)
    *
@@ -71,14 +61,9 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
   def updateState(): View = {
     val ids = longIds("evaluateResult")
     var state = getInt("isEvaluate").get
-    //    if (state) {
-    //      state = false
-    //    }
     val results = entityDao.find(classOf[EvaluateResult], ids)
     results foreach { result =>
       result.statType = state
-      //      //FIXME
-      //    result.statType = 1
     }
     try {
       entityDao.saveOrUpdate(results)
@@ -115,7 +100,6 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
    * 查看(详细信息)
    */
   override def info(@param("id") id: String): View = {
-    //    val entityId = longId("evaluateResult")
     if (null == id) {
       logger.warn("cannot get paremeter {}Id or {}.id")
     }
@@ -124,11 +108,9 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
     val query = OqlBuilder.from(classOf[QuestionResult], "questionResult")
     query.where("questionResult.result =:result", result)
     val questionResults = entityDao.search(query)
-    //          questions.sortWith((x, y) => x.priority < y.priority)
     questionResults.sortWith((x, y) => x.question.priority < y.question.priority)
-    //    questionResults.sort(questionResults, new PropertyComparator("question"))
     put("questionResults", questionResults)
-    put("remark", result.remark)
+//    put("remark", result.remark)
     forward()
   }
 
@@ -138,7 +120,6 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
    * @return
    */
   def changeToInvalid(): View = {
-
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult")

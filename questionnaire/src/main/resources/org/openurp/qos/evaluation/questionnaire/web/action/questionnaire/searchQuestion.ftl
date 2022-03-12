@@ -18,7 +18,7 @@
         questionArray[${question_index}]=new Array();
         questionArray[${question_index}][0]='${question.id!}';
         questionArray[${question_index}][1]="${(question.indicator.name?html)!}";
-        questionArray[${question_index}][2]="${(question.content?html?js_string)!}";
+        questionArray[${question_index}][2]="${(question.contents?html?js_string)!}";
         questionArray[${question_index}][3]='${question.indicator.id!}';
     [/#list]
 

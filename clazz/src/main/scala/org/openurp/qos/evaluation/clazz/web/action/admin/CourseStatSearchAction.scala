@@ -23,7 +23,7 @@ import org.beangle.data.transfer.exporter.ExportSetting
 import org.beangle.web.action.annotation.{mapping, param}
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.edu.code.model.CourseAssessCategory
+import org.openurp.base.edu.code.model.CourseCategory
 import org.openurp.base.edu.model.Semester
 import org.openurp.qos.evaluation.clazz.model.{CategoryEvalStat, CourseEvalStat, DepartEvalStat}
 import org.openurp.qos.evaluation.clazz.web.helper.StatCoursePropertyExtractor
@@ -34,7 +34,7 @@ class CourseStatSearchAction extends RestfulAction[CourseEvalStat] with ProjectS
   override protected def indexSetting(): Unit = {
     put("project",getProject)
     put("grades", entityDao.getAll(classOf[AssessGrade]))
-    put("categories", getCodes(classOf[CourseAssessCategory]))
+    put("categories", getCodes(classOf[CourseCategory]))
     val semester = getId("semester") match {
       case Some(sid) => entityDao.get(classOf[Semester], sid.toInt)
       case None =>

@@ -96,7 +96,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     rankQuery.where("finalTeacherScore.semester.id=:semesterId", semesterId)
     val evals = entityDao.search(rankQuery)
     Ranker.rOver(evals) { (x, r) =>
-      x.categoryRank = r
+      x.schoolRank = r
     }
     val departEvalMaps = evals.groupBy(x => x.teacher.user.department)
     departEvalMaps.values foreach { departEvals =>

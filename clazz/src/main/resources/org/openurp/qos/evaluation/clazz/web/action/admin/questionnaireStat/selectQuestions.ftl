@@ -29,7 +29,7 @@
           <@table.tbody datas=questions;question>
                <@table.selectTd type="radio" id="questionId" value=question.id/>
             <td width="15%" align="center">&nbsp;${(question.type.name)?if_exists}</td>
-            <td width="50%" align="left"><label id="qcontent${question.id}">${question.content?if_exists}</label><input type="hidden" id="qremark${question.id}" value="${(question.remark?html)!}"/></td>
+            <td width="50%" align="left"><label id="qcontent${question.id}">${question.contents?if_exists}</label><input type="hidden" id="qremark${question.id}" value="${(question.remark?html)!}"/></td>
             <td width="15%" align="left">${(question.department.name)?if_exists}</td>
             <td width="10%">&nbsp;<label id="score">${(question.score?string("###0.0"))?if_exists}</label></td>
            </@>

@@ -24,16 +24,16 @@ ThisBuild / developers := List(
 ThisBuild / description := "OpenURP Std CreditBank"
 ThisBuild / homepage := Some(url("http://openurp.github.io/qos-evaluation/index.html"))
 
-val apiVer = "0.23.5-SNAPSHOT"
-val starterVer = "0.0.14"
-val baseVer = "0.1.23"
+val apiVer = "0.24.0"
+val starterVer = "0.0.15"
+val baseVer = "0.1.24"
 val openurp_edu_api = "org.openurp.edu" % "openurp-edu-api" % apiVer
 val openurp_qos_api = "org.openurp.qos" % "openurp-qos-api" % apiVer
 val openurp_stater_web = "org.openurp.starter" % "openurp-starter-web" % starterVer
 val openurp_base_tag = "org.openurp.base" % "openurp-base-tag" % baseVer
 
 lazy val root = (project in file("."))
-  .aggregate(core,questionnaire,clazz,department,teacher,adminapp,studentapp)
+  .aggregate(core,questionnaire,clazz,department,webapp)
 
 lazy val core = (project in file("core"))
   .settings(
@@ -63,29 +63,14 @@ lazy val department = (project in file("department"))
     libraryDependencies ++= Seq(openurp_stater_web,openurp_base_tag),
   ).dependsOn(core)
 
-lazy val teacher = (project in file("teacher"))
-  .settings(
-    name := "openurp-qos-evaluation-teacher",
-    common,
-    libraryDependencies ++= Seq(openurp_stater_web,openurp_base_tag),
-  ).dependsOn(core)
-
-lazy val adminapp = (project in file("adminapp"))
+lazy val webapp = (project in file("webapp"))
   .enablePlugins(WarPlugin)
   .settings(
-    name := "openurp-qos-evaluation-adminapp",
+    name := "openurp-qos-evaluation-webapp",
     common,
     libraryDependencies ++= Seq(openurp_stater_web,openurp_base_tag),
     libraryDependencies ++= Seq(Sas.Tomcat % "test")
-  ).dependsOn(core,clazz,questionnaire,teacher,department)
+  ).dependsOn(core,clazz,questionnaire,department)
 
-lazy val studentapp = (project in file("studentapp"))
-  .enablePlugins(WarPlugin)
-  .settings(
-    name := "openurp-qos-evaluation-studentapp",
-    common,
-    libraryDependencies ++= Seq(openurp_stater_web,openurp_base_tag),
-    libraryDependencies ++= Seq(Sas.Tomcat % "test")
-  ).dependsOn(core)
 
 

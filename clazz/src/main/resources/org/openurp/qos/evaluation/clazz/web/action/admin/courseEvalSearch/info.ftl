@@ -7,27 +7,19 @@
     <table class="infoTable" width="90%" align="center">
         <tr>
             <td class="title" style="text-align:center;">课程序号</td>
-            <td style="padding-left:10px;">${(questionnaireStat.clazz.crn)!}</td>
+            <td style="padding-left:10px;">${(questionnaireStat.crn)!}</td>
             <td class="title" style="text-align:center;">课程名称</td>
-            <td style="padding-left:10px;">${(questionnaireStat.clazz.course.name)!}</td>
+            <td style="padding-left:10px;">${(questionnaireStat.course.name)!}</td>
             <td class="title" style="text-align:center;">开课院系</td>
-            <td style="padding-left:10px;">${(questionnaireStat.clazz.teachDepart.name)!}</td>
+            <td style="padding-left:10px;">${(questionnaireStat.teachDepart.name)!}</td>
         </tr>
         <tr>
             <td class="title" style="text-align:center;">教师姓名</td>
             <td style="padding-left:10px;">${(questionnaireStat.teacher.user.name)!}</td>
-            <td class="title" style="text-align:center;">职称</td>
-            <td style="padding-left:10px;">${(questionnaireStat.teacher.title.name)!}</td>
-            <td class="title" style="text-align:center;">平均分</td>
-            <td style="padding-left:10px;">${(questionnaireStat.avgScore)!}</td>
-        </tr>
-        <tr>
-            <td class="title" style="text-align:center;">问卷下发数量</td>
-            <td style="padding-left:10px;">${(questionnaireStat.clazz.enrollment.actual)!}</td>
-            <td class="title" style="text-align:center;">问卷回收数量</td>
-            <td style="padding-left:10px;">${questionnaireStat.totalTickets}</td>
             <td class="title" style="text-align:center;">问卷有效数量</td>
             <td style="padding-left:10px;">${questionnaireStat.tickets}</td>
+            <td class="title" style="text-align:center;">平均分</td>
+            <td style="padding-left:10px;">${(questionnaireStat.score)!}</td>
         </tr>
     </table>
     [@b.grid items=questionnaireStat.questionStats var="qs" sortable="false"]
@@ -38,12 +30,11 @@
                 [#list qs.optionStats as os]
                     [#if os.option==option]
                       ${os.amount}[#break/]
-                    [#else]0
                     [/#if]
                 [/#list]
                 [/@]
             [/#list]
-            [@b.col title="平均得分"]${qs.avgScore}[/@]
+            [@b.col title="平均得分"]${qs.score}[/@]
         [/@]
     [/@]
 </div>

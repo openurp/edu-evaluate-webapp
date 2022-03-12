@@ -2,7 +2,7 @@
 [@b.head/]
 <div class="search-container">
   <div class="search-panel">
-        [@b.form action="!search?orderBy=courseEvalStat.avgScore desc" name="evaluateTeacherStatIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
+        [@b.form action="!search?orderBy=courseEvalStat.score desc" name="evaluateTeacherStatIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
             <input type="hidden" name="searchFormFlag" value="${searchFormFlag!}"/>
             [#if searchFormFlag?? || searchFormFlag == "beenStat"]
             <input type="hidden" name="evaluateTeacherStat.clazz.project.id" value="${(project.id)!}"/>
@@ -28,7 +28,7 @@
         [/@]
   </div>
   <div class="search-list">
-            [@b.div id="contentDiv" href="!search?orderBy=courseEvalStat.avgScore desc&semester.id="+currentSemester.id /]
+            [@b.div id="contentDiv" href="!search?orderBy=courseEvalStat.score desc&semester.id="+currentSemester.id /]
   </div>
 </div>
 <script type="text/javaScript">

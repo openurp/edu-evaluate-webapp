@@ -7,9 +7,8 @@
         bar.addItem("${b.text('action.delete')}",action.remove());
     [/@]
     [@b.row]
-        [@b.boxcol /]
-        [@b.col property="contents" title="问题内容" width="50%"]${(question.contents)!}[/@]
-        [@b.col property="depart" title="部门" width="10%"]${(question.depart.name)!}[/@]
+      [@b.boxcol /]
+      [@b.col property="contents" title="问题内容" width="55%"]${(question.contents)!}[/@]
       [@b.col property="score" title="问题分值" width="8%"]${(question.score)!}[/@]
       [@b.col property="indicator" title="问题类型" width="10%"]${(question.indicator.name)!}[/@]
       [@b.col property="priority" title="优先级" width="10%"]${(question.priority)!}[/@]

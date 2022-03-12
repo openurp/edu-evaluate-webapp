@@ -21,7 +21,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.support.{ActionSupport, ParamSupport}
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
-import org.openurp.base.edu.code.model.CourseAssessCategory
+import org.openurp.base.edu.code.model.CourseCategory
 import org.openurp.base.edu.model.Semester
 import org.openurp.qos.evaluation.clazz.model.CourseEvalStat
 import org.openurp.qos.evaluation.model.AssessGrade
@@ -32,7 +32,7 @@ class CourseStatAction extends ActionSupport with EntityAction[CourseEvalStat]  
   def index(): View = {
     put("project", getProject)
     put("grades", entityDao.getAll(classOf[AssessGrade]))
-    put("categories", getCodes(classOf[CourseAssessCategory]))
+    put("categories", getCodes(classOf[CourseCategory]))
     val semester = getId("semester") match {
       case Some(sid) => entityDao.get(classOf[Semester], sid.toInt)
       case None =>

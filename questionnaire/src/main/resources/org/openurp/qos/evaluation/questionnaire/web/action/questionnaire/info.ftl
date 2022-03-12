@@ -66,8 +66,8 @@ ${(questionnaire.title?html)?default('')}</b>
     [#--[#if oppositeQuestions?size >0]
     [@b.grid items=oppositeQuestions var="oppositeQuestion"]
     [@b.row]
-        [@b.col property="orginQuestion.contents" title="原始问题" width="50%"]${(oppositeQuestion.orginQuestion.content?html)!}[/@]
-        [@b.col property="oppoQuestion.contents" title="对立问题" width="50%"]${(oppositeQuestion.oppoQuestion.content?html)!}[/@]
+        [@b.col property="orginQuestion.contents" title="原始问题" width="50%"]${(oppositeQuestion.orginQuestion.contents?html)!}[/@]
+        [@b.col property="oppoQuestion.contents" title="对立问题" width="50%"]${(oppositeQuestion.oppoQuestion.contents?html)!}[/@]
 
     [/@]
     [/@]

@@ -10,7 +10,7 @@
         </table>
         <table class="listTable" width="100%" style="text-align:justify;text-justify:inter-ideograph;line-height:5mm">
             <tr>
-                <#assign criterias = evaluationCriteria.criteriaItems?sort_by("min")?reverse/>
+                <#assign criterias = assessCriteria.grades?sort_by("min")?reverse/>
                 <#assign criteriaSize = criterias?size/>
                 <td colspan="7"><#list criterias as item>${item.name}：<#if item_index == 0>${item.min}分以上<#elseif item_index == criteriaSize - 1>${item.max}分以下<#else>${item.min}－${item.max - 0.1}</#if><#if item_has_next>；</#if></#list></td>
             </tr>

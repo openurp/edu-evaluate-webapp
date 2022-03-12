@@ -37,7 +37,7 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
   var evaluateSwitchService: StdEvaluateSwitchService = _
 
   override def indexSetting(): Unit = {
-    put("project",getProject)
+    put("project", getProject)
     put("semester", getCurrentSemester)
     put("departments", findInSchool(classOf[Department]))
     put("courseTypes", entityDao.getAll(classOf[CourseType]))
@@ -128,6 +128,7 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
     query.limit(getPageLimit)
     query
   }
+
   /**
    * 设置(评教类型,定制问卷,条件-问卷缺失)
    *
@@ -177,7 +178,6 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
       questionnaireClazzs = entityDao.find(classOf[QuestionnaireClazz], ids)
     }
 
-    //    try {
     val questionnaireId = this.getLong("questionnaire.id").getOrElse(0L)
     // 判断(是否删除)
     if (questionnaireId == 0L) {
@@ -193,14 +193,6 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
       }
       entityDao.saveOrUpdate(questionnaireClazzs)
     }
-    redirect("search", "--------info.action.success")
-    //    } catch {
-    //      case e: Exception =>
-    //        redirect("search", "----..---info.action.failure")
-    //    }
+    redirect("search", "info.action.success")
   }
-  //
-  //  def setEvaluateSwitchService(evaluateSwitchService: StdEvaluateSwitchService) {
-  //    this.evaluateSwitchService = evaluateSwitchService
-  //  }
 }

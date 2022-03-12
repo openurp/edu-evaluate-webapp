@@ -54,7 +54,7 @@ class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
     val courseEvalStat = OqlBuilder.from(classOf[CourseEvalStat], "courseEvalStat")
     populateConditions(courseEvalStat)
     courseEvalStat.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
-    courseEvalStat.where("courseEvalStat.clazz.semester=:semester", semester)
+    courseEvalStat.where("courseEvalStat.semester=:semester", semester)
     put("courseEvalStats", entityDao.search(courseEvalStat))
     forward()
   }
@@ -86,33 +86,33 @@ class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
     val depId = getInt("department.id").getOrElse(20)
     put("departId", depId)
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department], "dep").where("dep.teaching=true")))
-    val evaquery = OqlBuilder.from(classOf[EvaluateResult], "evaluateR")
-    evaquery.select("distinct evaluateR.clazz.semester.id")
-    evaquery.where("evaluateR.clazz.teachDepart.id=:depId", depId)
+    val evaquery = OqlBuilder.from(classOf[CourseEvalStat], "stat")
+    evaquery.select("distinct stat.semester.id")
+    evaquery.where("stat.teachDepart.id=:depId", depId)
     val semesterIds = entityDao.search(evaquery)
     val qur = OqlBuilder.from(classOf[Semester], "semester")
     qur.where("semester.beginOn<=:dat", LocalDate.now())
     val quetionQuery = OqlBuilder.from(classOf[CourseEvalStat], "questionnaireS")
     if (semesterIds.size > 0) {
       qur.where("semester.id in(:ids)", semesterIds)
-      quetionQuery.where("questionnaireS.clazz.semester.id in(:semesterIds)", semesterIds)
+      quetionQuery.where("questionnaireS.semester.id in(:semesterIds)", semesterIds)
     } else {
       qur.where("semester.id is null")
-      quetionQuery.where("questionnaireS.clazz.semester.id is null")
+      quetionQuery.where("questionnaireS.semester.id is null")
     }
-    quetionQuery.where("questionnaireS.clazz.teachDepart.id=:depId", depId)
+    quetionQuery.where("questionnaireS.teachDepart.id=:depId", depId)
     put("evaSemesters", entityDao.search(qur))
-    quetionQuery.select("questionnaireS.clazz.semester.id,count(questionnaireS.teacher.id)")
-    quetionQuery.groupBy("questionnaireS.clazz.semester.id")
+    quetionQuery.select("questionnaireS.semester.id,count(questionnaireS.teacher.id)")
+    quetionQuery.groupBy("questionnaireS.semester.id")
     put("questionNums", entityDao.search(quetionQuery))
     val maps = Collections.newMap[String, Seq[CourseEvalStat]]
-    lis foreach { evaluationCriteriaItem =>
+    lis foreach { assessGrade =>
       val query = OqlBuilder.from(classOf[CourseEvalStat], "questionnaireStat")
       query.select("questionnaireStat.semester.id,count(questionnaireStat.teacher.id)")
-      query.where("questionnaireStat.score>=" + evaluationCriteriaItem.minScore + " and questionnaireStat.score<" + evaluationCriteriaItem.maxScore)
-      query.where("questionnaireStat.clazz.teachDepart.id=:depId", depId)
+      query.where("questionnaireStat.score>=" + assessGrade.minScore + " and questionnaireStat.score<" + assessGrade.maxScore)
+      query.where("questionnaireStat.teachDepart.id=:depId", depId)
       query.groupBy("questionnaireStat.semester.id")
-      maps.put(evaluationCriteriaItem.id.toString(), entityDao.search(query))
+      maps.put(assessGrade.id.toString(), entityDao.search(query))
     }
     put("questionDeps", maps)
     forward()
@@ -143,23 +143,19 @@ class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
     }
     put("evaluateResults", fl)
     val query = OqlBuilder.from(classOf[CourseEvalStat], "evaluateR")
-    query.select("evaluateR.clazz.teachDepart.id,count( evaluateR.teacher.id)")
-    query.where("evaluateR.clazz.semester.id =:semesterId ", semesterId)
-    query.groupBy("evaluateR.clazz.teachDepart.id,evaluateR.clazz.semester.id")
-    //    val hql = "select evaluateR.clazz.teachDepart.id,count( evaluateR.teacher.id) from" +
-    //    " org.openurp.qos.evaluation.clazz.model.CourseEvalStat evaluateR "  +
-    //    "where evaluateR.clazz.semester.id=" + semesterId + " " +
-    //    "group by evaluateR.clazz.teachDepart.id,evaluateR.clazz.semester.id "
+    query.select("evaluateR.teachDepart.id,count( evaluateR.teacher.id)")
+    query.where("evaluateR.semester.id =:semesterId ", semesterId)
+    query.groupBy("evaluateR.teachDepart.id,evaluateR.semester.id")
     put("questionNums", entityDao.search(query))
     val maps = Collections.newMap[String, Seq[CourseEvalStat]]
-    lis foreach { evaluationCriteriaItem =>
+    lis foreach { assessGrade =>
       val query = OqlBuilder.from(classOf[CourseEvalStat], "questionnaireStat")
-      query.where("questionnaireStat.clazz.semester.id=:semesterId", semesterId)
-      query.select("questionnaireStat.clazz.teachDepart.id,count(questionnaireStat.teacher.id)")
-      query.where("questionnaireStat.score>=" + evaluationCriteriaItem.minScore
-        + " and questionnaireStat.score<" + evaluationCriteriaItem.maxScore)
-      query.groupBy("questionnaireStat.clazz.teachDepart.id")
-      maps.put(evaluationCriteriaItem.id.toString(), entityDao.search(query))
+      query.where("questionnaireStat.semester.id=:semesterId", semesterId)
+      query.select("questionnaireStat.teachDepart.id,count(questionnaireStat.teacher.id)")
+      query.where("questionnaireStat.score>=" + assessGrade.minScore
+        + " and questionnaireStat.score<" + assessGrade.maxScore)
+      query.groupBy("questionnaireStat.teachDepart.id")
+      maps.put(assessGrade.id.toString(), entityDao.search(query))
     }
     put("questionDeps", maps)
     forward()
@@ -180,24 +176,24 @@ class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
     val quetionQuery = OqlBuilder.from(classOf[CourseEvalStat], "questionnaireS")
     if (semesterIds.size > 0) {
       qur.where("semester.id in(:ids)", semesterIds)
-      quetionQuery.where("questionnaireS.clazz.semester.id in(:semesterIds)", semesterIds)
+      quetionQuery.where("questionnaireS.semester.id in(:semesterIds)", semesterIds)
     } else {
       qur.where("semester.id is null")
-      quetionQuery.where("questionnaireS.clazz.semester.id is null")
+      quetionQuery.where("questionnaireS.semester.id is null")
     }
     put("evaSemesters", entityDao.search(qur))
-    quetionQuery.select("questionnaireS.clazz.semester.id,count(questionnaireS.teacher.id)")
-    quetionQuery.groupBy("questionnaireS.clazz.semester.id")
+    quetionQuery.select("questionnaireS.semester.id,count(questionnaireS.teacher.id)")
+    quetionQuery.groupBy("questionnaireS.semester.id")
     put("questionNums", entityDao.search(quetionQuery))
     val maps = Collections.newMap[String, Seq[CourseEvalStat]]
-    lis foreach { evaluationCriteriaItem =>
-      //    for (AssessGrade evaluationCriteriaItem : lis) {
+    lis foreach { assessGrade =>
+      //    for (AssessGrade assessGrade : lis) {
       val query = OqlBuilder.from(classOf[CourseEvalStat], "questionnaireStat")
-      query.select("questionnaireStat.clazz.semester.id,count(questionnaireStat.teacher.id)")
-      query.where("questionnaireStat.score>=" + evaluationCriteriaItem.minScore
-        + " and questionnaireStat.score<" + evaluationCriteriaItem.maxScore)
-      query.groupBy("questionnaireStat.clazz.semester.id")
-      maps.put(evaluationCriteriaItem.id.toString(), entityDao.search(query))
+      query.select("questionnaireStat.semester.id,count(questionnaireStat.teacher.id)")
+      query.where("questionnaireStat.score>=" + assessGrade.minScore
+        + " and questionnaireStat.score<" + assessGrade.maxScore)
+      query.groupBy("questionnaireStat.semester.id")
+      maps.put(assessGrade.id.toString(), entityDao.search(query))
     }
     put("questionDeps", maps)
     forward()
@@ -211,9 +207,9 @@ class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
     if (lis.size < 1) { redirect("search", "未找到评价标准！") }
     put("criterias", lis)
 
-    val evaquery = OqlBuilder.from(classOf[CourseEvalStat], "questionnaireStat")
-    evaquery.where("questionnaireStat.clazz.semester.id=:semesId", getInt("semester.id").get)
-    evaquery.join("questionnaireStat.indicatorStats", "indicator")
+    val evaquery = OqlBuilder.from(classOf[CourseEvalStat], "stat")
+    evaquery.where("stat.semester.id=:semesId", getInt("semester.id").get)
+    evaquery.join("stat.indicatorStats", "indicator")
     evaquery.select("distinct indicator.indicator.id")
     val queTypeIds = entityDao.search(evaquery)
 
@@ -233,14 +229,14 @@ class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
     put("quesTypeNums", entityDao.search(quetionQuery))
 
     val maps = Collections.newMap[String, Seq[CourseEvalStat]]
-    lis foreach { evaluationCriteriaItem =>
+    lis foreach { assessGrade =>
       val query = OqlBuilder.from(classOf[CourseEvalStat], "questionnaireStat")
       query.where("questionnaireStat.clazz.semester.id=:semesId", getInt("semester.id").get)
       query.join("questionnaireStat.indicatorStats", "indicatorStat")
       query.select("indicatorStat.indicator.id,count(questionnaireStat.teacher.id)")
-      query.where("indicatorStat.score>=" + evaluationCriteriaItem.minScore + " and indicatorStat.score<" + evaluationCriteriaItem.maxScore)
+      query.where("indicatorStat.score>=" + assessGrade.minScore + " and indicatorStat.score<" + assessGrade.maxScore)
       query.groupBy("indicatorStat.indicator.id")
-      maps.put(evaluationCriteriaItem.id.toString(), entityDao.search(query))
+      maps.put(assessGrade.id.toString(), entityDao.search(query))
     }
     put("questionDeps", maps)
     val que = OqlBuilder.from(classOf[EvaluateResult], "evaluateR")

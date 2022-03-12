@@ -11,14 +11,13 @@
         [/@]
         [@b.row]
             [@b.boxcol/]
-            [@b.col property="clazz.crn" title="课程序号" width="7%"/]
-            [@b.col property="clazz.course.code" title="课程代码" width="10%"/]
-            [@b.col property="clazz.course.name" title="课程名称" width="20%"/]
-            [@b.col property="clazz.teachDepart.shortName" title="开课院系" width="10%"/]
+            [@b.col property="crn" title="课程序号" width="7%"/]
+            [@b.col property="course.code" title="课程代码" width="10%"/]
+            [@b.col property="course.name" title="课程名称" width="20%"/]
+            [@b.col property="teachDepart.shortName" title="开课院系" width="10%"/]
             [@b.col property="teacher.user.code" title="教师工号" width="10%"/]
             [@b.col property="teacher.user.name" title="教师姓名" width="10%"/]
-            [@b.col property="questionnaire.description" title="问卷" width="9%"/]
-            [@b.col property="avgScore" title="平均分" width="7%"/]
+            [@b.col property="score" title="分数" width="7%"/]
             [@b.col property="schoolRank" title="全校排名" width="7%"/]
             [@b.col property="departRank" title="院系排名" width="7%"/]
         [/@]
@@ -55,7 +54,7 @@ var form = document.questionnaireStatSearchForm;
                 return false;
         }
         bg.form.addInput(form,"courseEvalStat.id",questionnaireStatIds);
-        var url= "${b.url('clazz-eval-search!info?id=aaa')}"
+        var url= "${b.url('course-eval-search!info?id=aaa')}"
         url=url.replace('aaa',questionnaireStatIds);
         bg.form.submit(form,url);
     }

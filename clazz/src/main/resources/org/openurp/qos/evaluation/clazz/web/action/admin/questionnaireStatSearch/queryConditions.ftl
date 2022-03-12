@@ -9,7 +9,7 @@
             [@b.select style="width:134px" name="questionnaireStat.clazz.teachDepart.id" label="开课院系" items=departments empty="..."/]
             [@b.select style="width:134px" name="selectTypeId" label="问题类别" items=indicators empty="..."/]
             [@b.select style="width:134px" name="selectMarkId" label="分值类型" items={'A':'优','B':'良','C':'中','D':'差'} empty="..."/]
-            [@b.select style="width:134px" name="evaluationCriteriaId" label="对照标准" items=evaluationCriterias empty="..."/]
+            [@b.select style="width:134px" name="assessCriteriaId" label="对照标准" items=assessCriterias empty="..."/]
         [/@]
   </div>
   <div class="search-list">
@@ -89,8 +89,8 @@
         </tr>
         <tr>
             <td>对照标准</td>
-            <td><select name="evaluationCriteriaId" style="width:100%">
-                <#list evaluationCriterias as criteria>
+            <td><select name="assessCriteriaId" style="width:100%">
+                <#list assessCriterias as criteria>
                 <option value="${criteria.id}">${criteria.name}</option>
                 </#list>
             </select>
