@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,7 +22,9 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.security.Securities
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.edu.model.{Semester, Student, Teacher}
+import org.openurp.base.edu.model.Teacher
+import org.openurp.base.model.Semester
+import org.openurp.base.std.model.Student
 import org.openurp.edu.clazz.model.{Clazz, CourseTaker}
 import org.openurp.qos.evaluation.app.course.model.TextEvaluateSwitch
 import org.openurp.qos.evaluation.clazz.model.Feedback
@@ -32,134 +34,6 @@ import java.time.{Instant, LocalDate}
 import scala.collection.mutable.Buffer
 
 class FeedbackAction extends RestfulAction[Feedback] with ProjectSupport {
-//
-//  def getOtherMap(std: Student, semester: Semester, teachers: Seq[Teacher]): collection.Map[Long, Buffer[TeacherRemessage]] = {
-//    val query = OqlBuilder.from(classOf[TeacherRemessage], "teacherRemessage")
-//    query.join("left", "teacherRemessage.students", "student")
-//    query.join("left", "teacherRemessage.textEvaluation", "textEvaluation")
-//    query.where("student =:std", std)
-//    query.where("textEvaluation.clazz.semester =:semester", semester)
-//    query.where("textEvaluation.student !=:std", std)
-//    query.where("teacherRemessage.visible = true")
-//    query.orderBy("teacherRemessage.createdAt desc")
-//    val otherMap = Collections.newMap[Long, Buffer[TeacherRemessage]]
-//    val results = entityDao.search(query)
-//    results foreach { teacherRemessage =>
-//      otherMap.getOrElseUpdate(teacherRemessage.textEvaluation.teacher.id, Collections.newBuffer[TeacherRemessage]) += teacherRemessage
-//    }
-//    for (teacher <- teachers) {
-//      if (!otherMap.contains(teacher.id)) {
-//        otherMap.put(teacher.id, null)
-//      }
-//    }
-//    otherMap
-//  }
-
-  def getMyFeedbackMap(std: Student, semester: Semester, teachers: Seq[Teacher]): collection.Map[Long, Buffer[Feedback]] = {
-    val query = OqlBuilder.from(classOf[Feedback], "textEvaluation")
-    query.where("textEvaluation.student =:std", std)
-    query.where("textEvaluation.clazz.semester =:semester", semester)
-    query.where("textEvaluation.audited = true")
-    val textEvaluateMap = Collections.newMap[Long, Buffer[Feedback]]
-    val results = entityDao.search(query)
-    results foreach { textEvaluation =>
-      textEvaluateMap.getOrElseUpdate(textEvaluation.teacher.id, Collections.newBuffer[Feedback]) += textEvaluation
-    }
-    for (teacher <- teachers) {
-      if (!textEvaluateMap.contains(teacher.id)) {
-        textEvaluateMap.put(teacher.id, null)
-      }
-    }
-    textEvaluateMap
-  }
-//
-//  def getAnnMap(std: Student, semester: Semester, teachers: Seq[Teacher]): collection.Map[Long, Buffer[TeacherRemessage]] = {
-//    val query = OqlBuilder.from(classOf[TeacherRemessage], "teacherRemessage")
-//    query.join("left", "teacherRemessage.students", "student")
-//    query.join("left", "teacherRemessage.textEvaluation", "textEvaluation")
-//    query.where("student =:std", std)
-//    query.where("textEvaluation.clazz.semester = :semester", semester)
-//    query.where("teacherRemessage.visible = false")
-//    val annMap = Collections.newMap[Long, Buffer[TeacherRemessage]]
-//    val results = entityDao.search(query)
-////    results foreach { teacherRemessage =>
-////      annMap.getOrElseUpdate(teacherRemessage.textEvaluation.teacher.id, Collections.newBuffer[TeacherRemessage]) +=
-////        teacherRemessage
-////    }
-//    for (teacher <- teachers) {
-//      if (!annMap.contains(teacher.id)) {
-//        annMap.put(teacher.id, null)
-//      }
-//    }
-//    annMap
-//  }
-
-  def getTeachersByClazzIdSeq(clazzIdSeq: List[Long]): Seq[Teacher] = {
-    val query = OqlBuilder.from[Teacher](classOf[Clazz].getName + " clazz")
-    query.join("clazz.teachers", "teacher")
-    query.select("teacher")
-    query.where("clazz.id in (:clazzIdSeq)", clazzIdSeq)
-    entityDao.search(query)
-  }
-
-  def getTeacherClazzByClazzIdSeq(clazzIdSeq: List[Long]): Seq[Array[Any]] = {
-    val query = OqlBuilder.from[Array[Any]](classOf[Clazz].getName + " clazz")
-    query.join("clazz.teachers", "teacher")
-    query.select("teacher,clazz")
-    query.where("clazz.id in (:clazzIdSeq)", clazzIdSeq)
-    entityDao.search(query)
-  }
-
-  def getFeedbackList(student: Student, clazz: Clazz, teacher: Teacher): Seq[Feedback] = {
-    val query = OqlBuilder.from(classOf[Feedback], "textEvaluation")
-    query.where("textEvaluation.student =:student", student)
-    query.where("textEvaluation.clazz =:clazz", clazz)
-    query.where("textEvaluation.teacher =:teacher", teacher)
-    entityDao.search(query)
-  }
-
-  def getSwitch(): TextEvaluateSwitch = {
-    val iterator: Iterator[TextEvaluateSwitch] = entityDao.getAll(classOf[TextEvaluateSwitch]).iterator
-    if (iterator.hasNext)
-      iterator.next()
-    else new TextEvaluateSwitch()
-  }
-
-  def getClazzIdAndTeacherIdOfResult(student: Student, semester: Semester): collection.Map[String, String] = {
-    val query = OqlBuilder.from(classOf[Feedback], "textEvaluation")
-    //    query.select("textEvaluation.clazz.id,textEvaluation.teacher.id")
-    query.where("textEvaluation.student = :student ", student)
-    query.where("textEvaluation.clazz.semester = :semester", semester)
-    val a = entityDao.search(query)
-//    a.map(obj => (obj.clazz.id.toString + "_" + (if (null == obj.teacher) "0" else obj.teacher.id.toString), "1")).toMap
-    Map.empty //FIXME
-  }
-
-  def getStdClazzs(student: Student, semester: Semester): Seq[Clazz] = {
-
-    val query = OqlBuilder.from(classOf[CourseTaker], "courseTake")
-    query.select("distinct courseTake.clazz.id ")
-    query.where("courseTake.std=:std", student)
-    query.where("courseTake.semester =:semester", semester)
-    val clazzIds = entityDao.search(query)
-    var stdClazzs: Seq[Clazz] = Seq()
-    if (clazzIds.nonEmpty) {
-      val entityquery = OqlBuilder.from(classOf[Clazz], "clazz").where("clazz.id in (:clazzIds)", clazzIds)
-      stdClazzs = entityDao.search(entityquery)
-    }
-    stdClazzs
-  }
-
-  override protected def indexSetting(): Unit = {
-    val semesters = entityDao.getAll(classOf[Semester])
-    put("semesters", semesters)
-    if (semesters.nonEmpty) {
-      val now = LocalDate.now
-      semesters.find(x => now.isAfter(x.beginOn) && now.isBefore(x.endOn)) foreach { semester =>
-        put("currentSemester", semester)
-      }
-    }
-  }
 
   override def search(): View = {
     val std = getUser(classOf[Student])
@@ -184,6 +58,52 @@ class FeedbackAction extends RestfulAction[Feedback] with ProjectSupport {
     // 获得(文字评教-已经评教)
     put("evaluateMap", getClazzIdAndTeacherIdOfResult(std, semester))
     forward()
+  }
+  //
+  //  def getAnnMap(std: Student, semester: Semester, teachers: Seq[Teacher]): collection.Map[Long, Buffer[TeacherRemessage]] = {
+  //    val query = OqlBuilder.from(classOf[TeacherRemessage], "teacherRemessage")
+  //    query.join("left", "teacherRemessage.students", "student")
+  //    query.join("left", "teacherRemessage.textEvaluation", "textEvaluation")
+  //    query.where("student =:std", std)
+  //    query.where("textEvaluation.clazz.semester = :semester", semester)
+  //    query.where("teacherRemessage.visible = false")
+  //    val annMap = Collections.newMap[Long, Buffer[TeacherRemessage]]
+  //    val results = entityDao.search(query)
+  ////    results foreach { teacherRemessage =>
+  ////      annMap.getOrElseUpdate(teacherRemessage.textEvaluation.teacher.id, Collections.newBuffer[TeacherRemessage]) +=
+  ////        teacherRemessage
+  ////    }
+  //    for (teacher <- teachers) {
+  //      if (!annMap.contains(teacher.id)) {
+  //        annMap.put(teacher.id, null)
+  //      }
+  //    }
+  //    annMap
+  //  }
+
+  def getClazzIdAndTeacherIdOfResult(student: Student, semester: Semester): collection.Map[String, String] = {
+    val query = OqlBuilder.from(classOf[Feedback], "textEvaluation")
+    //    query.select("textEvaluation.clazz.id,textEvaluation.teacher.id")
+    query.where("textEvaluation.student = :student ", student)
+    query.where("textEvaluation.clazz.semester = :semester", semester)
+    val a = entityDao.search(query)
+    //    a.map(obj => (obj.clazz.id.toString + "_" + (if (null == obj.teacher) "0" else obj.teacher.id.toString), "1")).toMap
+    Map.empty //FIXME
+  }
+
+  def getStdClazzs(student: Student, semester: Semester): Seq[Clazz] = {
+
+    val query = OqlBuilder.from(classOf[CourseTaker], "courseTake")
+    query.select("distinct courseTake.clazz.id ")
+    query.where("courseTake.std=:std", student)
+    query.where("courseTake.semester =:semester", semester)
+    val clazzIds = entityDao.search(query)
+    var stdClazzs: Seq[Clazz] = Seq()
+    if (clazzIds.nonEmpty) {
+      val entityquery = OqlBuilder.from(classOf[Clazz], "clazz").where("clazz.id in (:clazzIds)", clazzIds)
+      stdClazzs = entityDao.search(entityquery)
+    }
+    stdClazzs
   }
 
   def loadTextEvaluate(): View = {
@@ -220,6 +140,21 @@ class FeedbackAction extends RestfulAction[Feedback] with ProjectSupport {
     forward()
   }
 
+  def getFeedbackList(student: Student, clazz: Clazz, teacher: Teacher): Seq[Feedback] = {
+    val query = OqlBuilder.from(classOf[Feedback], "textEvaluation")
+    query.where("textEvaluation.student =:student", student)
+    query.where("textEvaluation.clazz =:clazz", clazz)
+    query.where("textEvaluation.teacher =:teacher", teacher)
+    entityDao.search(query)
+  }
+
+  def getSwitch(): TextEvaluateSwitch = {
+    val iterator: Iterator[TextEvaluateSwitch] = entityDao.getAll(classOf[TextEvaluateSwitch]).iterator
+    if (iterator.hasNext)
+      iterator.next()
+    else new TextEvaluateSwitch()
+  }
+
   def saveTextEvaluate(): View = {
     val std = getUser(classOf[Student])
     val ClazzId = longId("clazz")
@@ -235,7 +170,7 @@ class FeedbackAction extends RestfulAction[Feedback] with ProjectSupport {
         feedback.crn = clazz.crn
         feedback.course = clazz.course
         feedback.teacher = teacher
-        feedback.teachDepart =clazz.teachDepart
+        feedback.teachDepart = clazz.teachDepart
         feedback.contents = textOpinion
         feedback.updatedAt = Instant.now
         entityDao.saveOrUpdate(feedback)
@@ -257,11 +192,56 @@ class FeedbackAction extends RestfulAction[Feedback] with ProjectSupport {
 
     put("clazzs", clazzs)
     // 获得(教师公告)
-//    put("annMap", getAnnMap(std, semester, teachers))
+    //    put("annMap", getAnnMap(std, semester, teachers))
     // 获得(评教回复-本人)
     put("textEvaluationMap", getMyFeedbackMap(std, semester, teachers))
     // 获得(评教回复-其他)
-//    put("otherMap", getOtherMap(std, semester, teachers))
+    //    put("otherMap", getOtherMap(std, semester, teachers))
     forward()
+  }
+
+  def getMyFeedbackMap(std: Student, semester: Semester, teachers: Seq[Teacher]): collection.Map[Long, Buffer[Feedback]] = {
+    val query = OqlBuilder.from(classOf[Feedback], "textEvaluation")
+    query.where("textEvaluation.student =:std", std)
+    query.where("textEvaluation.clazz.semester =:semester", semester)
+    query.where("textEvaluation.audited = true")
+    val textEvaluateMap = Collections.newMap[Long, Buffer[Feedback]]
+    val results = entityDao.search(query)
+    results foreach { textEvaluation =>
+      textEvaluateMap.getOrElseUpdate(textEvaluation.teacher.id, Collections.newBuffer[Feedback]) += textEvaluation
+    }
+    for (teacher <- teachers) {
+      if (!textEvaluateMap.contains(teacher.id)) {
+        textEvaluateMap.put(teacher.id, null)
+      }
+    }
+    textEvaluateMap
+  }
+
+  def getTeachersByClazzIdSeq(clazzIdSeq: List[Long]): Seq[Teacher] = {
+    val query = OqlBuilder.from[Teacher](classOf[Clazz].getName + " clazz")
+    query.join("clazz.teachers", "teacher")
+    query.select("teacher")
+    query.where("clazz.id in (:clazzIdSeq)", clazzIdSeq)
+    entityDao.search(query)
+  }
+
+  def getTeacherClazzByClazzIdSeq(clazzIdSeq: List[Long]): Seq[Array[Any]] = {
+    val query = OqlBuilder.from[Array[Any]](classOf[Clazz].getName + " clazz")
+    query.join("clazz.teachers", "teacher")
+    query.select("teacher,clazz")
+    query.where("clazz.id in (:clazzIdSeq)", clazzIdSeq)
+    entityDao.search(query)
+  }
+
+  override protected def indexSetting(): Unit = {
+    val semesters = entityDao.getAll(classOf[Semester])
+    put("semesters", semesters)
+    if (semesters.nonEmpty) {
+      val now = LocalDate.now
+      semesters.find(x => now.isAfter(x.beginOn) && now.isBefore(x.endOn)) foreach { semester =>
+        put("currentSemester", semester)
+      }
+    }
   }
 }

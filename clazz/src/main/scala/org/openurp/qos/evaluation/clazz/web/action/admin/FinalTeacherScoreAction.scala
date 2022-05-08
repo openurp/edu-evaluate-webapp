@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -25,8 +25,8 @@ import org.beangle.data.transfer.exporter.ExportContext
 import org.beangle.web.action.context.ActionContext
 import org.beangle.web.action.view.{Status, View}
 import org.openurp.base.edu.code.model.StdType
-import org.openurp.base.edu.model.{Semester, Teacher}
-import org.openurp.base.model.Department
+import org.openurp.base.edu.model.Teacher
+import org.openurp.base.model.{Department, Semester}
 import org.openurp.code.edu.model.EducationLevel
 import org.openurp.qos.evaluation.app.course.service.Ranker
 import org.openurp.qos.evaluation.clazz.model.{FinalTeacherScore, QuestionResult}
@@ -56,6 +56,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     put("semesterId", semesterId)
     forward()
   }
+
   /**
    * 导出
    */
@@ -67,7 +68,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     finalScores.where("finalTeacherScore.semester.id=:semesterId", semesterId)
     val list = scala.jdk.javaapi.CollectionConverters.asJava(entityDao.search(finalScores))
     //查出信息并放到map中
-    val context= new ExportContext
+    val context = new ExportContext
     context.put("list", list)
     //获得模板路径
     val path = ClassLoaders.getResource("template/finalTeacherScore.xls").get
@@ -78,7 +79,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     val os = response.getOutputStream()
     try {
       //将beans通过模板输入流写到workbook中
-      new ExcelTemplateWriter(path,context, os).write()
+      new ExcelTemplateWriter(path, context, os).write()
     } finally {
       if (os != null) {
         os.close()
@@ -109,15 +110,6 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
   }
 
   /**
-   * 清除统计数据
-   */
-  def remove(semesterId: Int): Unit = {
-    val query = OqlBuilder.from(classOf[FinalTeacherScore], "finalScore")
-    query.where("finalScore.semester.id=:semesterId", semesterId)
-    entityDao.remove(entityDao.search(query))
-  }
-
-  /**
    * 跳转(统计首页面)
    */
   def statHome(): View = {
@@ -128,7 +120,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:tea", true))
     put("departments", teachingDeparts)
 
-    put("currentSemester",getCurrentSemester)
+    put("currentSemester", getCurrentSemester)
     forward()
   }
 
@@ -189,5 +181,14 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
       entityDao.saveOrUpdate(questionS)
     }
     redirect("index", "info.action.success")
+  }
+
+  /**
+   * 清除统计数据
+   */
+  def remove(semesterId: Int): Unit = {
+    val query = OqlBuilder.from(classOf[FinalTeacherScore], "finalScore")
+    query.where("finalScore.semester.id=:semesterId", semesterId)
+    entityDao.remove(entityDao.search(query))
   }
 }

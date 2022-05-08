@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,7 +22,8 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.security.Securities
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.edu.model.{Semester, Teacher}
+import org.openurp.base.edu.model.Teacher
+import org.openurp.base.model.Semester
 import org.openurp.edu.clazz.model.{Clazz, CourseTaker}
 import org.openurp.qos.evaluation.app.course.model.EvaluateSearchDepartment
 import org.openurp.qos.evaluation.clazz.model.EvaluateResult
@@ -34,7 +35,7 @@ import java.time.LocalDate
 class EvaluateStatusTeacherAction extends ProjectRestfulAction[EvaluateResult] {
 
   override def index(): View = {
-    put("currentSemester",this.getCurrentSemester)
+    put("currentSemester", this.getCurrentSemester)
     forward()
   }
 
@@ -46,10 +47,12 @@ class EvaluateStatusTeacherAction extends ProjectRestfulAction[EvaluateResult] {
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
-    val teacherQuery =OqlBuilder.from(classOf[Teacher],"t")
-    teacherQuery.where("t.project=:project and t.user.code=:code",getProject,Securities.user)
+    val teacherQuery = OqlBuilder.from(classOf[Teacher], "t")
+    teacherQuery.where("t.project=:project and t.user.code=:code", getProject, Securities.user)
     val teacher = entityDao.search(teacherQuery).headOption.orNull
-    if (teacher == null) { forward("error.teacher.teaNo.needed") }
+    if (teacher == null) {
+      forward("error.teacher.teaNo.needed")
+    }
     // 得到院系下的所有级教学任务
     val clazzQuery = OqlBuilder.from(classOf[Clazz], "clazz")
     clazzQuery.where("clazz.semester.id=:semesterId", semesterId)

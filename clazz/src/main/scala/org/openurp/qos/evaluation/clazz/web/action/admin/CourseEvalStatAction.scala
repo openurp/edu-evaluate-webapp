@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -21,8 +21,8 @@ import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.view.View
 import org.openurp.base.edu.code.model.StdType
-import org.openurp.base.edu.model.{Project, Semester, Teacher}
-import org.openurp.base.model.Department
+import org.openurp.base.edu.model.Teacher
+import org.openurp.base.model.{Department, Project, Semester}
 import org.openurp.code.edu.model.EducationLevel
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.app.course.service.Ranker
@@ -35,7 +35,7 @@ import scala.collection.mutable.{Buffer, ListBuffer}
 class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
 
   override def index(): View = {
-    put("project",getProject)
+    put("project", getProject)
     var searchFormFlag = get("searchFormFlag").orNull
     if (searchFormFlag == null) {
       searchFormFlag = "beenStat"
@@ -70,18 +70,21 @@ class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
   /**
    * 清除统计数据
    */
-  private def removeStats(project: Project, semesterId: Int) :Unit={
+  private def removeStats(project: Project, semesterId: Int): Unit = {
     val query = OqlBuilder.from(classOf[CourseEvalStat], "les")
     query.where("les.clazz.semester.id=:semesterId", semesterId)
     query.where("les.clazz.project=:project", project)
     entityDao.remove(entityDao.search(query))
   }
+
   /**
    * 院系历史评教
    */
   def depHistoryStat(): View = {
     val lis = entityDao.search(OqlBuilder.from(classOf[AssessGrade], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L))
-    if (lis.size < 1) { redirect("search", "未找到评价标准！") }
+    if (lis.size < 1) {
+      redirect("search", "未找到评价标准！")
+    }
     put("criterias", lis)
     val depId = getInt("department.id").getOrElse(20)
     put("departId", depId)
@@ -117,6 +120,7 @@ class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
     put("questionDeps", maps)
     forward()
   }
+
   /**
    * 院系评教统计
    */
@@ -125,7 +129,9 @@ class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     val lis = entityDao.search(OqlBuilder.from(classOf[AssessGrade], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L))
-    if (lis.size < 1) { redirect("search", "未找到评价标准！") }
+    if (lis.size < 1) {
+      redirect("search", "未找到评价标准！")
+    }
     put("criterias", lis)
     put("departments", entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:teaching", true)))
     put("semester", semester)
@@ -166,7 +172,9 @@ class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
    */
   def historyCollegeStat(): View = {
     val lis = entityDao.search(OqlBuilder.from(classOf[AssessGrade], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L))
-    if (lis.size < 1) { redirect("search", "未找到评价标准！") }
+    if (lis.size < 1) {
+      redirect("search", "未找到评价标准！")
+    }
     put("criterias", lis)
     val evaquery = OqlBuilder.from(classOf[EvaluateResult], "evaluateR")
     evaquery.select("distinct evaluateR.clazz.semester.id")
@@ -204,7 +212,9 @@ class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
    */
   def collegeGroupItemInfo(): View = {
     val lis = entityDao.search(OqlBuilder.from(classOf[AssessGrade], "criteriaItem").where("criteriaItem.criteria.id =:id", 1L))
-    if (lis.size < 1) { redirect("search", "未找到评价标准！") }
+    if (lis.size < 1) {
+      redirect("search", "未找到评价标准！")
+    }
     put("criterias", lis)
 
     val evaquery = OqlBuilder.from(classOf[CourseEvalStat], "stat")
@@ -279,7 +289,7 @@ class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
     val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:tea", true))
     put("departments", teachingDeparts)
 
-    put("currentSemester",getCurrentSemester)
+    put("currentSemester", getCurrentSemester)
     forward()
   }
 
@@ -322,6 +332,7 @@ class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
   /**
    * 统计(任务评教结果)
    * FIXME 去除最高5%和最低分数5%,以及人数少于15人的评教结果,  也没有正确计算问卷总数（只是将有效问卷和问卷总数相等）
+   *
    * @return
    */
   def stat(): View = {
@@ -389,7 +400,7 @@ class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
       val questionS = new CourseEvalStat
       val clazz = entityDao.get(classOf[Clazz], evaObject(0).asInstanceOf[Long])
       questionS.crn = Some(clazz.crn)
-      questionS.course= clazz.course
+      questionS.course = clazz.course
       questionS.semester = clazz.semester
       questionS.project = clazz.project
       questionS.teacher = new Teacher()

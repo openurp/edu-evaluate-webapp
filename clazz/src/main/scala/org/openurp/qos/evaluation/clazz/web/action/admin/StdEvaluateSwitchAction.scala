@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -19,18 +19,13 @@ package org.openurp.qos.evaluation.clazz.web.action.admin
 
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.view.View
-import org.openurp.base.edu.model.{Project, Semester}
+import org.openurp.base.model.{Project, Semester}
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.app.course.model.StdEvaluateSwitch
 import org.openurp.qos.evaluation.clazz.model.QuestionnaireClazz
 import org.openurp.qos.evaluation.clazz.web.action.admin.ProjectRestfulAction
 
 class StdEvaluateSwitchAction extends ProjectRestfulAction[StdEvaluateSwitch] {
-
-  protected override def indexSetting(): Unit = {
-    put("project",getProject)
-    put("currentSemester", getCurrentSemester)
-  }
 
   override def search(): View = {
     val opened = getBoolean("evaluateSwitch.opened")
@@ -61,8 +56,9 @@ class StdEvaluateSwitchAction extends ProjectRestfulAction[StdEvaluateSwitch] {
   }
 
   override def editSetting(entity: StdEvaluateSwitch): Unit = {
-    val project =getProject
-    val query = OqlBuilder.from(classOf[Semester], "s").where("s.calendar in(:calendars)", project.calendars)
+    val project = getProject
+    val query = OqlBuilder.from(classOf[Semester], "s")
+      .where("s.calendar = :calendar", project.calendar)
     put("semesters", entityDao.search(query))
     put("project", project)
   }
@@ -84,6 +80,11 @@ class StdEvaluateSwitchAction extends ProjectRestfulAction[StdEvaluateSwitch] {
       case e: Exception =>
         redirect("search", "info.save.failure", "failure,&evaluateSwitch.project.id=" + evaluateSwitch.project.id + "&evaluateSwitch.semester.id=" + evaluateSwitch.semester.id)
     }
+  }
+
+  protected override def indexSetting(): Unit = {
+    put("project", getProject)
+    put("currentSemester", getCurrentSemester)
   }
 
 }

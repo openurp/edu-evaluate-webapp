@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -23,8 +23,8 @@ import org.beangle.web.action.annotation.mapping
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.edu.code.model.StdType
-import org.openurp.base.edu.model.{Semester, Teacher}
-import org.openurp.base.model.Department
+import org.openurp.base.edu.model.Teacher
+import org.openurp.base.model.{Department, Semester}
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.clazz.model.{CourseEvalStat, EvaluateResult, QuestionResult, QuestionnaireClazz}
 import org.openurp.qos.evaluation.model.{AssessGrade, Indicator, Option}
@@ -133,8 +133,8 @@ class QuestionnaireStatTeacherAction extends RestfulAction[CourseEvalStat] {
     val stat = entityDao.get(classOf[CourseEvalStat], id.toLong)
     val teaId = stat.teacher.id
     val semesterId = stat.semester.id
-    val cq = OqlBuilder.from(classOf[Clazz],"c")
-    cq.where("cq.project=:project and cq.semester=:semester and cq.crn=:crn",stat.project,stat.semester,stat.crn)
+    val cq = OqlBuilder.from(classOf[Clazz], "c")
+    cq.where("cq.project=:project and cq.semester=:semester and cq.crn=:crn", stat.project, stat.semester, stat.crn)
     val clazz = entityDao.search(cq).head
     /** 本学期是否评教 */
     val builder = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult")

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -18,7 +18,7 @@
 package org.openurp.qos.evaluation.clazz.web.action.admin
 
 import org.beangle.cdi.bind.BindModule
-import org.openurp.base.edu.service.impl.SemesterServiceImpl
+import org.openurp.base.service.impl.SemesterServiceImpl
 import org.openurp.qos.evaluation.app.course.service.StdEvaluateSwitchService
 import org.openurp.qos.evaluation.clazz.web.action.*
 import org.openurp.qos.evaluation.clazz.web.action.admin.*

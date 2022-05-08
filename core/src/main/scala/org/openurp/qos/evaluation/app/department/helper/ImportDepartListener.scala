@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -17,14 +17,15 @@
 
 package org.openurp.qos.evaluation.app.department.helper
 
-import java.time.Instant
-
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.data.transfer.importer.{ImportListener, ImportResult}
 import org.beangle.security.Securities
-import org.openurp.base.edu.model.{Semester, Teacher}
+import org.openurp.base.edu.model.Teacher
+import org.openurp.base.model.Semester
 import org.openurp.qos.evaluation.department.model.DepartEvaluate
 import org.openurp.qos.evaluation.model.Questionnaire
+
+import java.time.Instant
 
 /**
  * @author xinzhou
@@ -47,15 +48,6 @@ class ImportDepartListener(entityDao: EntityDao) extends ImportListener {
     }
   }
 
-  override def onItemFinish(tr: ImportResult): Unit = {
-    val departEvaluate = tr.transfer.current.asInstanceOf[DepartEvaluate]
-    val questionnaire = entityDao.get(classOf[Questionnaire], 322L)
-    departEvaluate.questionnaire = questionnaire
-    departEvaluate.evaluateAt = Instant.now
-    departEvaluate.department = getTeacher().user.department
-    entityDao.saveOrUpdate(departEvaluate)
-  }
-
   def getTeacher(): Teacher = {
     val teachers = entityDao.findBy(classOf[Teacher], "code", List(Securities.user))
     if (teachers.isEmpty) {
@@ -63,5 +55,14 @@ class ImportDepartListener(entityDao: EntityDao) extends ImportListener {
     } else {
       teachers.head
     }
+  }
+
+  override def onItemFinish(tr: ImportResult): Unit = {
+    val departEvaluate = tr.transfer.current.asInstanceOf[DepartEvaluate]
+    val questionnaire = entityDao.get(classOf[Questionnaire], 322L)
+    departEvaluate.questionnaire = questionnaire
+    departEvaluate.evaluateAt = Instant.now
+    departEvaluate.department = getTeacher().user.department
+    entityDao.saveOrUpdate(departEvaluate)
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,7 +22,8 @@ import org.beangle.commons.lang.Numbers
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.annotation.param
 import org.beangle.web.action.view.View
-import org.openurp.base.edu.model.{Semester, Teacher}
+import org.openurp.base.edu.model.Teacher
+import org.openurp.base.model.Semester
 import org.openurp.edu.exam.model.ExamTaker
 import org.openurp.qos.evaluation.clazz.model.{EvaluateResult, QuestionResult}
 import org.openurp.qos.evaluation.clazz.web.action.admin.ProjectRestfulAction
@@ -30,11 +31,6 @@ import org.openurp.qos.evaluation.clazz.web.action.admin.ProjectRestfulAction
 import java.time.LocalDate
 
 class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
-
-  override protected def indexSetting(): Unit = {
-    put("project",getProject)
-    put("currentSemester", getCurrentSemester)
-  }
 
   override def search(): View = {
     // 页面条件
@@ -110,7 +106,7 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
     val questionResults = entityDao.search(query)
     questionResults.sortWith((x, y) => x.question.priority < y.question.priority)
     put("questionResults", questionResults)
-//    put("remark", result.remark)
+    //    put("remark", result.remark)
     forward()
   }
 
@@ -147,5 +143,10 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
         return redirect("search", "info.action.failure")
     }
     return redirect("search", "info.action.success")
+  }
+
+  override protected def indexSetting(): Unit = {
+    put("project", getProject)
+    put("currentSemester", getCurrentSemester)
   }
 }

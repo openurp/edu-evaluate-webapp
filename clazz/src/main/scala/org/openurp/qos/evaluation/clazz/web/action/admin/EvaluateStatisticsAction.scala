@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -21,8 +21,8 @@ import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.support.ServletSupport
 import org.beangle.web.action.view.View
-import org.openurp.base.edu.model.{Semester, Teacher}
-import org.openurp.base.model.Department
+import org.openurp.base.edu.model.Teacher
+import org.openurp.base.model.{Department, Semester}
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.clazz.model.{CourseEvalStat, EvaluateResult, QuestionResult}
 import org.openurp.qos.evaluation.clazz.web.action.admin.ProjectRestfulAction
@@ -246,6 +246,277 @@ class EvaluateStatisticsAction extends ProjectRestfulAction[CourseEvalStat] with
     forward()
   }
 
+  def clazzEvaluate(): Unit = {
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val departmentId = getInt("department.id").getOrElse(null)
+    val questionnaireId = getLong("questionnaire.id")
+    /** 得到本学期的唯一问卷 */
+    val builder = OqlBuilder.from[Questionnaire](classOf[EvaluateResult].getName, "evaluateResult")
+    builder.where("evaluateResult.clazz.semester.id=" + semesterId)
+    builder.select("distinct questionnaire")
+    val list = entityDao.search(builder)
+    val questionList = Collections.newBuffer[Question]
+    if (list.size > 0) {
+      list foreach { questionnaire =>
+        questionList ++= questionnaire.questions
+      }
+      //      for (int i = 0; i < list.size(); i++) {
+      //        Questionnaire questionnaire = (Questionnaire) list.get(i)
+      //        questionList.addAll(questionnaire.getQuestions())
+      //      }
+    } else {
+      redirect("search", "未找到评教记录!")
+    }
+    put("questionList", questionList)
+    if (semesterId != 0) {
+      semest = entityDao.get(classOf[Semester], semesterId)
+    }
+    put("semester", semest)
+    /** 教师评教总分 */
+    val quer = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
+      + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
+    quer.select("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id),teacher.state.department.name,teacher.id")
+    quer.join("evaluateResult.clazz.teachers", "tea")
+    quer.where("tea.id = teacher.id")
+    //    quer.where("teacher.endOn is null")
+    quer.where("evaluateResult.id=questionResult.result.id ")
+    quer.where("evaluateResult.clazz.semester.id=" + semesterId)
+    if (departmentId != null) {
+      quer.where("teacher.state.department.id=" + departmentId.toString())
+    }
+    quer.groupBy("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,teacher.state.department.name,teacher.id")
+    quer.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")
+    val liss = entityDao.search(quer)
+
+    put("evaluateTeaStasList", entityDao.search(quer))
+    val queres = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
+      + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
+    queres.select("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)")
+    queres.join("evaluateResult.clazz.teachers", "tea")
+    queres.where("tea.id = teacher.id")
+    //    queres.where("teacher.endOn is null")
+    queres.where("evaluateResult.id=questionResult.result.id ")
+    queres.where("evaluateResult.clazz.semester.id=" + semesterId)
+    queres.groupBy("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name")
+    queres.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")
+    val lits = entityDao.search(queres)
+    val numMaps = Collections.newMap[String, String]
+    var teaNums = 1
+    lits foreach { obs =>
+      teaNums += 1
+      numMaps.put(obs(0).toString(), teaNums.toString())
+    }
+    //    for (int i = 0; i < lits.size(); i++) {
+    //      Object[] obs = (Object[]) lits.get(i)
+    //      Integer teaNums = i + 1
+    //      numMaps.put(obs[0].toString(), teaNums.toString())
+    //    }
+    put("numTeaMaps", numMaps)
+    /** 教师各项得分 */
+    val evaluateRs = Collections.newMap[String, Float]
+    val quer1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
+      + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
+    quer1.select("teacher.user.code,evaluateResult.clazz.id,questionResult.question.id,sum(questionResult.score)/count(evaluateResult.id)")
+    quer1.join("evaluateResult.clazz.teachers", "tea")
+    quer1.where("tea.id = teacher.id")
+    //    quer1.where("teacher.endOn is null")
+    quer1.where("evaluateResult.id=questionResult.result.id")
+    quer1.where("evaluateResult.clazz.semester.id=" + semesterId)
+    if (departmentId != null) {
+      quer1.where("teacher.state.department.id=" + departmentId.toString())
+    }
+    quer1.groupBy("questionResult.question.id,teacher.user.code,evaluateResult.clazz.id")
+    quer1.orderBy("teacher.user.code,questionResult.question.id")
+    val lists = entityDao.search(quer1)
+    lists foreach { ob =>
+      if (ob.length > 0) {
+        val strs = ob(0).toString() + "_" + ob(1).toString() + "_" + ob(2).toString()
+        evaluateRs.put(strs, ob(3).toString().toFloat)
+      }
+    }
+    //    for (Iterator<?> iter = lists.iterator(); iter.hasNext();) {
+    //      Object[] ob = (Object[]) iter.next()
+    //      if (ob.length > 0) {
+    //        String strs = ob[0].toString() + "_" + ob[1].toString() + "_" + ob[2].toString()
+    //        evaluateRs.put(strs, Float.valueOf(ob[3].toString()))
+    //      }
+    //    }
+    put("evaluateRes", evaluateRs)
+    put("questionnaires", questis)
+    put("evaluateResults", evaResults)
+
+  }
+
+  def courseTypeEvaluate(courseType: Boolean): View = {
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val departmentId = getInt("department.id").getOrElse(null)
+    val questionnaireId = getLong("questionnaire.id").get
+    val buil = OqlBuilder.from(classOf[Indicator], "types")
+    put("indicators", entityDao.search(buil))
+    if (semesterId != 0) {
+      semest = entityDao.get(classOf[Semester], semesterId)
+    }
+    put("semester", semest)
+    /** 教师评教总分 */
+    val quer = OqlBuilder.from(classOf[EvaluateResult].getName + " evaluateResult,"
+      + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
+    quer.select("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)"
+      + ",evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code")
+    quer.join("evaluateResult.clazz.teachers", "tea")
+    //    quer.where("teacher.endOn is null")
+    quer.where("evaluateResult.id=questionResult.result.id and tea.id=teacher.id")
+    quer.where("evaluateResult.clazz.semester.id=" + semesterId)
+    quer.where("evaluateResult.questionnaire.id=" + questionnaireId)
+    if (departmentId != null) {
+      quer.where("evaluateResult.clazz.teachDepart.id=" + departmentId.toString())
+    }
+    quer.groupBy("teacher.user.code,evaluateResult.clazz.id,teacher.user.name,evaluateResult.clazz.course.name,evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code")
+    quer.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")
+    put("evaluateTeaStasList", entityDao.search(quer))
+    val queres = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
+      + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
+    queres.select("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)")
+    queres.join("evaluateResult.clazz.teachers", "tea")
+    //    queres.where("teacher.endOn is null")
+    queres.where("evaluateResult.id=questionResult.result.id and tea.id=teacher.id")
+    queres.where("evaluateResult.clazz.semester.id=" + semesterId)
+    queres.where("evaluateResult.questionnaire.id=" + questionnaireId)
+    if (courseType != false) {
+      queres.where("evaluateResult.clazz.course.courseType.practical=:courseTId", !courseType)
+    }
+    queres.groupBy("teacher.user.code,evaluateResult.clazz.id,teacher.user.name,evaluateResult.clazz.course.name")
+    queres.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")
+    val lits = entityDao.search(queres)
+    val numMaps = Collections.newMap[String, String]
+    var teaNums = 1
+    lits foreach { obs =>
+      teaNums += 1
+      numMaps.put(obs(0).toString(), teaNums.toString())
+    }
+    //    for (int i = 0; i < lits.size(); i++) {
+    //      Object[] obs = (Object[]) lits.get(i)
+    //      Integer teaNums = i + 1
+    //      numMaps.put(obs[0].toString(), teaNums.toString())
+    //    }
+    put("numTeaMaps", numMaps)
+    /** 教师各项得分 */
+    val evaluateRs = Collections.newMap[String, Float]
+    val quer1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
+      + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
+    quer1.select("teacher.user.code,evaluateResult.clazz.id,questionResult.question.id,sum(questionResult.score)/count(questionResult.question.id)")
+    quer1.join("evaluateResult.clazz.teachers", "tea")
+    quer1.where("tea.id = teacher.id")
+    //    quer1.where("teacher.endOn is null")
+    quer1.where("evaluateResult.id=questionResult.result.id")
+    quer1.where("evaluateResult.clazz.semester.id=" + semesterId)
+    quer1.where("evaluateResult.questionnaire.id=" + questionnaireId)
+    if (departmentId != null) {
+      quer1.where("evaluateResult.clazz.teachDepart.id=" + departmentId.toString())
+    }
+    if (courseType != false) {
+      quer1.where("evaluateResult.clazz.course.courseType.practical=:courseTId", !courseType)
+    }
+    quer1.groupBy("questionResult.question.id,teacher.user.code,evaluateResult.clazz.id")
+    quer1.orderBy("teacher.user.code")
+    val lists = entityDao.search(quer1)
+    lists foreach { ob =>
+      if (ob.length > 0) {
+        val strs = ob(0).toString() + "_" + ob(1).toString() + "_" + ob(2).toString()
+        evaluateRs.put(strs, ob(3).toString().toFloat)
+      }
+    }
+    //    for (Iterator<?> iter = lists.iterator(); iter.hasNext();) {
+    //      Object[] ob = (Object[]) iter.next()
+    //      if (ob.length > 0) {
+    //        // if (ob[0].toString().equals("3301")) {
+    //        // System.out.println(ob[3].toString())
+    //        // }
+    //        String strs = ob[0].toString() + "_" + ob[1].toString() + "_" + ob[2].toString()
+    //        evaluateRs.put(strs, Float.valueOf(ob[3].toString()))
+    //      }
+    //    }
+    put("evaluateRes", evaluateRs)
+    put("questionnaires", questis)
+    put("evaluateResults", evaResults)
+    return forward()
+  }
+
+  def stuEvaluateResults(): View = {
+    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
+    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
+    val depId = getInt("department.id").getOrElse(null)
+    val questionnaireId = getLong("questionnaire.id").get
+    /** 得到本学期的唯一问卷 */
+    val builder = OqlBuilder.from[Questionnaire](classOf[EvaluateResult].getName, "evaluateResult")
+    builder.select("distinct evaluateResult.questionnaire")
+    builder.where("evaluateResult.clazz.semester.id=" + semesterId)
+    builder.where("evaluateResult.questionnaire.id=" + questionnaireId)
+    val list = entityDao.search(builder)
+    val questionList = Collections.newBuffer[Question]
+    if (list.size > 0) {
+      list foreach { questionnaire =>
+        questionList ++= questionnaire.questions
+      }
+      //      for (int i = 0; i < list.size(); i++) {
+      //        Questionnaire questionnaire = (Questionnaire) list.get(i)
+      //        questionList.addAll(questionnaire.getQuestions())
+      //      }
+    } else {
+      redirect("search", "未找到评教记录!")
+    }
+    put("questionList", questionList)
+    val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult")
+    query.where("evaluateResult.clazz.semester.id=:semesterId", semesterId)
+    if (depId != 0) {
+      query.where("evaluateResult.department.id=:depId", depId)
+    }
+    query.limit(getPageLimit)
+    put("evaluateRList", entityDao.search(query))
+    /** 教师各项得分 */
+    val evaluateRs = Collections.newMap[String, String]
+    val quer1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
+      + classOf[QuestionResult].getName + " questionResult")
+    quer1
+      .select("evaluateResult.id,questionResult.question.id,questionResult.score,questionResult.option.name")
+    quer1.where("evaluateResult.id=questionResult.result.id")
+    quer1.where("evaluateResult.clazz.semester.id=" + semesterId)
+    if (depId != 0) {
+      quer1.where("evaluateResult.department.id=:depId", depId)
+    }
+    quer1
+      .groupBy("evaluateResult.id,questionResult.question.id,questionResult.score,questionResult.option.name")
+    val lists = entityDao.search(quer1)
+    lists foreach { ob =>
+      if (ob.length > 0) {
+        val strs = ob(0).toString() + "_" + ob(1).toString()
+        if (ob(2).toString().toFloat > 0) {
+          evaluateRs.put(strs, ob(2).toString())
+        } else {
+          evaluateRs.put(strs, ob(3).toString())
+        }
+      }
+    }
+    //    for (Iterator<?> iter = lists.iterator(); iter.hasNext();) {
+    //      Object[] ob = (Object[]) iter.next()
+    //      if (ob.length > 0) {
+    //        String strs = ob[0].toString() + "_" + ob[1].toString()
+    //        if (Float.valueOf(ob[2].toString()) > 0) {
+    //          evaluateRs.put(strs, ob[2].toString())
+    //        } else {
+    //          evaluateRs.put(strs, ob[3].toString())
+    //        }
+    //      }
+    //    }
+    put("evaluateRes", evaluateRs)
+    forward()
+  }
+
+  def evaluateHistorys(): View = {
+    forward()
+  }
+
   def teaEvaluateInfo(): View = {
     val str = get("idStrs").get
     val strs = str.split(",")
@@ -391,108 +662,6 @@ class EvaluateStatisticsAction extends ProjectRestfulAction[CourseEvalStat] with
     schQuery.orderBy("questionResult.question.id")
     put("schQRList", entityDao.search(schQuery))
     forward()
-  }
-
-  def clazzEvaluate(): Unit = {
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
-    val departmentId = getInt("department.id").getOrElse(null)
-    val questionnaireId = getLong("questionnaire.id")
-    /** 得到本学期的唯一问卷 */
-    val builder = OqlBuilder.from[Questionnaire](classOf[EvaluateResult].getName, "evaluateResult")
-    builder.where("evaluateResult.clazz.semester.id=" + semesterId)
-    builder.select("distinct questionnaire")
-    val list = entityDao.search(builder)
-    val questionList = Collections.newBuffer[Question]
-    if (list.size > 0) {
-      list foreach { questionnaire =>
-        questionList ++= questionnaire.questions
-      }
-      //      for (int i = 0; i < list.size(); i++) {
-      //        Questionnaire questionnaire = (Questionnaire) list.get(i)
-      //        questionList.addAll(questionnaire.getQuestions())
-      //      }
-    } else {
-      redirect("search", "未找到评教记录!")
-    }
-    put("questionList", questionList)
-    if (semesterId != 0) {
-      semest = entityDao.get(classOf[Semester], semesterId)
-    }
-    put("semester", semest)
-    /** 教师评教总分 */
-    val quer = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
-      + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
-    quer.select("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id),teacher.state.department.name,teacher.id")
-    quer.join("evaluateResult.clazz.teachers", "tea")
-    quer.where("tea.id = teacher.id")
-    //    quer.where("teacher.endOn is null")
-    quer.where("evaluateResult.id=questionResult.result.id ")
-    quer.where("evaluateResult.clazz.semester.id=" + semesterId)
-    if (departmentId != null) {
-      quer.where("teacher.state.department.id=" + departmentId.toString())
-    }
-    quer.groupBy("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,teacher.state.department.name,teacher.id")
-    quer.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")
-    val liss = entityDao.search(quer)
-
-    put("evaluateTeaStasList", entityDao.search(quer))
-    val queres = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
-      + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
-    queres.select("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)")
-    queres.join("evaluateResult.clazz.teachers", "tea")
-    queres.where("tea.id = teacher.id")
-    //    queres.where("teacher.endOn is null")
-    queres.where("evaluateResult.id=questionResult.result.id ")
-    queres.where("evaluateResult.clazz.semester.id=" + semesterId)
-    queres.groupBy("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name")
-    queres.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")
-    val lits = entityDao.search(queres)
-    val numMaps = Collections.newMap[String, String]
-    var teaNums = 1
-    lits foreach { obs =>
-      teaNums += 1
-      numMaps.put(obs(0).toString(), teaNums.toString())
-    }
-    //    for (int i = 0; i < lits.size(); i++) {
-    //      Object[] obs = (Object[]) lits.get(i)
-    //      Integer teaNums = i + 1
-    //      numMaps.put(obs[0].toString(), teaNums.toString())
-    //    }
-    put("numTeaMaps", numMaps)
-    /** 教师各项得分 */
-    val evaluateRs = Collections.newMap[String, Float]
-    val quer1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
-      + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
-    quer1.select("teacher.user.code,evaluateResult.clazz.id,questionResult.question.id,sum(questionResult.score)/count(evaluateResult.id)")
-    quer1.join("evaluateResult.clazz.teachers", "tea")
-    quer1.where("tea.id = teacher.id")
-    //    quer1.where("teacher.endOn is null")
-    quer1.where("evaluateResult.id=questionResult.result.id")
-    quer1.where("evaluateResult.clazz.semester.id=" + semesterId)
-    if (departmentId != null) {
-      quer1.where("teacher.state.department.id=" + departmentId.toString())
-    }
-    quer1.groupBy("questionResult.question.id,teacher.user.code,evaluateResult.clazz.id")
-    quer1.orderBy("teacher.user.code,questionResult.question.id")
-    val lists = entityDao.search(quer1)
-    lists foreach { ob =>
-      if (ob.length > 0) {
-        val strs = ob(0).toString() + "_" + ob(1).toString() + "_" + ob(2).toString()
-        evaluateRs.put(strs, ob(3).toString().toFloat)
-      }
-    }
-    //    for (Iterator<?> iter = lists.iterator(); iter.hasNext();) {
-    //      Object[] ob = (Object[]) iter.next()
-    //      if (ob.length > 0) {
-    //        String strs = ob[0].toString() + "_" + ob[1].toString() + "_" + ob[2].toString()
-    //        evaluateRs.put(strs, Float.valueOf(ob[3].toString()))
-    //      }
-    //    }
-    put("evaluateRes", evaluateRs)
-    put("questionnaires", questis)
-    put("evaluateResults", evaResults)
-
   }
 
   def clazzTeaEvaluate(): View = {
@@ -685,171 +854,6 @@ class EvaluateStatisticsAction extends ProjectRestfulAction[CourseEvalStat] with
     forward()
   }
 
-  def courseTypeEvaluate(courseType: Boolean): View = {
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
-    val departmentId = getInt("department.id").getOrElse(null)
-    val questionnaireId = getLong("questionnaire.id").get
-    val buil = OqlBuilder.from(classOf[Indicator], "types")
-    put("indicators", entityDao.search(buil))
-    if (semesterId != 0) {
-      semest = entityDao.get(classOf[Semester], semesterId)
-    }
-    put("semester", semest)
-    /** 教师评教总分 */
-    val quer = OqlBuilder.from(classOf[EvaluateResult].getName + " evaluateResult,"
-      + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
-    quer.select("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)"
-      + ",evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code")
-    quer.join("evaluateResult.clazz.teachers", "tea")
-    //    quer.where("teacher.endOn is null")
-    quer.where("evaluateResult.id=questionResult.result.id and tea.id=teacher.id")
-    quer.where("evaluateResult.clazz.semester.id=" + semesterId)
-    quer.where("evaluateResult.questionnaire.id=" + questionnaireId)
-    if (departmentId != null) {
-      quer.where("evaluateResult.clazz.teachDepart.id=" + departmentId.toString())
-    }
-    quer.groupBy("teacher.user.code,evaluateResult.clazz.id,teacher.user.name,evaluateResult.clazz.course.name,evaluateResult.clazz.crn,evaluateResult.clazz.teachDepart.name,evaluateResult.clazz.course.code")
-    quer.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")
-    put("evaluateTeaStasList", entityDao.search(quer))
-    val queres = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
-      + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
-    queres.select("teacher.user.code,teacher.user.name,evaluateResult.clazz.id,evaluateResult.clazz.course.name,sum(questionResult.score)/count(distinct evaluateResult.id),count(distinct evaluateResult.id)")
-    queres.join("evaluateResult.clazz.teachers", "tea")
-    //    queres.where("teacher.endOn is null")
-    queres.where("evaluateResult.id=questionResult.result.id and tea.id=teacher.id")
-    queres.where("evaluateResult.clazz.semester.id=" + semesterId)
-    queres.where("evaluateResult.questionnaire.id=" + questionnaireId)
-    if (courseType != false) {
-      queres.where("evaluateResult.clazz.course.courseType.practical=:courseTId", !courseType)
-    }
-    queres.groupBy("teacher.user.code,evaluateResult.clazz.id,teacher.user.name,evaluateResult.clazz.course.name")
-    queres.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")
-    val lits = entityDao.search(queres)
-    val numMaps = Collections.newMap[String, String]
-    var teaNums = 1
-    lits foreach { obs =>
-      teaNums += 1
-      numMaps.put(obs(0).toString(), teaNums.toString())
-    }
-    //    for (int i = 0; i < lits.size(); i++) {
-    //      Object[] obs = (Object[]) lits.get(i)
-    //      Integer teaNums = i + 1
-    //      numMaps.put(obs[0].toString(), teaNums.toString())
-    //    }
-    put("numTeaMaps", numMaps)
-    /** 教师各项得分 */
-    val evaluateRs = Collections.newMap[String, Float]
-    val quer1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
-      + classOf[QuestionResult].getName + " questionResult," + classOf[Teacher].getName + " teacher")
-    quer1.select("teacher.user.code,evaluateResult.clazz.id,questionResult.question.id,sum(questionResult.score)/count(questionResult.question.id)")
-    quer1.join("evaluateResult.clazz.teachers", "tea")
-    quer1.where("tea.id = teacher.id")
-    //    quer1.where("teacher.endOn is null")
-    quer1.where("evaluateResult.id=questionResult.result.id")
-    quer1.where("evaluateResult.clazz.semester.id=" + semesterId)
-    quer1.where("evaluateResult.questionnaire.id=" + questionnaireId)
-    if (departmentId != null) {
-      quer1.where("evaluateResult.clazz.teachDepart.id=" + departmentId.toString())
-    }
-    if (courseType != false) {
-      quer1.where("evaluateResult.clazz.course.courseType.practical=:courseTId", !courseType)
-    }
-    quer1.groupBy("questionResult.question.id,teacher.user.code,evaluateResult.clazz.id")
-    quer1.orderBy("teacher.user.code")
-    val lists = entityDao.search(quer1)
-    lists foreach { ob =>
-      if (ob.length > 0) {
-        val strs = ob(0).toString() + "_" + ob(1).toString() + "_" + ob(2).toString()
-        evaluateRs.put(strs, ob(3).toString().toFloat)
-      }
-    }
-    //    for (Iterator<?> iter = lists.iterator(); iter.hasNext();) {
-    //      Object[] ob = (Object[]) iter.next()
-    //      if (ob.length > 0) {
-    //        // if (ob[0].toString().equals("3301")) {
-    //        // System.out.println(ob[3].toString())
-    //        // }
-    //        String strs = ob[0].toString() + "_" + ob[1].toString() + "_" + ob[2].toString()
-    //        evaluateRs.put(strs, Float.valueOf(ob[3].toString()))
-    //      }
-    //    }
-    put("evaluateRes", evaluateRs)
-    put("questionnaires", questis)
-    put("evaluateResults", evaResults)
-    return forward()
-  }
-
-  def stuEvaluateResults(): View = {
-    val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
-    val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
-    val depId = getInt("department.id").getOrElse(null)
-    val questionnaireId = getLong("questionnaire.id").get
-    /** 得到本学期的唯一问卷 */
-    val builder = OqlBuilder.from[Questionnaire](classOf[EvaluateResult].getName, "evaluateResult")
-    builder.select("distinct evaluateResult.questionnaire")
-    builder.where("evaluateResult.clazz.semester.id=" + semesterId)
-    builder.where("evaluateResult.questionnaire.id=" + questionnaireId)
-    val list = entityDao.search(builder)
-    val questionList = Collections.newBuffer[Question]
-    if (list.size > 0) {
-      list foreach { questionnaire =>
-        questionList ++= questionnaire.questions
-      }
-      //      for (int i = 0; i < list.size(); i++) {
-      //        Questionnaire questionnaire = (Questionnaire) list.get(i)
-      //        questionList.addAll(questionnaire.getQuestions())
-      //      }
-    } else {
-      redirect("search", "未找到评教记录!")
-    }
-    put("questionList", questionList)
-    val query = OqlBuilder.from(classOf[EvaluateResult], "evaluateResult")
-    query.where("evaluateResult.clazz.semester.id=:semesterId", semesterId)
-    if (depId != 0) {
-      query.where("evaluateResult.department.id=:depId", depId)
-    }
-    query.limit(getPageLimit)
-    put("evaluateRList", entityDao.search(query))
-    /** 教师各项得分 */
-    val evaluateRs = Collections.newMap[String, String]
-    val quer1 = OqlBuilder.from[Array[Any]](classOf[EvaluateResult].getName + " evaluateResult,"
-      + classOf[QuestionResult].getName + " questionResult")
-    quer1
-      .select("evaluateResult.id,questionResult.question.id,questionResult.score,questionResult.option.name")
-    quer1.where("evaluateResult.id=questionResult.result.id")
-    quer1.where("evaluateResult.clazz.semester.id=" + semesterId)
-    if (depId != 0) {
-      quer1.where("evaluateResult.department.id=:depId", depId)
-    }
-    quer1
-      .groupBy("evaluateResult.id,questionResult.question.id,questionResult.score,questionResult.option.name")
-    val lists = entityDao.search(quer1)
-    lists foreach { ob =>
-      if (ob.length > 0) {
-        val strs = ob(0).toString() + "_" + ob(1).toString()
-        if (ob(2).toString().toFloat > 0) {
-          evaluateRs.put(strs, ob(2).toString())
-        } else {
-          evaluateRs.put(strs, ob(3).toString())
-        }
-      }
-    }
-    //    for (Iterator<?> iter = lists.iterator(); iter.hasNext();) {
-    //      Object[] ob = (Object[]) iter.next()
-    //      if (ob.length > 0) {
-    //        String strs = ob[0].toString() + "_" + ob[1].toString()
-    //        if (Float.valueOf(ob[2].toString()) > 0) {
-    //          evaluateRs.put(strs, ob[2].toString())
-    //        } else {
-    //          evaluateRs.put(strs, ob[3].toString())
-    //        }
-    //      }
-    //    }
-    put("evaluateRes", evaluateRs)
-    forward()
-  }
-
   def stuEvalutateResultsExport(): View = {
     val semesterId = getInt("semester.id")
     val depId = getInt("department.id")
@@ -911,10 +915,6 @@ class EvaluateStatisticsAction extends ProjectRestfulAction[CourseEvalStat] with
     put("evaluateRes", evaluateRs)
     response.setContentType("application/vnd.ms-excel;charset=UTF-8")
     response.setHeader("Content-Disposition", "attachment;filename=stuEvaluateResultsExport.xls")
-    forward()
-  }
-
-  def evaluateHistorys(): View = {
     forward()
   }
 }

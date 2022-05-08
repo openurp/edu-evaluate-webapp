@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -17,14 +17,15 @@
 
 package org.openurp.qos.evaluation.department.helper
 
-import java.time.Instant
-
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.data.transfer.importer.{ImportListener, ImportResult}
 import org.beangle.security.Securities
-import org.openurp.base.edu.model.{ Semester, Teacher}
+import org.openurp.base.edu.model.Teacher
+import org.openurp.base.model.Semester
 import org.openurp.qos.evaluation.department.model.DepartEvaluate
 import org.openurp.qos.evaluation.model.Questionnaire
+
+import java.time.Instant
 
 /**
  * @author xinzhou
@@ -56,9 +57,9 @@ class ImportDepartListener(entityDao: EntityDao) extends ImportListener {
     entityDao.saveOrUpdate(departEvaluate)
   }
 
-  protected def getTeacher():Teacher={
+  protected def getTeacher(): Teacher = {
     val builder = OqlBuilder.from(classOf[Teacher], "t")
-    builder.where("t.user.code=:code",Securities.user)
+    builder.where("t.user.code=:code", Securities.user)
     entityDao.search(builder).head
   }
 }

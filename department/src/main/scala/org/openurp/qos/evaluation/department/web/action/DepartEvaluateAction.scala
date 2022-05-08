@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -17,8 +17,6 @@
 
 package org.openurp.qos.evaluation.department.web.action
 
-import java.time.{Instant, LocalDate}
-
 import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.commons.lang.ClassLoaders
 import org.beangle.data.dao.OqlBuilder
@@ -27,26 +25,27 @@ import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.security.Securities
 import org.beangle.web.action.view.{Stream, View}
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.model.Department
-import org.openurp.base.edu.model.{Semester, Teacher}
+import org.openurp.base.edu.model.Teacher
+import org.openurp.base.model.{Department, Semester}
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.qos.evaluation.department.helper.ImportDepartListener
 import org.openurp.qos.evaluation.department.model.{DepartEvaluate, DepartQuestion}
-import org.openurp.qos.evaluation.model.{Question, Indicator, Questionnaire}
+import org.openurp.qos.evaluation.model.{Indicator, Question, Questionnaire}
 import org.openurp.starter.edu.helper.ProjectSupport
 
+import java.time.{Instant, LocalDate}
 import scala.collection.mutable.Buffer
 
 /**
  * @author xinzhou
  */
-class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ProjectSupport{
+class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ProjectSupport {
 
   override def indexSetting(): Unit = {
     put("departments", findInSchool(classOf[Department]))
     put("semesters", entityDao.getAll(classOf[Semester]))
-    put("currentSemester",getCurrentSemester)
+    put("currentSemester", getCurrentSemester)
   }
 
   def importTeachers(): View = {
@@ -54,7 +53,7 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ProjectSup
     getInt("departEvaluation.semester.id") foreach { semesterId => builder.where("clazz.semester.id=:id", semesterId) }
     builder.join("clazz.teachers", "teacher")
     builder.select("distinct teacher.id , clazz.teachDepart.id , clazz.semester.id")
-//    builder.where("clazz.teachDepart.id=:departId", getTeacher.user.department.id)
+    //    builder.where("clazz.teachDepart.id=:departId", getTeacher.user.department.id)
     builder.where("not exists (from " + classOf[DepartEvaluate].getName + " de where de.semester = clazz.semester and de.teacher = teacher and de.department = clazz.teachDepart)")
     val datas = entityDao.search(builder)
     val departEvaluates = Collections.newBuffer[DepartEvaluate]
@@ -73,28 +72,6 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ProjectSup
     entityDao.saveOrUpdate(departEvaluates)
     val semesterId = get("departEvaluate.semester.id").orNull
     redirect("search", s"orderBy=departEvaluate.teacher.user.code asc&departEvaluate.semester.id=$semesterId", "导入完成")
-  }
-
-  override protected def getQueryBuilder: OqlBuilder[DepartEvaluate] = {
-    val query = OqlBuilder.from(classOf[DepartEvaluate], "departEvaluate")
-    getBoolean("passed") match {
-      case Some(true) => query.where("departEvaluate.totalScore is not null")
-      case Some(false) => query.where("departEvaluate.totalScore is null")
-      case None =>
-    }
-
-    val builder = OqlBuilder.from(classOf[Teacher], "s")
-      .where("s.user.code=:code", Securities.user)
-      .where("s.project=:project", getProject)
-    val teachers = entityDao.search(builder)
-    if (teachers.isEmpty) {
-      throw new RuntimeException("Cannot find teachers with code " + Securities.user)
-    } else {
-
-      query.where("departEvaluate.department.id=:id", teachers.head.user.department.id)
-      populateConditions(query)
-      query.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
-    }
   }
 
   override def editSetting(departEvaluate: DepartEvaluate): Unit = {
@@ -157,6 +134,28 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ProjectSup
 
   def importTemplate: View = {
     Stream(ClassLoaders.getResourceAsStream("departEvaluate.xls").get, "application/vnd.ms-excel", "评教结果.xls")
+  }
+
+  override protected def getQueryBuilder: OqlBuilder[DepartEvaluate] = {
+    val query = OqlBuilder.from(classOf[DepartEvaluate], "departEvaluate")
+    getBoolean("passed") match {
+      case Some(true) => query.where("departEvaluate.totalScore is not null")
+      case Some(false) => query.where("departEvaluate.totalScore is null")
+      case None =>
+    }
+
+    val builder = OqlBuilder.from(classOf[Teacher], "s")
+      .where("s.user.code=:code", Securities.user)
+      .where("s.project=:project", getProject)
+    val teachers = entityDao.search(builder)
+    if (teachers.isEmpty) {
+      throw new RuntimeException("Cannot find teachers with code " + Securities.user)
+    } else {
+
+      query.where("departEvaluate.department.id=:id", teachers.head.user.department.id)
+      populateConditions(query)
+      query.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
+    }
   }
 
   protected override def configImport(setting: ImportSetting): Unit = {

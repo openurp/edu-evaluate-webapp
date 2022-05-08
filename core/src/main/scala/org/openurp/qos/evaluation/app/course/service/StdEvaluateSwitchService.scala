@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -20,7 +20,7 @@ package org.openurp.qos.evaluation.app.course.service
 import java.time.Instant
 
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
-import org.openurp.base.edu.model.{Project, Semester}
+import org.openurp.base.model.{Project, Semester}
 import org.openurp.qos.evaluation.app.course.model.StdEvaluateSwitch
 
 class StdEvaluateSwitchService(entityDao: EntityDao) {
