@@ -1,0 +1,1 @@
+[#include "../courseStat/info.ftl"/]

@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <cdi>
-  <container name="web">
-    <module class="org.openurp.edu.evaluation.clazz.web.DefaultModule"/>
+  <container>
+    <module class="org.openurp.qos.evaluation.clazz.web.action.admin.DefaultModule"/>
+    <module class="org.openurp.qos.evaluation.clazz.web.action.teacher.DefaultModule"/>
+    <module class="org.openurp.qos.evaluation.clazz.web.action.publik.DefaultModule"/>
+    <module class="org.openurp.qos.evaluation.clazz.web.action.std.DefaultModule" />
   </container>
 </cdi>

@@ -1,0 +1,241 @@
+.chart-container {
+    margin: 15px 0;
+    padding: 0 5px;
+    /*border: 1px solid #F7F7F7*/
+}
+
+.foot_list_box img {
+    width: 40px
+}
+
+.foot_list_box table {
+    width: 100%
+}
+
+.foot_list_box td {
+    width: 50%
+}
+
+ol.list {
+    margin: 0;
+    padding-left: 2em;
+}
+
+.header-photo {
+    display: block;
+    position: relative;
+    width: 100%;
+}
+
+.header {
+    position: relative;
+    font-size: 1.2em;
+    color: #fff;
+    text-align: center;
+}
+
+.header-title {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 40%;
+    margin-top: -0.6em;
+    font-size: 1.2em;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.view {
+    position: relative;
+    margin-top: -20px;
+    padding: 0 15px
+}
+
+.pj_container {
+    padding: 25px 20px;
+    margin: 0 auto;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.zb-title {
+    padding: 15px 0;
+    text-align: center;
+    line-height: 4.4em;
+    font-size: 1.1em;
+    color: #666;
+    /*border-top: 1px dashed #ccc;*/
+    /*border-bottom: 1px dashed #ccc;*/
+}
+
+.line-divider {
+    position: relative;
+    border-top: 1px dashed #ebe7e6;
+}
+
+.line-divider:before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -28px;
+    width: 20px;
+    height: 20px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    background: rgb(249, 245, 244);
+}
+
+.line-divider:after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    right: -28px;
+    width: 20px;
+    height: 20px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    background: rgb(249, 245, 244);
+}
+
+.title-1 {
+    padding: 40px 0 5px 0;
+    font-size: 1em;
+}
+
+.title-1>span {
+    color: rgb(255, 83, 100);
+}
+
+.title-2 {
+    padding: 0 0 15px 0;
+}
+
+.fenxi {
+    padding: 30px 0 30px 0;
+    line-height: 1.5em;
+}
+
+.fenxi b {
+    font-size: 1.5em;
+    color: #fc7c89;
+}
+
+.fenxijieguo {
+    padding: 5px 0;
+    color: rgb(44, 168, 255);
+}
+
+.zhpj {
+    color: #666;
+    font-size: 1em;
+    padding: 0px 0px 15px 0;
+    /*border-bottom: 1px dashed #ccc;*/
+    text-align: center;
+}
+
+.btn-container {
+    padding: 0 15px;
+}
+
+.btn {
+    display: block;
+    margin: 25px 0;
+    padding: 15px 0;
+    font-size: 1.1em;
+    text-align: center;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    /* background-color: #389df9; */
+    background: -webkit-linear-gradient(left, #fb5a2f, #ff4444);
+    /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right, #fb5a2f, #ff4444);
+    /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right, #fb5a2f, #ff4444);
+    /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right, #fb5a2f, #ff4444);
+}
+
+.copy {
+    padding: 10px 0;
+    text-align: center;
+}
+
+/*
+.chart {
+    height: 360px;
+
+}*/
+
+.rank {
+    position: relative;
+    color: #333;
+}
+
+.rank-title1 {
+    position: absolute;
+    top: 35px;
+    left: 3%;
+    display: inline-block;
+    width: 120px;
+    height: 16px;
+    -webkit-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+
+    -webkit-transform-origin: bottom left;
+    transform-origin: bottom left;
+}
+
+.rank-container {
+    position: relative;
+    margin: 0 0 0 8%;
+    width: 92%;
+    padding: 25px 0;
+    border-left: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.rank-bar {
+    width: 100%;
+    height: 2px;
+    background-color: rgb(44, 168, 255);
+}
+
+.rank-circle {
+    position: absolute;
+    top: 1px;
+    /*left: 100px;*/
+}
+
+.rank-circle span {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border: 2px solid rgb(44, 168, 255);
+    border-radius: 50%;
+}
+
+.rank-num {
+    margin-left: -12px;
+    font-size: 12px;
+}
+
+.tbl-rank-name {
+    table-layout: fixed;
+    margin: 0 0 0 8%;
+    width: 92%;
+}
+
+.tbl-rank-name td {
+    padding: 10px 0 0 0;
+}
+
+.txt-red{
+    color: rgb(255, 83, 100);
+}
