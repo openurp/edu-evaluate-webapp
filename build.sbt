@@ -70,5 +70,5 @@ lazy val webapp = (project in file("webapp"))
     libraryDependencies ++= Seq(openurp_stater_web, openurp_base_tag)
   ).dependsOn(core, clazz, questionnaire, department)
 
-
+publish / skip := true
 
