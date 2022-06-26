@@ -22,8 +22,10 @@ import org.beangle.data.transfer.importer.{ImportListener, ImportResult}
 import org.beangle.security.Securities
 import org.openurp.base.edu.model.Teacher
 import org.openurp.base.model.Semester
+import org.openurp.qos.evaluation.config.Questionnaire
 import org.openurp.qos.evaluation.department.model.DepartEvaluate
-import org.openurp.qos.evaluation.model.Questionnaire
+
+import java.time.Instant
 
 import java.time.Instant
 
@@ -50,7 +52,7 @@ class ImportDepartListener(entityDao: EntityDao) extends ImportListener {
 
   override def onItemFinish(tr: ImportResult): Unit = {
     val departEvaluate = tr.transfer.current.asInstanceOf[DepartEvaluate]
-    val questionnaire = entityDao.get(classOf[Questionnaire], 322L)
+    val questionnaire = entityDao.get(classOf[Questionnaire], 322L) //FIXME 322 magicNo
     departEvaluate.questionnaire = questionnaire
     departEvaluate.evaluateAt = Instant.now
     departEvaluate.department = getTeacher().user.department

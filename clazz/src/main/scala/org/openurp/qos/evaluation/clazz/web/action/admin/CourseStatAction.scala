@@ -24,11 +24,11 @@ import org.beangle.ems.app.Ems
 import org.beangle.web.action.annotation.{mapping, param}
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.edu.code.model.CourseCategory
+import org.openurp.base.edu.code.CourseCategory
 import org.openurp.base.model.Semester
 import org.openurp.qos.evaluation.clazz.model.{CategoryEvalStat, CourseEvalStat, DepartEvalStat}
 import org.openurp.qos.evaluation.clazz.web.helper.StatCoursePropertyExtractor
-import org.openurp.qos.evaluation.model.AssessGrade
+import org.openurp.qos.evaluation.config.AssessGrade
 import org.openurp.starter.edu.helper.ProjectSupport
 
 class CourseStatAction extends RestfulAction[CourseEvalStat] with ProjectSupport {

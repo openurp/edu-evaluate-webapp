@@ -26,7 +26,7 @@ import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.base.model.Project
-import org.openurp.qos.evaluation.model.{OptionGroup, Question, Questionnaire}
+import org.openurp.qos.evaluation.config.{OptionGroup, Question, Questionnaire}
 import org.openurp.qos.evaluation.questionnaire.service.IndicatorService
 import org.openurp.starter.edu.helper.ProjectSupport
 

@@ -25,7 +25,7 @@ import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Semester
 import org.openurp.qos.evaluation.clazz.model.CourseEvalStat
 import org.openurp.qos.evaluation.clazz.web.action.admin.ProjectRestfulAction
-import org.openurp.qos.evaluation.model.Option
+import org.openurp.qos.evaluation.config.Option
 
 import java.time.LocalDate
 

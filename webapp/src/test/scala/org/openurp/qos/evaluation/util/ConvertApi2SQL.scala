@@ -33,6 +33,7 @@ object ConvertApi2SQL {
     //create table qos.evaluate_data3(id bigint,semester_no varchar(20),clazz_no varchar(4),teacher_no varchar(15),course_no varchar(20),teach_depart_no varchar(20),std_no varchar(20),conclusion varchar(100),details varchar(1000),created_at varchar(30));
     val gson = new Gson()
     val utf8 = Charset.forName("UTF-8")
+    //https://pjxt.ecupl.edu.cn/api/open/feedback/index?semester_no=202120222&type=1&clazz_no=2021202220753&limit=2000
     val url = "https://pjxt.ecupl.edu.cn/api/open/result/index?semester_no=202120221&limit=2000"
     val content = HttpUtils.getText(new URL(url), HttpMethods.GET, utf8, Some({ c =>
       c.setConnectTimeout(60 * 1000);

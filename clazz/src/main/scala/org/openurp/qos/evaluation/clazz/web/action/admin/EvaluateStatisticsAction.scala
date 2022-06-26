@@ -26,7 +26,7 @@ import org.openurp.base.model.{Department, Semester}
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.clazz.model.{CourseEvalStat, EvaluateResult, QuestionResult}
 import org.openurp.qos.evaluation.clazz.web.action.admin.ProjectRestfulAction
-import org.openurp.qos.evaluation.model.{Indicator, Question, Questionnaire}
+import org.openurp.qos.evaluation.config.{Indicator, Question, Questionnaire}
 
 import java.time.LocalDate
 

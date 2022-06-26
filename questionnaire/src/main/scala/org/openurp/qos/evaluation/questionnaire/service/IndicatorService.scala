@@ -20,7 +20,7 @@ package org.openurp.qos.evaluation.questionnaire.service
 import java.time.LocalDate
 
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
-import org.openurp.qos.evaluation.model.{Question, Indicator}
+import org.openurp.qos.evaluation.config.{Question, Indicator}
 
 class IndicatorService(entityDao: EntityDao) {
 

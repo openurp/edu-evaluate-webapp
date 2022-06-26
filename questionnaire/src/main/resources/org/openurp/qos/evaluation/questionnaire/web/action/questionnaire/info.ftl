@@ -8,7 +8,7 @@
 ${(questionnaire.title?html)?default('')}</b>
 </pre>
 [/#if]
-<div align="center" style="font:bold 15px/20px">问卷描述：${(questionnaire.description?html)?default('')}&nbsp;&nbsp;&nbsp;问卷制作部门:${questionnaire.depart.name}&nbsp;&nbsp;&nbsp;</div>
+<div align="center" style="font:bold 15px/20px">问卷描述：${(questionnaire.description?html)?default('')}&nbsp;&nbsp;&nbsp;问卷制作部门:${(questionnaire.depart.name)!}&nbsp;&nbsp;&nbsp;</div>
 <div class="grid">
     <table class="gridtable" >
         <thead class="gridhead">
@@ -21,7 +21,7 @@ ${(questionnaire.title?html)?default('')}</b>
         </thead>
         <tbody>
             [#assign index=1]
-            [#list questionTree?keys?sort_by("priority")?reverse as key]
+            [#list questionTree?keys?sort_by("code")?reverse as key]
                 <tr class="griddata-${(key_index%2==0)?string("even","odd")}">
                     <td rowSpan="${questionTree.get(key)?size}" align="center">
                         ${key.name}

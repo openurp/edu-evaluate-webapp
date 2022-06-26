@@ -22,7 +22,7 @@ import org.beangle.commons.collection.Order
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.qos.evaluation.model.{Question, Indicator}
+import org.openurp.qos.evaluation.config.{Question, Indicator}
 import org.openurp.starter.edu.helper.ProjectSupport
 
 class IndicatorAction extends RestfulAction[Indicator] with ProjectSupport {

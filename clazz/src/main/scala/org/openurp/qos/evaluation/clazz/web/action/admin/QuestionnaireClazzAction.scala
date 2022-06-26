@@ -21,14 +21,14 @@ import org.beangle.commons.collection.Order
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.{OqlBuilder, QueryBuilder}
 import org.beangle.web.action.view.View
-import org.openurp.base.edu.code.model.CourseType
+import org.openurp.base.edu.code.CourseType
 import org.openurp.base.model.Semester
 import org.openurp.base.model.Department
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.app.course.service.StdEvaluateSwitchService
 import org.openurp.qos.evaluation.clazz.model.QuestionnaireClazz
 import org.openurp.qos.evaluation.clazz.web.action.admin.ProjectRestfulAction
-import org.openurp.qos.evaluation.model.Questionnaire
+import org.openurp.qos.evaluation.config.Questionnaire
 
 import java.time.LocalDate
 

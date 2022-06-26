@@ -2,7 +2,7 @@ import org.openurp.parent.Dependencies._
 import org.openurp.parent.Settings._
 
 ThisBuild / organization := "org.openurp.qos.evaluation"
-ThisBuild / version := "0.0.20"
+ThisBuild / version := "0.0.21"
 
 ThisBuild / scmInfo := Some(
   ScmInfo(
@@ -20,12 +20,13 @@ ThisBuild / developers := List(
   )
 )
 
-ThisBuild / description := "OpenURP QoS Evaluation"
+
+ThisBuild / description := "OpenURP QoS Evalution"
 ThisBuild / homepage := Some(url("http://openurp.github.io/qos-evaluation/index.html"))
 
-val apiVer = "0.25.0"
-val starterVer = "0.0.19"
-val baseVer = "0.1.27"
+val apiVer = "0.26.0"
+val starterVer = "0.0.21"
+val baseVer = "0.1.30"
 val openurp_edu_api = "org.openurp.edu" % "openurp-edu-api" % apiVer
 val openurp_qos_api = "org.openurp.qos" % "openurp-qos-api" % apiVer
 val openurp_stater_web = "org.openurp.starter" % "openurp-starter-web" % starterVer
@@ -70,5 +71,5 @@ lazy val webapp = (project in file("webapp"))
     libraryDependencies ++= Seq(openurp_stater_web, openurp_base_tag)
   ).dependsOn(core, clazz, questionnaire, department)
 
-
+publish / skip := true
 

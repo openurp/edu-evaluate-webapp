@@ -21,7 +21,7 @@
                         <td id="teacherName${teachTask.id}"><#list teachTask.arrangeInfo.teachers?if_exists?sort_by("name") as teacher><#if teacher_index == teachTask.arrangeInfo.teachers?size - 1>${teacher.name?if_exists}<#else>${teacher.name?if_exists},</#if></#list></td>
                         <td>${teachTask.semester.schoolYear}&nbsp;&nbsp;${teachTask.semester.name}</td>
                         <td>${(teachTask.teachDepart.name?html)!}</td>
-                        <td><input type="hidden" id="questionnaire${teachTask.id}" name="questionnaire${teachTask.id}" value="<#if teachTask.questionnaire?exists>true<#else>false</#if>"><#if teachTask.questionnaire?exists><input type="hidden" id="questionnaireValue${teachTask.id}" name="questionnaireValue${teachTask.id}"  value="${teachTask.questionnaire.id},${teachTask.questionnaire.depart.name}">${teachTask.questionnaire.description}<#else><font red="red">无问卷</font></#if></td>
+                        <td><input type="hidden" id="questionnaire${teachTask.id}" name="questionnaire${teachTask.id}" value="<#if teachTask.questionnaire?exists>true<#else>false</#if>"><#if teachTask.questionnaire?exists><input type="hidden" id="questionnaireValue${teachTask.id}" name="questionnaireValue${teachTask.id}"  value="${teachTask.questionnaire.id},${(teachTask.questionnaire.depart.name)!}">${teachTask.questionnaire.description}<#else><font red="red">无问卷</font></#if></td>
                        </@>
                  </@>
             </td>

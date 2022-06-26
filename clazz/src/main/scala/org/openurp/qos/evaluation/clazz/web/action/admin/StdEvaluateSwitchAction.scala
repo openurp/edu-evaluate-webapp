@@ -56,9 +56,8 @@ class StdEvaluateSwitchAction extends ProjectRestfulAction[StdEvaluateSwitch] {
   }
 
   override def editSetting(entity: StdEvaluateSwitch): Unit = {
-    val project = getProject
-    val query = OqlBuilder.from(classOf[Semester], "s")
-      .where("s.calendar = :calendar", project.calendar)
+    val project =getProject
+    val query = OqlBuilder.from(classOf[Semester], "s").where("s.calendar =:calendar ", project.calendar)
     put("semesters", entityDao.search(query))
     put("project", project)
   }

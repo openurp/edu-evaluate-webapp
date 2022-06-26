@@ -17,23 +17,22 @@
 
 package org.openurp.qos.evaluation.questionnaire.web.action
 
-import java.time.{ Instant, LocalDate }
-
-import scala.collection.mutable.Buffer
-
-import org.beangle.commons.collection.{ Collections, Order }
-import org.beangle.commons.lang.{ Numbers, Strings }
+import org.beangle.commons.collection.{Collections, Order}
+import org.beangle.commons.lang.{Numbers, Strings}
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.security.Securities
 import org.beangle.web.action.annotation.param
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Department
-import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.qos.evaluation.clazz.model.QuestionnaireClazz
-import org.openurp.qos.evaluation.model.{ Question, Indicator, Questionnaire }
+import org.openurp.qos.evaluation.config.{Indicator, Question, Questionnaire}
+import org.openurp.starter.edu.helper.ProjectSupport
 
-class QuestionnaireAction extends RestfulAction[Questionnaire] with ProjectSupport{
+import java.time.{Instant, LocalDate}
+import scala.collection.mutable.Buffer
+
+class QuestionnaireAction extends RestfulAction[Questionnaire] with ProjectSupport {
 
   override def search(): View = {
     val builder = OqlBuilder.from(classOf[Questionnaire], "questionnaire")
@@ -110,7 +109,9 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] with ProjectSuppo
     val query = OqlBuilder.from(classOf[QuestionnaireClazz], "ql")
     query.where("ql.questionnaire in (:questionnaires)", questionnaires)
     val qls = entityDao.search(query)
-    if (!qls.isEmpty) { return redirect("search", "删除失败,选择的数据中已有被课程问卷引用"); }
+    if (!qls.isEmpty) {
+      return redirect("search", "删除失败,选择的数据中已有被课程问卷引用");
+    }
 
     entityDao.remove(questionnaires)
     return redirect("search", "删除成功")

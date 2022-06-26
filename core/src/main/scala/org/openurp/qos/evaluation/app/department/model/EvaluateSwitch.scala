@@ -22,7 +22,7 @@ import java.time.LocalDate
 import org.beangle.data.model.LongId
 import org.beangle.data.model.pojo.DateRange
 import org.openurp.base.model.Semester
-import org.openurp.qos.evaluation.model.Questionnaire
+import org.openurp.qos.evaluation.config.Questionnaire
 
 class EvaluateSwitch extends LongId with DateRange {
 

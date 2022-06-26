@@ -29,9 +29,9 @@ import org.openurp.base.edu.model.Teacher
 import org.openurp.base.model.{Department, Semester}
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.app.department.model.EvaluateSwitch
+import org.openurp.qos.evaluation.config.{Indicator, Question, Questionnaire}
 import org.openurp.qos.evaluation.department.helper.ImportDepartListener
 import org.openurp.qos.evaluation.department.model.{DepartEvaluate, DepartQuestion}
-import org.openurp.qos.evaluation.model.{Indicator, Question, Questionnaire}
 import org.openurp.starter.edu.helper.ProjectSupport
 
 import java.time.{Instant, LocalDate}
@@ -101,7 +101,6 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ProjectSup
         questionTree.put(key, questions)
       }
       put("questionTree", questionTree)
-
     }
     val resultMap = Collections.newMap[Question, Float]
     departEvaluate.questionResults foreach { qr =>
