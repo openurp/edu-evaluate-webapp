@@ -2,7 +2,7 @@ import org.openurp.parent.Dependencies._
 import org.openurp.parent.Settings._
 
 ThisBuild / organization := "org.openurp.qos.evaluation"
-ThisBuild / version := "0.0.21"
+ThisBuild / version := "0.0.22-SNAPSHOT"
 
 ThisBuild / scmInfo := Some(
   ScmInfo(
@@ -25,7 +25,7 @@ ThisBuild / description := "OpenURP QoS Evalution"
 ThisBuild / homepage := Some(url("http://openurp.github.io/qos-evaluation/index.html"))
 
 val apiVer = "0.26.0"
-val starterVer = "0.0.21"
+val starterVer = "0.0.22-SNAPSHOT"
 val baseVer = "0.1.30"
 val openurp_edu_api = "org.openurp.edu" % "openurp-edu-api" % apiVer
 val openurp_qos_api = "org.openurp.qos" % "openurp-qos-api" % apiVer
