@@ -59,27 +59,6 @@ class FeedbackAction extends RestfulAction[Feedback] with ProjectSupport {
     put("evaluateMap", getClazzIdAndTeacherIdOfResult(std, semester))
     forward()
   }
-  //
-  //  def getAnnMap(std: Student, semester: Semester, teachers: Seq[Teacher]): collection.Map[Long, Buffer[TeacherRemessage]] = {
-  //    val query = OqlBuilder.from(classOf[TeacherRemessage], "teacherRemessage")
-  //    query.join("left", "teacherRemessage.students", "student")
-  //    query.join("left", "teacherRemessage.textEvaluation", "textEvaluation")
-  //    query.where("student =:std", std)
-  //    query.where("textEvaluation.clazz.semester = :semester", semester)
-  //    query.where("teacherRemessage.visible = false")
-  //    val annMap = Collections.newMap[Long, Buffer[TeacherRemessage]]
-  //    val results = entityDao.search(query)
-  ////    results foreach { teacherRemessage =>
-  ////      annMap.getOrElseUpdate(teacherRemessage.textEvaluation.teacher.id, Collections.newBuffer[TeacherRemessage]) +=
-  ////        teacherRemessage
-  ////    }
-  //    for (teacher <- teachers) {
-  //      if (!annMap.contains(teacher.id)) {
-  //        annMap.put(teacher.id, null)
-  //      }
-  //    }
-  //    annMap
-  //  }
 
   def getClazzIdAndTeacherIdOfResult(student: Student, semester: Semester): collection.Map[String, String] = {
     val query = OqlBuilder.from(classOf[Feedback], "textEvaluation")
@@ -191,12 +170,7 @@ class FeedbackAction extends RestfulAction[Feedback] with ProjectSupport {
     val semester = clazz.semester
 
     put("clazzs", clazzs)
-    // 获得(教师公告)
-    //    put("annMap", getAnnMap(std, semester, teachers))
-    // 获得(评教回复-本人)
     put("textEvaluationMap", getMyFeedbackMap(std, semester, teachers))
-    // 获得(评教回复-其他)
-    //    put("otherMap", getOtherMap(std, semester, teachers))
     forward()
   }
 
