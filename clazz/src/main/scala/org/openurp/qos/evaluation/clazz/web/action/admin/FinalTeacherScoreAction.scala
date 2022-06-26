@@ -24,7 +24,7 @@ import org.beangle.data.transfer.excel.ExcelTemplateWriter
 import org.beangle.data.transfer.exporter.ExportContext
 import org.beangle.web.action.context.ActionContext
 import org.beangle.web.action.view.{Status, View}
-import org.openurp.base.edu.code.model.StdType
+import org.openurp.base.edu.code.StdType
 import org.openurp.base.edu.model.Teacher
 import org.openurp.base.model.{Department, Semester}
 import org.openurp.code.edu.model.EducationLevel

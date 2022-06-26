@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <cdi>
-  <container >
+  <container>
     <module class="org.openurp.qos.evaluation.app.course.DefaultModule"/>
   </container>
 </cdi>

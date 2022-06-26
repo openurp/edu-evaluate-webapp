@@ -22,12 +22,12 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.annotation.mapping
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.edu.code.model.StdType
+import org.openurp.base.edu.code.StdType
 import org.openurp.base.edu.model.Teacher
 import org.openurp.base.model.{Department, Semester}
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.clazz.model.{CourseEvalStat, EvaluateResult, QuestionResult, QuestionnaireClazz}
-import org.openurp.qos.evaluation.model.{AssessGrade, Indicator, Option}
+import org.openurp.qos.evaluation.config.{AssessGrade, Indicator, Option}
 
 class QuestionnaireStatTeacherAction extends RestfulAction[CourseEvalStat] {
 

@@ -22,7 +22,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Department
-import org.openurp.qos.evaluation.model.{AssessCriteria, AssessGrade}
+import org.openurp.qos.evaluation.config.{AssessCriteria, AssessGrade}
 import org.openurp.starter.edu.helper.ProjectSupport
 
 class AssessCriteriaAction extends RestfulAction[AssessCriteria] with ProjectSupport {

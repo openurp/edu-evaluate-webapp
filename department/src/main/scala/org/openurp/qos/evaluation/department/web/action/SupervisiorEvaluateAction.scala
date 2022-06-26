@@ -30,7 +30,7 @@ import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.qos.evaluation.department.helper.ImportSupervisiorListener
 import org.openurp.qos.evaluation.department.model.{SupervisiorEvaluate, SupervisiorQuestion}
-import org.openurp.qos.evaluation.model.{Indicator, Question, Questionnaire}
+import org.openurp.qos.evaluation.config.{Indicator, Question, Questionnaire}
 import org.openurp.starter.edu.helper.ProjectSupport
 
 import java.time.Instant

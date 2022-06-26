@@ -59,14 +59,14 @@ class FeedbackAction extends EntityAction[Feedback] with ProjectSupport {
 
   def getCurrentSemester(project: Project): Semester = {
     val builder = OqlBuilder.from(classOf[Semester], "semester")
-      .where("semester.calendar = :calendar", project.calendar)
-    builder.where(":date between semester.beginOn and  semester.endOn", LocalDate.now)
+      .where("semester.calendar = :calendar ", project.calendar)
+      builder.where(":date between semester.beginOn and  semester.endOn", LocalDate.now)
     builder.cacheable()
     val rs = entityDao.search(builder)
     if (rs.isEmpty) { //如果没有正在其中的学期，则查找一个距离最近的
       val builder2 = OqlBuilder.from(classOf[Semester], "semester")
-        .where("semester.calendar = :calendar", project.calendar)
-      builder2.orderBy("abs(semester.beginOn - current_date() + semester.endOn - current_date())")
+        .where("semester.calendar = :calendar ", project.calendar)
+        builder2.orderBy("abs(semester.beginOn - current_date() + semester.endOn - current_date())")
       builder2.cacheable()
       builder2.limit(1, 1)
       entityDao.search(builder2).headOption.orNull
