@@ -25,13 +25,13 @@ import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.web.action.view.{Stream, View}
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.edu.model.Teacher
-import org.openurp.base.model.{Department, Semester}
+import org.openurp.base.model.{Department, Project, Semester}
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.qos.evaluation.department.helper.ImportSupervisiorListener
 import org.openurp.qos.evaluation.department.model.{SupervisiorEvaluate, SupervisiorQuestion}
 import org.openurp.qos.evaluation.config.{Indicator, Question, Questionnaire}
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
 import java.time.Instant
 import scala.collection.mutable.Buffer
@@ -42,9 +42,11 @@ import scala.collection.mutable.Buffer
 class SupervisiorEvaluateAction extends RestfulAction[SupervisiorEvaluate] with ProjectSupport {
 
   override def indexSetting(): Unit = {
+    given project: Project = getProject
+
     put("departments", findInSchool(classOf[Department]))
     put("semesters", entityDao.getAll(classOf[Semester]))
-    put("currentSemester", getCurrentSemester)
+    put("currentSemester", getSemester)
   }
 
   def importTeachers(): View = {
@@ -69,7 +71,7 @@ class SupervisiorEvaluateAction extends RestfulAction[SupervisiorEvaluate] with 
     }
     entityDao.saveOrUpdate(supervisiorEvaluates)
     val semesterId = get("supervisiorEvaluate.semester.id").orNull
-    redirect("search", s"orderBy=supervisiorEvaluate.teacher.user.code asc&supervisiorEvaluate.semester.id=$semesterId", "导入完成")
+    redirect("search", s"orderBy=supervisiorEvaluate.teacher.staff.code asc&supervisiorEvaluate.semester.id=$semesterId", "导入完成")
   }
 
   override def editSetting(supervisiorEvaluate: SupervisiorEvaluate): Unit = {
@@ -130,7 +132,7 @@ class SupervisiorEvaluateAction extends RestfulAction[SupervisiorEvaluate] with 
     super.saveAndRedirect(supervisiorEvaluate)
   }
 
-  def importTemplate: View = {
+  def importTemplate(): View = {
     Stream(ClassLoaders.getResourceAsStream("supervisiorEvaluate.xls").get, "application/vnd.ms-excel", "评教结果.xls")
   }
 

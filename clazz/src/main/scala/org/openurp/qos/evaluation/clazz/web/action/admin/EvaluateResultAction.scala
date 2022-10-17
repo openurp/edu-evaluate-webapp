@@ -23,7 +23,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.annotation.param
 import org.beangle.web.action.view.View
 import org.openurp.base.edu.model.Teacher
-import org.openurp.base.model.Semester
+import org.openurp.base.model.{Project, Semester}
 import org.openurp.edu.exam.model.ExamTaker
 import org.openurp.qos.evaluation.clazz.model.{EvaluateResult, QuestionResult}
 import org.openurp.qos.evaluation.clazz.web.action.admin.ProjectRestfulAction
@@ -146,7 +146,9 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
   }
 
   override protected def indexSetting(): Unit = {
-    put("project", getProject)
-    put("currentSemester", getCurrentSemester)
+    given project: Project = getProject
+
+    put("project", project)
+    put("currentSemester", getSemester)
   }
 }

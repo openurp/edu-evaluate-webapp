@@ -70,7 +70,7 @@
             [#--[@b.col property="schedule.firstWeek" title="起始周" width="6%"/]--]
             [@b.col title="任课教师"]
                 [#list clazz.teachers?if_exists as teacher]
-                    ${(teacher.user.name)!}[#if teacher_has_next],[/#if]
+                    ${(teacher.name)!}[#if teacher_has_next],[/#if]
                 [/#list]
             [/@]
         [/@]

@@ -19,34 +19,24 @@ package org.openurp.qos.evaluation.clazz.web.action.admin
 
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.model.Semester
+import org.openurp.base.model.{Project, Semester}
 import org.openurp.qos.evaluation.clazz.model.Feedback
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
 class FeedbackAction extends RestfulAction[Feedback] with ProjectSupport {
 
   override protected def indexSetting(): Unit = {
-    put("project",getProject)
+    given project: Project = getProject
+
+    put("project",project)
     put("departments", getDeparts)
-    val semester = getId("semester") match {
-      case Some(sid) => entityDao.get(classOf[Semester], sid.toInt)
-      case None =>
-        val query = OqlBuilder.from[Semester](classOf[Feedback].getName, "fb")
-        query.select("fb.semester")
-        query.limit(1, 2)
-        query.orderBy("fb.semester.beginOn desc")
-        val semesters = entityDao.search(query)
-        if (semesters.isEmpty) {
-          getCurrentSemester
-        } else {
-          semesters.head
-        }
-    }
-    put("currentSemester", semester)
+    put("currentSemester", getSemester)
   }
 
   override protected def getQueryBuilder: OqlBuilder[Feedback] = {
     val builder = super.getQueryBuilder
+    given project: Project = getProject
+
     builder.where("feedback.teachDepart in(:departs)", getDeparts)
   }
 }

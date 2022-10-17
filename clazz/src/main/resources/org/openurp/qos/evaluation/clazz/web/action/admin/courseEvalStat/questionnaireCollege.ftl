@@ -32,7 +32,7 @@
             <td>${result.teacher.name}</td>
             <td>${result.course.name}</td>
             <td>${result.validTickets?default(0)}</td>
-            <td style="text-align:left">${result.teacher.user.department.name}</td>
+            <td style="text-align:left">${result.teacher.department.name}</td>
             <#list 1..tdCount as i>
             <td>${(result.questionsStat[i - 1].evgPoints?default(0))?string("0.00")}</td>
             </#list>

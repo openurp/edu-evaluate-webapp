@@ -21,9 +21,9 @@ import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.support.ServletSupport
 import org.beangle.web.action.view.View
-import org.openurp.base.edu.code.StdType
+import org.openurp.base.std.code.StdType
 import org.openurp.base.edu.model.Teacher
-import org.openurp.base.model.{Department, Semester}
+import org.openurp.base.model.{Department, Project, Semester}
 import org.openurp.code.edu.model.EducationLevel
 import org.openurp.qos.evaluation.clazz.model.{CourseEvalStat, CourseOptionStat, EvaluateResult, QuestionResult}
 import org.openurp.qos.evaluation.clazz.web.action.admin.ProjectRestfulAction
@@ -34,21 +34,20 @@ import java.time.LocalDate
 class QuestionnaireStatAction extends ProjectRestfulAction[CourseEvalStat] with ServletSupport {
 
   override def index(): View = {
-    val stdType = entityDao.get(classOf[StdType], 5)
-    put("stdTypeList", stdType)
-    val department = entityDao.get(classOf[Department], 20)
-    put("departmentList", department)
+    given project: Project = getProject
+
+    put("stdTypeList", project.stdTypes)
+    put("departmentList", project.departments)
 
     var searchFormFlag = get("searchFormFlag").orNull
     if (searchFormFlag == null) {
       searchFormFlag = "beenStat"
     }
     put("searchFormFlag", searchFormFlag)
-    //    put("educations", getEducationLevels())
     put("departments", entityDao.getAll(classOf[Department]))
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire")
     put("questionnaires", entityDao.search(query))
-    put("currentSemester", this.getCurrentSemester)
+    put("currentSemester", this.getSemester)
     put("assessCriterias", entityDao.getAll(classOf[AssessCriteria]))
     put("indicators", entityDao.getAll(classOf[Indicator]))
     forward()
@@ -76,7 +75,7 @@ class QuestionnaireStatAction extends ProjectRestfulAction[CourseEvalStat] with 
       val teacher = teachers(0)
       response.setCharacterEncoding("utf-8")
       response.getWriter().print(
-        teacher.id.toString + "_" + teacher.user.name + "_" + teacher.user.department.name)
+        teacher.id.toString + "_" + teacher.name + "_" + teacher.department.name)
     } else {
       response.getWriter().print("")
     }

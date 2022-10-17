@@ -1,18 +1,18 @@
 [#ftl]
 [#if evaluateSwitches?size>0 && evaluateSwitches?first.open]
 [@b.head/]
-    <link rel="stylesheet" href="${base}/static/score.css"/>
+    <link rel="stylesheet" href="${b.base}/static/score.css"/>
 [@b.toolbar title="添加督导组评教"]
   bar.addItem("提交","saveTeaEvaluate()");
 [/@]
 <table class="infoTable">
   <tr>
    <td class="title">教师工号:</td>
-   <td class="content"> ${supervisiorEvaluate.teacher.user.code}</td>
+   <td class="content"> ${supervisiorEvaluate.teacher.staff.code}</td>
    <td class="title">教师姓名:</td>
-   <td class="content">${supervisiorEvaluate.teacher.user.name}</td>
+   <td class="content">${supervisiorEvaluate.teacher.name}</td>
    <td class="title">所在院系:</td>
-   <td class="content"> ${supervisiorEvaluate.teacher.user.department.name}</td>
+   <td class="content"> ${supervisiorEvaluate.teacher.department.name}</td>
   </tr>
   <tr>
    <td class="title">开课院系:</td>

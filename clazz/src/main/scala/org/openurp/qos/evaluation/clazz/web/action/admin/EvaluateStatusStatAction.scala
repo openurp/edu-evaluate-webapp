@@ -21,8 +21,7 @@ import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.view.View
-import org.openurp.base.model.Semester
-import org.openurp.base.model.Department
+import org.openurp.base.model.{Department, Project, Semester}
 import org.openurp.edu.clazz.model.{Clazz, CourseTaker}
 import org.openurp.qos.evaluation.app.course.model.{EvaluateSearchDepartment, EvaluateSearchManager}
 import org.openurp.qos.evaluation.clazz.model.EvaluateResult
@@ -34,7 +33,9 @@ import java.time.LocalDate
 class EvaluateStatusStatAction extends ProjectRestfulAction[EvaluateResult] {
 
   override def index(): View = {
-    put("currentSemester",getCurrentSemester)
+    given project: Project = getProject
+
+    put("currentSemester",getSemester)
     put("departments", findInSchool(classOf[Department]))
     forward()
   }
@@ -81,7 +82,7 @@ class EvaluateStatusStatAction extends ProjectRestfulAction[EvaluateResult] {
     }
     if (Strings.isNotBlank(teacherName)) {
       clazzQuery.join("clazz.teachers", "teacher")
-      clazzQuery.where("teacher.user.name like :teacherName", "%" + teacherName + "%")
+      clazzQuery.where("teacher.name like :teacherName", "%" + teacherName + "%")
     }
     val clazzList = entityDao.search(clazzQuery)
     val evaluateSearchDepartmentList = Collections.newBuffer[EvaluateSearchDepartment]

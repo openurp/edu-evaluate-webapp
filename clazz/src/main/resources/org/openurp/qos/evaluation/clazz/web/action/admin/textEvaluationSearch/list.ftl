@@ -29,7 +29,7 @@
             [@b.col property="clazz.crn" title="课程序号" width="13%"/]
             [@b.col property="clazz.course.code" title="课程代码"/]
             [@b.col property="clazz.course.name" title="课程名称"/]
-            [@b.col property="teacher.user.name" title="教师姓名"/]
+            [@b.col property="teacher.name" title="教师姓名"/]
             [@b.col property="contents" title="评教内容" width="35%"/]
             [@b.col property="audited" title="是否确认" width="8%"]
                 ${((textEvaluation.audited)?string("已确认","未确认"))!}

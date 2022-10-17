@@ -24,9 +24,9 @@ import org.beangle.data.transfer.excel.ExcelTemplateWriter
 import org.beangle.data.transfer.exporter.ExportContext
 import org.beangle.web.action.context.ActionContext
 import org.beangle.web.action.view.{Status, View}
-import org.openurp.base.edu.code.StdType
 import org.openurp.base.edu.model.Teacher
-import org.openurp.base.model.{Department, Semester}
+import org.openurp.base.model.{Department, Project, Semester}
+import org.openurp.base.std.code.StdType
 import org.openurp.code.edu.model.EducationLevel
 import org.openurp.qos.evaluation.app.course.service.Ranker
 import org.openurp.qos.evaluation.clazz.model.{FinalTeacherScore, QuestionResult}
@@ -38,8 +38,10 @@ import java.time.LocalDate
 class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
 
   override def index(): View = {
-    put("departments", findInSchool(classOf[Department]))
-    put("currentSemester", getCurrentSemester)
+    given project: Project = getProject
+
+    put("departments", project.departments)
+    put("currentSemester", getSemester)
     forward()
   }
 
@@ -99,7 +101,7 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
     Ranker.rOver(evals) { (x, r) =>
       x.schoolRank = r
     }
-    val departEvalMaps = evals.groupBy(x => x.teacher.user.department)
+    val departEvalMaps = evals.groupBy(x => x.teacher.department)
     departEvalMaps.values foreach { departEvals =>
       Ranker.rOver(departEvals) { (x, r) =>
         x.departRank = r
@@ -113,14 +115,15 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
    * 跳转(统计首页面)
    */
   def statHome(): View = {
-    put("stdTypeList", entityDao.getAll(classOf[StdType]))
-    put("departmentList", entityDao.getAll(classOf[Department]))
+    given project: Project = getProject
 
-    put("educations", entityDao.getAll(classOf[EducationLevel]))
-    val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:tea", true))
-    put("departments", teachingDeparts)
+    put("stdTypeList", project.stdTypes)
+    put("departmentList", project.departments)
 
-    put("currentSemester", getCurrentSemester)
+    put("educations", project.levels)
+    put("departments", project.departments)
+
+    put("currentSemester", getSemester)
     forward()
   }
 

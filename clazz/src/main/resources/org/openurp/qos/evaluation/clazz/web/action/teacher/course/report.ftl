@@ -34,7 +34,7 @@
 [/#function]
 
 <script>
-    bg.requireCss("${base}/static/css/style.css");
+    bg.requireCss("${b.base}/static/css/style.css");
 </script>
 [#include "../bars.ftl"/]
 <div style="width:800px;min-width:400px;margin:auto">
@@ -48,7 +48,7 @@
     <section class="view" style="background-color: rgb(249, 245, 244);">
         <div class="pj_container">
             <p>
-                尊敬的${stat.teacher.user.name}老师，您好：<br>
+                尊敬的${stat.teacher.name}老师，您好：<br>
                 本学期您所授的《${stat.course.name}》(课程序号:${stat.crn})共有 ${stat.tickets} 名学生对课程进行了评价，通过统计与分析，课程的教学质量评价报告已经生成，如下内容供您参考。
             </p>
             <div class="zb-title">

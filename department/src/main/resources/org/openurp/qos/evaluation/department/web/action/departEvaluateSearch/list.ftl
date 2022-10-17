@@ -4,10 +4,10 @@
         [@b.gridbar title="部门评教列表"/]
         [@b.row]
             [@b.boxcol/]
-            [@b.col property="teacher.user.code" title="工号" width="10%"/]
-            [@b.col property="teacher.user.name" title="姓名" width="10%"/]
-            [@b.col title="性别" property="teacher.user.gender.name" width="10%"/]
-            [@b.col title="所在院系" property="teacher.user.department.name" width="20%"/]
+            [@b.col property="teacher.staff.code" title="工号" width="10%"/]
+            [@b.col property="teacher.name" title="姓名" width="10%"/]
+            [@b.col title="性别" property="teacher.gender.name" width="10%"/]
+            [@b.col title="所在院系" property="teacher.department.name" width="20%"/]
             [@b.col title="评教状态" width="20%"]
               [#if (departEvaluate.totalScore) ??]已评
               [#else]未评

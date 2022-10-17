@@ -18,22 +18,22 @@
 package org.openurp.qos.evaluation.department.web.action
 
 import java.time.LocalDate
-
 import org.beangle.commons.collection.Order
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.model.Department
-import org.openurp.base.model.Semester
+import org.openurp.base.model.{Department, Project, Semester}
 import org.openurp.qos.evaluation.department.model.DepartEvaluate
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
 class DepartEvaluateSearchAction extends RestfulAction[DepartEvaluate] with ProjectSupport {
 
   override def indexSetting(): Unit = {
+    given project: Project = getProject
+
     put("departments", findInSchool(classOf[Department]))
     put("semesters", entityDao.getAll(classOf[Semester]))
-    put("currentSemester", getCurrentSemester)
+    put("currentSemester", getSemester)
   }
 
   override def search(): View = {

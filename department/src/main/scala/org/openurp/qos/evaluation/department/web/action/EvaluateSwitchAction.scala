@@ -18,23 +18,24 @@
 package org.openurp.qos.evaluation.department.web.action
 
 import java.time.LocalDate
-
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.model.Semester
+import org.openurp.base.model.{Project, Semester}
 import org.openurp.qos.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.qos.evaluation.config.Questionnaire
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
 /**
  * @author xinzhou
  */
-class EvaluateSwitchAction extends  RestfulAction[EvaluateSwitch] with ProjectSupport {
+class EvaluateSwitchAction extends RestfulAction[EvaluateSwitch] with ProjectSupport {
 
   override def indexSetting(): Unit = {
+    given project: Project = getProject
+
     put("semesters",  entityDao.getAll(classOf[Semester]))
     put("questionnaires", entityDao.getAll(classOf[Questionnaire]))
-    put("currentSemester",getCurrentSemester)
+    put("currentSemester",getSemester)
   }
 
   override def editSetting(entity: EvaluateSwitch): Unit = {

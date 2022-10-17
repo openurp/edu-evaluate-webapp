@@ -34,7 +34,7 @@ object ConvertApi2SQL {
     val gson = new Gson()
     val utf8 = Charset.forName("UTF-8")
     //https://pjxt.ecupl.edu.cn/api/open/feedback/index?semester_no=202120222&type=1&clazz_no=2021202220753&limit=2000
-    val url = "https://pjxt.ecupl.edu.cn/api/open/result/index?semester_no=202120221&limit=2000"
+    val url = "https://pjxt.ecupl.edu.cn/api/open/result/index?semester_no=202120222&limit=2000"
     val content = HttpUtils.getText(new URL(url), HttpMethods.GET, utf8, Some({ c =>
       c.setConnectTimeout(60 * 1000);
       c.setReadTimeout(60 * 1000)
@@ -46,9 +46,12 @@ object ConvertApi2SQL {
     val data2File = new FileWriter(new File("./data2.sql"), utf8)
     val data3File = new FileWriter(new File("./data3.sql"), utf8)
 
+    var i=0
     while (listIter.hasNext) {
+      i+=1
       val clazzData = listIter.next();
       val clazzNo = get[String](clazzData, "clazz_no")
+      println(s"process ${i} ${clazzNo}")
       val crn =clazzNo.substring(9)
       val grade = get[String](clazzData, "grade")
       val semesterNo=get[String](clazzData, "semester_no")
@@ -76,7 +79,7 @@ object ConvertApi2SQL {
         data2File.write(sql2)
         data2File.write("\n")
       }
-      val feedbackUrl = s"https://pjxt.ecupl.edu.cn/api/open/feedback/index?type=2&semester_no=202120221&limit=2000&clazz_no=${clazzNo}&teacher_no=${teacherNo}"
+      val feedbackUrl = s"https://pjxt.ecupl.edu.cn/api/open/feedback/index?type=2&semester_no=202120222&limit=2000&clazz_no=${clazzNo}&teacher_no=${teacherNo}"
       val feedbackContent = HttpUtils.getText(new URL(feedbackUrl), HttpMethods.GET, utf8, Some({ c =>
         c.setConnectTimeout(60 * 1000);
         c.setReadTimeout(60 * 1000)

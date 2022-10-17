@@ -7,11 +7,11 @@
     <table class="infoTable" width="90%" align="center">
         <tr>
             <td class="title" style="text-align:center;">教师姓名</td>
-            <td style="padding-left:10px;">${(teacher.user.name)!}</td>
+            <td style="padding-left:10px;">${(teacher.name)!}</td>
             <td class="title" style="text-align:center;">职称</td>
             <td style="padding-left:10px;">${(teacher.title.name)!}</td>
             <td class="title" style="text-align:center;">院系</td>
-            <td style="padding-left:10px;">${(teacher.user.department.name)!}</td>
+            <td style="padding-left:10px;">${(teacher.department.name)!}</td>
         </tr>
     </table>
     [@b.grid items=teachEvaluates var="teachEvaluate" sortable="false"]

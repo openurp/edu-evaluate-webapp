@@ -22,7 +22,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.annotation.mapping
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.edu.code.StdType
+import org.openurp.base.std.code.StdType
 import org.openurp.base.edu.model.Teacher
 import org.openurp.base.model.{Department, Semester}
 import org.openurp.edu.clazz.model.Clazz
@@ -164,7 +164,7 @@ class QuestionnaireStatTeacherAction extends RestfulAction[CourseEvalStat] {
     querdep.where("evaluateResult.clazz.semester.id=" + semesterId)
     if (clazz != null) {
       querdep.where("evaluateResult.clazz.teachDepart.id=:depId", clazz.teachDepart.id)
-      // querdep.where("evaluateResult.teacher.teacher.user.department.id=:depId",teacher.getDepartment().getId())
+      // querdep.where("evaluateResult.teacher.teacher.department.id=:depId",teacher.getDepartment().getId())
     }
     put("depScores", entityDao.search(querdep)(0).toString().toFloat)
     /** 全校平均分 */
@@ -201,7 +201,7 @@ class QuestionnaireStatTeacherAction extends RestfulAction[CourseEvalStat] {
     querydep.where("evaluateResult.clazz.semester.id=" + semesterId)
     if (clazz != null) {
       querdep.where("evaluateResult.clazz.teachDepart.id=:depId", clazz.teachDepart.id)
-      // querdep.where("evaluateResult.teacher.teacher.user.department.id=:depId",teacher.getDepartment().getId())
+      // querdep.where("evaluateResult.teacher.teacher.department.id=:depId",teacher.getDepartment().getId())
     }
     querydep.groupBy("evaluateResult.clazz.id")
     querydep.orderBy("sum(questionResult.score)/count(distinct evaluateResult.id) desc")

@@ -13,7 +13,7 @@
             [@b.col property="clazz.course.name" title="课程名称"/]
             [@b.col property="clazz.course.code" title="课程代码"/]
             [@b.col property="clazz.teachDepart.name" title="开课院系"/]
-            [@b.col property="teacher.user.name" title="任课教师"/]
+            [@b.col property="teacher.name" title="任课教师"/]
             [#if questionnaireStat?exists]
             [#list questionnaireStat.indicatorStats as indicator]
             [@b.col property="" title="${indicator.indicator.name}"]${indicator.score!}[/@]

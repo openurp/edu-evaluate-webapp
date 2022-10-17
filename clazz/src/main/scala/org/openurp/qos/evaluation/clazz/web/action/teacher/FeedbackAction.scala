@@ -25,7 +25,7 @@ import org.openurp.base.edu.model.Teacher
 import org.openurp.base.model.{Project, Semester}
 import org.openurp.qos.evaluation.clazz.model.Feedback
 import org.openurp.qos.evaluation.clazz.web.helper.ClazzFeedback
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
 import java.time.LocalDate
 
@@ -53,7 +53,7 @@ class FeedbackAction extends EntityAction[Feedback] with ProjectSupport {
 
   private def getTeacher(): Teacher = {
     val query = OqlBuilder.from(classOf[Teacher], "t")
-    query.where("t.user.code=:code", Securities.user)
+    query.where("t.staff.code=:code", Securities.user)
     entityDao.search(query).head
   }
 

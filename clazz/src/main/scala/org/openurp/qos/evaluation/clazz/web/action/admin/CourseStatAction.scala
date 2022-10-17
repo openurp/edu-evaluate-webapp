@@ -25,34 +25,22 @@ import org.beangle.web.action.annotation.{mapping, param}
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.edu.code.CourseCategory
-import org.openurp.base.model.Semester
+import org.openurp.base.model.{Project, Semester}
 import org.openurp.qos.evaluation.clazz.model.{CategoryEvalStat, CourseEvalStat, DepartEvalStat}
 import org.openurp.qos.evaluation.clazz.web.helper.StatCoursePropertyExtractor
 import org.openurp.qos.evaluation.config.AssessGrade
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
 class CourseStatAction extends RestfulAction[CourseEvalStat] with ProjectSupport {
 
   override protected def indexSetting(): Unit = {
-    put("project", getProject)
+    given project: Project = getProject
+
+    put("project", project)
     put("grades", entityDao.getAll(classOf[AssessGrade]))
     put("departments", getDeparts)
     put("categories", getCodes(classOf[CourseCategory]))
-    val semester = getId("semester") match {
-      case Some(sid) => entityDao.get(classOf[Semester], sid.toInt)
-      case None =>
-        val query = OqlBuilder.from[Semester](classOf[CourseEvalStat].getName, "stat")
-        query.select("stat.semester")
-        query.limit(1, 2)
-        query.orderBy("stat.semester.beginOn desc")
-        val semesters = entityDao.search(query)
-        if (semesters.isEmpty) {
-          getCurrentSemester
-        } else {
-          semesters.head
-        }
-    }
-    put("currentSemester", semester)
+    put("currentSemester", getSemester)
   }
 
   override protected def getQueryBuilder: OqlBuilder[CourseEvalStat] = {

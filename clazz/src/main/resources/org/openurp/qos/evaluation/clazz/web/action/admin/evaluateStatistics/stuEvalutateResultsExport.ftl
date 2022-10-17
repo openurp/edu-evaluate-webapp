@@ -193,14 +193,14 @@ rt
                 <td>${(evaluateR.clazz.crn)?if_exists}</td>
                 <td>${(evaluateR.clazz.course.code)?if_exists}</td>
                 <td>${(evaluateR.clazz.course.name)?if_exists}</td>
-                <td>${(evaluateR.student.user.code)?if_exists}</td>
-                <td>${(evaluateR.student.person.name)?if_exists}</td>
+                <td>${(evaluateR.student.code)?if_exists}</td>
+                <td>${(evaluateR.student.name)?if_exists}</td>
                 <td>${(evaluateR.student.department.name)?if_exists}</td>
                 <td>${(evaluateR.student.adminclass.name)?if_exists}</td>
-                <td>${(evaluateR.teacher.user.code)?if_exists}</td>
+                <td>${(evaluateR.teacher.staff.code)?if_exists}</td>
                 <td>${(evaluateR.teacher.name)?if_exists}</td>
                 <td>${(evaluateR.teacher.title.name)?if_exists}</td>
-                <td>${(evaluateR.teacher.user.department.name)?if_exists}</td>
+                <td>${(evaluateR.teacher.department.name)?if_exists}</td>
                    <#list questionList as ques>
                   <td>
                   <#assign str = "${evaluateR.id!}"+"_"+"${ques.id!}">

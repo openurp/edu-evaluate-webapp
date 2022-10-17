@@ -23,7 +23,7 @@ import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.qos.evaluation.config.{AssessCriteria, AssessGrade}
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
 class AssessCriteriaAction extends RestfulAction[AssessCriteria] with ProjectSupport {
 
@@ -50,8 +50,8 @@ class AssessCriteriaAction extends RestfulAction[AssessCriteria] with ProjectSup
         get("criteriaItem" + i + ".name") foreach { criteriaItemName =>
           val item = populateEntity(classOf[AssessGrade], "criteriaItem" + i)
           item.criteria = assessCriteria
-          if(item.description ==null){
-            item.description=item.name
+          if (item.description == null) {
+            item.description = item.name
           }
           assessCriteria.grades += item
         }
@@ -79,8 +79,7 @@ class AssessCriteriaAction extends RestfulAction[AssessCriteria] with ProjectSup
   }
 
   protected override def getQueryBuilder: OqlBuilder[AssessCriteria] = {
-
-    val builder: OqlBuilder[AssessCriteria] = OqlBuilder.from(entityName, simpleEntityName)
+    val builder = OqlBuilder.from(classOf[AssessCriteria], simpleEntityName)
     populateConditions(builder)
     builder.where("assessCriteria.depart.id in (:departIds)", get("assessCriteria.depart.id"))
     builder.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)

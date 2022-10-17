@@ -28,7 +28,7 @@ import org.openurp.base.model.Department
 import org.openurp.base.model.Project
 import org.openurp.qos.evaluation.config.{OptionGroup, Question, Questionnaire}
 import org.openurp.qos.evaluation.questionnaire.service.IndicatorService
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
 /**
  * 问题维护响应类

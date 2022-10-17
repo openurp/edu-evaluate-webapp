@@ -22,32 +22,20 @@ import org.beangle.web.action.support.{ActionSupport, ParamSupport}
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.edu.code.CourseCategory
-import org.openurp.base.model.Semester
+import org.openurp.base.model.{Project, Semester}
 import org.openurp.qos.evaluation.clazz.model.CourseEvalStat
 import org.openurp.qos.evaluation.config.AssessGrade
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
 class CourseStatAction extends ActionSupport with EntityAction[CourseEvalStat]  with ParamSupport with ProjectSupport {
 
   def index(): View = {
-    put("project", getProject)
+    given project: Project = getProject
+
+    put("project", project)
     put("grades", entityDao.getAll(classOf[AssessGrade]))
     put("categories", getCodes(classOf[CourseCategory]))
-    val semester = getId("semester") match {
-      case Some(sid) => entityDao.get(classOf[Semester], sid.toInt)
-      case None =>
-        val query = OqlBuilder.from[Semester](classOf[CourseEvalStat].getName, "stat")
-        query.select("stat.semester")
-        query.limit(1, 2)
-        query.orderBy("stat.semester.beginOn desc")
-        val semesters = entityDao.search(query)
-        if (semesters.isEmpty) {
-          getCurrentSemester
-        } else {
-          semesters.head
-        }
-    }
-    put("currentSemester", semester)
+    put("currentSemester", getSemester)
     forward()
   }
 

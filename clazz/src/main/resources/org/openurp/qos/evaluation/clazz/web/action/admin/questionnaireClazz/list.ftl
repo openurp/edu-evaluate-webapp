@@ -79,7 +79,7 @@
             [@b.col property="clazz.teachDepart.name" title="开课院系"/]
             [@b.col title="任课教师"]
                 [#list questionnaireClazz.clazz.teachers?if_exists as teacher]
-                    ${(teacher.user.name)!}
+                    ${(teacher.name)!}
                 [/#list]
             [/@]
         [/@]

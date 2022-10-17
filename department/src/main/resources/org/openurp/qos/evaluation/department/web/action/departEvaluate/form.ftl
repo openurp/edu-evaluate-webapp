@@ -1,20 +1,20 @@
 [#ftl]
 [#if evaluateSwitches?size>0 && evaluateSwitches?first.open]
 [@b.head/]
-    <link rel="stylesheet" href="${base}/static/score.css"/>
+    <link rel="stylesheet" href="${b.base}/static/score.css"/>
 [@b.toolbar title="添加部门评教"]
   bar.addItem("提交","saveTeaEvaluate()");
 [/@]
 <table class="infoTable">
   <tr>
    <td class="title">教师工号:</td>
-   <td class="content"> ${departEvaluate.teacher.user.code}</td>
+   <td class="content"> ${departEvaluate.teacher.staff.code}</td>
    <td class="title">教师姓名:</td>
-   <td class="content">${departEvaluate.teacher.user.name}</td>
+   <td class="content">${departEvaluate.teacher.name}</td>
   </tr>
   <tr>
    <td class="title">所在院系:</td>
-   <td class="content"> ${departEvaluate.teacher.user.department.name}</td>
+   <td class="content"> ${departEvaluate.teacher.department.name}</td>
    <td class="title" style="font-weight:bold;">评教总分:</td>
    <td class="content" style="color:red; font-weight:bold;">${(departEvaluate.totalScore)!}</td>
   </tr>

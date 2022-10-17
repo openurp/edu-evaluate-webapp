@@ -23,7 +23,7 @@ import org.beangle.security.Securities
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.edu.model.Teacher
-import org.openurp.base.model.Semester
+import org.openurp.base.model.{Project, Semester}
 import org.openurp.edu.clazz.model.{Clazz, CourseTaker}
 import org.openurp.qos.evaluation.app.course.model.EvaluateSearchDepartment
 import org.openurp.qos.evaluation.clazz.model.EvaluateResult
@@ -35,7 +35,9 @@ import java.time.LocalDate
 class EvaluateStatusTeacherAction extends ProjectRestfulAction[EvaluateResult] {
 
   override def index(): View = {
-    put("currentSemester", this.getCurrentSemester)
+    given project: Project = getProject
+
+    put("currentSemester", this.getSemester)
     forward()
   }
 
@@ -48,7 +50,7 @@ class EvaluateStatusTeacherAction extends ProjectRestfulAction[EvaluateResult] {
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)
     val teacherQuery = OqlBuilder.from(classOf[Teacher], "t")
-    teacherQuery.where("t.project=:project and t.user.code=:code", getProject, Securities.user)
+    teacherQuery.where("t.project=:project and t.staff.code=:code", getProject, Securities.user)
     val teacher = entityDao.search(teacherQuery).headOption.orNull
     if (teacher == null) {
       forward("error.teacher.teaNo.needed")

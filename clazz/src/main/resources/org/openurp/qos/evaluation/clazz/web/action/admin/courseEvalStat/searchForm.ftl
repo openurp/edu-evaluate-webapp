@@ -7,7 +7,7 @@
             [#if searchFormFlag?? || searchFormFlag == "beenStat"]
             <input type="hidden" name="evaluateTeacherStat.clazz.project.id" value="${(project.id)!}"/>
             [@urp_base.semester name="semester.id" label="学年学期" value=currentSemester /]
-            [@b.textfields names="courseEvalStat.clazz.crn;课程序号,courseEvalStat.clazz.course.code;课程代码,courseEvalStat.clazz.course.name;课程名称,courseEvalStat.teacher.user.code;教师工号,courseEvalStat.teacher.user.name;教师姓名"/]
+            [@b.textfields names="courseEvalStat.clazz.crn;课程序号,courseEvalStat.clazz.course.code;课程代码,courseEvalStat.clazz.course.name;课程名称,courseEvalStat.teacher.staff.code;教师工号,courseEvalStat.teacher.name;教师姓名"/]
             [@b.select name="courseEvalStat.clazz.teachDepart.id" label="开课院系" items=departments empty="..."/]
             [@b.select name="courseEvalStat.questionnaire.id" label="所用问卷" items=[] ]
                 [#list questionnaires as q]
@@ -17,7 +17,7 @@
             [#else]
             [@urp_base.semester name="semester.id" label="学年学期" value=currentSemester /]
             <input type="hidden" name="courseEvalStat.clazz.project.id" value="${(project.id)!}"/>
-            [@b.textfields names="courseEvalStat.clazz.crn;课程序号,courseEvalStat.clazz.course.code;课程代码,courseEvalStat.clazz.course.name;课程名称,courseEvalStat.teacher.user.code;教师工号,courseEvalStat.teacher.user.name;教师姓名"/]
+            [@b.textfields names="courseEvalStat.clazz.crn;课程序号,courseEvalStat.clazz.course.code;课程代码,courseEvalStat.clazz.course.name;课程名称,courseEvalStat.teacher.staff.code;教师工号,courseEvalStat.teacher.name;教师姓名"/]
             [@b.select name="courseEvalStat.depart.id" label="开课院系" items=departments empty="..."/]
             [@b.select name="courseEvalStat.questionnaire.id" label="所用问卷" items=[] ]
                 [#list questionnaires as q]

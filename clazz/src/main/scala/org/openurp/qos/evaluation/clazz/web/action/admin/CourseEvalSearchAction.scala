@@ -22,7 +22,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.annotation.{mapping, param}
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.model.Semester
+import org.openurp.base.model.{Project, Semester}
 import org.openurp.qos.evaluation.clazz.model.CourseEvalStat
 import org.openurp.qos.evaluation.clazz.web.action.admin.ProjectRestfulAction
 import org.openurp.qos.evaluation.config.Option
@@ -32,7 +32,9 @@ import java.time.LocalDate
 class CourseEvalSearchAction extends ProjectRestfulAction[CourseEvalStat] {
 
   override def index(): View = {
-    put("currentSemester", getCurrentSemester)
+    given project: Project = getProject
+
+    put("currentSemester", getSemester)
     forward()
   }
 

@@ -20,7 +20,7 @@ package org.openurp.qos.evaluation.clazz.web.action.admin
 import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.view.View
-import org.openurp.base.edu.code.StdType
+import org.openurp.base.std.code.StdType
 import org.openurp.base.edu.model.Teacher
 import org.openurp.base.model.{Department, Project, Semester}
 import org.openurp.code.edu.model.EducationLevel
@@ -35,7 +35,9 @@ import scala.collection.mutable.{Buffer, ListBuffer}
 class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
 
   override def index(): View = {
-    put("project", getProject)
+    given project: Project = getProject
+
+    put("project", project)
     var searchFormFlag = get("searchFormFlag").orNull
     if (searchFormFlag == null) {
       searchFormFlag = "beenStat"
@@ -44,7 +46,7 @@ class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
     put("departments", findInSchool(classOf[Department]))
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire")
     put("questionnaires", entityDao.search(query))
-    put("currentSemester", getCurrentSemester)
+    put("currentSemester", getSemester)
     forward()
   }
 
@@ -282,14 +284,16 @@ class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
    * 跳转(统计首页面)
    */
   def statHome(): View = {
-    put("stdTypeList", entityDao.getAll(classOf[StdType]))
-    put("departmentList", entityDao.getAll(classOf[Department]))
+    given project: Project = getProject
 
-    put("educations", entityDao.getAll(classOf[EducationLevel]))
+    put("stdTypeList", project.stdTypes)
+    put("departmentList", project.departments)
+
+    put("educations", project.levels)
     val teachingDeparts = entityDao.search(OqlBuilder.from(classOf[Department], "depart").where("depart.teaching =:tea", true))
     put("departments", teachingDeparts)
 
-    put("currentSemester", getCurrentSemester)
+    put("currentSemester", getSemester)
     forward()
   }
 

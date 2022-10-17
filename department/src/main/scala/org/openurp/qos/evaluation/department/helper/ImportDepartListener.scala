@@ -34,16 +34,16 @@ import java.time.Instant
  */
 class ImportDepartListener(entityDao: EntityDao) extends ImportListener {
   override def onItemStart(tr: ImportResult): Unit = {
-    val teacherCode = transfer.curData("teacher.code")
+    val teacherCode = transfer.curData("teacher.staff.code")
     val semesterCode = transfer.curData("semester.code").toString
-    val departmentId = getTeacher().user.department.id
+    val departmentId = getTeacher().department.id
     val semesterBuilder = OqlBuilder.from(classOf[Semester], "s").where("s.code=:code ", semesterCode)
     val semesters = entityDao.search(semesterBuilder)
     if (semesters.isEmpty) {
       tr.addFailure("学期数据格式非法", semesterCode)
     } else {
       val builder = OqlBuilder.from(classOf[DepartEvaluate], "de")
-      builder.where("de.teacher.user.code=:code and de.semester.code=:scode and de.department.id=:id", teacherCode, semesterCode, departmentId)
+      builder.where("de.teacher.staff.code=:code and de.semester.code=:scode and de.department.id=:id", teacherCode, semesterCode, departmentId)
       entityDao.search(builder) foreach { s =>
         this.transfer.current = s
       }
@@ -55,13 +55,13 @@ class ImportDepartListener(entityDao: EntityDao) extends ImportListener {
     val questionnaire = entityDao.get(classOf[Questionnaire], 322L) //FIXME 322 magicNo
     departEvaluate.questionnaire = questionnaire
     departEvaluate.evaluateAt = Instant.now
-    departEvaluate.department = getTeacher().user.department
+    departEvaluate.department = getTeacher().department
     entityDao.saveOrUpdate(departEvaluate)
   }
 
   protected def getTeacher(): Teacher = {
     val builder = OqlBuilder.from(classOf[Teacher], "t")
-    builder.where("t.user.code=:code", Securities.user)
+    builder.where("t.staff.code=:code", Securities.user)
     entityDao.search(builder).head
   }
 }

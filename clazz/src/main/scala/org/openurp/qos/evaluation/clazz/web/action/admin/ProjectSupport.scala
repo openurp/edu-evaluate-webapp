@@ -21,35 +21,10 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.model.Entity
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.{Project, Semester}
-import org.openurp.base.service.SemesterService
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
 import java.time.LocalDate
 
 abstract class ProjectRestfulAction[T <: Entity[_]] extends RestfulAction[T] with ProjectSupport {
 
-  var semesterService: SemesterService = _
-
-  def get(project: Project, date: LocalDate): Semester = {
-    val builder = OqlBuilder.from(classOf[Semester], "semester")
-      .where("semester.calendar = :calendar", project.calendar)
-    builder.where(":date between semester.beginOn and  semester.endOn", LocalDate.now)
-    builder.cacheable()
-    val rs = entityDao.search(builder)
-    if (rs.isEmpty) {
-      val builder2 = OqlBuilder.from(classOf[Semester], "semester")
-        .where("semester.calendar = :calendar", project.calendar)
-      builder2.orderBy("abs(semester.beginOn - current_date() + semester.endOn - current_date())")
-      builder2.cacheable()
-      builder2.limit(1, 1)
-      val rs2 = entityDao.search(builder2)
-      if (rs2.nonEmpty) {
-        rs2.head
-      } else {
-        null
-      }
-    } else {
-      rs.head
-    }
-  }
 }

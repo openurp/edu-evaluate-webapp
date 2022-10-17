@@ -15,7 +15,7 @@
         </tr>
         <tr>
             <td class="title" style="text-align:center;">教师姓名</td>
-            <td style="padding-left:10px;">${(stat.teacher.user.name)!}</td>
+            <td style="padding-left:10px;">${(stat.teacher.name)!}</td>
             <td class="title" style="text-align:center;">参评人数</td>
             <td style="padding-left:10px;">${stat.tickets}</td>
             <td class="title" style="text-align:center;">总分</td>

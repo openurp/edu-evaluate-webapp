@@ -6,10 +6,10 @@
   <div class="search-panel">
         [@b.form action="!search" name="evaluateResultStatIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
             <input type="hidden" name="semesterIds" value=""/>
-            [@b.textfields style="width:130px" names="questionnaireStat.clazz.crn;选课号,questionnaireStat.clazz.course.name;课程名称,questionnaireStat.teacher.user.code;教师工号,questionnaireStat.teacher.name;教师名称"/]
+            [@b.textfields style="width:130px" names="questionnaireStat.clazz.crn;选课号,questionnaireStat.clazz.course.name;课程名称,questionnaireStat.teacher.staff.code;教师工号,questionnaireStat.teacher.name;教师名称"/]
             [@b.textfield style="width:80px" name="regainLower" label="回收率" onBlur="clearNoNum(this)"/]
             [@b.select style="width:134px" name="questionnaireStat.depart.id" label="开课院系" items=departments empty="${b.text('filed.choose')}..."/]
-            [@b.select style="width:134px" name="questionnaireStat.teacher.teacher.user.department.id" label="教师院系" items=departments empty="${b.text('filed.choose')}..."/]
+            [@b.select style="width:134px" name="questionnaireStat.teacher.teacher.department.id" label="教师院系" items=departments empty="${b.text('filed.choose')}..."/]
             [@b.select style="width:134px" name="questionnaireStat.education.id" label="培养层次" items=educations empty="${b.text('filed.choose')}..."/]
             [@b.select style="width:134px" name="tutorDepartmentStat.questionnaire.id" label="问卷类型" items=questionnaires option="id,description" empty="${b.text('filed.choose')}..."/]
             [@eams.semesterCalendar style="width:130px" label="学年学期" id="semesterId" name="semester.id" empty="false" value=semester /]
@@ -104,7 +104,7 @@
             <td><select id="major" name="questionnaireStat.depart.majors.id" style="width:130px"><option value="">...</option></select></td>
         </tr>
            <tr>
-            <td>导师工号:</td><td><input type="text" name="questionnaireStat.teacher.user.code" style="width:100px;"></td>
+            <td>导师工号:</td><td><input type="text" name="questionnaireStat.teacher.staff.code" style="width:100px;"></td>
         </tr>
         <tr>
             <td>导师姓名:</td><td><input type="text" name="questionnaireStat.teacher.name" style="width:100px;"></td>

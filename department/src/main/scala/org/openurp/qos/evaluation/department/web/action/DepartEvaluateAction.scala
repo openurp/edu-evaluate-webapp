@@ -26,13 +26,13 @@ import org.beangle.security.Securities
 import org.beangle.web.action.view.{Stream, View}
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.edu.model.Teacher
-import org.openurp.base.model.{Department, Semester}
+import org.openurp.base.model.{Department, Project, Semester}
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.app.department.model.EvaluateSwitch
 import org.openurp.qos.evaluation.config.{Indicator, Question, Questionnaire}
 import org.openurp.qos.evaluation.department.helper.ImportDepartListener
 import org.openurp.qos.evaluation.department.model.{DepartEvaluate, DepartQuestion}
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
 import java.time.{Instant, LocalDate}
 import scala.collection.mutable.Buffer
@@ -43,9 +43,11 @@ import scala.collection.mutable.Buffer
 class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ProjectSupport {
 
   override def indexSetting(): Unit = {
+    given project: Project = getProject
+
     put("departments", findInSchool(classOf[Department]))
     put("semesters", entityDao.getAll(classOf[Semester]))
-    put("currentSemester", getCurrentSemester)
+    put("currentSemester", getSemester)
   }
 
   def importTeachers(): View = {
@@ -53,7 +55,7 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ProjectSup
     getInt("departEvaluation.semester.id") foreach { semesterId => builder.where("clazz.semester.id=:id", semesterId) }
     builder.join("clazz.teachers", "teacher")
     builder.select("distinct teacher.id , clazz.teachDepart.id , clazz.semester.id")
-    //    builder.where("clazz.teachDepart.id=:departId", getTeacher.user.department.id)
+    //    builder.where("clazz.teachDepart.id=:departId", getteacher.department.id)
     builder.where("not exists (from " + classOf[DepartEvaluate].getName + " de where de.semester = clazz.semester and de.teacher = teacher and de.department = clazz.teachDepart)")
     val datas = entityDao.search(builder)
     val departEvaluates = Collections.newBuffer[DepartEvaluate]
@@ -71,7 +73,7 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ProjectSup
     }
     entityDao.saveOrUpdate(departEvaluates)
     val semesterId = get("departEvaluate.semester.id").orNull
-    redirect("search", s"orderBy=departEvaluate.teacher.user.code asc&departEvaluate.semester.id=$semesterId", "导入完成")
+    redirect("search", s"orderBy=departEvaluate.teacher.staff.code asc&departEvaluate.semester.id=$semesterId", "导入完成")
   }
 
   override def editSetting(departEvaluate: DepartEvaluate): Unit = {
@@ -131,7 +133,7 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ProjectSup
     super.saveAndRedirect(departEvaluate)
   }
 
-  def importTemplate: View = {
+  def importTemplate(): View = {
     Stream(ClassLoaders.getResourceAsStream("departEvaluate.xls").get, "application/vnd.ms-excel", "评教结果.xls")
   }
 
@@ -151,7 +153,7 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ProjectSup
       throw new RuntimeException("Cannot find teachers with code " + Securities.user)
     } else {
 
-      query.where("departEvaluate.department.id=:id", teachers.head.user.department.id)
+      query.where("departEvaluate.department.id=:id", teachers.head.department.id)
       populateConditions(query)
       query.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)
     }

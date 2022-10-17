@@ -82,8 +82,10 @@ class StdEvaluateSwitchAction extends ProjectRestfulAction[StdEvaluateSwitch] {
   }
 
   protected override def indexSetting(): Unit = {
-    put("project", getProject)
-    put("currentSemester", getCurrentSemester)
+    given project: Project = getProject
+
+    put("project", project)
+    put("currentSemester", getSemester)
   }
 
 }

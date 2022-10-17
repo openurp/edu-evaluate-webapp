@@ -23,7 +23,7 @@ import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Project
 import org.openurp.qos.evaluation.config.{Option, OptionGroup, Question}
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
 class OptionGroupAction extends RestfulAction[OptionGroup] with ProjectSupport {
 
@@ -76,7 +76,7 @@ class OptionGroupAction extends RestfulAction[OptionGroup] with ProjectSupport {
   }
 
   protected override def getQueryBuilder: OqlBuilder[OptionGroup] = {
-    val builder: OqlBuilder[OptionGroup] = OqlBuilder.from(entityName, simpleEntityName)
+    val builder = OqlBuilder.from(classOf[OptionGroup], simpleEntityName)
     populateConditions(builder)
     builder.where("optionGroup.depart.id in (:departIds)")
     builder.orderBy(get(Order.OrderStr).orNull).limit(getPageLimit)

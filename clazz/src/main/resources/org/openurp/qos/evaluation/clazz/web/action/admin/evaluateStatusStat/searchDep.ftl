@@ -7,7 +7,7 @@
         [@b.col width="10%" property="clazz.course.name" title="课程名称" width="30%"/]
         [@b.col title="教师姓名"]
             [#list (evaluateSearchDepartment.clazz.teachers)?if_exists as teacher]
-            ${(teacher.user.name)!}[#if teacher_has_next],[/#if]
+            ${(teacher.name)!}[#if teacher_has_next],[/#if]
             [/#list]
         [/@]
         [@b.col width="10%" property="haveFinish" title="已评人次"/]

@@ -11,7 +11,7 @@
     <div class="search-panel">
         [@b.form action="!search?orderBy=finalComment.updatedAt desc" name="finalCommentIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
             <input type="hidden" name="finalComment.semester.id" value="${currentSemester.id}"/>
-            [@b.textfields names="finalComment.crn;课程序号,finalComment.course.code;课程代码,finalComment.course.name;课程名称,finalComment.teacher.user.code;教师工号,finalComment.teacher.user.name;教师姓名"/]
+            [@b.textfields names="finalComment.crn;课程序号,finalComment.course.code;课程代码,finalComment.course.name;课程名称,finalComment.teacher.staff.code;教师工号,finalComment.teacher.name;教师姓名"/]
             [@b.select name="finalComment.teachDepart.id" label="开课院系" items=departments empty="..."/]
         [/@]
     </div>

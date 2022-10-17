@@ -15,7 +15,7 @@
         </tr>
         <tr>
             <td class="title" style="text-align:center;">教师姓名</td>
-            <td style="padding-left:10px;">${(questionnaireStat.teacher.user.name)!}</td>
+            <td style="padding-left:10px;">${(questionnaireStat.teacher.name)!}</td>
             <td class="title" style="text-align:center;">问卷有效数量</td>
             <td style="padding-left:10px;">${questionnaireStat.tickets}</td>
             <td class="title" style="text-align:center;">平均分</td>

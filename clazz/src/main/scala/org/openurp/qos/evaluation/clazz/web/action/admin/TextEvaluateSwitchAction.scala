@@ -19,13 +19,16 @@ package org.openurp.qos.evaluation.clazz.web.action.admin
 
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.view.View
+import org.openurp.base.model.Project
 import org.openurp.qos.evaluation.app.course.model.TextEvaluateSwitch
 import org.openurp.qos.evaluation.clazz.web.action.admin.ProjectRestfulAction
 
 class TextEvaluateSwitchAction extends ProjectRestfulAction[TextEvaluateSwitch] {
 
   protected override def indexSetting(): Unit = {
-    put("currentSemester", getCurrentSemester)
+    given project: Project = getProject
+
+    put("currentSemester", getSemester)
   }
 
   override def search(): View = {

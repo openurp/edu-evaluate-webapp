@@ -1,7 +1,7 @@
 [@b.head/]
 <div class="container">
 <div class="page-header">
-  <h2>学生反馈<small>${courseEvalStat.crn} ${courseEvalStat.course.name} ${courseEvalStat.teacher.user.name}</small></h2>
+  <h2>学生反馈<small>${courseEvalStat.crn} ${courseEvalStat.course.name} ${courseEvalStat.teacher.name}</small></h2>
 </div>
 <ul class="list-group">
  [#list comments as comment]

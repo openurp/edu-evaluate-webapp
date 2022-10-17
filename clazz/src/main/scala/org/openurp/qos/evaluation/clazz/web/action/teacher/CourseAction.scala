@@ -25,7 +25,7 @@ import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.edu.model.Teacher
 import org.openurp.base.model.Semester
 import org.openurp.qos.evaluation.clazz.model.*
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
 class CourseAction extends EntityAction[CourseEvalStat] with ProjectSupport {
 
@@ -95,7 +95,7 @@ class CourseAction extends EntityAction[CourseEvalStat] with ProjectSupport {
 
   private def getTeacher(): Teacher = {
     val query = OqlBuilder.from(classOf[Teacher], "t")
-    query.where("t.user.code=:code", Securities.user)
+    query.where("t.staff.code=:code", Securities.user)
     entityDao.search(query).head
   }
 }

@@ -27,7 +27,7 @@ import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Department
 import org.openurp.qos.evaluation.clazz.model.QuestionnaireClazz
 import org.openurp.qos.evaluation.config.{Indicator, Question, Questionnaire}
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
 import java.time.{Instant, LocalDate}
 import scala.collection.mutable.Buffer

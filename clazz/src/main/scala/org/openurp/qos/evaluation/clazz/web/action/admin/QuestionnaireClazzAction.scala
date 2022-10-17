@@ -22,8 +22,7 @@ import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.{OqlBuilder, QueryBuilder}
 import org.beangle.web.action.view.View
 import org.openurp.base.edu.code.CourseType
-import org.openurp.base.model.Semester
-import org.openurp.base.model.Department
+import org.openurp.base.model.{Department, Project, Semester}
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.app.course.service.StdEvaluateSwitchService
 import org.openurp.qos.evaluation.clazz.model.QuestionnaireClazz
@@ -37,9 +36,11 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
   var evaluateSwitchService: StdEvaluateSwitchService = _
 
   override def indexSetting(): Unit = {
-    put("project", getProject)
-    put("semester", getCurrentSemester)
-    put("departments", findInSchool(classOf[Department]))
+    given project: Project = getProject
+
+    put("project", project)
+    put("semester", getSemester)
+    put("departments", project.departments)
     put("courseTypes", entityDao.getAll(classOf[CourseType]))
     put("questionnaires", entityDao.getAll(classOf[Questionnaire]))
   }
@@ -90,7 +91,7 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
     val teacherName = get("teacher").orNull
     if (Strings.isNotBlank(teacherName)) {
       query.join("questionnaireClazz.clazz.teachers", "teacher")
-      query.where("teacher.user.name like :teacherName", "%" + teacherName + "%")
+      query.where("teacher.name like :teacherName", "%" + teacherName + "%")
     }
     if (questionnaireId != -1 && questionnaireId != 0) {
       query.where("questionnaireClazz.questionnaire.id =:questionnaireId", questionnaireId)
@@ -119,7 +120,7 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
     val teacherName = get("teacher").getOrElse("")
     if (Strings.isNotBlank(teacherName)) {
       query.join("clazz.teachers", "teacher")
-      query.where("teacher.user.name like :teacherName", "%" + teacherName + "%")
+      query.where("teacher.name like :teacherName", "%" + teacherName + "%")
     }
     // 排除(已有问卷)
     query.where("not exists(from " + classOf[QuestionnaireClazz].getName + " questionnaireClazz"
