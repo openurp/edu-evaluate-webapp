@@ -7,64 +7,62 @@
 [#assign sa][#if questionnaire.persisted]!update?id=${questionnaire.id}[#else]!save[/#if][/#assign]
 [@b.form name="questionnaireForm" title="" action=sa theme="list" ]
     [@b.textfield label="问卷描述" required="true" check="maxLength(80)" name="questionnaire.description" value="${(questionnaire.description?html)?default('')}" /]
-    [@b.select label="问卷部门" required="true" name="questionnaire.depart.id" value=(questionnaire.depart.id)! empty="..." items=departments?if_exists/]
-    [@b.textarea label="问卷表头" check="maxLength(300)" name="questionnaire.title" value="${(questionnaire.title?html)?default('')}" style="width:500px"/]
+    [@b.textarea label="问卷表头" required="true" check="maxLength(300)" name="questionnaire.title" value="${(questionnaire.title?html)?default('')}" style="width:500px"/]
     [@b.textarea label="备注" check="maxLength(300)" name="questionnaire.remark" value="${(questionnaire.remark?html)?default('')}" style="width:500px" /]
-     [@b.datepicker label="生效日期" required="true" name="questionnaire.beginOn" id="_beginOn" format="yyyy-MM-dd" maxDate="#F{$dp.$D(\\'_endOn\\')}" value=(questionnaire.beginOn?string("yyyy-MM-dd"))! maxlength="10" style="width:200px"/]
+    [@b.datepicker label="生效日期" required="true" name="questionnaire.beginOn" id="_beginOn" format="yyyy-MM-dd" maxDate="#F{$dp.$D(\\'_endOn\\')}" value=(questionnaire.beginOn?string("yyyy-MM-dd"))! maxlength="10" style="width:200px"/]
     [@b.datepicker label="失效日期" name="questionnaire.endOn" id="_endOn" format="yyyy-MM-dd" minDate="#F{$dp.$D(\\'_beginOn\\')}" value=(questionnaire.endOn?string("yyyy-MM-dd"))! maxlength="10" style="width:200px"/]
 
     [@b.field label="问题列表"]
-        <table class="gridtable" id="questionnaireTable">
-            <thead class="gridhead">
-                <tr>
-                    <th width="10%">问题类型</th>
-                    <th>问题内容</th>
-                    <th width="15%" colspan="2">操作</th>
+      <table class="gridtable" id="questionnaireTable">
+        <thead class="gridhead">
+          <tr>
+            <th width="10%">问题类型</th>
+            <th>问题内容</th>
+            <th width="15%" colspan="2">操作</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyId">
+            [#assign keyIndex=1]
+            [#list questionTree?keys?sort_by("code")as key]
+            [#assign value=questionTree.get(key)/]
+                <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}" name="${value[0].indicator.name}">
+                  <td rowSpan="${questionTree.get(key)?size}" align="center">
+                    ${key.name}
+                  </td>
+                  <td align="left">
+                    <span>${keyIndex}:</span>${value[0].contents}
+                  </td>
+                  <td align="center">
+                    <a href="#" onclick="removeTr('question${keyIndex}','${value[0].id}','${key.name}')">删除</a>
+                  </td>
+                  <td rowSpan="${questionTree.get(key)?size}" align="center">
+                    <a href="#" onclick="addTr('${(value[0].indicator.id)?if_exists}')">添加</a>
+                  </td>
                 </tr>
-            </thead>
-            <tbody id="tbodyId">
-                [#assign keyIndex=1]
-                [#list questionTree?keys?sort_by("priority")?reverse as key]
-                [#assign value=questionTree.get(key)/]
-                    <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}" name="${value[0].indicator.name}">
-                        <td rowSpan="${questionTree.get(key)?size}" align="center">
-                            ${key.name}
-                        </td>
-                        <td align="left">
-                            <span>${keyIndex}:</span>${value[0].contents}
-                        </td>
-                        <td align="center">
-                            <a href="#" onclick="removeTr('question${keyIndex}','${value[0].id}','${key.name}')">删除</a>
-                        </td>
-                        <td rowSpan="${questionTree.get(key)?size}" align="center">
-                            <a href="#" onclick="addTr('${(value[0].indicator.id)?if_exists}')">添加</a>
-                        </td>
-                    </tr>
-                    [#if questionTree.get(key)?size>1]
-                        [#list 1..questionTree.get(key)?size-1 as i]
-                            [#assign keyIndex= keyIndex+1]
-                            <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}"  name="${value[0].indicator.name}">
-                                <td align="left">
-                                    <span>${keyIndex}:</span>${value[i].contents}
-                                </td>
-                                <td align="center">
-                                    <a href="#" onclick="removeTr('question${keyIndex}','${value[i].id}','${value[i].indicator.name}')">删除</a>
-                                </td>
-                            </tr>
-                        [/#list]
-                    [/#if]
+                [#if questionTree.get(key)?size>1]
+                  [#list 1..questionTree.get(key)?size-1 as i]
                     [#assign keyIndex= keyIndex+1]
-                [/#list]
-            </tbody>
-        </table>
-
+                    <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}"  name="${value[0].indicator.name}">
+                      <td align="left">
+                        <span>${keyIndex}:</span>${value[i].contents}
+                      </td>
+                      <td align="center">
+                        <a href="#" onclick="removeTr('question${keyIndex}','${value[i].id}','${value[i].indicator.name}')">删除</a>
+                      </td>
+                    </tr>
+                  [/#list]
+                [/#if]
+                [#assign keyIndex= keyIndex+1]
+            [/#list]
+        </tbody>
+      </table>
     [/@]
     [@b.formfoot]
-         [#if questionnaire.persisted]
+       [#if questionnaire.persisted]
       <input type="hidden"  name="questionnaire.id"  value="${questionnaire.id?default('')}" />
          [/#if]
         [@b.submit value=(questionnaire.id)?exists?string("保存","修改") onsubmit="doValidate"/]&nbsp;
-        <input type="button" name="btnReset" value="${b.text("action.reset")}" class="buttonStyle" onClick="doReset()" />
+        [@b.reset/]
     [/@]
     [@b.field label="注意"]
         <font color="red">
@@ -75,45 +73,45 @@
 [/@]
 <table class="gridtable" id="questionnaireTableReset" style="display:none;">
     <thead class="gridhead">
-        <tr>
-            <th>问题类型</th>
-            <th>问题内容</th>
-            <th colspan="2">操作</th>
-        </tr>
+      <tr>
+        <th>问题类型</th>
+        <th>问题内容</th>
+        <th colspan="2">操作</th>
+      </tr>
     </thead>
     <tbody id="tbodyIdReset">
-        [#assign keyIndex=1]
-        [#list questionTree?keys?sort_by("priority")?reverse as key]
-         [#assign value=questionTree.get(key)/]
-            <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}" name="${value[0].indicator.name}">
-                <td rowSpan="${value?size}" align="center">
-                    ${value[0].indicator.name}
-                </td>
-                <td align="left">
-                    <span>${keyIndex}:</span>${value[0].contents}
-                </td>
-                <td align="center">
-                    <a href="#" onclick="removeTr('question${keyIndex}','${value[0].id}','${value[0].indicator.name}')">${b.text('action.delete')}</a>
-                </td>
-                <td rowSpan="${value?size}" align="center">
-                    <a href="#" onclick="addTr('${(value[0].indicator.id)?if_exists}')">添加</a>
-                </td>
-            </tr>
-            [#if questionTree.get(key)?size>1]
-                [#list 1..questionTree.get(key)?size-1 as i]
-                    [#assign keyIndex= keyIndex+1]
-                    <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}"  name="${value[0].indicator.name}">
-                        <td align="left">
-                            <span>${keyIndex}:</span>${value[i].contents}
-                        </td>
-                        <td align="center">
-                            <a href="#" onclick="removeTr('question${keyIndex}','${value[i].id}','${value[i].indicator.name}')">${b.text('action.delete')}</a>
-                        </td>
-                    </tr>
-                [/#list]
-            [/#if]
+      [#assign keyIndex=1]
+      [#list questionTree?keys?sort_by("code") as key]
+        [#assign value=questionTree.get(key)/]
+        <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}" name="${value[0].indicator.name}">
+            <td rowSpan="${value?size}" align="center">
+                ${value[0].indicator.name}
+            </td>
+            <td align="left">
+                <span>${keyIndex}:</span>${value[0].contents}
+            </td>
+            <td align="center">
+                <a href="#" onclick="removeTr('question${keyIndex}','${value[0].id}','${value[0].indicator.name}')">${b.text('action.delete')}</a>
+            </td>
+            <td rowSpan="${value?size}" align="center">
+                <a href="#" onclick="addTr('${(value[0].indicator.id)?if_exists}')">添加</a>
+            </td>
+        </tr>
+        [#if questionTree.get(key)?size>1]
+          [#list 1..questionTree.get(key)?size-1 as i]
             [#assign keyIndex= keyIndex+1]
-        [/#list]
+            <tr class="griddata-${(key_index%2==0)?string("even","odd")}" id="question${keyIndex}"  name="${value[0].indicator.name}">
+              <td align="left">
+                <span>${keyIndex}:</span>${value[i].contents}
+              </td>
+              <td align="center">
+                <a href="#" onclick="removeTr('question${keyIndex}','${value[i].id}','${value[i].indicator.name}')">${b.text('action.delete')}</a>
+              </td>
+            </tr>
+          [/#list]
+        [/#if]
+        [#assign keyIndex= keyIndex+1]
+      [/#list]
     </tbody>
 </table>
 <script language="JavaScript">

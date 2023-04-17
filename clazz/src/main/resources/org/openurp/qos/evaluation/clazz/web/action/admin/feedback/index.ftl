@@ -3,7 +3,7 @@
   [@b.navitem href="feedback"]过程文字评价[/@]
   [@b.navitem href="final-comment"]期末文字评价[/@]
 [/@]
-[@urp_base.semester_bar value=currentSemester/]
+[@base.semester_bar value=currentSemester/]
 <script>
    document.semesterForm.method="get";
 </script>

@@ -23,7 +23,7 @@ import org.beangle.data.transfer.exporter.ExportSetting
 import org.beangle.ems.app.Ems
 import org.beangle.web.action.annotation.{mapping, param}
 import org.beangle.web.action.view.View
-import org.beangle.webmvc.support.action.RestfulAction
+import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.openurp.base.edu.code.CourseCategory
 import org.openurp.base.model.{Project, Semester}
 import org.openurp.qos.evaluation.clazz.model.{CategoryEvalStat, CourseEvalStat, DepartEvalStat}
@@ -31,7 +31,7 @@ import org.openurp.qos.evaluation.clazz.web.helper.StatCoursePropertyExtractor
 import org.openurp.qos.evaluation.config.AssessGrade
 import org.openurp.starter.web.support.ProjectSupport
 
-class CourseStatAction extends RestfulAction[CourseEvalStat] with ProjectSupport {
+class CourseStatAction extends RestfulAction[CourseEvalStat], ExportSupport[CourseEvalStat], ProjectSupport {
 
   override protected def indexSetting(): Unit = {
     given project: Project = getProject
@@ -52,7 +52,7 @@ class CourseStatAction extends RestfulAction[CourseEvalStat] with ProjectSupport
 
   def history(): View = {
     val q = OqlBuilder.from(classOf[CourseEvalStat], "c")
-    q.where("c.teacher.id=:teacherId", longId("teacher"))
+    q.where("c.teacher.id=:teacherId", getLongId("teacher"))
     q.orderBy("c.semester.beginOn desc")
     put("stats", entityDao.search(q))
     forward()

@@ -17,27 +17,23 @@
 
 package org.openurp.qos.evaluation.clazz.web.action.teacher
 
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.security.Securities
+import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.edu.model.Teacher
 import org.openurp.base.model.{Project, Semester}
 import org.openurp.qos.evaluation.clazz.model.Feedback
 import org.openurp.qos.evaluation.clazz.web.helper.ClazzFeedback
-import org.openurp.starter.web.support.ProjectSupport
+import org.openurp.starter.web.support.{ProjectSupport, TeacherSupport}
 
 import java.time.LocalDate
 
-class FeedbackAction extends EntityAction[Feedback] with ProjectSupport {
+class FeedbackAction extends TeacherSupport {
 
-  def index(): View = {
-    val me = getTeacher()
-    put("project", me.projects.head)
-    val semester = getId("semester") match {
-      case Some(sid) => entityDao.get(classOf[Semester], sid.toInt)
-      case None => getCurrentSemester(me.projects.head)
-    }
+  protected override def projectIndex(me: Teacher)(using project: Project): View = {
+    val semester = getSemester
     put("currentSemester", semester)
     val fbQuery = OqlBuilder.from(classOf[Feedback], "fb")
     fbQuery.where("fb.semester=:semester", semester)
@@ -51,27 +47,4 @@ class FeedbackAction extends EntityAction[Feedback] with ProjectSupport {
     forward()
   }
 
-  private def getTeacher(): Teacher = {
-    val query = OqlBuilder.from(classOf[Teacher], "t")
-    query.where("t.staff.code=:code", Securities.user)
-    entityDao.search(query).head
-  }
-
-  def getCurrentSemester(project: Project): Semester = {
-    val builder = OqlBuilder.from(classOf[Semester], "semester")
-      .where("semester.calendar = :calendar ", project.calendar)
-      builder.where(":date between semester.beginOn and  semester.endOn", LocalDate.now)
-    builder.cacheable()
-    val rs = entityDao.search(builder)
-    if (rs.isEmpty) { //如果没有正在其中的学期，则查找一个距离最近的
-      val builder2 = OqlBuilder.from(classOf[Semester], "semester")
-        .where("semester.calendar = :calendar ", project.calendar)
-        builder2.orderBy("abs(semester.beginOn - current_date() + semester.endOn - current_date())")
-      builder2.cacheable()
-      builder2.limit(1, 1)
-      entityDao.search(builder2).headOption.orNull
-    } else {
-      rs.head
-    }
-  }
 }

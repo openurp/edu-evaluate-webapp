@@ -18,12 +18,12 @@
 package org.openurp.qos.evaluation.clazz.web.action.admin
 
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.webmvc.support.action.RestfulAction
+import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.openurp.base.model.{Project, Semester}
 import org.openurp.qos.evaluation.clazz.model.FinalComment
 import org.openurp.starter.web.support.ProjectSupport
 
-class FinalCommentAction extends RestfulAction[FinalComment] with ProjectSupport {
+class FinalCommentAction extends RestfulAction[FinalComment], ExportSupport[FinalComment], ProjectSupport {
 
   override protected def indexSetting(): Unit = {
     given project: Project = getProject
@@ -35,6 +35,7 @@ class FinalCommentAction extends RestfulAction[FinalComment] with ProjectSupport
 
   override protected def getQueryBuilder: OqlBuilder[FinalComment] = {
     val builder = super.getQueryBuilder
+
     given project: Project = getProject
 
     builder.where("finalComment.teachDepart in(:departs)", getDeparts)

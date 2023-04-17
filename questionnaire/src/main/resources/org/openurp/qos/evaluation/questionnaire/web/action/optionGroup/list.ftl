@@ -7,14 +7,14 @@
         bar.addItem("${b.text('action.delete')}",action.remove());
     [/@]
     [@b.row]
-        [@b.boxcol /]
-        [@b.col property="name" title="名称" width="30%"]${(optionGroup.name)!}[/@]
-      [@b.col title="选项" width="60%"]
-      [#list optionGroup.options?sort_by("proportion")?reverse as option]
-      ${option.name}(${option.proportion?default(0)})&nbsp;
-      [#else]  无内容
-      [/#list]
-        [/@]
+      [@b.boxcol /]
+      [@b.col property="name" title="名称" width="30%"]${(optionGroup.name)!}[/@]
+      [@b.col title="选项"]
+        [#list optionGroup.options?sort_by("proportion")?reverse as option]
+        ${option.name}(${option.proportion?default(0)})&nbsp;
+        [#else]无内容
+        [/#list]
+      [/@]
     [/@]
 [/@]
 [@b.foot/]

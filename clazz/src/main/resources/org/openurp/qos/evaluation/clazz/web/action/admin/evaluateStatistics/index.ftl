@@ -8,7 +8,7 @@
 <div class="search-container">
   <div class="search-panel">
         [@b.form action="!search" name="textbookIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
-            [@urp_base.semester  name="semester.id" label="学年学期" value=currentSemester/]
+            [@base.semester  name="semester.id" label="学年学期" value=currentSemester/]
             [@b.select name="department.id" label="院系" items=departmentList empty="..." /]
             [@b.select name="questionnaire.id" label="所用问卷" items=[] ]
                 [#list questionnaires as q]

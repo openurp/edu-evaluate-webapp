@@ -17,7 +17,7 @@
 
 package org.openurp.qos.evaluation.clazz.web.action.publik
 
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.web.action.support.{ActionSupport, ParamSupport}
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
@@ -27,7 +27,9 @@ import org.openurp.qos.evaluation.clazz.model.CourseEvalStat
 import org.openurp.qos.evaluation.config.AssessGrade
 import org.openurp.starter.web.support.ProjectSupport
 
-class CourseStatAction extends ActionSupport with EntityAction[CourseEvalStat]  with ParamSupport with ProjectSupport {
+class CourseStatAction extends ActionSupport with EntityAction[CourseEvalStat] with ParamSupport with ProjectSupport {
+
+  var entityDao: EntityDao = _
 
   def index(): View = {
     given project: Project = getProject
@@ -40,7 +42,7 @@ class CourseStatAction extends ActionSupport with EntityAction[CourseEvalStat]  
   }
 
   def search(): View = {
-    val builder=super.getQueryBuilder
+    val builder = super.getQueryBuilder
     builder.where("courseEvalStat.publishStatus=2")
     put("courseEvalStats", entityDao.search(builder))
     forward()

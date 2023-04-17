@@ -3,7 +3,7 @@
 [@b.toolbar title="过程评教查询"]
   bar.addBack();
 [/@]
-[@urp_base.semester_bar value=currentSemester/]
+[@base.semester_bar value=currentSemester/]
 <div class="container-fluid">
   <div class="row">
      <div class="col-3" id="accordion">

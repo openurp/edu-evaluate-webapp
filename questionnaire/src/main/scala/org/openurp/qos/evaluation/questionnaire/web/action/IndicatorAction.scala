@@ -70,7 +70,7 @@ class IndicatorAction extends RestfulAction[Indicator] with ProjectSupport {
   }
 
   override def remove(): View = {
-    val indicatorIds = longIds("indicator")
+    val indicatorIds = getLongIds("indicator")
     val query1 = OqlBuilder.from(classOf[Indicator], "indicator")
     query1.where("indicator.id in (:indicatorIds)", indicatorIds)
     val indicators = entityDao.search(query1)

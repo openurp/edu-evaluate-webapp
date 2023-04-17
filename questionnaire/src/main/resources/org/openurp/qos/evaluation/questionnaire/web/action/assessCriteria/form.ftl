@@ -42,7 +42,7 @@
               [#--] <input name="assessCriteria.id" value="${assessCriteria.id?default("")}" type="hidden"/>[--]
 
             [@b.submit value="action.submit" onsubmit="check"/]&nbsp;
-            <input type="reset"  name="reset1" value="${b.text("action.reset")}" class="buttonStyle" />
+            [@b.reset/]
         [/@]
    [/@]
  <script language="JavaScript">

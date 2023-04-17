@@ -21,9 +21,10 @@ import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.support.ServletSupport
 import org.beangle.web.action.view.View
-import org.openurp.base.std.code.StdType
+import org.beangle.webmvc.support.action.ExportSupport
 import org.openurp.base.edu.model.Teacher
 import org.openurp.base.model.{Department, Project, Semester}
+import org.openurp.base.std.code.StdType
 import org.openurp.code.edu.model.EducationLevel
 import org.openurp.qos.evaluation.clazz.model.{CourseEvalStat, CourseOptionStat, EvaluateResult, QuestionResult}
 import org.openurp.qos.evaluation.clazz.web.action.admin.ProjectRestfulAction
@@ -31,7 +32,7 @@ import org.openurp.qos.evaluation.config.{AssessCriteria, AssessGrade, Indicator
 
 import java.time.LocalDate
 
-class QuestionnaireStatAction extends ProjectRestfulAction[CourseEvalStat] with ServletSupport {
+class QuestionnaireStatAction extends ProjectRestfulAction[CourseEvalStat], ExportSupport[CourseEvalStat], ServletSupport {
 
   override def index(): View = {
     given project: Project = getProject
@@ -59,7 +60,7 @@ class QuestionnaireStatAction extends ProjectRestfulAction[CourseEvalStat] with 
    * @return
    */
   def modifyTeacher(): View = {
-    val quenStatId = longId("questionnaireStat")
+    val quenStatId = getLongId("questionnaireStat")
     put("questionnaireStat", entityDao.get(classOf[CourseEvalStat], quenStatId))
     forward()
   }

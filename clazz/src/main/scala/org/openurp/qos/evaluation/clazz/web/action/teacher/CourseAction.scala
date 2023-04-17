@@ -17,9 +17,10 @@
 
 package org.openurp.qos.evaluation.clazz.web.action.teacher
 
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.security.Securities
 import org.beangle.web.action.annotation.{mapping, param}
+import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.{Status, View}
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.edu.model.Teacher
@@ -27,7 +28,9 @@ import org.openurp.base.model.Semester
 import org.openurp.qos.evaluation.clazz.model.*
 import org.openurp.starter.web.support.ProjectSupport
 
-class CourseAction extends EntityAction[CourseEvalStat] with ProjectSupport {
+class CourseAction extends ActionSupport, EntityAction[CourseEvalStat], ProjectSupport {
+
+  var entityDao: EntityDao = _
 
   def index(): View = {
     val me = getTeacher()
@@ -51,7 +54,7 @@ class CourseAction extends EntityAction[CourseEvalStat] with ProjectSupport {
 
   def comments(): View = {
     val me = getTeacher()
-    val courseEvalStatId = longId("stat")
+    val courseEvalStatId = getLongId("stat")
     val stat = entityDao.get(classOf[CourseEvalStat], courseEvalStatId)
 
     val query = OqlBuilder.from(classOf[FinalComment], "fb")

@@ -1,5 +1,5 @@
 [@b.head/]
-[@urp_base.semester_bar value=currentSemester/]
+[@base.semester_bar value=currentSemester/]
 <script>
    document.semesterForm.method="get";
 </script>

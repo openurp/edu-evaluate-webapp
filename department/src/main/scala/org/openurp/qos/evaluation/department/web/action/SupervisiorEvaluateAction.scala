@@ -23,14 +23,14 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.transfer.importer.ImportSetting
 import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.web.action.view.{Stream, View}
-import org.beangle.webmvc.support.action.RestfulAction
+import org.beangle.webmvc.support.action.{ImportSupport, RestfulAction}
 import org.openurp.base.edu.model.Teacher
 import org.openurp.base.model.{Department, Project, Semester}
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.app.department.model.EvaluateSwitch
+import org.openurp.qos.evaluation.config.{Indicator, Question, Questionnaire}
 import org.openurp.qos.evaluation.department.helper.ImportSupervisiorListener
 import org.openurp.qos.evaluation.department.model.{SupervisiorEvaluate, SupervisiorQuestion}
-import org.openurp.qos.evaluation.config.{Indicator, Question, Questionnaire}
 import org.openurp.starter.web.support.ProjectSupport
 
 import java.time.Instant
@@ -39,7 +39,7 @@ import scala.collection.mutable.Buffer
 /**
  * @author xinzhou
  */
-class SupervisiorEvaluateAction extends RestfulAction[SupervisiorEvaluate] with ProjectSupport {
+class SupervisiorEvaluateAction extends RestfulAction[SupervisiorEvaluate], ImportSupport[SupervisiorEvaluate], ProjectSupport {
 
   override def indexSetting(): Unit = {
     given project: Project = getProject
@@ -75,7 +75,7 @@ class SupervisiorEvaluateAction extends RestfulAction[SupervisiorEvaluate] with 
   }
 
   override def editSetting(supervisiorEvaluate: SupervisiorEvaluate): Unit = {
-    val semesterId = intId("supervisiorEvaluate.semester")
+    val semesterId = getIntId("supervisiorEvaluate.semester")
     put("semester", entityDao.get(classOf[Semester], semesterId))
 
     val esbuilder = OqlBuilder.from(classOf[EvaluateSwitch], "es")

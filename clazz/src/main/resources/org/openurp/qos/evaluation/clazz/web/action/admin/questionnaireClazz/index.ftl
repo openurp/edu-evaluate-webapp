@@ -4,7 +4,7 @@
 <div class="search-container">
   <div class="search-panel">
         [@b.form action="!search" name="questionnaireClazzIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
-            [@urp_base.semester  name="semester.id" label="学年学期" value=semester/]
+            [@base.semester  name="semester.id" label="学年学期" value=semester/]
             [@b.textfields names="questionnaireClazz.clazz.crn;课程序号,questionnaireClazz.clazz.course.code;课程代码,questionnaireClazz.clazz.course.name;课程名称"/]
             [@b.textfield name="teacher" label="教师姓名" /]
             [@b.select name="questionnaireClazz.clazz.courseType.id" label="课程类别" items=courseTypes empty="..."/]

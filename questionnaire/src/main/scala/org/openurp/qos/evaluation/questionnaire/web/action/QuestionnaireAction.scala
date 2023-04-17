@@ -44,21 +44,8 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] with ProjectSuppo
     forward()
   }
 
-  override def editSetting(entity: Questionnaire): Unit = {
-    val questionnaire = entity.asInstanceOf[Questionnaire]
-    val departmentList = entityDao.getAll(classOf[Department])
-    put("departments", departmentList)
-    val questionTree = Collections.newMap[Indicator, Buffer[Question]]
-    questionnaire.questions foreach { question =>
-      val key = question.indicator
-      var questions: Buffer[Question] = questionTree.get(key).orNull
-      if (null == questions) {
-        questions = Collections.newBuffer
-      }
-      questions += question
-      questions.sortWith((x, y) => x.priority < y.priority)
-      questionTree.put(key, questions)
-    }
+  override def editSetting(questionnaire: Questionnaire): Unit = {
+    val questionTree = questionnaire.questions.groupBy(x => x.indicator)
     put("questions", questionnaire.questions)
     put("questionTree", questionTree)
 
@@ -95,14 +82,14 @@ class QuestionnaireAction extends RestfulAction[Questionnaire] with ProjectSuppo
     }
     questionnaire.endOn = get("questionnaire.endOn").filter(Strings.isNotBlank(_)).map(LocalDate.parse(_))
     questionnaire.questions.clear()
-    questionnaire.questions ++= entityDao.find(classOf[Question], longIds("questionnaire.question"))
+    questionnaire.questions ++= entityDao.find(classOf[Question], getLongIds("questionnaire.question"))
 
     entityDao.saveOrUpdate(questionnaire)
     redirect("search", "info.save.success")
   }
 
   override def remove(): View = {
-    val questionnaireIds = longIds("questionnaire")
+    val questionnaireIds = getLongIds("questionnaire")
     val query1 = OqlBuilder.from(classOf[Questionnaire], "questionnaire")
     query1.where("questionnaire.id in (:questionnaireIds)", questionnaireIds)
     val questionnaires = entityDao.search(query1)

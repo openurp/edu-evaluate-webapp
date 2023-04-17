@@ -4,5 +4,6 @@
     <module class="org.openurp.qos.evaluation.clazz.web.action.admin.DefaultModule"/>
     <module class="org.openurp.qos.evaluation.clazz.web.action.teacher.DefaultModule"/>
     <module class="org.openurp.qos.evaluation.clazz.web.action.publik.DefaultModule"/>
+    <module class="org.openurp.qos.evaluation.clazz.web.action.student.DefaultModule"/>
   </container>
 </cdi>

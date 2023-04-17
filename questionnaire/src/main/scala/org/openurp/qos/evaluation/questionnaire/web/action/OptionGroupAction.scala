@@ -83,7 +83,7 @@ class OptionGroupAction extends RestfulAction[OptionGroup] with ProjectSupport {
   }
 
   override def remove(): View = {
-    val optionGroupIds = longIds("optionGroup")
+    val optionGroupIds = getLongIds("optionGroup")
     val query1 = OqlBuilder.from(classOf[OptionGroup], "optionGroup")
     query1.where("optionGroup.id in (:optionGroupIds)", optionGroupIds)
     val optionGroups = entityDao.search(query1)

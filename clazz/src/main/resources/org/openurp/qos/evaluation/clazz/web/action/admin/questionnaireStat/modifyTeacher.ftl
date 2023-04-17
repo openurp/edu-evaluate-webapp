@@ -27,8 +27,8 @@
     </table>
     [/@]
     [@b.formfoot]
-        [@b.submit value="action.submit" onsubmit="doPost()"/]
-        <input type="reset" name="teacherReset" value="${b.text("action.reset")}" />
+        [@b.submit value="action.submit" onsubmit="doPost()"/]&nbsp;
+        [@b.reset/]
     [/@]
 [/@]
 <script type="text/javaScript">

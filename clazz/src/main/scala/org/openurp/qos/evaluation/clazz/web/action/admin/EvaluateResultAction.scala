@@ -55,7 +55,7 @@ class EvaluateResultAction extends ProjectRestfulAction[EvaluateResult] {
    * @return
    */
   def updateState(): View = {
-    val ids = longIds("evaluateResult")
+    val ids = getLongIds("evaluateResult")
     var state = getInt("isEvaluate").get
     val results = entityDao.find(classOf[EvaluateResult], ids)
     results foreach { result =>

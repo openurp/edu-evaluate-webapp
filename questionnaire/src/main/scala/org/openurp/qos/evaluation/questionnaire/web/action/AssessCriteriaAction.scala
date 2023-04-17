@@ -70,7 +70,7 @@ class AssessCriteriaAction extends RestfulAction[AssessCriteria] with ProjectSup
    * 不能删除默认对照标准
    */
   override def remove(): View = {
-    val assessCriteriaIds = longIds("assessCriteria")
+    val assessCriteriaIds = getLongIds("assessCriteria")
     if (assessCriteriaIds.contains(1L)) {
       return redirect("search", "info.delete.failure")
     } else {

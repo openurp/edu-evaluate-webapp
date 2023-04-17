@@ -11,7 +11,7 @@
 <div class="search-container">
   <div class="search-panel">
         [@b.form action="!search?orderBy=departEvalStat.totalScore desc" name="departEvaluateStatIndexForm" title="ui.searchForm" target="contentDiv" theme="search"]
-            [@urp_base.semester  name="semester.id" label="学年学期" value=currentSemester/]
+            [@base.semester  name="semester.id" label="学年学期" value=currentSemester/]
             [@b.select name="departEvalStat.department.id" label="开课院系" items=departments empty="..."/]
             [@b.select name="departEvalStat.questionnaire.id" label="所用问卷" items=[] ]
                 [#list questionnaires as q]

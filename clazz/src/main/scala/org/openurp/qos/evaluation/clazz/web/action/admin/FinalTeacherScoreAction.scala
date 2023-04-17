@@ -24,6 +24,7 @@ import org.beangle.data.transfer.excel.ExcelTemplateWriter
 import org.beangle.data.transfer.exporter.ExportContext
 import org.beangle.web.action.context.ActionContext
 import org.beangle.web.action.view.{Status, View}
+import org.beangle.webmvc.support.action.ExportSupport
 import org.openurp.base.edu.model.Teacher
 import org.openurp.base.model.{Department, Project, Semester}
 import org.openurp.base.std.code.StdType
@@ -35,7 +36,7 @@ import org.openurp.qos.evaluation.department.model.{DepartEvaluate, SupervisiorE
 
 import java.time.LocalDate
 
-class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
+class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore], ExportSupport[FinalTeacherScore] {
 
   override def index(): View = {
     given project: Project = getProject
@@ -46,7 +47,6 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore] {
   }
 
   override def search(): View = {
-    // 页面条件
     val semesterQuery = OqlBuilder.from(classOf[Semester], "semester").where(":now between semester.beginOn and semester.endOn", LocalDate.now)
     val semesterId = getInt("semester.id").getOrElse(entityDao.search(semesterQuery).head.id)
     val semester = entityDao.get(classOf[Semester], semesterId)

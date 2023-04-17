@@ -33,7 +33,7 @@
             <input type="hidden"  name="question.id"  value="${question.id?default('')}" />
             [/#if]
             [@b.submit value="action.submit"/]&nbsp;
-            <input type="reset"  name="reset1" value="${b.text("action.reset")}" class="buttonStyle" />
+            [@b.reset/]
         [/@]
         [/#if]
    [/@]

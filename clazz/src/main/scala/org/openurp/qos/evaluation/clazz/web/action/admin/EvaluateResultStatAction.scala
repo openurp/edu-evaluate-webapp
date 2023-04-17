@@ -18,13 +18,13 @@
 package org.openurp.qos.evaluation.clazz.web.action.admin
 
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.webmvc.support.action.RestfulAction
+import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.openurp.base.model.Department
 import org.openurp.code.edu.model.EducationLevel
 import org.openurp.qos.evaluation.clazz.model.CourseEvalStat
 import org.openurp.qos.evaluation.config.Questionnaire
 
-class EvaluateResultStatAction extends RestfulAction[CourseEvalStat] {
+class EvaluateResultStatAction extends RestfulAction[CourseEvalStat], ExportSupport[CourseEvalStat] {
 
   override protected def indexSetting(): Unit = {
     put("educations", entityDao.getAll(classOf[EducationLevel]))

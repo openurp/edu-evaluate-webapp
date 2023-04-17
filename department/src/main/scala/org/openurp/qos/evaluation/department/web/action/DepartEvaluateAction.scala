@@ -24,7 +24,7 @@ import org.beangle.data.transfer.importer.ImportSetting
 import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.security.Securities
 import org.beangle.web.action.view.{Stream, View}
-import org.beangle.webmvc.support.action.RestfulAction
+import org.beangle.webmvc.support.action.{ImportSupport, RestfulAction}
 import org.openurp.base.edu.model.Teacher
 import org.openurp.base.model.{Department, Project, Semester}
 import org.openurp.edu.clazz.model.Clazz
@@ -40,7 +40,7 @@ import scala.collection.mutable.Buffer
 /**
  * @author xinzhou
  */
-class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ProjectSupport {
+class DepartEvaluateAction extends RestfulAction[DepartEvaluate], ImportSupport[DepartEvaluate], ProjectSupport {
 
   override def indexSetting(): Unit = {
     given project: Project = getProject
@@ -77,7 +77,7 @@ class DepartEvaluateAction extends RestfulAction[DepartEvaluate] with ProjectSup
   }
 
   override def editSetting(departEvaluate: DepartEvaluate): Unit = {
-    val semesterId = intId("departEvaluate.semester")
+    val semesterId = getIntId("departEvaluate.semester")
     put("semester", entityDao.get(classOf[Semester], semesterId))
 
     val esbuilder = OqlBuilder.from(classOf[EvaluateSwitch], "es")

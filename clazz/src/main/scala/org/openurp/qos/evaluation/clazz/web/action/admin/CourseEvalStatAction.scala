@@ -62,7 +62,7 @@ class CourseEvalStatAction extends ProjectRestfulAction[CourseEvalStat] {
   }
 
   override def remove(): View = {
-    val questionSIds = longIds("courseEvalStat")
+    val questionSIds = getLongIds("courseEvalStat")
     val query = OqlBuilder.from(classOf[CourseEvalStat], "questionS")
     query.where("questionS.id in(:ids)", questionSIds)
     entityDao.remove(entityDao.search(query))

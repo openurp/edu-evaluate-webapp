@@ -143,10 +143,10 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
       val qurey = getQueryBuilderByClazz()
       clazzs = entityDao.search(getQueryBuilderByClazz().limit(null))
     } else {
-      val ids = longIds("clazz")
+      val ids = getLongIds("clazz")
       clazzs = entityDao.find(classOf[Clazz], ids)
     }
-    val questionnaireId = longId("questionnaire")
+    val questionnaireId = getLongId("questionnaire")
     if (questionnaireId != 0) {
       val isEvaluate = getBoolean("isEvaluate").get
       val questionnaire = entityDao.get(classOf[Questionnaire], questionnaireId)
@@ -175,7 +175,7 @@ class QuestionnaireClazzAction extends ProjectRestfulAction[QuestionnaireClazz] 
     if ("all".equals(isAll)) {
       questionnaireClazzs = entityDao.getAll(classOf[QuestionnaireClazz])
     } else {
-      val ids = longIds(simpleEntityName)
+      val ids = getLongIds(simpleEntityName)
       questionnaireClazzs = entityDao.find(classOf[QuestionnaireClazz], ids)
     }
 

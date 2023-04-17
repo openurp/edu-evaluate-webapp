@@ -78,7 +78,7 @@ class QuestionAction extends RestfulAction[Question] with ProjectSupport{
   }
 
   override def remove(): View = {
-    val questionIds = longId("question")
+    val questionIds = getLongId("question")
     val questions = entityDao.get(classOf[Question], questionIds)
 
     val query = OqlBuilder.from(classOf[Questionnaire], "questionnaire")

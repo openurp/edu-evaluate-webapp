@@ -22,7 +22,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.transfer.exporter.ExportSetting
 import org.beangle.web.action.annotation.{mapping, param}
 import org.beangle.web.action.view.View
-import org.beangle.webmvc.support.action.RestfulAction
+import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.openurp.base.edu.code.CourseCategory
 import org.openurp.base.model.{Project, Semester}
 import org.openurp.qos.evaluation.clazz.model.{CategoryEvalStat, CourseEvalStat, DepartEvalStat}
@@ -30,11 +30,11 @@ import org.openurp.qos.evaluation.clazz.web.helper.StatCoursePropertyExtractor
 import org.openurp.qos.evaluation.config.AssessGrade
 import org.openurp.starter.web.support.ProjectSupport
 
-class CourseStatSearchAction extends RestfulAction[CourseEvalStat] with ProjectSupport {
+class CourseStatSearchAction extends RestfulAction[CourseEvalStat], ExportSupport[CourseEvalStat], ProjectSupport {
   override protected def indexSetting(): Unit = {
     given project: Project = getProject
 
-    put("project",project)
+    put("project", project)
     put("grades", entityDao.getAll(classOf[AssessGrade]))
     put("categories", getCodes(classOf[CourseCategory]))
     put("currentSemester", getSemester)
@@ -56,11 +56,11 @@ class CourseStatSearchAction extends RestfulAction[CourseEvalStat] with ProjectS
     val categoryStats = entityDao.search(query)
     put("categoryStat", categoryStats.head)
 
-    val departQuery = OqlBuilder.from(classOf[DepartEvalStat],"ces")
-    departQuery.where("ces.project=:project",stat.project)
-    departQuery.where("ces.semester=:semester",stat.semester)
-    departQuery.where("ces.department=:department",stat.teachDepart)
-    put("departEvalStat",entityDao.search(departQuery).head)
+    val departQuery = OqlBuilder.from(classOf[DepartEvalStat], "ces")
+    departQuery.where("ces.project=:project", stat.project)
+    departQuery.where("ces.semester=:semester", stat.semester)
+    departQuery.where("ces.department=:department", stat.teachDepart)
+    put("departEvalStat", entityDao.search(departQuery).head)
 
     put("stat", stat)
     forward()
@@ -68,9 +68,9 @@ class CourseStatSearchAction extends RestfulAction[CourseEvalStat] with ProjectS
 
   override def configExport(setting: ExportSetting): Unit = {
     super.configExport(setting)
-//    val writer = new ExcelItemWriter(setting.context, response.getOutputStream)
-//    setting.writer = writer
-//    writer.registerFormat(DataType.Float, "#,##0.00")
+    //    val writer = new ExcelItemWriter(setting.context, response.getOutputStream)
+    //    setting.writer = writer
+    //    writer.registerFormat(DataType.Float, "#,##0.00")
     setting.context.extractor = new StatCoursePropertyExtractor
   }
 }
