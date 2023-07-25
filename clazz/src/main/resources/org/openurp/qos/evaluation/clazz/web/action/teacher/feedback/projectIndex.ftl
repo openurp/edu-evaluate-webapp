@@ -41,16 +41,16 @@
                  <div  id="feedback_${fd.course.id}_${fd.crn}" [#if fd_index=0]style="display:block"[#else]style="display:none"[/#if]>
                    <table class="table">
                      <tr>
-                       <th>序号</th>
-                       <th>综合感受</th>
+                       <th style="width:6%">序号</th>
+                       <th style="width:14%">综合感受</th>
                        <th>内容</th>
-                       <th>时间</th>
+                       <th style="width:12%">时间</th>
                      </tr>
                    [#list fd.feedbacks as f]
                         <tr>
                          <td>${f_index+1}</td>
                          <td>${f.grade!}</td>
-                         <td>${f.contents}</td>
+                         <td>${f.contents?replace("\n","<br>")}</td>
                          <td><small>${f.updatedAt?string("yyyy-MM-dd HH:mm")}</small></td>
                         </tr>
                    [/#list]
