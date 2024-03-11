@@ -22,7 +22,7 @@ import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.openurp.base.model.Department
 import org.openurp.code.edu.model.EducationLevel
 import org.openurp.qos.evaluation.clazz.model.CourseEvalStat
-import org.openurp.qos.evaluation.config.Questionnaire
+import org.openurp.qos.evaluation.base.model.Questionnaire
 
 class EvaluateResultStatAction extends RestfulAction[CourseEvalStat], ExportSupport[CourseEvalStat] {
 

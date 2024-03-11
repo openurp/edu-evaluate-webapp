@@ -20,14 +20,13 @@ package org.openurp.qos.evaluation.clazz.web.action.admin
 import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.view.View
-import org.openurp.base.std.code.StdType
-import org.openurp.base.edu.model.Teacher
+import org.openurp.base.hr.model.Teacher
 import org.openurp.base.model.{Department, Project, Semester}
 import org.openurp.code.edu.model.EducationLevel
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.app.course.service.Ranker
+import org.openurp.qos.evaluation.base.model.*
 import org.openurp.qos.evaluation.clazz.model.*
-import org.openurp.qos.evaluation.config.*
 
 import java.time.{Instant, LocalDate}
 import scala.collection.mutable.{Buffer, ListBuffer}

@@ -21,12 +21,12 @@ import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.support.ServletSupport
 import org.beangle.web.action.view.View
-import org.openurp.base.edu.model.Teacher
+import org.openurp.base.hr.model.Teacher
 import org.openurp.base.model.{Department, Project, Semester}
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.clazz.model.{CourseEvalStat, EvaluateResult, QuestionResult}
 import org.openurp.qos.evaluation.clazz.web.action.admin.ProjectRestfulAction
-import org.openurp.qos.evaluation.config.{Indicator, Question, Questionnaire}
+import org.openurp.qos.evaluation.base.model.{Indicator, Question, Questionnaire}
 
 import java.time.LocalDate
 

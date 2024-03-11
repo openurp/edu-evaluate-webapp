@@ -23,7 +23,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.security.Securities
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.edu.model.Teacher
+import org.openurp.base.hr.model.Teacher
 import org.openurp.base.model.Semester
 import org.openurp.base.std.model.Student
 import org.openurp.edu.clazz.model.{Clazz, CourseTaker}
@@ -99,7 +99,6 @@ class FeedbackAction extends StudentSupport {
     }
     val textEvaluationSwitch = getSwitch()
     if (null == textEvaluationSwitch) {
-      //      || !textEvaluationSwitch.isTextEvaluateOpened()) {
       addMessage("现在还没有开放文字评教!")
       forward("errors")
     }

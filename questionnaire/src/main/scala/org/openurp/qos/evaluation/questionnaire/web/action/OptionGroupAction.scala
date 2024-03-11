@@ -22,7 +22,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Project
-import org.openurp.qos.evaluation.config.{Option, OptionGroup, Question}
+import org.openurp.qos.evaluation.base.model.{Option, OptionGroup, Question}
 import org.openurp.starter.web.support.ProjectSupport
 
 class OptionGroupAction extends RestfulAction[OptionGroup] with ProjectSupport {

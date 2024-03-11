@@ -23,7 +23,7 @@ import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.data.transfer.importer.{ImportListener, ImportResult}
 import org.openurp.base.model.Semester
 import org.openurp.qos.evaluation.department.model.SupervisiorEvaluate
-import org.openurp.qos.evaluation.config.Questionnaire
+import org.openurp.qos.evaluation.base.model.Questionnaire
 
 /**
  * @author xinzhou

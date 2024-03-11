@@ -20,9 +20,9 @@ package org.openurp.qos.evaluation.app.department.helper
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.data.transfer.importer.{ImportListener, ImportResult}
 import org.beangle.security.Securities
-import org.openurp.base.edu.model.Teacher
+import org.openurp.base.hr.model.Teacher
 import org.openurp.base.model.Semester
-import org.openurp.qos.evaluation.config.Questionnaire
+import org.openurp.qos.evaluation.base.model.Questionnaire
 import org.openurp.qos.evaluation.department.model.DepartEvaluate
 
 import java.time.Instant

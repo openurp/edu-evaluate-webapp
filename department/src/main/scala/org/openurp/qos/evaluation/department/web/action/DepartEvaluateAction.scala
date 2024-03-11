@@ -25,11 +25,11 @@ import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.security.Securities
 import org.beangle.web.action.view.{Stream, View}
 import org.beangle.webmvc.support.action.{ImportSupport, RestfulAction}
-import org.openurp.base.edu.model.Teacher
+import org.openurp.base.hr.model.Teacher
 import org.openurp.base.model.{Department, Project, Semester}
 import org.openurp.edu.clazz.model.Clazz
 import org.openurp.qos.evaluation.app.department.model.EvaluateSwitch
-import org.openurp.qos.evaluation.config.{Indicator, Question, Questionnaire}
+import org.openurp.qos.evaluation.base.model.{Indicator, Question, Questionnaire}
 import org.openurp.qos.evaluation.department.helper.ImportDepartListener
 import org.openurp.qos.evaluation.department.model.{DepartEvaluate, DepartQuestion}
 import org.openurp.starter.web.support.ProjectSupport

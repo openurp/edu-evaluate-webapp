@@ -1,5 +1,5 @@
-import org.openurp.parent.Dependencies._
-import org.openurp.parent.Settings._
+import org.openurp.parent.Dependencies.*
+import org.openurp.parent.Settings.*
 
 ThisBuild / organization := "org.openurp.qos.evaluation"
 ThisBuild / version := "0.0.23-SNAPSHOT"
@@ -24,9 +24,9 @@ ThisBuild / developers := List(
 ThisBuild / description := "OpenURP QoS Evalution"
 ThisBuild / homepage := Some(url("http://openurp.github.io/qos-evaluation/index.html"))
 
-val apiVer = "0.31.1"
-val starterVer = "0.2.13"
-val baseVer = "0.3.6"
+val apiVer = "0.37.3-SNAPSHOT"
+val starterVer = "0.3.26-SNAPSHOT"
+val baseVer = "0.4.20"
 val openurp_edu_api = "org.openurp.edu" % "openurp-edu-api" % apiVer
 val openurp_qos_api = "org.openurp.qos" % "openurp-qos-api" % apiVer
 val openurp_stater_web = "org.openurp.starter" % "openurp-starter-web" % starterVer

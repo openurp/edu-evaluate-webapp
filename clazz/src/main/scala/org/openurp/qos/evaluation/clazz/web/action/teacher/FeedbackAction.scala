@@ -22,7 +22,7 @@ import org.beangle.security.Securities
 import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
-import org.openurp.base.edu.model.Teacher
+import org.openurp.base.hr.model.Teacher
 import org.openurp.base.model.{Project, Semester}
 import org.openurp.qos.evaluation.clazz.model.Feedback
 import org.openurp.qos.evaluation.clazz.web.helper.ClazzFeedback

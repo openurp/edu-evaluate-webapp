@@ -21,10 +21,10 @@ import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.web.action.support.{ActionSupport, ParamSupport}
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
-import org.openurp.base.edu.code.CourseCategory
 import org.openurp.base.model.{Project, Semester}
+import org.openurp.code.edu.model.CourseCategory
+import org.openurp.qos.evaluation.base.model.AssessGrade
 import org.openurp.qos.evaluation.clazz.model.CourseEvalStat
-import org.openurp.qos.evaluation.config.AssessGrade
 import org.openurp.starter.web.support.ProjectSupport
 
 class CourseStatAction extends ActionSupport with EntityAction[CourseEvalStat] with ParamSupport with ProjectSupport {

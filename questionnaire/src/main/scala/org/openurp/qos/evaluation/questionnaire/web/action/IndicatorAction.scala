@@ -17,13 +17,14 @@
 
 package org.openurp.qos.evaluation.questionnaire.web.action
 
-import java.time.{Instant, LocalDate}
 import org.beangle.commons.collection.Order
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.qos.evaluation.config.{Question, Indicator}
+import org.openurp.qos.evaluation.base.model.{Indicator, Question}
 import org.openurp.starter.web.support.ProjectSupport
+
+import java.time.{Instant, LocalDate}
 
 class IndicatorAction extends RestfulAction[Indicator] with ProjectSupport {
 
@@ -78,7 +79,9 @@ class IndicatorAction extends RestfulAction[Indicator] with ProjectSupport {
     val query = OqlBuilder.from(classOf[Question], "question")
     query.where("question.indicator in (:indicators)", indicators)
     val questions = entityDao.search(query)
-    if (questions.nonEmpty) { return redirect("search", "删除失败,选择的数据中已有被评教问题引用"); }
+    if (questions.nonEmpty) {
+      return redirect("search", "删除失败,选择的数据中已有被评教问题引用");
+    }
 
     entityDao.remove(indicators)
     redirect("search", "info.remove.success")

@@ -27,8 +27,8 @@ import java.util as ju
 
 object ConvertApi2SQL {
   def main(args: Array[String]): Unit = {
-    //fetchFinal("202120222")
-    fetchOpenFeedback("202220231")
+    fetchFinal("202320241")
+    //fetchOpenFeedback("202220232")
   }
 
   def fetchOpenFeedback(semesterNo: String): Unit = {
@@ -37,8 +37,6 @@ object ConvertApi2SQL {
     //create table qos.evaluate_data3(id bigint,semester_no varchar(20),clazz_no varchar(4),teacher_no varchar(15),course_no varchar(20),teach_depart_no varchar(20),std_no varchar(20),conclusion varchar(100),details varchar(1000),created_at varchar(30));
     val gson = new Gson()
     val utf8 = Charset.forName("UTF-8")
-
-    //https://pjxt.ecupl.edu.cn/api/open/feedback/index?semester_no=202220231&type=1&clazz_no=2022202310753&limit=2000
     val url = s"https://pjxt.ecupl.edu.cn/api/open/result/index?semester_no=${semesterNo}&limit=4000"
     val content = HttpUtils.getText(new URL(url), HttpMethods.GET, utf8, Some({ c =>
       c.setConnectTimeout(60 * 1000)
@@ -64,7 +62,7 @@ object ConvertApi2SQL {
       val departRank = get[Number](clazzData, "college.rank").intValue()
       val courseNo = get[String](clazzData, "course.course_no")
 
-      val feedbackUrl = s"https://pjxt.ecupl.edu.cn/api/open/feedback/index?type=2&semester_no=${semesterNo}&limit=4000&clazz_no=${clazzNo}&teacher_no=${teacherNo}"
+      val feedbackUrl = s"https://pjxt.ecupl.edu.cn/api/open/feedback/index?type=1&semester_no=${semesterNo}&limit=4000&clazz_no=${clazzNo}&teacher_no=${teacherNo}"
       val feedbackContent = HttpUtils.getText(new URL(feedbackUrl), HttpMethods.GET, utf8, Some({ c =>
         c.setConnectTimeout(60 * 1000);
         c.setReadTimeout(60 * 1000)
@@ -109,7 +107,6 @@ object ConvertApi2SQL {
     val gson = new Gson()
     val utf8 = Charset.forName("UTF-8")
 
-    //https://pjxt.ecupl.edu.cn/api/open/feedback/index?semester_no=202220231&type=1&clazz_no=2022202310753&limit=2000
     val url = s"https://pjxt.ecupl.edu.cn/api/open/result/index?semester_no=${semesterNo}&limit=4000"
     val content = HttpUtils.getText(new URL(url), HttpMethods.GET, utf8, Some({ c =>
       c.setConnectTimeout(60 * 1000)

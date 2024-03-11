@@ -17,10 +17,10 @@
 
 package org.openurp.qos.evaluation.questionnaire.service
 
-import java.time.LocalDate
-
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
-import org.openurp.qos.evaluation.config.{Question, Indicator}
+import org.openurp.qos.evaluation.base.model.{Indicator, Question}
+
+import java.time.LocalDate
 
 class IndicatorService(entityDao: EntityDao) {
 
@@ -31,7 +31,9 @@ class IndicatorService(entityDao: EntityDao) {
   }
 
   def getIndicator(indicatorId: String): Indicator = {
-    if (indicatorId == null) { return null; }
+    if (indicatorId == null) {
+      return null;
+    }
     entityDao.get(classOf[Indicator], indicatorId.toLong)
   }
 

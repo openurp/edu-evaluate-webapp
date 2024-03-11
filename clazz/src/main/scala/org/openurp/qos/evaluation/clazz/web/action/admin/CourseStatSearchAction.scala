@@ -19,15 +19,15 @@ package org.openurp.qos.evaluation.clazz.web.action.admin
 
 import org.beangle.commons.io.DataType
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.data.transfer.exporter.ExportSetting
+import org.beangle.data.transfer.exporter.ExportContext
 import org.beangle.web.action.annotation.{mapping, param}
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
-import org.openurp.base.edu.code.CourseCategory
 import org.openurp.base.model.{Project, Semester}
+import org.openurp.code.edu.model.CourseCategory
+import org.openurp.qos.evaluation.base.model.AssessGrade
 import org.openurp.qos.evaluation.clazz.model.{CategoryEvalStat, CourseEvalStat, DepartEvalStat}
 import org.openurp.qos.evaluation.clazz.web.helper.StatCoursePropertyExtractor
-import org.openurp.qos.evaluation.config.AssessGrade
 import org.openurp.starter.web.support.ProjectSupport
 
 class CourseStatSearchAction extends RestfulAction[CourseEvalStat], ExportSupport[CourseEvalStat], ProjectSupport {
@@ -66,11 +66,11 @@ class CourseStatSearchAction extends RestfulAction[CourseEvalStat], ExportSuppor
     forward()
   }
 
-  override def configExport(setting: ExportSetting): Unit = {
-    super.configExport(setting)
+  override def configExport(context: ExportContext): Unit = {
+    super.configExport(context)
     //    val writer = new ExcelItemWriter(setting.context, response.getOutputStream)
     //    setting.writer = writer
     //    writer.registerFormat(DataType.Float, "#,##0.00")
-    setting.context.extractor = new StatCoursePropertyExtractor
+    context.extractor = new StatCoursePropertyExtractor
   }
 }

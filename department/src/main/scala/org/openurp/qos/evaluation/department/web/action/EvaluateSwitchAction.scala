@@ -22,7 +22,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.{Project, Semester}
 import org.openurp.qos.evaluation.app.department.model.EvaluateSwitch
-import org.openurp.qos.evaluation.config.Questionnaire
+import org.openurp.qos.evaluation.base.model.Questionnaire
 import org.openurp.starter.web.support.ProjectSupport
 
 /**

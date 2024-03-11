@@ -23,7 +23,7 @@ import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.data.transfer.importer.{ImportListener, ImportResult}
 import org.openurp.base.model.Semester
 import org.openurp.qos.evaluation.department.model.SupervisiorEvaluate
-import org.openurp.qos.evaluation.config.Questionnaire
+import org.openurp.qos.evaluation.base.model.Questionnaire
 
 /**
  * @author xinzhou
@@ -47,6 +47,7 @@ class ImportSupervisiorListener(entityDao: EntityDao) extends ImportListener {
 
   override def onItemFinish(tr: ImportResult) : Unit = {
     val supervisiorEvaluate = tr.transfer.current.asInstanceOf[SupervisiorEvaluate]
+    //FIXME magic number
     val questionnaire = entityDao.get(classOf[Questionnaire], 322L)
     supervisiorEvaluate.questionnaire = questionnaire
     supervisiorEvaluate.evaluateAt = Instant.now

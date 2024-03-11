@@ -17,14 +17,13 @@
 
 package org.openurp.qos.evaluation.clazz.web.helper
 
-import org.beangle.commons.bean.Properties
+import org.beangle.commons.bean.{DefaultPropertyExtractor, Properties}
 import org.beangle.commons.lang.Strings
-import org.beangle.data.transfer.exporter.DefaultPropertyExtractor
 import org.openurp.qos.evaluation.clazz.model.CourseEvalStat
 
 class StatCoursePropertyExtractor extends DefaultPropertyExtractor {
 
-  override def getPropertyValue(target: Object, property: String): Any = {
+  override def get(target: Object, property: String): Any = {
     if (property.startsWith("indicator_score_")) {
       val stat = target.asInstanceOf[CourseEvalStat]
       val indicatorCode = Strings.substringAfter(property, "indicator_score_")

@@ -20,18 +20,15 @@ package org.openurp.qos.evaluation.clazz.web.action.admin
 import org.beangle.commons.collection.Order
 import org.beangle.commons.lang.ClassLoaders
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.data.transfer.excel.ExcelTemplateWriter
-import org.beangle.data.transfer.exporter.ExportContext
+import org.beangle.data.transfer.Format.Xlsx
+import org.beangle.data.transfer.exporter.{ExcelTemplateExporter, ExportContext}
 import org.beangle.web.action.context.ActionContext
 import org.beangle.web.action.view.{Status, View}
 import org.beangle.webmvc.support.action.ExportSupport
-import org.openurp.base.edu.model.Teacher
-import org.openurp.base.model.{Department, Project, Semester}
-import org.openurp.base.std.code.StdType
-import org.openurp.code.edu.model.EducationLevel
+import org.openurp.base.hr.model.Teacher
+import org.openurp.base.model.{Project, Semester}
 import org.openurp.qos.evaluation.app.course.service.Ranker
 import org.openurp.qos.evaluation.clazz.model.{FinalTeacherScore, QuestionResult}
-import org.openurp.qos.evaluation.clazz.web.action.admin.ProjectRestfulAction
 import org.openurp.qos.evaluation.department.model.{DepartEvaluate, SupervisiorEvaluate}
 
 import java.time.LocalDate
@@ -70,23 +67,18 @@ class FinalTeacherScoreAction extends ProjectRestfulAction[FinalTeacherScore], E
     finalScores.where("finalTeacherScore.semester.id=:semesterId", semesterId)
     val list = scala.jdk.javaapi.CollectionConverters.asJava(entityDao.search(finalScores))
     //查出信息并放到map中
-    val context = new ExportContext
+    val context = new ExportContext(Xlsx)
     context.put("list", list)
     //获得模板路径
     val path = ClassLoaders.getResource("template/finalTeacherScore.xls").get
+    context.template = path
     //准备输出流
     val response = ActionContext.current.response
     response.setContentType("application/x-excel")
     response.setHeader("Content-Disposition", "attachmentfilename=finalTeacherScore.xls")
     val os = response.getOutputStream()
-    try {
-      //将beans通过模板输入流写到workbook中
-      new ExcelTemplateWriter(path, context, os).write()
-    } finally {
-      if (os != null) {
-        os.close()
-      }
-    }
+    //将beans通过模板输入流写到workbook中
+    new ExcelTemplateExporter().exportData(os, context)
     Status.Ok
   }
 

@@ -23,13 +23,13 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.security.Securities
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.edu.model.Teacher
+import org.openurp.base.hr.model.Teacher
 import org.openurp.base.model.Semester
 import org.openurp.base.std.model.Student
 import org.openurp.edu.clazz.model.{Clazz, CourseTaker}
 import org.openurp.qos.evaluation.app.course.service.StdEvaluateSwitchService
 import org.openurp.qos.evaluation.clazz.model.{EvaluateResult, QuestionResult, QuestionnaireClazz}
-import org.openurp.qos.evaluation.config.{Option, Question}
+import org.openurp.qos.evaluation.base.model.{Option, Question}
 import org.openurp.starter.web.support.StudentSupport
 
 import java.time.{Instant, LocalDate}

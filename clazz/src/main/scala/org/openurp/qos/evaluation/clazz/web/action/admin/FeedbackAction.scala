@@ -18,23 +18,24 @@
 package org.openurp.qos.evaluation.clazz.web.action.admin
 
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.model.{Project, Semester}
+import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
+import org.openurp.base.model.Project
 import org.openurp.qos.evaluation.clazz.model.Feedback
 import org.openurp.starter.web.support.ProjectSupport
 
-class FeedbackAction extends RestfulAction[Feedback] with ProjectSupport {
+class FeedbackAction extends RestfulAction[Feedback], ProjectSupport, ExportSupport[Feedback] {
 
   override protected def indexSetting(): Unit = {
     given project: Project = getProject
 
-    put("project",project)
+    put("project", project)
     put("departments", getDeparts)
     put("currentSemester", getSemester)
   }
 
   override protected def getQueryBuilder: OqlBuilder[Feedback] = {
     val builder = super.getQueryBuilder
+
     given project: Project = getProject
 
     builder.where("feedback.teachDepart in(:departs)", getDeparts)

@@ -17,25 +17,24 @@
 
 package org.openurp.qos.evaluation.questionnaire.web.action
 
-import java.time.{Instant, LocalDate}
-
 import org.beangle.commons.collection.Order
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.model.Department
-import org.openurp.base.model.Project
-import org.openurp.qos.evaluation.config.{OptionGroup, Question, Questionnaire}
+import org.openurp.base.model.{Department, Project}
+import org.openurp.qos.evaluation.base.model.{OptionGroup, Question, Questionnaire}
 import org.openurp.qos.evaluation.questionnaire.service.IndicatorService
 import org.openurp.starter.web.support.ProjectSupport
+
+import java.time.{Instant, LocalDate}
 
 /**
  * 问题维护响应类
  *
  * @author chaostone
  */
-class QuestionAction extends RestfulAction[Question] with ProjectSupport{
+class QuestionAction extends RestfulAction[Question] with ProjectSupport {
 
   var indicatorService: IndicatorService = _
 
@@ -85,7 +84,9 @@ class QuestionAction extends RestfulAction[Question] with ProjectSupport{
     query.join("questionnaire.questions", "question")
     query.where("question in (:questions)", questions)
     val questionnaires = entityDao.search(query)
-    if (!questionnaires.isEmpty) { redirect("search", "删除失败,选择的数据中已有被评教问卷引用"); }
+    if (!questionnaires.isEmpty) {
+      redirect("search", "删除失败,选择的数据中已有被评教问卷引用");
+    }
     entityDao.remove(questions)
     redirect("search", "删除成功")
   }
