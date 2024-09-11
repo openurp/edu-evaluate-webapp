@@ -24,9 +24,9 @@ ThisBuild / developers := List(
 ThisBuild / description := "OpenURP QoS Evalution"
 ThisBuild / homepage := Some(url("http://openurp.github.io/qos-evaluation/index.html"))
 
-val apiVer = "0.37.3-SNAPSHOT"
-val starterVer = "0.3.26-SNAPSHOT"
-val baseVer = "0.4.20"
+val apiVer = "0.41.6"
+val starterVer = "0.3.40"
+val baseVer = "0.4.38"
 val openurp_edu_api = "org.openurp.edu" % "openurp-edu-api" % apiVer
 val openurp_qos_api = "org.openurp.qos" % "openurp-qos-api" % apiVer
 val openurp_stater_web = "org.openurp.starter" % "openurp-starter-web" % starterVer

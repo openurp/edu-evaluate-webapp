@@ -18,7 +18,7 @@
 package org.openurp.qos.evaluation.department.helper
 
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
-import org.beangle.data.transfer.importer.{ImportListener, ImportResult}
+import org.beangle.doc.transfer.importer.{ImportListener, ImportResult}
 import org.beangle.security.Securities
 import org.openurp.base.hr.model.Teacher
 import org.openurp.base.model.Semester

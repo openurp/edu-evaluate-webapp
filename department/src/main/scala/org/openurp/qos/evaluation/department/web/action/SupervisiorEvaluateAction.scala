@@ -20,8 +20,8 @@ package org.openurp.qos.evaluation.department.web.action
 import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.commons.lang.ClassLoaders
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.data.transfer.importer.ImportSetting
-import org.beangle.data.transfer.importer.listener.ForeignerListener
+import org.beangle.doc.transfer.importer.ImportSetting
+import org.beangle.doc.transfer.importer.listener.ForeignerListener
 import org.beangle.web.action.view.{Stream, View}
 import org.beangle.webmvc.support.action.{ImportSupport, RestfulAction}
 import org.openurp.base.hr.model.Teacher

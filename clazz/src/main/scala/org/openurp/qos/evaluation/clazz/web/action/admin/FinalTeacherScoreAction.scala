@@ -20,8 +20,8 @@ package org.openurp.qos.evaluation.clazz.web.action.admin
 import org.beangle.commons.collection.Order
 import org.beangle.commons.lang.ClassLoaders
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.data.transfer.Format.Xlsx
-import org.beangle.data.transfer.exporter.{ExcelTemplateExporter, ExportContext}
+import org.beangle.doc.transfer.Format.Xlsx
+import org.beangle.doc.transfer.exporter.{ExcelTemplateExporter, ExportContext}
 import org.beangle.web.action.context.ActionContext
 import org.beangle.web.action.view.{Status, View}
 import org.beangle.webmvc.support.action.ExportSupport

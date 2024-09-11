@@ -19,7 +19,7 @@ package org.openurp.qos.evaluation.clazz.web.action.admin
 
 import org.beangle.commons.io.DataType
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.data.transfer.exporter.ExportContext
+import org.beangle.doc.transfer.exporter.ExportContext
 import org.beangle.ems.app.Ems
 import org.beangle.web.action.annotation.{mapping, param}
 import org.beangle.web.action.view.View
@@ -46,7 +46,7 @@ class CourseStatAction extends RestfulAction[CourseEvalStat], ExportSupport[Cour
   override protected def getQueryBuilder: OqlBuilder[CourseEvalStat] = {
     put("webapp_base", Ems.webapp)
     val builder = super.getQueryBuilder
-    addDepart(builder, "courseEvalStat.teachDepart.id")
+    queryByDepart(builder, "courseEvalStat.teachDepart.id")
     builder
   }
 
